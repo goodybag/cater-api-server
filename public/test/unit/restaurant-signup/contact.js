@@ -1,7 +1,6 @@
 define(function(require, exports, module) {
   var React = require('react');
   var Contact = require('../../../dist/restaurant-signup/components/contact.js');
-
   describe('Contact Component', function () {
 
     it('.val() should return contact', function () {

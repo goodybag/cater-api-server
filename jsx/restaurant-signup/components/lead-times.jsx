@@ -27,6 +27,10 @@ define(function(require, exports, module) {
       return this.state.lead_times;
     },
 
+    isValid: function () {
+      return true; // TODO: implement validations
+    },
+
     addLeadTime: function (e) {
       e.preventDefault();
       var lt = { max_guests: null, lead_times: null, cancel_time: null };

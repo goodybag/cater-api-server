@@ -2,14 +2,14 @@ define(function(require, exports, module) {
   var React = require('react');
   var Input = require('../components/input');
   var LeadTimes = require('../components/lead-times')
-  var HoursDropDown = require('../components/hours-dropdown')
+  var HoursDropDownList = require('../components/hours-dropdown-list')
   var requestMixin = require('../mixins/requests');
 
   module.exports = React.createClass({
     mixins: [requestMixin],
 
     getFields: function () {
-      return ['delivery_fee', 'delivery_times', 'pickup_lead_times'];
+      return ['delivery_fee', 'delivery_times', 'pickup_lead_times', 'hours'];
     },
 
     toggleLeadTimes: function (ref, e) {
@@ -77,7 +77,7 @@ define(function(require, exports, module) {
           <div>
             <h3>Hours of Operation</h3>
 
-            <HoursDropDown />
+            <HoursDropDownList ref="hours" />
 
           </div>
         </div>

@@ -12,7 +12,7 @@ define(function(require, exports, module) {
     },
 
     val: function () {
-      return this.state.value;
+      return this.state;
     },
 
     render: function () {

@@ -9,7 +9,9 @@ define(function(require, exports, module) {
     },
 
     getInitialState: function () {
-      _.defaults(this.props.contact || {}, {
+      var contact = this.props.contact || {};
+
+      _.defaults(contact, {
         name: ''
       , position: ''
       , number: ''
@@ -17,7 +19,7 @@ define(function(require, exports, module) {
       });
 
       return {
-        contact: this.props.contact
+        contact: contact
       };
     },
 

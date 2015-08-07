@@ -18,11 +18,15 @@ define(function(require, exports, module) {
     mixins: [isValid],
 
     getInitialState: function () {
-      return {
-        day: null
-      , from : null
-      , to: null
-      };
+      var hours = this.props.hours || {};
+
+      _.defaults(hours, {
+          day: null
+        , from : null
+        , to: null
+        });
+
+      return hours;
     },
 
     componentDidMount: function () {

@@ -1,5 +1,7 @@
 define(function(require, exports, module) {
   var React = require('react');
+  var utils = require('utils');
+  var pickatime = require('pickatime');
 
   var daysOfWeek = [
     'Sunday'
@@ -12,6 +14,16 @@ define(function(require, exports, module) {
   ];
 
   module.exports = React.createClass({
+    mixins: [requestMixin],
+
+    componentDidMount: function () {
+      $(this.refs.hoursFrom.getDOMNode()).pickatime();
+      $(this.refs.hoursTo.getDOMNode()).pickatime();
+    },
+
+    getFields: function () {
+      return []; // TODO: add fields
+    },
 
     render: function () {
       var selectDays = (function () {
@@ -31,10 +43,10 @@ define(function(require, exports, module) {
             {selectDays}
           </div>
           <div>
-            <input type="text" />
+            <input type="text"ref="hoursFrom" />
           </div>
           <div>
-            <input type="text" />
+            <input type="text" ref="hoursTo" />
           </div>
 
         </div>

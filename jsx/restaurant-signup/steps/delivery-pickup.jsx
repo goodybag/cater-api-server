@@ -2,6 +2,7 @@ define(function(require, exports, module) {
   var React = require('react');
   var Input = require('../components/input');
   var LeadTimes = require('../components/lead-times')
+  var HoursDropDown = require('../components/hours-dropdown')
   var requestMixin = require('../mixins/requests');
 
   module.exports = React.createClass({
@@ -71,6 +72,13 @@ define(function(require, exports, module) {
             <div ref="pickup_lead_times_container" className="hide">
               <LeadTimes ref="pickup_lead_times" />
             </div>
+          </div>
+
+          <div>
+            <h3>Hours of Operation</h3>
+
+            <HoursDropDown />
+
           </div>
         </div>
       );

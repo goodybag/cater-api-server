@@ -1,0 +1,16 @@
+#!/usr/bin/env node
+
+var async = require('async');
+var tasks = require(__dirname + '/../db/tasks');
+
+async.waterfall([
+  tasks.createExtensions
+  tasks.loadUtilityFunctions
+  tasks.createTypes
+  tasks.createTables
+  tasks.loadFunctions
+], function(err) {
+  if (err) throw err;
+
+  console.log('Successfully bootstrapped the database');
+});

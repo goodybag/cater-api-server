@@ -8,7 +8,9 @@ async.series([
   tasks.loadUtilityFunctions.run,
   tasks.createTypes.run,
   tasks.createTables.run,
-  tasks.loadFunctions.run
+  tasks.loadFunctions.run,
+  tasks.loadTriggers.run,
+  tasks.createViews.run
 ], function(err) {
   if (err) throw err;
 

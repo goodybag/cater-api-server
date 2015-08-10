@@ -14,7 +14,7 @@ module.exports.get = function(req, res) {
   db.query(sql.query, sql.values, function(error, rows, results){
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     if (!rows || !rows[0]) return res.status(404).render('404');
-    res.render('user', {user: rows[0]}, function(err, html) {
+    res.render('account-settings/account-settings', {user: rows[0]}, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, err);
       return res.send(200, html);
     });

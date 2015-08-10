@@ -23,6 +23,15 @@
       font-size: 3em;
     }
 
+    // breathing room for inner contents
+    .row.panel {
+      padding-top: 14px;
+
+      section:last-child {
+        margin-bottom: 20px;
+      }
+    }
+
     @media screen and (min-width: 787px) {
       // center form elements
       .user-settings-form {
@@ -45,9 +54,15 @@
         width: 200px;
       }
 
-      // breathing room under other settings titles
-      .user-other-settings dt {
-        margin-bottom: 5px;
+      .user-other-settings {
+        // breathing room under other settings titles
+        .section-title {
+          margin-bottom: 5px;
+        }
+        // indention for divs below title
+        div:nth-of-type(n+2) {
+          padding-left: 20px;
+        }
       }
     }
 

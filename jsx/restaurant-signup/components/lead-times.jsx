@@ -40,9 +40,10 @@ define(function(require, exports, module) {
     },
 
     render: function () {
-      var lead_times = (this.state.lead_times).map(function (t) {
+      var lead_times = (this.state.lead_times).map(function (t, i) {
         return (
           <LeadTime
+            key={i}
             maxGuests={t.max_guests}
             leadTime={t.lead_time}
             cancelTime={t.cancel_time} />

@@ -15,6 +15,14 @@ define(function(require, exports, module) {
       return this.state;
     },
 
+    updateLeadTime: function (e) {
+      e.preventDefault();
+      var target = e.target;
+      this.setState(function (state) {
+        state[target.name] = parseInt(target.value) || null;
+      });
+    },
+
     render: function () {
       return (
         <div className="row">

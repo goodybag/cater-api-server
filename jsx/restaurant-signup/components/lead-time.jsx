@@ -20,7 +20,12 @@ define(function(require, exports, module) {
       var target = e.target;
       this.setState(function (state) {
         state[target.name] = parseInt(target.value) || null;
-      });
+      }, function () {
+        // pass state change to parent onChange method
+        if (this.props.onChange) {
+          this.props.onChange(this.props, this.state, e);
+        }
+      }.bind(this));
     },
 
     render: function () {

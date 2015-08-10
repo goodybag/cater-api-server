@@ -17,6 +17,7 @@ module.exports.register = function(app) {
 
   app.use(require('./public'));
   app.use(require('./documents'));
+  app.use(require('./lunchroom'));
   app.use('/verify', require('./verify'));
   app.use('/restaurants', require('./restaurants'));
   app.use('/admin', require('./admin'));

@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.340",
+  "version": "1.1.341",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -115,7 +115,9 @@
     "stdm": "0.0.4",
     "stripe": "^3.5.2",
     "sugar": "~1.4.1",
+    "superagent": "^1.3.0",
     "time": "^0.10.0",
+    "toposort-class": "^0.3.1",
     "twilio": "1.1.x",
     "udp-client": "0.1.x",
     "usd": "^1.0.1",

@@ -1,3 +1,25 @@
+drop trigger if exists order_order_items_change on order_items;
+create trigger order_order_items_change
+  after insert or update of quantity, price, options_sets
+  on order_items
+  for each row
+  execute procedure on_order_items_change();
+
+drop trigger if exists order_order_items_remove on order_items;
+create trigger order_order_items_remove
+  after delete
+  on order_items
+  for each row
+  execute procedure on_order_items_remove();
+
+
+drop trigger if exists on_order_datetime_change on orders;
+create trigger on_order_datetime_change
+  after insert or update of datetime
+  on orders
+  for each row
+  execute procedure on_order_datetime_change();
+
 drop trigger if exists on_user_organization_update on users;
 create trigger on_user_organization_update
   after insert or update of organization

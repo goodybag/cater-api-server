@@ -26,7 +26,7 @@ module.exports.register = function(app) {
     }));
 
     app.get('/users/me', m.view('account-settings/account-settings', {
-      layout: 'account-settings/layout'
+      layout: 'layout/default'
     }));
 
     app.get('/testimonials'

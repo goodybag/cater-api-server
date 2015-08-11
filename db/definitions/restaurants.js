@@ -155,6 +155,22 @@ define(function(require) {
       type: types.varchar(2)
     , editable: ['client', 'admin']
     }
+  , billing_bank: {
+      type: types.text
+    , editable: ['client', 'admin']
+    }
+  , billing_account_number: {
+      type: types.text
+    , editable: ['client', 'admin']
+    }
+  , billing_account_type: {
+      type: types.text
+    , editable: ['client', 'admin']
+    }
+  , billing_account_name: {
+      type: types.text
+    , editable: ['client', 'admin']
+    }
   , gb_fee: {
       type: types.numeric(5,5)
     , nullable: false

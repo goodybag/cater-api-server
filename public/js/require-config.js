@@ -33,7 +33,7 @@
     , {name: 'amanda',                  location: '../../components/amanda/releases/latest',    main: 'amanda.js'}
     , {name: 'leFunc',                  location: '../../components/lefunc/lib',                main: 'leFunc.js'}
     , {name: 'plan',                    location: '../../components/plan.js',                   main: 'index.js'}
-    , {name: 'stampit',                 location: '../../components/stampit/dist',              main: 'stampit.js'}
+    , {name: 'stampit',                 location: '../../components/stampit',                   main: 'stampit.min.js'}
     , {name: 'resource',                location: '../../components/resource.js',               main: 'index.js'}
 
       // backbone stuff

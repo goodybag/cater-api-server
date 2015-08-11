@@ -605,6 +605,16 @@ describe('Orders Stamps', function(){
       assert.equal( oc.getApplicationCut(), 35 );
     });
 
+    it('.getApplicationCut() - with service fee', function(){
+      var oc = DefaultOrderCharge({ service_fee: 100 });
+      assert.equal( oc.getApplicationCut(), 158 );
+    });
+
+    it('.getRestaurantCut() - with service fee', function(){
+      var oc = DefaultOrderCharge({ service_fee: 100 });
+      assert.equal( oc.getRestaurantCut(), 313 );
+    });
+
     it('.getTotal()', function(){
       var oc = DefaultOrderCharge();
       assert.equal( oc.getTotal(), 321);

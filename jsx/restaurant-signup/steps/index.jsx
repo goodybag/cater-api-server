@@ -3,5 +3,6 @@ define(function(require, exports, module) {
     { component: require('./basic-info'), name: 'Basic Info' }
   , { component: require('./restaurant-info'), name: 'Restaurant Info' }
   , { component: require('./delivery-pickup'), name: 'Delivery + Pickup' }
+  , { component: require('./payment'), name: 'Payment' }
   ];
 });

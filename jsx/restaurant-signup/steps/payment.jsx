@@ -8,7 +8,17 @@ define(function (require, exports, module) {
     mixins: [requestMixin],
 
     getFields: function () {
-      return []; // TODO add fields
+      return [
+        'billing_street'
+      , 'billing_street2'
+      , 'billing_city'
+      , 'billing_state'
+      , 'billing_zip'
+      , 'billing_name'
+      , 'billing_account_type'
+      , 'billing_account_name'
+      , 'billing_account_number'
+      ];
     },
 
     render: function () {
@@ -26,7 +36,7 @@ define(function (require, exports, module) {
           <div>
             <h2>Direct Deposit Info</h2>
             <Input label="Bank Name" ref="billing_name" />
-            <Input label="Bank Accout Type" ref="bank_account_type" />
+            <Input label="Bank Accout Type" ref="billing_account_type" />
             <Input label="Name on Account" ref="billing_account_name" />
             <Input label="Bank Account Number" ref="billing_account_number" />
           </div>

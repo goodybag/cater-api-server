@@ -31,6 +31,7 @@ define( function( require, exports, module ){
         , plan.getApplicationCut(
             this.restaurant.plan, this.getTotalForPayoutCalculations()
           )
+        , this.service_fee
         ].reduce( utils.add, 0 );
       }
     });

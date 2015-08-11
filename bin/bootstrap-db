@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+
+var async = require('async');
+var tasks = require(__dirname + '/../db/tasks');
+
+async.series([
+  tasks.createExtensions.run,
+  tasks.loadUtilityFunctions.run,
+  tasks.createTypes.run,
+  tasks.createTables.run,
+  tasks.loadFunctions.run,
+  tasks.loadTriggers.run,
+  tasks.createViews.run
+], function(err) {
+  if (err) throw err;
+
+  console.log('Successfully bootstrapped the database!');
+  process.exit();
+});

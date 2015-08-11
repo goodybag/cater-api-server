@@ -142,6 +142,16 @@ errors.input.INVALID_ADDRESS = {
 
 errors[errors.input.INVALID_ADDRESS.code] = errors.input.INVALID_ADDRESS;
 
+errors.input.INVALID_RESTAURANT = {
+  type: "input"
+, code: "0302"
+, httpCode: "400"
+, name: "INVALID_RESTAURANT"
+, message: "The restaurant provided is invalid"
+};
+
+errors[errors.input.INVALID_RESTAURANT.code] = errors.input.INVALID_RESTAURANT;
+
 /**
  * Stripe Errors
  */

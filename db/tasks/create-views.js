@@ -2,24 +2,19 @@ var fs = require('fs');
 var path = require('path');
 var db = require('../');
 
-var cli = false;
+exports.run = createViews;
 
-var done = function(callback) {
-  return function(error, results) {
-    console.log( (error) ? "Error creating views" : "Successfully loaded in views");
-    if(error) console.log(error);
-    if (cli) return process.exit( (error) ? 1 : 0 );
-    else if(callback) callback(error, results);
-  }
+function createViews(cb) {
+  var fileName = path.join(__dirname, '/../sql/views.sql');
+
+  fs.readFile(fileName, 'utf-8', function(err, fixtures) {
+    if (err) return cb(err);
+
+    db.query(fixtures, function(err) {
+      if (err) return cb(err);
+
+      console.log('Successfully created views');
+      cb();
+    });
+  });
 };
-
-module.exports.run = function(callback) {
-  var file = path.join(__dirname, '/../sql/views.sql');
-  var views = fs.readFileSync(file).toString();
-  db.query(views, done(callback));
-};
-
-if (require.main === module) {
-  cli = true;
-  module.exports.run();
-}

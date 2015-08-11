@@ -27,6 +27,34 @@ route.get('/manage',
   m.restrict(['restaurant', 'admin']),
   controllers.restaurants.listManageable);
 
+/**
+ * Restaurant Sign Up
+ */
+
+route.get('/join'
+, m.states()
+, function (req, res, next) {
+    res.locals.restaurant = {};
+    res.locals.signup = {};
+    var signupId = req.session.restaurant_signup_id;
+    if (!signupId) return next();
+
+    db.restaurant_signups.findOne({ id: signupId }, function (error, results) {
+      if (error) return next();
+
+      if (results) {
+        res.locals.restaurant = results.data;
+        res.locals.signup = { id: results.id, step: results.step.toString() };
+      }
+
+      next();
+    });
+  }
+, m.view('restaurant-signup', {
+    layout: 'layout/default'
+  })
+);
+
 route.get('/:rid',
   // Just do a barebones lookup since the controller
   // has to do a legacy db model lookup
@@ -161,48 +189,3 @@ route.all('/:rid/orders', m.restrict(['client', 'admin']), function(req, res, ne
  */
 
 route.all('/:rid/orders/current(/*)?', m.restrict(['client', 'admin']), controllers.restaurants.orders.current);
-
-/**
- * Restaurant Sign Up
- */
-route.post('/api/restaurants/join', controllers.restaurants.signups.create);
-
-route.put('/api/restaurants/join'
-, function (req, res, next) {
-    var signupId = req.session.restaurant_signup_id;
-    if (!signupId) {
-      return console.log('invalid signup id'), res.status(400).send();
-    }
-
-    req.queryObj = { id: signupId };
-    req.queryOptions.returning = ['id', 'status', 'data'];
-
-    next();
-  }
-, controllers.restaurants.signups.update
-);
-
-route.get('/restaurants/join'
-, m.states()
-, m.localCookies(['gb_rs'])
-, function (req, res, next) {
-    res.locals.restaurant = {};
-    res.locals.signup = {};
-    var signupId = req.session.restaurant_signup_id;
-    if (!signupId) return next();
-
-    db.restaurant_signups.findOne({ id: signupId }, function (error, results) {
-      if (error) return next();
-
-      if (results) {
-        res.locals.restaurant = results.data;
-        res.locals.signup = { id: results.id, step: results.step.toString() };
-      }
-
-      next();
-    });
-  }
-, m.view('restaurant-signup', {
-    layout: 'layout/default'
-  })
-);

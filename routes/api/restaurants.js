@@ -17,6 +17,23 @@ route.get('/', m.restrict(['admin']), m.sort('-id'), m.param('region_id'), m.que
 
 route.post('/', m.restrict(['admin']), m.insert(db.restaurants));
 
+route.post('/join', controllers.restaurants.signups.create);
+
+route.put('/join'
+, function (req, res, next) {
+    var signupId = req.session.restaurant_signup_id;
+    if (!signupId) {
+      return console.log('invalid signup id'), res.status(400).send();
+    }
+
+    req.queryObj = { id: signupId };
+    req.queryOptions.returning = ['id', 'status', 'data'];
+
+    next();
+  }
+, controllers.restaurants.signups.update
+);
+
 route.get('/:id', m.restrict(['admin']), m.param('id'), m.findOne(db.restaurants));
 
 route.put('/:id', m.restrict(['admin']), m.param('id'), m.update(db.restaurants));

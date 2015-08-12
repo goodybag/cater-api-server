@@ -57,6 +57,10 @@ module.exports.get = function(req, res) {
   var logger = req.logger.create('Controller-Restaurants-Get');
   logger.info('getting restaurant %s', req.params.rid);
 
+  if (req.restaurant.is_hidden && !req.user.isAdmin()) {
+    return res.status(404).render('404');
+  }
+
   var queryOptions = req.query || {};
 
   var userId = req.creatorId || req.user.attributes.id;

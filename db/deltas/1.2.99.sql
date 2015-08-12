@@ -9,11 +9,10 @@ begin
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
   create table if not exists "requested_restaurants" (
-    id            serial primary key
-  , created_at    timestamp not null default now()
-  , user_id       int references users(id) on delete cascade
-  , votes         int check(votes > 0) default 0
-  , restaurant    text not null
+    id            SERIAL PRIMARY KEY
+  , created_at    timestamp NOT NULL DEFAULT now()
+  , user_id       int references users(id) ON DELETE CASCADE
+  , restaurant    text NOT NULL
   );
 
 end$$;

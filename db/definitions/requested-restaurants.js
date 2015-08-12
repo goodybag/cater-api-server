@@ -32,11 +32,6 @@ define(function(require) {
     , nullable: false
     , references: {table: 'users', column: 'id'}
     }
-  , votes: {
-      type: types.int
-    , checks: ['>= 0']
-    , default: 0
-    }
   , restaurant: {
       type: types.text
     , nullable: false

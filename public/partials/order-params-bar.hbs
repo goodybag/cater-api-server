@@ -5,7 +5,7 @@
     </div>
 
     <div class="form-group" data-icon="gb-icon-location">
-      <input list="zips" type="text" class="form-control form-control-zip" name="zip" placeholder="zip" maxlength="5" value="{{#if orderParams.zip}}{{orderParams.zip}}{{else}}{{ order.zip}}{{/if}}"/>
+      <input list="zips" type="text" class="form-control form-control-zip" name="zip" placeholder="zip" maxlength="5" value="{{#if defaultAddress}}{{defaultAddress.zip}}{{else}}{{#if orderParams.zip}}{{orderParams.zip}}{{else}}{{order.zip}}{{/if}}{{/if}}"/>
       <datalist id="zips">
         {{#if defaultAddress }}
         <option value="{{defaultAddress.zip}}">Your Default Address</option>

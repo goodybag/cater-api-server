@@ -176,21 +176,28 @@ $$ language plpgsql;
 -- NOTE: Probabilities _NEED_ to add up to 1
 create or replace function update_order_delivery_service_id( oid int )
 returns void as $$
-  declare rand_val double precision;
 begin
-  select random() into rand_val;
+  with computed_weights as (
+    select random() * sum( ds.region_order_distribution ) r
+      from orders
+        left join restaurants on orders.restaurant_id = restaurants.id
+        left join regions on restaurants.region_id = regions.id
+        left join delivery_services ds on regions.id = ds.region_id
+        where orders.id = oid
+  )
 
   update orders
     set delivery_service_id = (
       select id from (
-          select ds.id, sum( ds.region_order_distribution ) over ( order by ds.id ) s
-          from orders
-            left join restaurants on orders.restaurant_id = restaurants.id
-            left join regions on restaurants.region_id = regions.id
-            left join delivery_services ds on regions.id = ds.region_id
-            where orders.id = oid
+        select ds.id, r, sum( ds.region_order_distribution ) over ( order by ds.id ) s
+        from orders
+          left join restaurants on orders.restaurant_id = restaurants.id
+          left join regions on restaurants.region_id = regions.id
+          left join delivery_services ds on regions.id = ds.region_id
+          cross join computed_weights
+          where orders.id = oid
       ) q
-      where s >= rand_val
+      where s >= r
       order by id
       limit 1
     )

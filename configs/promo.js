@@ -8,7 +8,7 @@ try {
 var promo = {
   adam: {
     email: 'adam.peacock@goodybag.com'
-  , promo_code: ['g315b', 'gbsea15', 'gb315', 'gb518']
+  , promo_code: ['g315b', 'gbsea15', 'gb315', 'gb518', 'gbhou0818']
   }
 , jacob: {
     email: 'jacobparker@goodybag.com'

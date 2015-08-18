@@ -54,3 +54,5 @@ route.post('/api/invoices/:user_invoice_id/orders/:order_id', m.restrict(['admin
 
 route.delete('/api/invoices/:user_invoice_id/orders/:order_id', m.restrict(['admin']), m.param(
   'user_invoice_id'), m.param('order_id'), m.remove(db.user_invoice_orders));
+
+route.post('/api/invoices/recipients', m.restrict(['admin']), m.insert(db.user_invoice_recipients));

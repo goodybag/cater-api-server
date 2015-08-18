@@ -57,10 +57,15 @@ define(function(require, exports, module) {
 
       if ( this.validationError ) return this.options.orderView.displayErrors();
 
+      var original = utils.pick.apply(utils, [this.model.attributes].concat(Object.keys(diff)));
+
       var sent = this.options.orderView.model.save(diff, {
         success: _.bind(this.render, this),
         error: function(jqXHR, textstatus, errorThrown) {
-          // TODO: error handling
+
+          // revert to original state
+          this.options.orderView.model.set(original);
+
           return this.options.orderView.model.trigger('change:invalid_address', textstatus, errorThrown);
         }.bind(this)
       })

@@ -9,6 +9,7 @@ var route = module.exports = express.Router();
 route.use('/restaurants', require('./restaurants'));
 route.use('/orders', require('./orders'));
 route.use('/amenities', require('./amenities'));
+routes.use('/invoices', require('./invoices'));
 
 /**
  * Users

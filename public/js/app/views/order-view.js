@@ -174,7 +174,7 @@ define(function(require, exports, module) {
       this.listenTo(this.model, {
         'change:total': this.onPriceChange,
         'change:phone': this.onPhoneChange,
-        'change:invalid_address': function () { alert('Invalid Address') }
+        'change:invalid_address': utils.partial(this.setAlerts, '.alert-invalid-address')
       }, this);
 
       this.listenTo(this.model.restaurant, {

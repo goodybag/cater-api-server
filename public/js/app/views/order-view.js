@@ -173,7 +173,8 @@ define(function(require, exports, module) {
 
       this.listenTo(this.model, {
         'change:total': this.onPriceChange,
-        'change:phone': this.onPhoneChange
+        'change:phone': this.onPhoneChange,
+        'change:invalid_address': function () { alert('Invalid Address') }
       }, this);
 
       this.listenTo(this.model.restaurant, {

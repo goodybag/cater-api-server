@@ -61,8 +61,8 @@ define(function(require, exports, module) {
         success: _.bind(this.render, this),
         error: function(jqXHR, textstatus, errorThrown) {
           // TODO: error handling
-          alert('invalid address');
-        }
+          return this.options.orderView.model.trigger('change:invalid_address', textstatus, errorThrown);
+        }.bind(this)
       })
 
       if (!sent)

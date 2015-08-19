@@ -22,6 +22,11 @@ define(function(require) {
     , nullable: false
     , references: {table: 'user_invoices', column: 'id'}
     }
+  , user_id: {
+      type: types.int
+    , nullable: false
+    , references: {table: 'users', column: 'id'}
+    }
   , name: {
       type: types.text
     , nullable: false

@@ -208,10 +208,6 @@ define(function(require, exports, module) {
         };
       }
 
-      if ( attrs.restaurant.delivery_service ){
-        this.set( 'delivery_service_id', attrs.restaurant.delivery_service.id );
-      }
-
       this.restaurant = new Restaurant(attrs.restaurant);
       this.unset('restaurant');
 

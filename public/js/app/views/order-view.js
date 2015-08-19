@@ -173,8 +173,7 @@ define(function(require, exports, module) {
 
       this.listenTo(this.model, {
         'change:total': this.onPriceChange,
-        'change:phone': this.onPhoneChange,
-        'change:invalid_address': utils.partial(this.setAlerts, '.alert-invalid-address')
+        'change:phone': this.onPhoneChange
       }, this);
 
       this.listenTo(this.model.restaurant, {

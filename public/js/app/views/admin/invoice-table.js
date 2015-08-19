@@ -62,7 +62,43 @@ define( function( require, exports, module ){
       });
     }
 
+  , 'save-emails': function( $target, $el, invoiceId, userId, userName ){
+      var $emails = $el.find('.email-address-in');
+
+      utils.async.each( $emails, function( email, next){
+        // basic email validation
+        // (should be on server-side as well)
+        var emailVal = email.value;
+        if(emailVal) {
+          if(validateEmail(emailVal)) {
+            console.log('Id: ' + invoiceId);
+            console.log('User Id: ' + userId);
+            console.log('Name: ' + userName);
+            console.log('Email:' + email.value);
+            // api.invoices('recipients').post({
+            //   invoice_id: invoiceId,
+            //   user_id: userId,
+            //   name: userName,
+            //   email: emailVal
+            // }, next);
+          } else {
+            return alert('\'' + emailVal + '\' is not a valid email address.\
+                         \nThis address was not saved.');
+          }
+        }
+      }, function( error ) {
+        if(error) {
+          console.error( error );
+          return alert('Error saving invoice. CMD+Shift+J for details');
+        }
+      });
+    }
   };
+
+  var validateEmail = function(email) {
+    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+    return re.test(email);
+  }
 
   return function( $el ){
     $el.find('[data-action]').click( function( e ){

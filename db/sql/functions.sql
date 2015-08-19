@@ -176,33 +176,47 @@ $$ language plpgsql;
 -- NOTE: Probabilities _NEED_ to add up to 1
 create or replace function update_order_delivery_service_id( oid int )
 returns void as $$
+  declare ds_id int;
 begin
-  with computed_weights as (
-    select random() * sum( ds.region_order_distribution ) r
-      from orders
-        left join restaurants on orders.restaurant_id = restaurants.id
-        left join regions on restaurants.region_id = regions.id
-        left join delivery_services ds on regions.id = ds.region_id
-        where orders.id = oid
-  )
+  ds_id := get_random_delivery_service_id( oid );
 
   update orders
-    set delivery_service_id = (
-      select id from (
-        select ds.id, r, sum( ds.region_order_distribution ) over ( order by ds.id ) s
+    set delivery_service_id = ds_id
+    where id = oid
+      and delivery_service_id is null;
+end;
+$$ language plpgsql;
+
+
+-- Need to pick a delivery service based on probabilities
+-- Source: http://stackoverflow.com/questions/13040246/select-random-row-from-a-postgresql-table-with-weighted-row-probabilities
+-- NOTE: Probabilities _NEED_ to add up to 1
+create or replace function get_random_delivery_service_id( oid int )
+returns int as $$
+begin
+  return (
+    with computed_weights as (
+      select random() * sum( ds.region_order_distribution ) r
         from orders
           left join restaurants on orders.restaurant_id = restaurants.id
           left join regions on restaurants.region_id = regions.id
           left join delivery_services ds on regions.id = ds.region_id
-          cross join computed_weights
           where orders.id = oid
-      ) q
-      where s >= r
-      order by id
-      limit 1
     )
-    where id = oid
-      and delivery_service_id is null;
+
+    select id from (
+      select ds.id, r, sum( ds.region_order_distribution ) over ( order by ds.id ) s
+      from orders
+        left join restaurants on orders.restaurant_id = restaurants.id
+        left join regions on restaurants.region_id = regions.id
+        left join delivery_services ds on regions.id = ds.region_id
+        cross join computed_weights
+        where orders.id = oid
+    ) q
+    where s >= r
+    order by id
+    limit 1
+  );
 end;
 $$ language plpgsql;
 

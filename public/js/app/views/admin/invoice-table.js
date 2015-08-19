@@ -14,8 +14,8 @@ define( function( require, exports, module ){
   var api     = require('api')
 
   var actions = {
-    'delete': function( $target, $el, id ){
-      api.invoices( id ).del( function( error ){
+    'delete': function( $target, $el, invoiceId ){
+      api.invoices( invoiceId ).del( function( error ){
         if ( error ){
           console.error( error );
           return alert('Error deleting invoice. CMD+Shift+J for details');
@@ -25,8 +25,8 @@ define( function( require, exports, module ){
       });
     }
 
-  , 'send-email': function( $target, $el, id ){
-      api.invoices( id )('emails').post( function( error, result ){
+  , 'send-email': function( $target, $el, invoiceId ){
+      api.invoices( invoiceId )('emails').post( function( error, result ){
         if ( error ){
           console.error( error );
           return alert('Error deleting invoice. CMD+Shift+J for details');
@@ -39,13 +39,13 @@ define( function( require, exports, module ){
       });
     }
 
-  , 'set-status': function( $target, $el, id ){
+  , 'set-status': function( $target, $el, invoiceId ){
       var status = $target.data('status');
       var $items = $('.list-item.selected');
 
       utils.async.each( $items, function( item, next ){
         var $item = $(item);
-        api.invoices( +$item.data('id') ).put({ status: status }, next );
+        api.invoices( +$item.data('invoiceId') ).put({ status: status }, next );
       }, function( error ){
         if ( error ){
           console.error( error );
@@ -61,17 +61,20 @@ define( function( require, exports, module ){
         $el.closest('.open').removeClass('open');
       });
     }
+
   };
 
   return function( $el ){
     $el.find('[data-action]').click( function( e ){
       e.preventDefault();
 
-      var $this   = $(this);
-      var id      = +$this.data('id');
-      var action  = $this.data('action');
+      var $this       = $(this);
+      var invoiceId   = +$this.data('invoice-id');
+      var userId      = $this.data('user-id');
+      var userName    = $this.data('user-name');
+      var action      = $this.data('action');
 
-      actions[ action ]( $this, $('.list-item[data-id="' + id + '"]'), id );
+      actions[ action ]( $this, $('.list-item[data-invoice-id="' + invoiceId + '"]'), invoiceId, userId, userName );
     })
   };
 });

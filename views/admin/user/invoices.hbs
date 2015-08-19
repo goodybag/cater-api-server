@@ -59,7 +59,7 @@
   </div>
   <div class="list-items">
   {{#each invoices}}
-    <div class="list-item" data-id="{{this.id}}">
+    <div class="list-item" data-invoice-id="{{this.id}}">
       <label class="component item-selector">
         <input type="checkbox">
       </label>
@@ -85,16 +85,25 @@
           </div>
           {{/if}}
         </dl>
+        <form>
+          <input type="email" class="email-address">
+          <input type="email" class="email-address">
+          <input type="submit"
+            data-invoice-id="{{this.id}}"
+            data-user-id="{{user.id}}"
+            data-user-name="{{user.name}}"
+            data-action="save-emails">
+        </form>
         <div class="more-actions-and-info bottom">
           <button
             class="action btn-default"
-            data-id="{{this.id}}"
+            data-invoice-id="{{this.id}}"
             data-action="send-email">
               {{~#is this.status 'pending' 'error'}}Send Email{{else}}Re-Send Email{{/is~}}
           </button>
           <button
             class="action btn-default"
-            data-id="{{this.id}}"
+            data-invoice-id="{{this.id}}"
             data-action="delete">Delete</button>
         </div>
       </div>

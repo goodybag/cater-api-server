@@ -92,6 +92,11 @@ define(function(require) {
     , default: true
     , editable: ['admin']
     }
+  , accepts_tips: {
+      type: types.boolean
+    , default: true
+    , editable: ['admin']
+    }
   , logo_url: {
       type: types.text
     , editable: ['client', 'admin']
@@ -203,9 +208,10 @@ define(function(require) {
     , default: 0
     , editable: ['client', 'admin']
     }
-  , pms_contact_id: {
-      type: types.int
-    , references: {table: 'contacts', column: 'id', onDelete: 'set null'}
+    , pms_contact_id: {
+    type: types.int
+    // TODO: create migration to avoid cyclic dependency
+    // , references: {table: 'contacts', column: 'id', onDelete: 'set null'}
     }
   , search_vector: {
       type: types.tsvector
@@ -230,7 +236,7 @@ define(function(require) {
   , popularity: {
       type: types.numeric(1,1)
     , default: 0
-    , checks: ['popularity <= 1']
+    , checks: ['<= 1']
     }
   , supported_order_types: {
       type: types.array(types.order_type)

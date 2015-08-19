@@ -23,6 +23,7 @@ module.exports = utils.extend(
   , filters: require('./filters')
   , findRegions: require('./find-regions')
   , getInvoices: require('./get-invoices')
+  , geocodeBody: require('./geocode-body')
   , getOrder: require('./get-order')
   , getOrder2: require('./get-order2')
   , getOrders: require('./get-orders')

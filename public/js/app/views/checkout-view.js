@@ -677,7 +677,7 @@ define(function(require, exports, module) {
           selector.replace( /{property}/g, (error.name || error.param || error.property).toLowerCase().replace(/-/g, '_') )
         ).parents('.form-group').eq(0);
 
-        $parent.prepend( $el );
+        $parent.append( $el );
         $parent.addClass('has-error');
 
         $el.css( 'right', 0 - $el[0].offsetWidth );
@@ -688,6 +688,8 @@ define(function(require, exports, module) {
 
       if ( $el.length ){
         $('html,body').animate({ scrollTop: $el.eq(0).offset().top - 20 });
+        // focus on first element that has error
+        $el.children().eq(1).focus();
       }
     },
 

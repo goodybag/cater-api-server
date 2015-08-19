@@ -13,7 +13,7 @@ module.exports = {
 , transports: {
     console: true
   , rollbar: true
-  , mongo:   true
+  , mongo:   !!local.mongoEnabled
   , loggly:  true
   }
 , console: {

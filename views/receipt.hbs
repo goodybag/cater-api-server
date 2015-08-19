@@ -424,6 +424,7 @@
   </div>
 </div>
 
+{{#if order.restaurant.accepts_tips}}
 <div id="add-tip-modal" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -468,6 +469,7 @@
     </div>
 </div>
 </div>
+{{/if}}
 
 {{> copy_order_error_modal}}
 

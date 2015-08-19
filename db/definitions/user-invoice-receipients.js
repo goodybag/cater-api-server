@@ -17,10 +17,10 @@ define(function(require) {
   definition.name = 'user-invoice-recipients';
 
   definition.schema = {
-    user_id: {
+    invoice_id: {
       type: types.int
     , nullable: false
-    , references: {table: 'users', column: 'id'}
+    , references: {table: 'user_invoices', column: 'id'}
     }
   , name: {
       type: types.text

@@ -14,10 +14,14 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'user-invoice-recipients';
+  definition.name = 'user_invoice_recipients';
 
   definition.schema = {
-    invoice_id: {
+    id: {
+      type: types.serial
+    , pk: true
+    }
+  , invoice_id: {
       type: types.int
     , nullable: false
     , references: {table: 'user_invoices', column: 'id'}

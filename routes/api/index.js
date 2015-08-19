@@ -10,6 +10,7 @@ route.use('/restaurants', require('./restaurants'));
 route.use('/orders', require('./orders'));
 route.use('/amenities', require('./amenities'));
 route.use('/invoices', require('./invoices'));
+route.use('/payments', require('./payments'));
 
 /**
  * Users

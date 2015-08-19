@@ -16,14 +16,7 @@
 href="https://www.goodybag.com/restaurants/{{restaurant.id}}">Order with Goodybag</a>
 
 <script>
-(function (d,s,id) {
-  if (document.getElementById(id)) return;
-  var js = document.createElement(s)
-  , gjs = document.getElementsByTagName(s)[0];
-  js.src= '{{config.cdn.baseUrl}}/sharelink.js';
-  js.id = id;
-  gjs.parentNode.insertBefore(js, gjs);
-})(document, 'script', 'gb-wjs');
+!function(a,b){var c=function(a,b){for(var c in b)a.style[c]=b[c]},d=function(){var a=b.querySelectorAll(".goodybag-order-button"),d=b.createElement("div"),e=b.createElement("button");c(e,{background:"#ed4242",color:"#ffffff",borderTopColor:"#ed4242",boxShadow:"inset 0 1px 0 rgba(255, 255, 255, 0.1)",position:"relative",display:"inline-block",border:"none",borderStyle:"solid",borderWidth:"1px",borderBottomWidth:"2px",borderRadius:"4px",borderColor:"#dd1515",padding:"5.5px 18px 4.5px 18px",fontSize:"14px",fontFamily:'"Avenir", Helvetica, sans-serif',lineHeight:"0",textDecoration:"none",letterSpacing:"0.4px",verticalAlign:"bottom"});var f=b.createElement("img");f.src="https://www.filepicker.io/api/file/2teJMBOMRgmdLfGdl8zO",c(f,{width:"30px",height:"30px",border:"none"});var g=b.createElement("span");g.appendChild(b.createTextNode("Order with Goodybag")),c(g,{position:"relative",bottom:"10px",left:"5px"}),e.appendChild(f),e.appendChild(g),d.appendChild(e);for(var h=0;h<a.length;h++)a[h].innerHTML=d.innerHTML},e=function(c,d,e){d=b,e="addEventListener",d[e]?d[e]("DOMContentLoaded",c):a.attachEvent("onload",c)};e(function(){d()})}(window,document);
 </script>
     {{~/raw~}}
     </code>
@@ -33,14 +26,5 @@ href="https://www.goodybag.com/restaurants/{{restaurant.id}}">Order with Goodyba
 {{/extend}}
 
 {{#extend "scripts"}}
-<script>
-(function (d,s,id) {
-  if (document.getElementById(id)) return;
-  var js = document.createElement(s)
-  , gjs = document.getElementsByTagName(s)[0];
-  js.src= '{{config.baseUrl}}/js/lib/sharelink.js';
-  js.id = id;
-  gjs.parentNode.insertBefore(js, gjs);
-})(document, 'script', 'gb-wjs');
-</script>
+<script src="/dist/sharelink.min.js"></script>
 {{/extend}}

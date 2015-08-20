@@ -22,6 +22,7 @@ var config = {};
 config.defaults = {
   numWorkers: local.numWorkers || os.cpus().length
 
+, legal: require('./configs/legal')
 , credentials: require('./configs/credentials')
 , stores: require('./configs/stores')
 , adroll: require('./configs/adroll')

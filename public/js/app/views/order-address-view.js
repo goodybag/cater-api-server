@@ -55,17 +55,19 @@ define(function(require, exports, module) {
       var diff = this.getDiff(); // changes to address fields
       if (!diff) return this.render();
 
-      this.options.orderView.model.set( diff );
-
       if ( this.validationError ) return this.options.orderView.displayErrors();
 
+      var original = utils.pick.apply(utils, [this.model.attributes].concat(Object.keys(diff)));
+
       var sent = this.options.orderView.model.save(diff, {
-        wait: true,
         success: _.bind(this.render, this),
         error: function(jqXHR, textstatus, errorThrown) {
-          // TODO: error handling
-          alert(errorThrown);
-        }
+
+          // revert to original state
+          this.options.orderView.model.set(original);
+
+          return this.options.orderView.model.trigger('change:invalid_address', textstatus, errorThrown);
+        }.bind(this)
       })
 
       if (!sent)

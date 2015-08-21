@@ -63,31 +63,26 @@ define( function( require, exports, module ){
     }
 
   , 'save-emails': function( $target, $el, invoiceId, userId, userName ){
-      var $emails = $el.find('.email-address-in');
-
-      utils.async.each( $emails, function( email, next){
-        // basic email validation
-        // (should be on server-side as well)
-        var emailVal = email.value;
-        if(emailVal) {
-          if(validateEmail(emailVal)) {
-            api.invoices('recipients').post({
-              invoice_id: invoiceId,
-              user_id: userId,
-              name: userName,
-              email: emailVal
-            }, next);
-          } else {
-            return alert('\'' + emailVal + '\' is not a valid email address.\
-                         \nThis address was not saved.');
-          }
+      var emailStr = $target.context.previousElementSibling.value;
+      if(emailStr) {
+        if(validateEmail(emailStr)) {
+          api.invoices('recipients').post({
+            user_id: userId,
+            name: userName,
+            email: emailStr
+          }, function(error, result) {
+            if(error) {
+              console.error("There was an error." +  error);
+            } else {
+              alert(emailStr + " has been successfully added!");
+              location.reload();
+            }
+          });
+        } else {
+          return alert('\'' + emailStr + '\' is not a valid email address.\
+                       \nThis address was not saved.');
         }
-      }, function( error ) {
-        if(error) {
-          console.error( error );
-          return alert('Error saving invoice. CMD+Shift+J for details');
-        }
-      });
+      }
     }
   };
 

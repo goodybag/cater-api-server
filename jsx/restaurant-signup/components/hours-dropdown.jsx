@@ -58,8 +58,6 @@ define(function(require, exports, module) {
     },
 
     render: function () {
-      console.log(this.state.days);
-
       var hoursPopover = (function () {
         return (
           <div>

@@ -56,7 +56,7 @@ route.param('uid', function(req, res, next, id) {
     if (!req.user) {
       restrictOwner(req, res, next);
     } else {
-      req.url = req.url.replace(/^\/users\/me/, '/users/' + req.user.attributes.id);
+      req.params.uid = req.user.attributes.id;
       next();
     }
   } else {

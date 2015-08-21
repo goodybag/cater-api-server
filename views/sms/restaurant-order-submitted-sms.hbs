@@ -1,4 +1,4 @@
 {{#with order}}
-New Goodybag order for ${{dollars total}} {{#eq type 'delivery'}}for delivery at {{timepart datetime}} on {{datepart datetime}}.
+New Goodybag order for ${{dollars restaurant_total}} {{#eq type 'delivery'}}for delivery at {{timepart datetime}} on {{datepart datetime}}.
 {{else}}for pickup at {{timepart pickup_datetime}} on {{datepart pickup_datetime}}.{{/eq}}
 {{/with}}{{url}}

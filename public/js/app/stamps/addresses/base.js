@@ -28,6 +28,7 @@ define( function( require, exports, module ){
       ]
 
     , toString: function( options ){
+        // By default, turn all components on
         var defaults = this.components.reduce( function( obj, k ){
           obj[ k ] = true;
           return obj;
@@ -36,15 +37,24 @@ define( function( require, exports, module ){
         options = utils.defaults( options || {}, defaults );
 
         return this.components
+          // Filter out components that have been disabled by user options
           .filter( function( key ){
             return !!options[ key ];
           })
-          .map( function( key ){
-            return this[ key ];
+          // Filter out falsey values
+          .filter( function( key ){
+            return !!this[ key ];
           }.bind( this ))
-          .filter( function( val ){
-            return !!val;
-          }.bind( this ))
+          // Format
+          .reduce( function( list, key ){
+            if ( key === 'zip' ){
+              list.push( list.pop() + ' ' + this[ key ] );
+            } else {
+              list.push( this[ key ] );
+            }
+
+            return list;
+          }.bind( this ), [] )
           .join(', ');
       }
 

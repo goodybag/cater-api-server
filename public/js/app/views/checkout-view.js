@@ -105,6 +105,12 @@ define(function(require, exports, module) {
       this.$orderOrganization = this.$el.find('#order-organization');
 
       this.model.on('change:datetime', this.updateDatetime, this);
+      this.model.on('change:invalid_address', function () {
+        return this.displayErrors2([{
+          property: 'street'
+        , message: 'Please enter a valid address'
+        }]);
+      }, this);
     },
 
     updateDatetime: function(order) {

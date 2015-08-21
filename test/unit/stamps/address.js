@@ -15,7 +15,7 @@ describe('Stamps', function(){
 
         assert.equal(
           address.toString()
-        , '5336 Kreuger Ln., Austin, TX, 78723'
+        , '5336 Kreuger Ln., Austin, TX 78723'
         );
       });
 
@@ -30,7 +30,7 @@ describe('Stamps', function(){
 
         assert.equal(
           address.toString()
-        , '123 Sesame St., Trashcan 456, Austin, TX, 78723'
+        , '123 Sesame St., Trashcan 456, Austin, TX 78723'
         );
       });
 
@@ -45,7 +45,7 @@ describe('Stamps', function(){
 
         assert.equal(
           address.toString({ street2: false })
-        , '123 Sesame St., Austin, TX, 78723'
+        , '123 Sesame St., Austin, TX 78723'
         );
       });
     });

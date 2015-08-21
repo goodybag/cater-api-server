@@ -21,11 +21,6 @@ define(function(require) {
       type: types.serial
     , pk: true
     }
-  , invoice_id: {
-      type: types.int
-    , nullable: false
-    , references: {table: 'user_invoices', column: 'id'}
-    }
   , user_id: {
       type: types.int
     , nullable: false

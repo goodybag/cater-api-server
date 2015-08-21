@@ -10,7 +10,6 @@ begin
 
   create table if not exists "user_invoice_recipients" (
     id           serial primary key
-  , invoice_id   int references user_invoices(id) ON DELETE CASCADE
   , user_id      int references users(id) ON DELETE CASCADE
   , name         text NOT NULL
   , email        text NOT NULL

@@ -173,26 +173,19 @@ require([
     var $sendto = $('.send-to');
     var $nohover = $('#no-hover');
     var $selectableEmails = $('#no-hover .popover-email');
-    var checked = 0;
     $(':checkbox').change(function() {
-      if(this.checked) { checked++; }
-        else { checked--; }
-
-      if(checked===1) {
+      if($('.selected').length > 0) {
+        $sendto.text("Send To");
         $nohover.removeClass('no-hover');
         $selectableEmails.on('click', function() {
           console.log("Email selected: " + $(this).html());
           $(this).toggleClass('selected-email');
         });
-      }
-
-      if(checked===0) {
+      } else {
         $sendto.text("Emails");
         $nohover.addClass('no-hover');
         $selectableEmails.removeClass('selected-email');
         $selectableEmails.off('click');
-      } else {
-        $sendto.text("Send To");
       }
     });
   });

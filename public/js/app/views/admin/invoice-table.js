@@ -71,16 +71,12 @@ define( function( require, exports, module ){
         var emailVal = email.value;
         if(emailVal) {
           if(validateEmail(emailVal)) {
-            console.log('Id: ' + invoiceId);
-            console.log('User Id: ' + userId);
-            console.log('Name: ' + userName);
-            console.log('Email:' + email.value);
-            // api.invoices('recipients').post({
-            //   invoice_id: invoiceId,
-            //   user_id: userId,
-            //   name: userName,
-            //   email: emailVal
-            // }, next);
+            api.invoices('recipients').post({
+              invoice_id: invoiceId,
+              user_id: userId,
+              name: userName,
+              email: emailVal
+            }, next);
           } else {
             return alert('\'' + emailVal + '\' is not a valid email address.\
                          \nThis address was not saved.');

@@ -38,36 +38,16 @@ define(function(require, exports, module) {
 
     setDay: function (e) {
       var val = parseInt(e.target.getAttribute('data-value'));
-      if (this.state.days.length < 1) {
-        return this.setState({
-          days: this.state.days.concat(val)
-        });
-      }
 
       var days = this.state.days;
       var index = days.indexOf(val);
-      if ( index > -1 ) days = days.splice(index, 1);
-      var group = utils.groupBy(days, function (a, b) { return a - b; });
-      var newState = [];
 
-      var handleGroup = function (g) {
-        var max = Math.max.apply(Math, g);
-        var min = Math.min.apply(Math, g);
-        var s = [];
-
-        if (val <= max && val >= min) max = val
-        else if (val >= max) max = val
-        else if (val <= min) min = val
-
-        for (var i = min, s = []; i <= max; i++) s.push(i)
-
-        return s;
-      };
-
-      for (var k in group) newState.push(handleGroup(group[k]))
+      // toggle day
+      if (index > -1) days.splice(index, 1)
+      else days.push(val)
 
       this.setState({
-        days: utils.flatten(newState)
+        days: days
       });
     },
 

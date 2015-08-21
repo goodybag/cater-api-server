@@ -55,6 +55,34 @@
           </a>
         </div>
       </li>
+      <li class="popover-wrapper gb-dropdown right">
+        <a data-role="popover" data-target="dropdown-popover" href="#">
+          Available Emails
+          <i class="gb-icon-caret-down"></i>
+        </a>
+        <div class="popover-modal dropdown-popover">
+          <div class="popover-item popover-email">
+            <span class="popover-item-icon"><i class="gb-icon-email"></i></span>
+            <span class="popover-item-label email-text">{{user.email}}</span>
+          </div>
+          {{#each user.invoice_recipients}}
+          <div class="popover-item popover-email">
+            <span class="popover-item-icon"><i class="gb-icon-email"></i></span>
+            <span class="popover-item-label email-text">{{email}}</span>
+          </div>
+          {{/each}}
+          <form class="popover-item popover-form">
+            <input type="email" class="email-address-in">
+            <button
+              class="add-button"
+              data-user-id="{{user.id}}"
+              data-user-name="{{user.name}}"
+              data-action="save-emails">
+              Add
+            </button>
+          </form>
+        </div>
+      </li>
     </ul>
   </div>
   <div class="list-items">
@@ -85,15 +113,6 @@
           </div>
           {{/if}}
         </dl>
-        <form>
-          <input type="email" class="email-address">
-          <input type="email" class="email-address">
-          <input type="submit"
-            data-invoice-id="{{this.id}}"
-            data-user-id="{{user.id}}"
-            data-user-name="{{user.name}}"
-            data-action="save-emails">
-        </form>
         <div class="more-actions-and-info bottom">
           <button
             class="action btn-default"

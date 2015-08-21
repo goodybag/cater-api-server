@@ -294,6 +294,10 @@ route.get('/users/:id/invoices', m.param('id'), m.viewPlugin('mainNav', {
     table: 'regions',
     alias: 'region'
   }],
+  many: [{
+    table: 'user_invoice_recipients',
+    alias: 'invoice_recipients'
+  }],
   userGroups: true
 }), m.getInvoices({
   userIdParam: 'id'

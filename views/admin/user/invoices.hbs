@@ -9,6 +9,7 @@
 {{/extend}}
 
 {{#extend "body"}}
+
 <div class="table-list invoices-table-list striped">
   <div class="list-header">
     <label class="component item-selector">
@@ -76,7 +77,8 @@
               <input
                 type="button"
                 class="action-button"
-                value="Send">
+                value="Send"
+                data-action="send-emails">
             </form>
           </div>
           <div class="not-selected-only">
@@ -173,12 +175,21 @@ require([
     var $sendto = $('.send-to');
     var $nohover = $('#no-hover');
     var $selectableEmails = $('#no-hover .popover-email');
+    var sendtoView = false;
     $(':checkbox').change(function() {
+      // resets class toggle
+      $selectableEmails.off('click');
+
       if($('.selected').length > 0) {
+        sendtoView = true;
+      } else {
+        sendtoView = false;
+      }
+
+      if(sendtoView) {
         $sendto.text("Send To");
         $nohover.removeClass('no-hover');
         $selectableEmails.on('click', function() {
-          console.log("Email selected: " + $(this).html());
           $(this).toggleClass('selected-email');
         });
       } else {
@@ -188,6 +199,7 @@ require([
         $selectableEmails.off('click');
       }
     });
+
   });
 });
 </script>

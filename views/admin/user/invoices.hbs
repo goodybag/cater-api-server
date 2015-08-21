@@ -57,7 +57,7 @@
       </li>
       <li class="popover-wrapper gb-dropdown right">
         <a data-role="popover" data-target="dropdown-popover" href="#">
-          Available Emails
+          Emails
           <i class="gb-icon-caret-down"></i>
         </a>
         <div class="popover-modal dropdown-popover">
@@ -71,16 +71,26 @@
             <span class="popover-item-label email-text">{{email}}</span>
           </div>
           {{/each}}
-          <form class="popover-item popover-form">
-            <input type="email" class="email-address-in">
-            <button
-              class="add-button"
-              data-user-id="{{user.id}}"
-              data-user-name="{{user.name}}"
-              data-action="save-emails">
-              Add
-            </button>
-          </form>
+          <div class="selected-only">
+            <form class="popover-item popover-form">
+              <input
+                type="button"
+                class="action-button"
+                value="Send">
+            </form>
+          </div>
+          <div class="not-selected-only">
+            <form class="popover-item popover-form">
+              <input type="email" class="email-address-in">
+              <button
+                class="action-button"
+                data-user-id="{{user.id}}"
+                data-user-name="{{user.name}}"
+                data-action="save-emails">
+                Add
+              </button>
+            </form>
+          </div>
         </div>
       </li>
     </ul>
@@ -161,4 +171,5 @@ require([
   });
 });
 </script>
+
 {{/extend}}

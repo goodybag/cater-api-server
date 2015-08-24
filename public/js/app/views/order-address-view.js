@@ -59,7 +59,13 @@ define(function(require, exports, module) {
     saveAddress: function(e) {
       var data = new FormView2({ el: this.$el }).getModelData();
 
-      if ( this.validationError ) return this.options.orderView.displayErrors();
+      data = Object
+        .keys( data )
+        .reduce( function( obj, key ){
+          if ( data[ key ] === '' ) return obj;
+          obj[ key ] = data[ key ];
+          return obj;
+        }, {} );
 
       var sent = this.order.address.save( data, {
         success: function(){

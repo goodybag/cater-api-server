@@ -323,8 +323,8 @@ define(function(require, exports, module) {
       var addressId = this.$el.find('#select-address-form input[name="address-radio"]:checked').data('id');
       var address = this.options.user.addresses.get(addressId);
 
-      // NOTE: this used to be this.model.save(...)
-      this.model.address.set(address.omit(['id', 'user_id', 'is_default']));
+      this.model.setAddress( address, { save: true } );
+
       this.$el.find('#select-address-modal').modal('hide');
       this.clear();
       this.addressView.render();

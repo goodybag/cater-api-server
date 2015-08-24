@@ -301,6 +301,23 @@ define(function(require, exports, module) {
       return Backbone.Model.prototype.set.call(this, attrs, options);
     },
 
+    setAddress: function( address, options ){
+      options = _.defaults( options || {}, {
+        save: false
+      });
+
+      address = address instanceof Address ? address : new Address( address );
+
+      var data = address.pick( Order.addressFields );
+      data.address_name = address.get('name');
+
+      this.address = address;
+
+      return this[ options.save ? 'save' : 'set' ]( data, {
+        patch: true
+      });
+    },
+
     updateSubtotal: function() {
       var sub_total = _.reduce( this.orderItems.pluck('sub_total'), function(a, b) {
         return a + b;

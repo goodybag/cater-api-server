@@ -27,6 +27,7 @@ function getQueryOptions(){
                       , where: { is_default: true }
                       }
                     ]
+            , many: [ { table: 'user_invoice_recipients', alias: 'invoice_recipients' } ]
             }
           ]
   }

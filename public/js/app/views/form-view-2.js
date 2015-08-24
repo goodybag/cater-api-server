@@ -19,6 +19,7 @@ define(function(require){
     , 'number':   function( $el ){ return +$el.val(); }
     , 'checkbox': function( $el ){ return $el[0].checked; }
     , 'array':    function( $el ){ return $el.val().trim().split(/\,\s*/g); }
+    , 'tel':      function( $el ){ return $el.val().match(/\d/g).join(''); }
     , 'list': function( $el ) {
         var result = $el.find('input[type="checkbox"]:checked').map( function() {
           return this.value;

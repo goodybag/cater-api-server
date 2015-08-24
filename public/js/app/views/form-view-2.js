@@ -28,6 +28,14 @@ define(function(require){
       }
     }
 
+    // Change the key used in the inputs `name` attribute to the
+    // value mapped here
+  , map: {}
+
+  , defaultFieldGetter: function( key ){
+      return this.$el.find('[name="' + key + '"]')
+    }
+
     /**
      * Describes which keys should be two-way data-bound
      * {
@@ -103,6 +111,8 @@ define(function(require){
   , getModelData: function(){
       var this_ = this, data = {};
 
+      var map = this.map;
+
       // Scan all named input elements (only pick checked radio inputs)
       var inputs = this.$el.find('[name][type="radio"]:checked, [name]:not([type="radio"])');
 
@@ -112,7 +122,7 @@ define(function(require){
         var k     = $this.attr('name');
         var val   = this_.getDomValue( k, $this );
 
-        data[ k ] = val;
+        data[ k in map ? map[ k ] : k ] = val;
       });
 
       return data;
@@ -126,7 +136,7 @@ define(function(require){
      */
   , getDomValue: function( key, $el ){
       var val, args, helper, type;
-      $el = $el || this.$el.find('[name="' + key + '"]');
+      $el = $el || this.defaultFieldGetter( key );
 
       if ( !$el ) return val;
 

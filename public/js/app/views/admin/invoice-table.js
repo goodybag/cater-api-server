@@ -40,6 +40,33 @@ define( function( require, exports, module ){
       });
     }
 
+  , 'send-to-all': function($target, $el, invoiceId, userId, userName, inRec ) {
+    var emails = inRec.split(";");
+
+    utils.async.each( emails, function(email, next) {
+      if(email) {
+        api.invoices( invoiceId )( email )('emails').post(function( error, result ){
+          if ( error ){
+            console.error( error );
+            return alert('Error sending invoice to ' + email + '. CMD+Shift+J for details');
+          }
+
+          // Change label to 'Emailed'
+          $el.find('.label-status')
+            .removeClass('pending error paid')
+            .addClass('emailed')
+            .text('Emailed');
+        });
+      }
+    }, function( error ) {
+      if(error) {
+        console.error( error );
+        return alert("Error sending invoice. CMD+SHIFT+J for details");
+      }
+    });
+
+  }
+
   , 'send-emails': function( $target, $el, invoiceId ) {
       var $items = $('.list-item.selected');
       var $emails = $('.selected-email .email-text');
@@ -83,7 +110,7 @@ define( function( require, exports, module ){
       });
     }
 
-  , 'set-status': function( $target, $el, invoiceId ){
+  , 'set-status': function( $target, $el, invoiceId){
       var status = $target.data('status');
       var $items = $('.list-item.selected');
 
@@ -144,8 +171,9 @@ define( function( require, exports, module ){
       var userId      = $this.data('user-id');
       var userName    = $this.data('user-name');
       var action      = $this.data('action');
+      var inRec       = $this.data('invoice-recipients');
 
-      actions[ action ]( $this, $('.list-item[data-invoice-id="' + invoiceId + '"]'), invoiceId, userId, userName );
+      actions[ action ]( $this, $('.list-item[data-invoice-id="' + invoiceId + '"]'), invoiceId, userId, userName, inRec );
     })
   };
 });

@@ -1,15 +1,21 @@
 define(function(require, exports, module) {
+  var Address = require('app/models/address');
   var AddressView = require('./address-view');
   var Handlebars = require('handlebars');
   var states = require('states');
   var utils =require('utils');
+  var FormView2 = require('app/views/form-view-2').extend({
+    map: {
+      address_name: 'name'
+    }
+  });
 
   var template = Handlebars.partials.order_delivery_info;
 
   return module.exports = AddressView.extend({
     events: {
       'click .toggle-edit': 'toggleEditAddress',
-      'click .cancel-edit-btn': 'render',
+      'click .cancel-edit-btn': 'onCancelClick',
       'click .save-address': 'saveAddress',
       'click .add-address': 'addAddress'
     },
@@ -45,33 +51,43 @@ define(function(require, exports, module) {
 
     addAddress: function(e) {
       this.$el.find('input').val('');
+      this.previousModel = this.order.address;
+      this.order.address = new Address();
       this.toggleEditAddress();
     },
 
     saveAddress: function(e) {
-      var errors = this.options.orderView.validateAddress();
-      if (errors) return this.options.orderView.displayErrors2(errors);
-
-      var diff = this.getDiff(); // changes to address fields
-      if (!diff) return this.render();
+      var data = new FormView2({ el: this.$el }).getModelData();
 
       if ( this.validationError ) return this.options.orderView.displayErrors();
 
-      var original = utils.pick.apply(utils, [this.model.attributes].concat(Object.keys(diff)));
+      var sent = this.order.address.save( data, {
+        success: function(){
+          var sent = this.options.orderView.model.save(data, {
+            success: _.bind(this.render, this),
+            error: function(jqXHR, textstatus, errorThrown) {
+              return this.options.orderView.model.trigger('change:invalid_address', textstatus, errorThrown);
+            }.bind(this)
+          });
 
-      var sent = this.options.orderView.model.save(diff, {
-        success: _.bind(this.render, this),
-        error: function(jqXHR, textstatus, errorThrown) {
+          if (!sent) this.options.orderView.displayErrors();
+        }.bind( this )
 
-          // revert to original state
-          this.options.orderView.model.set(original);
-
+      , error: function( jqXHR, textstatus, errorThrown ){
           return this.options.orderView.model.trigger('change:invalid_address', textstatus, errorThrown);
         }.bind(this)
-      })
+      });
 
-      if (!sent)
-        this.options.orderView.displayErrors();
+      if (!sent) this.options.orderView.displayErrors();
+    }
+
+  , onCancelClick: function( e ){
+      if ( this.previousModel ){
+        this.order.address = this.previousModel;
+        delete this.previousModel;
+      }
+
+      this.render();
     }
   });
 });

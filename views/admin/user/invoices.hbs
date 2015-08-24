@@ -58,7 +58,7 @@
       </li>
       <li id="no-hover" class="popover-wrapper gb-dropdown right no-hover">
         <a data-role="popover" data-target="dropdown-popover" href="#">
-          <span class="send-to">Emails</span>
+          <span class="send-to">Add Email</span>
           <i class="gb-icon-caret-down"></i>
         </a>
         <div class="popover-modal dropdown-popover">
@@ -193,7 +193,7 @@ require([
           $(this).toggleClass('selected-email');
         });
       } else {
-        $sendto.text("Emails");
+        $sendto.text("Add Email");
         $nohover.addClass('no-hover');
         $selectableEmails.removeClass('selected-email');
         $selectableEmails.off('click');

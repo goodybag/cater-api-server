@@ -29,13 +29,46 @@ define( function( require, exports, module ){
       api.invoices( invoiceId )('emails').post( function( error, result ){
         if ( error ){
           console.error( error );
-          return alert('Error deleting invoice. CMD+Shift+J for details');
+          return alert('Error sending invoice. CMD+Shift+J for details');
         }
 
         $el.find('.label-status')
           .removeClass('pending error paid')
           .addClass('emailed')
           .text('Emailed');
+      });
+    }
+
+  , 'send-emails': function( $target, $el, invoiceId ) {
+      var $items = $('.list-item.selected');
+      var $emails = $('.selected-email .email-text');
+
+      utils.async.each( $items, function(item, next) {
+        var $item = $(item);
+        var id = +$item.data('invoiceId');
+
+        utils.async.each( $emails, function(email, next) {
+          var email = $(email).html();
+
+          api.invoices( id )( email )('emails').post( function( error, result ){
+            if( error ){
+              console.error( error );
+              return alert('Error sending invoice. CMD+SHIFT+J for details');
+            }
+          });
+
+        }, function( error ) {
+          if(error) {
+            console.error( error );
+            return alert('An error occurred. CMD+Shift+J for details');
+          }
+        });
+
+      }, function( error ) {
+        if(error) {
+          console.error( error );
+          return alert('An error occurred. CMD+Shift+J for details');
+        }
       });
     }
 

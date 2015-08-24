@@ -32,6 +32,7 @@ define( function( require, exports, module ){
           return alert('Error sending invoice. CMD+Shift+J for details');
         }
 
+        // Change label to 'Emailed'
         $el.find('.label-status')
           .removeClass('pending error paid')
           .addClass('emailed')
@@ -55,6 +56,16 @@ define( function( require, exports, module ){
               console.error( error );
               return alert('Error sending invoice. CMD+SHIFT+J for details');
             }
+
+            // Change label to 'Emailed'
+            $el.find('.label-status')
+              .removeClass('pending error paid')
+              .addClass('emailed')
+              .text('Emailed');
+
+            alert("Email has been sent!");
+            location.reload();
+
           });
 
         }, function( error ) {

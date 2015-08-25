@@ -14,7 +14,7 @@ var
 
 define(function(require) {
   var definition = {};
-  definition.name = 'requested-restaurants';
+  definition.name = 'requested_restaurants';
 
   definition.schema = {
     id: {

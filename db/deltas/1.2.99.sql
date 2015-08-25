@@ -11,7 +11,7 @@ begin
   create table if not exists "requested_restaurants" (
     id            SERIAL PRIMARY KEY
   , created_at    timestamp NOT NULL DEFAULT now()
-  , user_id       int references users(id) ON DELETE CASCADE
+  , user_id       int references users(id) ON DELETE SET NULL
   , restaurant    text NOT NULL
   );
 

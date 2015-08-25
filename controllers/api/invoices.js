@@ -27,7 +27,7 @@ module.exports.sendCustomEmail = function( req, res ) {
     .catch( function( error ){
       logger.error('Error sending invoice', {
         invoice : { id: req.params.id }
-      , email   : { email: req.params.email }
+      , email   : req.params.email
       , error   : error
       });
 

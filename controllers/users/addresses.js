@@ -4,6 +4,8 @@ var db = require('../../db')
   , utils = require('../../utils')
   , config = require('../../config')
   , states = require('../../public/js/lib/states')
+  , Addresses = require('stamps/addresses')
+  , GeocodeRequest = require('stamps/requests/geocode')
   , models = require('../../models');
 
 /**
@@ -12,6 +14,42 @@ var db = require('../../db')
  * Set the first address as default, for convenience
  */
 module.exports.create = function(req, res, next) {
+  var logger = req.logger.create('Controller-Create-Address', {
+    data: { address: address }
+  });
+
+  logger.info('Create user Address');
+  
+  var address = Address( req.body );
+
+  if ( !address.hasMinimumComponents() ){
+    logger.warn('Invalid address');
+    return res.error( errors.input.INVALID_ADDRESS );
+  }
+
+  utils.async.series([
+    // Geocode Address
+    function( next ){
+      GeocodeRequest()
+        .address( address.toString() )
+        .send( function( error, result ){
+          if ( error ){
+            return next( error );
+          }
+
+          if ( !result.isValidAddress() ){
+            return res.error( errors.input.INVALID_ADDRESS );
+          }
+
+          return next( null, result.toAddress() );
+        });
+    }
+
+    // Check if there was an existing default
+  , function( address)
+  ]);
+
+
   models.Address.find({ where: {user_id: req.params.uid, is_default: true}}, function(error, addresses) {
     var noExistingDefault = !addresses.length;
     var address = new models.Address(utils.extend(

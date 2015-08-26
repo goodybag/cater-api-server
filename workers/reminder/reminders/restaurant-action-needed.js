@@ -49,8 +49,27 @@ var getOptions = function( storage ){
   return options;
 };
 
+var withinBusinessHours = function (order) {
+  // check whether or not the current time is
+  // within business hours, based on orders timezone
+  var now = moment().tz(order.timezone)
+  , start = moment().tz(order.timezone)
+  , end = moment().tz(order.timezone)
+  , timeframe = config.reminders.actionNeeded.timeframe;
+
+  start.set('hour', +timeframe.start.split(':')[0])
+  start.set('minute', +timeframe.start.split(':')[1])
+
+  end.set('hour', +timeframe.end.split(':')[0])
+  end.set('minute', +timeframe.end.split(':')[1])
+
+  return now.isBetween(start, end);
+};
+
 var notifyOrderFn = function( order ) {
   return function( done ) {
+    if (!withinBusinessHours(order)) return done(null);
+
     notifier.send( 'order-submitted-needs-action-sms', order.id, function(error) {
       done( error, error ? null : order );
     });

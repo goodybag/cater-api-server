@@ -15,8 +15,15 @@
   var embeddedOrderIcon = function() {
     var orderBtns = document.querySelectorAll('.goodybag-order-button');
 
+    if (orderBtns.length < 1) return;
+
     var container = document.createElement('div');
     var button = document.createElement('button');
+    var link = document.createElement('a');
+
+    link.title = 'order with goodybag!';
+    link.href = 'https://www.goodybag.com/restaurants/' + orderBtns[0].getAttribute('data-rid');
+
     applyStyle(button, {
       background: '#ed4242'
     , color: '#ffffff'
@@ -57,7 +64,8 @@
 
     button.appendChild(image);
     button.appendChild(span);
-    container.appendChild(button);
+    link.appendChild(button)
+    container.appendChild(link);
     for (var i=0; i < orderBtns.length; i++) {
       orderBtns[i].innerHTML = container.innerHTML;
     }

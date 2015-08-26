@@ -45,7 +45,7 @@ define( function( require, exports, module ){
 
     utils.async.each( emails, function(email, next) {
       if(email) {
-        api.invoices( invoiceId )( email )('emails').post(function( error, result ){
+        api.invoices( invoiceId )('emails')( email ).post(function( error, result ){
           if ( error ){
             console.error( error );
             return alert('Error sending invoice to ' + email + '. CMD+Shift+J for details');
@@ -78,7 +78,7 @@ define( function( require, exports, module ){
         utils.async.each( $emails, function(email, next) {
           var email = $(email).html();
 
-          api.invoices( id )( email )('emails').post( function( error, result ){
+          api.invoices( id )('emails')( email ).post( function( error, result ){
             if( error ){
               console.error( error );
               return alert('Error sending invoice. CMD+SHIFT+J for details');

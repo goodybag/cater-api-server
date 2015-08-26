@@ -102,6 +102,28 @@ The root module `index.js` will register all notifications in the ./notification
 
 Gets a notification factory by notification id.
 
+##### `.render(string template, object context) -> String`
+
+Direct access to templating. By default, notifications use handlebars for rendering.
+
+##### `.setRenderer(object renderer)`
+
+Accepts an object that must provide a .render(template, context) function.
+
+This allows you to replace templating:
+
+```
+var jade = require('jade');
+var notifications = require('order-notifications2');
+
+notifications.setRenderer({
+  render: function(template, context) {
+    var fn = jade.compile(template);
+    return fn(context);
+  }
+});
+```
+
 ### Notification Factories
 
 [./notification.js](./notification.js) contains the logic for creating factories that create [notification](#notification) instances. It exports a single Function:

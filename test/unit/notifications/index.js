@@ -3,8 +3,24 @@ var config          = require('../../../config');
 var errors          = require('../../../errors');
 var utils           = require('../../../utils');
 var notifications   = require('../../../lib/order-notifications2');
-var app             = require('../../../app');
 var events          = require('events');
+var Hbs             = require('handlebars');
+
+var mockDb = {
+  order_notifications: {
+    insert: function(options, callback) {
+      return callback(null); // always success
+    }
+  },
+
+  orders: {
+    findOne: function() {
+      var args = Array.prototype.slice.call(arguments);
+      var callback = args[args.length-1];
+      return callback(null, {});
+    }
+  }
+};
 
 var venter = new events.EventEmitter;
 
@@ -24,13 +40,15 @@ var orders = require('stampit')()
     }
   })
 
-var oldRender = app.render;
+var oldRenderer = notifications.renderer;
 var oldSendRawEmail = utils.sendRawEmail;
 
 var overrideRender = function( returns ){
-  app.render = function( template, context, callback ){
-    return callback( null, returns );
-  };
+  notifications.setRenderer({
+    render: function( template, context ){
+      return returns;
+    }
+  });
 };
 
 before( function(){
@@ -40,7 +58,7 @@ before( function(){
 });
 
 after( function(){
-  app.render = oldRender;
+  notifications.setRenderer(oldRenderer);
   utils.sendRawEmail = oldSendRawEmail;
 });
 
@@ -67,6 +85,7 @@ describe('Order Notifications', function(){
       , name: 'a'
       , build: function(){}
       , send: function(){}
+      , db: mockDb
       });
 
       var order = orders()
@@ -84,6 +103,7 @@ describe('Order Notifications', function(){
       , requiredOptions: ['optA']
       , build: function(){}
       , send: function(){}
+      , db: mockDb
       });
 
       var order = orders();
@@ -110,6 +130,8 @@ describe('Order Notifications', function(){
       , subject: function( order ){
           return order.subject;
         }
+
+      , db: mockDb
       });
 
       assert.equal( typeof emailNote.build, 'function' );
@@ -151,6 +173,8 @@ describe('Order Notifications', function(){
         , subject: function( order ){
             return order.subject;
           }
+
+        , db: mockDb
         })
       );
 
@@ -163,7 +187,7 @@ describe('Order Notifications', function(){
       var note = notes( order, 1 );
 
       overrideRender('Test preview');
-      
+
       note.send( function( error, from, to, text ){
         assert( !error );
         assert.equal( to, order.to );

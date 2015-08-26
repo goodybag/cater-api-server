@@ -71,11 +71,18 @@ define( function( require, exports, module ){
       var $items = $('.list-item.selected');
       var $emails = $('.selected-email .email-text');
 
-      utils.async.each( $items, function(item, next) {
+      var done = function( error ) {
+        if(error) {
+          console.error( error );
+          return alert('An error occurred. CMD+Shift+J for details');
+        }
+      }
+
+      var sendEmails = function(item, next) {
         var $item = $(item);
         var id = +$item.data('invoiceId');
 
-        utils.async.each( $emails, function(email, next) {
+        var sendEmail = function(email, next) {
           var email = $(email).html();
 
           api.invoices( id )('emails')( email ).post( function( error, result ){
@@ -94,20 +101,12 @@ define( function( require, exports, module ){
             location.reload();
 
           });
-
-        }, function( error ) {
-          if(error) {
-            console.error( error );
-            return alert('An error occurred. CMD+Shift+J for details');
-          }
-        });
-
-      }, function( error ) {
-        if(error) {
-          console.error( error );
-          return alert('An error occurred. CMD+Shift+J for details');
         }
-      });
+
+        utils.async.each( $emails, sendEmail, done);
+      }
+
+      utils.async.each( $items, sendEmails, done);
     }
 
   , 'set-status': function( $target, $el, invoiceId){

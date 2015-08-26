@@ -19,13 +19,18 @@ module.exports.create = function(req, res, next) {
   });
 
   logger.info('Create user Address');
-  
+
   var address = Address( req.body );
 
   if ( !address.hasMinimumComponents() ){
     logger.warn('Invalid address');
     return res.error( errors.input.INVALID_ADDRESS );
   }
+
+  var addressLookup = {
+    user_id: req.params.uid
+  , is_default: true
+  };
 
   utils.async.series([
     // Geocode Address
@@ -46,7 +51,52 @@ module.exports.create = function(req, res, next) {
     }
 
     // Check if there was an existing default
-  , function( address)
+  , function( address, next ){
+      db.addresses.findOne( addressLookup, function( error, result ){
+        return next( error, address, !!result );
+      });
+    }
+
+    // Save
+  , function( address, hadExistingDefault, next ){
+      address.is_default = address.is_default || !hadExistingDefault;
+
+      var tx = db.dirac.create();
+
+      tx.begin( function( error ){
+        if ( error ){
+          logger.warn('Transaction error', {
+            error: error
+          });
+
+          return res.error( errors.internal.DB_FAILURE, error );
+        }
+
+        if ( address.is_default ){
+          tx.addresses.update( addressLookup, { is_default: false } );
+        }
+
+        tx.addresses.insert( address, function( error, result ){
+          if ( error ){
+            logger.warn('Error inserting address', {
+              error: error
+            });
+
+            return res.error( errors.internal.DB_FAILURE, error );
+          }
+
+          tx.commit( function( error ){
+            if ( error ){
+              logger.warn('Error inserting address', {
+                error: error
+              });
+
+              return res.error( errors.internal.DB_FAILURE, error );
+            }
+          });
+        });
+      });
+    }
   ]);
 
 

@@ -17,7 +17,6 @@
 
     if (orderBtns.length < 1) return;
 
-    var container = document.createElement('div');
     var button = document.createElement('button');
     var link = document.createElement('a');
 
@@ -65,10 +64,8 @@
     button.appendChild(image);
     button.appendChild(span);
     link.appendChild(button)
-    container.appendChild(link);
-    for (var i=0; i < orderBtns.length; i++) {
-      orderBtns[i].innerHTML = container.innerHTML;
-    }
+
+    orderBtns[0].parentNode.insertBefore(link, orderBtns[0]);
   };
 
   var DOMReady = function(a,b,c){

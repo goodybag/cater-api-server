@@ -93,6 +93,8 @@ module.exports.create = function(req, res, next) {
 
               return res.error( errors.internal.DB_FAILURE, error );
             }
+
+            res.json( result );
           });
         });
       });

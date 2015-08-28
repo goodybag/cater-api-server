@@ -20,7 +20,7 @@ module.exports.create = function(req, res, next) {
 
   logger.info('Create user Address');
 
-  var address = Address( req.body );
+  var address = Addresses( req.body );
 
   if ( !address.hasMinimumComponents() ){
     logger.warn('Invalid address');
@@ -31,27 +31,32 @@ module.exports.create = function(req, res, next) {
     user_id: req.params.uid
   , is_default: true
   };
-
-  utils.async.series([
+console.log(address.toString())
+  utils.async.waterfall([
     // Geocode Address
     function( next ){
       GeocodeRequest()
         .address( address.toString() )
         .send( function( error, result ){
           if ( error ){
-            return next( error );
+            logger.warn('Error geocoding address', {
+              error: error
+            });
+
+            return res.error( 'httpCode' in error ? error : errors.internal.UNKNOWN, error );
           }
 
           if ( !result.isValidAddress() ){
             return res.error( errors.input.INVALID_ADDRESS );
           }
-
+console.log('got result back', result);
           return next( null, result.toAddress() );
         });
     }
 
     // Check if there was an existing default
   , function( address, next ){
+    console.log(address);
       db.addresses.findOne( addressLookup, function( error, result ){
         return next( error, address, !!result );
       });
@@ -61,7 +66,7 @@ module.exports.create = function(req, res, next) {
   , function( address, hadExistingDefault, next ){
       address.is_default = address.is_default || !hadExistingDefault;
 
-      var tx = db.dirac.create();
+      var tx = db.dirac.tx.create();
 
       tx.begin( function( error ){
         if ( error ){
@@ -99,7 +104,11 @@ module.exports.create = function(req, res, next) {
         });
       });
     }
-  ]);
+  ], function( error ){
+    if ( error ){
+      return res.error( errors.internal.UNKNOWN, error )
+    }
+  });
 
 
   models.Address.find({ where: {user_id: req.params.uid, is_default: true}}, function(error, addresses) {

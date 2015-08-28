@@ -36,7 +36,7 @@
       <div class="form-group
                   form-group-personal-tax-id
                   {{#eq data.legal_entity.type 'company'}}hide{{/eq}}">
-        <label for="personal-tax-id">Personal ID Number (SSN)</label>
+        <label for="personal-tax-id">Personal ID (Last 4 digits of your SSN or call/email us to provide a Driver's License photo)</label>
         <input
           id="personal-tax-id" name="personal_id_number" type="text"
           {{#dneq data.legal_entity.type "company"}}value="{{data.legal_entity.personal_id_number}}"{{/dneq}}>

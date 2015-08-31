@@ -78,7 +78,7 @@
           </div>
         </div>
       </div> {{!-- end permission groups --}}
-      
+
       <div class="col">
         <label>Other</label>
         <div>
@@ -97,6 +97,14 @@
               class="form-control"
               {{#if user.is_invoiced}}checked="checked"{{/if}}>
               Invoiced
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="is_deleted"
+              class="form-control"
+              {{#if user.is_deleted}}checked="checked"{{/if}}>
+              Deleted
           </label>
         </div>
     </div>

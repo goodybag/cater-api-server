@@ -22,6 +22,8 @@ module.exports.create = function(req, res, next) {
 
   var address = Addresses( req.body );
 
+  address.user_id = req.params.uid;
+
   if ( !address.hasMinimumComponents() ){
     logger.warn('Invalid address');
     return res.error( errors.input.INVALID_ADDRESS );
@@ -49,8 +51,8 @@ console.log(address.toString())
           if ( !result.isValidAddress() ){
             return res.error( errors.input.INVALID_ADDRESS );
           }
-console.log('got result back', result);
-          return next( null, result.toAddress() );
+
+          return next( null, utils.extend( {}, address, result.toAddress() ) );
         });
     }
 
@@ -81,6 +83,7 @@ console.log('got result back', result);
           tx.addresses.update( addressLookup, { is_default: false } );
         }
 
+        console.log('saving', address);
         tx.addresses.insert( address, function( error, result ){
           if ( error ){
             logger.warn('Error inserting address', {

@@ -78,7 +78,7 @@
     "leFunc": "~1.2.5",
     "lodash": "2.2.x",
     "loglog": "^0.3.0",
-    "loglog-loggly": "^1.1.1",
+    "loglog-loggly": "^1.1.2",
     "loglog-mongodb": "^1.1.0",
     "loglog-rollbar": "~0.0.2",
     "mailcomposer": "0.2.x",

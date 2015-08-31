@@ -148,7 +148,7 @@ require( ['jquery-loaded'], function($) {
           .attr('required', null);
       $businessTaxId
         .removeClass('hide')
-        .find('input')
+        .find('input:not([name="ssn_last_4"])')
           .attr('required', true);
     }
   };

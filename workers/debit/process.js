@@ -59,14 +59,13 @@ var debitCustomer = function (order, callback) {
 
   var pmId = order.payment_method_id;
   models.PaymentMethod.findOne(pmId, function(error, paymentMethod) {
-    if (error) return callback(new Error('invalid payment method: ' + pmId));
+    if (error || !paymentMethod) return callback(new Error('invalid payment method: ' + pmId));
 
     db.users.findOne(order.user_id, function(err, user) {
       if ( err ) return callback({ error: err });
 
-      // invoiced orders should use our own debit card
-      var customer = paymentMethod ? user.stripe_id : config.stripe.invoicing.customer_id;
-      var source = paymentMethod ? paymentMethod.attributes.stripe_id : config.stripe.invoicing.card_id;
+      var customer = user.stripe_id;
+      var source = paymentMethod.attributes.stripe_id;
       var charge = OrderCharge( order );
 
       var data = {

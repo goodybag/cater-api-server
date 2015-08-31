@@ -1046,6 +1046,7 @@ module.exports = Model.extend({
         payment_status: {$null: true}
       , status: 'accepted'
       , $custom: ['now() > ("orders"."datetime" AT TIME ZONE "orders"."timezone")']
+      , payment_method_id: { $notNull: true }
       }
     , limit: limit
     };

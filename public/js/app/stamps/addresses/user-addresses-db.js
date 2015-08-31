@@ -10,7 +10,7 @@ module.exports = require('stampit')()
       , configurable: false
       , enumerable: false
       });
-      
+
       return this;
     }
 
@@ -60,16 +60,16 @@ module.exports = require('stampit')()
           console.log('saving', address);
           tx.addresses.insert( address, function( error, result ){
             if ( error ){
-              logger.warn('Error inserting address', {
+              this.logger.warn('Error inserting address', {
                 error: error
               });
 
-              return res.error( errors.internal.DB_FAILURE, error );
+              return callback( error );
             }
 
             tx.commit( function( error ){
               if ( error ){
-                logger.warn('Error inserting address', {
+                this.logger.warn('Error inserting address', {
                   error: error
                 });
 

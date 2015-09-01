@@ -113,7 +113,11 @@
   display: block;
   color: @palette-black;
 
-  > a {
+  .email-text {
+    color: @palette-gray-dark;
+  }
+
+  a {
     display: block;
     padding: 12px 12px 11px;
     color: @color-primary-text;
@@ -124,6 +128,22 @@
 .popover-modal .popover-item:hover {
   background-color: @palette-gray-lighter;
   text-decoration: none;
+}
+
+.popover-modal .popover-email {
+  cursor: pointer;
+}
+
+.popover-modal .popover-form {
+  position: relative;
+  background-color: @palette-gray-lighter;
+  border-top: 1px solid @palette-gray;
+
+  .email-address-in,
+  .action-button {
+    display: inline-block;
+    margin-bottom: 10px;
+  }
 }
 
 .popover-modal .popover-item .popover-item-icon {

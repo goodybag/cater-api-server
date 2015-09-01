@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.342",
+  "version": "1.1.343",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -88,8 +88,9 @@
     "microtime": "0.4.x",
     "moment": "~2.3.1",
     "moment-timezone": "~0.3.0",
-    "mongo-sql": "^2.6.2",
+    "mongo-sql": "^2.7.0",
     "multer": "^0.1.8",
+    "newrelic": "^1.22.0",
     "node-hipchat": "^0.4.5",
     "node-uuid": "1.4.x",
     "npm": "*",

@@ -53,7 +53,7 @@ define( function( require, exports, module ){
           throw new Error('Invalid Geocode Result');
         }
         
-        return address({
+        var a = address({
           street:   [ this.getAddressComponent('street_number').long_name
                     , this.getAddressComponent('route').long_name
                     ].join(' ')
@@ -70,6 +70,12 @@ define( function( require, exports, module ){
 
         , lat_lng:  this.toLatLng()
         });
+
+        if ( a.street2 === null ){
+          delete a.street2;
+        }
+
+        return a;
       }
     });
 

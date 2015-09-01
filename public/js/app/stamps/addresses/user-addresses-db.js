@@ -1,8 +1,13 @@
 var db = require('db');
 var utils = require('utils');
 var errors = require('errors');
+var logger = require('../../../../../lib/logger');
 
 module.exports = require('stampit')()
+  .compose( require('./base') )
+  .enclose( function(){
+    this.setLogger( logger );
+  })
   .methods({
     setLogger: function( logger ){
       Object.defineProperty( this, 'logger', {
@@ -29,6 +34,8 @@ module.exports = require('stampit')()
         return callback( errors.input.INVALID_ADDRESS );
       }
 
+      var logger = this.logger;
+
       var addressLookup = {
         user_id:    this.user_id
       , is_default: true
@@ -38,9 +45,15 @@ module.exports = require('stampit')()
 
       utils.async.waterfall([
         // Check if there was an existing default
-        function( address, next ){
+        function( next ){
+          console.log('check existing address')
           db.addresses.findOne( addressLookup, function( error, result ){
             if ( error ){
+              logger.warn('Error looking up address', {
+                addressLookup: addressLookup
+              , error: error
+              });
+
               return next( error );
             }
 
@@ -50,62 +63,50 @@ module.exports = require('stampit')()
           }.bind( this ));
         }.bind( this )
 
-      , tx.begin.bind( tx )
-
       , function( next ){
-          if ( address.is_default ){
-            tx.addresses.update( addressLookup, { is_default: false } );
-          }
-
-          console.log('saving', address);
-          tx.addresses.insert( address, function( error, result ){
-            if ( error ){
-              this.logger.warn('Error inserting address', {
-                error: error
-              });
-
-              return callback( error );
-            }
-
-            tx.commit( function( error ){
-              if ( error ){
-                this.logger.warn('Error inserting address', {
-                  error: error
-                });
-
-                return res.error( errors.internal.DB_FAILURE, error );
-              }
-
-              res.json( result );
-            });
+          console.log('begin transaction')
+          tx.begin( function( error ){
+            return next( error );
           });
         }
 
-      , function( results, next ){
-          tx.polls.insert( this, { returning: ['*'] }, next );
-        }.bind( this )
-      , function( pollResults, next ){
-          var poll = pollResults[0];
+        // Update existing addresses with default false
+        // and save the new address
+      , function( next ){
+          console.log('Update and save')
+          if ( this.is_default ){
+            tx.addresses.update( addressLookup, { is_default: false } );
+          }
 
-          var choices = this.choices.map( function( choice ){
-            return utils.extend( { poll_id: poll.id }, utils.pick( choice, 'title', 'body' ) );
-          });
+          console.log('inserting', this);
+          tx.addresses.insert( this, function( error, result ){
+            if ( error ){
+              logger.warn('Error inserting address', {
+                error: error
+              });
+            }
 
-          tx.poll_choices.insert( choices, { returning: ['*'] }, function( error, results ){
-            return next( error, poll, results );
+            return next( error, result[0] );
           });
         }.bind( this )
-      , function( poll, choices, next ){
+
+        // Commit and extend the instance with the result
+      , function( result, next ){
+          console.log('Commit and extend')
           tx.commit( function( error ){
             if ( error ){
+              logger.warn('Error committing transaction', {
+                error: error
+              });
+
               return next( error );
             }
 
-            poll.choices = choices;
-            utils.extend( this, poll );
+            utils.extend( this, result );
 
+            console.log('finishing up')
             return next();
-          }.bind( this ) );
+          }.bind( this ));
         }.bind( this )
       ], function( error ){
         if ( error ){

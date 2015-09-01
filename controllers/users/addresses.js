@@ -149,12 +149,12 @@ module.exports.update = function(req, res, next) {
  * DELETE /users/:uid/addresses/:aid
  */
 module.exports.remove = function(req, res, next) {
-  var where = {
+  var query = { where: {
     user_id:  req.params.uid
   , id:       req.params.aid
-  };
+  }};
 
-  models.Address.findOne(where, function(error, address) {
+  models.Address.findOne(query, function(error, address) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     if (address === null) return res.send(404);
 

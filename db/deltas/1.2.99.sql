@@ -1,8 +1,4 @@
-<<<<<<< HEAD
--- Delta
-=======
 -- Delta for creating "requested_restaurants" table
->>>>>>> master
 
 DO $$
   declare version       text := '1.2.99';
@@ -12,10 +8,6 @@ begin
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-<<<<<<< HEAD
-  alter table addresses alter column is_default set default false;
-end$$;
-=======
   create table if not exists "requested_restaurants" (
     id            SERIAL PRIMARY KEY
   , created_at    timestamp NOT NULL DEFAULT now()
@@ -24,4 +16,3 @@ end$$;
   );
 
 end$$;
->>>>>>> master

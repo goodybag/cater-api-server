@@ -105,7 +105,14 @@ define(function(require, exports, module) {
       this.$orderOrganization = this.$el.find('#order-organization');
 
       this.model.on('change:datetime', this.updateDatetime, this);
-      this.model.on('change:invalid_address', function () {
+      this.model.on('change:invalid_address', function ( error ) {
+        if ( error && error.name === 'ADDRESS_EXISTS' ){
+          return this.displayErrors2([{
+            property: 'street'
+          , message: error.message
+          }]);
+        }
+
         return this.displayErrors2([{
           property: 'street'
         , message: 'Please enter a valid address'
@@ -224,6 +231,12 @@ define(function(require, exports, module) {
           spinner.stop();
           return this.displayErrors2(errors, Address);
         }
+
+        return this.addressView.saveAddress( function( error ){
+          if ( !error ){
+            this.submit(e);
+          }
+        }.bind( this ));
       }
 
       var secondaryContactPhone = this.$el.find('.order-secondary-contact-phone').val().replace(/[^\d]/g, '');
@@ -302,6 +315,13 @@ define(function(require, exports, module) {
             return self.displayErrors2([{
               property: 'street'
             , message: 'Please enter a valid address'
+            }]);
+          }
+
+          if ( error && error.name === 'ADDRESS_EXISTS' ){
+            return self.displayErrors2([{
+              property: 'street'
+            , message: error.message
             }]);
           }
 
@@ -603,7 +623,7 @@ define(function(require, exports, module) {
 
         address.set( Order.addressFields[i], val );
       }
-
+console.log('validating', address.toJSON(), address.validate(address.toJSON()))
       return address.validate(address.toJSON());
     },
 

@@ -168,7 +168,6 @@ module.exports.get = function(req, res) {
       delete context.order.review_token;
     }
 
-    logger.info('rendering %s', view, { context: context });
     res.render(view, context);
   });
 }

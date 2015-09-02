@@ -278,7 +278,7 @@ define(function(require, exports, module) {
 
       // TODO: same field names between order and address
       // See comment below
-      var addressFields = _.keys(_.result(Address, 'schema').properties);
+      var addressFields = Order.addressFields;
       if (typeof key === 'object') {
         attrs = key;
         options = val;

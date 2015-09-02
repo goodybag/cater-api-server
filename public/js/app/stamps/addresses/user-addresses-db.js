@@ -121,9 +121,15 @@ module.exports = require('stampit')()
               logger.warn('Error inserting address', {
                 error: error
               });
+
+              if ( error.code === '23505' ){
+                return next( errors.input.ADDRESS_EXISTS );
+              }
+
+              return next( error );
             }
 
-            return next( error, result[0] );
+            return next( null, result[0] );
           });
         }.bind( this )
 
@@ -145,7 +151,7 @@ module.exports = require('stampit')()
         }.bind( this )
       ], function( error ){
         if ( error ){
-          tx.rollback();
+          tx.rollback( utils.noop );
           return callback( error );
         }
 
@@ -199,7 +205,7 @@ module.exports = require('stampit')()
         }.bind( this )
       ], function( error ){
         if ( error ){
-          tx.rollback();
+          tx.rollback( utils.noop );
           return callback( error );
         }
 

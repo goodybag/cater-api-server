@@ -16,7 +16,7 @@ define(function(require, exports, module) {
     events: {
       'click .toggle-edit': 'toggleEditAddress',
       'click .cancel-edit-btn': 'onCancelClick',
-      'click .save-address': 'saveAddress',
+      'click .save-address': 'onSaveAddressClick',
       'click .add-address': 'addAddress'
     },
 
@@ -56,7 +56,7 @@ define(function(require, exports, module) {
       this.toggleEditAddress();
     },
 
-    saveAddress: function(e) {
+    saveAddress: function(callback) {
       var data = new FormView2({ el: this.$el }).getModelData();
 
       // Do not send blank values
@@ -69,13 +69,16 @@ define(function(require, exports, module) {
         }, {} );
 
       var saveAddress = function( done ){
-        var sent = this.order.address.save( data, {
+        var sent = this.order.address.save( utils.clone( data ), {
           success: function(){
             return done();
           }
 
-        , error: function( jqXHR, textstatus, errorThrown ){
-            return done( errorThrown );
+        , error: function( model, jqXHR, errorThrown ){
+            var error = jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.error ?
+              jqXHR.responseJSON.error : errorThrown;
+
+            return done( error );
           }
         });
 
@@ -88,16 +91,22 @@ define(function(require, exports, module) {
       var saveOrder = function( done ){
         var orderData = utils.clone( data );
         orderData.address_name = orderData.name;
+        delete orderData.id;
         delete orderData.name;
 
-        var sent = this.order.save( data, {
+        var sent = this.order.save( orderData, {
           success: function(){
             return done();
           }
 
-        , error: function( jqXHR, textstatus, errorThrown ){
-            return done( errorThrown );
+        , error: function( model, jqXHR, errorThrown ){
+            var error = jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.error ?
+              jqXHR.responseJSON.error : errorThrown;
+
+            return done( error );
           }
+
+        , patch: true
         });
 
         if (!sent) this.options.orderView.displayErrors();
@@ -112,10 +121,21 @@ define(function(require, exports, module) {
       , saveOrder
       ], function( error ){
         if ( error ){
-          return this.options.orderView.model.trigger('change:invalid_address', error);
+          console.log('reporting error', error);
+          this.options.orderView.model.trigger('change:invalid_address', error);
+
+          if ( typeof callback === 'function' ){
+            callback( error );
+          }
+
+          return;
         }
 
         this.render();
+
+        if ( typeof callback === 'function' ){
+          callback();
+        }
       }.bind( this ));
     }
 
@@ -126,6 +146,10 @@ define(function(require, exports, module) {
       }
 
       this.render();
+    }
+
+  , onSaveAddressClick: function( e ){
+      this.saveAddress();
     }
   });
 });

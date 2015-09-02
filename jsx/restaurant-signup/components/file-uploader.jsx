@@ -1,3 +1,17 @@
+
+/*
+*  FileUploader Component
+*   This relies heavily on FilePicker (https://www.filepicker.com).
+*   It provides the user with the option to upload a file or
+*   type in a photo's url
+*   Props:
+*    @label - component's label text
+*    @errorMessage - this is message will display if there's an
+                     issue uploading a file or if the components
+                     fields are set to required
+    @value - uploaded photo's url
+*/
+
 define(function(require, exports, module) {
   var React = require('react');
   var isValid = require('../mixins/is-valid')

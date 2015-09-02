@@ -1,3 +1,8 @@
+
+/*
+* List of LeadTime components
+*/
+
 define(function(require, exports, module) {
   var React = require('react');
   var LeadTime = require('../components/lead-time')

@@ -1,3 +1,9 @@
+
+/*
+* HoursDrop Component
+*  restaurant's delivery/pickup hours
+*/
+
 define(function(require, exports, module) {
   var React = require('react');
   var utils = require('utils');

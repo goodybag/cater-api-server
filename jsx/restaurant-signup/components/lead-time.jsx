@@ -1,7 +1,18 @@
+
+/*
+*  Restaurant's lead time
+*/
+
 define(function(require, exports, module) {
   var React = require('react');
 
   module.exports = React.createClass({
+
+    propTypes: {
+      maxGuests: React.PropTypes.number,
+      lead_time: React.PropTypes.number,
+      cancel_time: React.PropTypes.number
+    },
 
     getInitialState: function () {
       return {

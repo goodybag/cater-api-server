@@ -1,3 +1,18 @@
+
+/*
+* Input Component
+*  Abstracts a lot of the markup and styling associated with
+*  making input tags nice and functional. No more error message
+*  css hacks
+*
+*  Props:
+*    @type - defaults to text but can be a radio or checkbox
+*    @label - component's label text
+*    @name - input[name=""]
+*    @errorMessage - error message text
+*    @value - input's value
+*/
+
 define(function(require, exports, module) {
   var React = require('react');
   var isValid = require('../mixins/is-valid');

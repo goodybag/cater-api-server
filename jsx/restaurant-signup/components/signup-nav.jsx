@@ -1,3 +1,13 @@
+
+/*
+* SignupNav Component
+* Props:
+*  @step - will likely be the current step state of the signup form
+*  @steps - an ordered array of step names
+*   ex.
+*    ['Basic Info', 'Payment', ...]
+*/
+
 define(function(require, exports, module) {
   var React = require('react');
 

@@ -1,3 +1,10 @@
+
+/*
+*  Contact Component
+*  Props:
+*   @contact (optional) - contact object
+*/
+
 define(function(require, exports, module) {
   var React = require('react');
   var Input = require('./input');

@@ -1,3 +1,8 @@
+
+/*
+*  List of HoursDropDown Components
+*/
+
 define(function(require, exports, module) {
   var React = require('react');
   var HoursDropDown = require('./hours-dropdown');

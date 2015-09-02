@@ -1,14 +1,23 @@
+
+/*
+* Dynamic list of Contact components
+* Props:
+*   @contacts (optional) - array of contacts, this will most likely
+*                          be input from a backbone model
+*/
+
 define(function(require, exports, module) {
   var React = require('react');
   var Contact = require('./contact');
   var isValid = require('../mixins/is-valid');
 
   module.exports = React.createClass({
-    mixins: [isValid],
 
     propTypes: {
       contacts: React.PropTypes.array
     },
+
+    mixins: [isValid],
 
     getInitialState: function () {
       return { contacts: this.props.contacts || [{}] };

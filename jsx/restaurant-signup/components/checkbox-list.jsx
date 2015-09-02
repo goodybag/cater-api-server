@@ -1,8 +1,27 @@
+
+/*
+* Creates a list of checkboxes
+* Props:
+*   @label - label for the entire checkbox list
+*   @checkBoxes - array of checkbox properties for
+*                 each item in the list
+*   ex.
+*     [ {label: 'Vegan', name: 'vegan', value: 'vegan' }, ... ]
+*     so each checkbox list item will have it's own label, a name
+*     and a value
+*/
+
 define(function(require, exports, module) {
   var React = require('react');
   var isValid = require('../mixins/is-valid');
 
   module.exports = React.createClass({
+
+    propsTypes: {
+      label: React.PropType.string
+      checkBoxes: React.PropType.array
+    },
+
     mixins: [isValid],
 
     getInitialState: function () {

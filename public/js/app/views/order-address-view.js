@@ -121,7 +121,6 @@ define(function(require, exports, module) {
       , saveOrder
       ], function( error ){
         if ( error ){
-          console.log('reporting error', error);
           this.options.orderView.model.trigger('change:invalid_address', error);
 
           if ( typeof callback === 'function' ){

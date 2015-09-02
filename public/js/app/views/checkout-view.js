@@ -623,7 +623,7 @@ define(function(require, exports, module) {
 
         address.set( Order.addressFields[i], val );
       }
-console.log('validating', address.toJSON(), address.validate(address.toJSON()))
+
       return address.validate(address.toJSON());
     },
 

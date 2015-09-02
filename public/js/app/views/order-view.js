@@ -136,10 +136,6 @@ define(function(require, exports, module) {
 
       // please add any model listeners in the setModel function
       this.setModel((this.model) ? this.model : new Order());
-
-      this.model.on('change:id', function(){
-        console.log('id change', arguments);
-      })
     },
 
     updateAmenitiesTotal: function(amenity) {

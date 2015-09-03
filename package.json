@@ -77,7 +77,7 @@
     "knox": "^0.8.10",
     "leFunc": "~1.2.5",
     "lodash": "2.2.x",
-    "loglog": "^0.3.0",
+    "loglog": "^0.3.2",
     "loglog-loggly": "^1.1.1",
     "loglog-mongodb": "^1.1.0",
     "loglog-rollbar": "~0.0.2",

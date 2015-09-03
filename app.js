@@ -6,6 +6,7 @@
 var
   config = require('./config')
 , rollbar = require('rollbar')
+, util = require('util')
 , express = require('express')
 , session = require('express-session')
 , RedisStore = require('connect-redis')( session )
@@ -35,7 +36,7 @@ app.use( middleware.statusCodeIntercept() );
 // If our request times out, something must be wrong with
 // our server. Likely caught in some impossible condition,
 // so let's just kill the worker
-app.use( middleware.timeout() );
+app.use( middleware.timeout({ timeout: config.http.timeout }) );
 
 app.use(require('serve-favicon')(__dirname + '/public/favicon.ico'));
 app.use(require('compression')());
@@ -95,16 +96,68 @@ app.use( function( req, res, next ){
   next();
 });
 
+helpers.register(hbs);
+partials.register(hbs);
+
+routes.register(app);
+
 if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accessToken));
 
-app.use(function(err, req, res, next){
-  req.logger.error(err instanceof Error ? err.toString() : err);
-  res.error(errors.internal.UNKNOWN, err);
+app.use( function logErrors( error, req, res, next ){
+  console.log('logErrors');
 
-  // If the response stream does not close/finish in 2 seconds, just die anyway
-  // forky.disconnect(2000);
-  res.on( 'finish', process.exit.bind( process ) );
-  res.on( 'close', process.exit.bind( process ) );
+  req.logger.error({
+    error:  error instanceof Error ? utils.extend( {}
+            , errors.runtime.ERROR
+            , { message: error.message, stack: error.stack }
+            ) : error
+  });
+
+  return next( error );
+});
+
+app.use( function clientErrors( error, req, res, next ){
+  if ( !req.xhr ){
+    return next( error );
+  }
+
+  if ( 'httpCode' in error ){
+    return res.error( error );
+  }
+
+  res.error( errors.internal.UNKNOWN, error );
+});
+
+if ( process.env.NODE_ENV === 'production' ){
+  app.use( function renderErrors( error, req, res, next ){
+    if ( res.headersSent ){
+      return next( error );
+    }
+
+    if ( 'httpCode' in error ){
+      res.status( error.httpCode );
+    } else {
+      res.status(500);
+    }
+
+    res.render( 'error', {
+      error: error
+    , layout: 'layout/default'
+    });
+  });
+}
+
+app.use( function devErrors( error, req, res, next ){
+  // If instance of error, the default error handler will do just fine
+  if ( error instanceof Error ){
+    return next( error );
+  }
+
+  try {
+    res.json( JSON.stringify( error ) );
+  } catch( e ) {
+    res.send( util.inspect( error ) );
+  }
 });
 
 app.set('view engine', 'hbs');
@@ -170,10 +223,5 @@ app.before = function(){
   , all:    handle.bind( app, 'all' )
   })
 };
-
-helpers.register(hbs);
-partials.register(hbs);
-
-routes.register(app);
 
 utils.overload.config({ dataTypes: Models });

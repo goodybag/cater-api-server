@@ -1,9 +1,13 @@
-var forky   = require('forky');
-var config  = require('../config');
+var forky = require('forky');
+var _     = require('lodash');
 
 module.exports = function( options ){
+  options = _.defaults( options || {}, {
+    timeout: 10000
+  });
+
   return function( req, res, next ){
-    res.setTimeout( config.http.timeout, function(){
+    res.setTimeout( options.timeout, function(){
       req.logger.error('Timeout');
 
       res.send(503);

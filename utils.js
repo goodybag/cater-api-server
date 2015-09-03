@@ -506,6 +506,8 @@ utils.sendJSON = function(res, json){
 };
 
 utils.sendError = function(res, error, details){
+  res.status(error.httpCode || (details || {}).httpCode || 500);
+
   if (error instanceof Error) {
     error = utils.extend({}, errors.runtime.ERROR, { message: error.message, stack: error.stack });
   }
@@ -513,7 +515,7 @@ utils.sendError = function(res, error, details){
     error = errors[error];
   }
   if ( !error.details ) error.details = utils.pick(details, ['message', 'stack']);
-  res.status(error.httpCode);
+  
   utils.sendJSON(res, { error: error });
 };
 

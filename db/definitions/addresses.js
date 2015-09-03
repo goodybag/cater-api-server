@@ -55,6 +55,7 @@ define(function(require) {
   , is_default: {
       type: types.bool
     , nullable: false
+    , default: 'false'
     }
   , phone: {
       type: types.varchar(10)

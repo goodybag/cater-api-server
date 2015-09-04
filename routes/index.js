@@ -28,6 +28,12 @@ module.exports.register = function(app) {
     app.get('/test-timeout', function(){
       
     });
+
+    app.get('/throw-error', function(){
+      process.nextTick( function(){
+        throw new Error('Deliberate error');
+      });
+    });
   }
 
   app.use(require('./public'));

@@ -126,7 +126,7 @@ app.use( function clientErrors( error, req, res, next ){
   res.error( errors.internal.UNKNOWN, error );
 });
 
-// if ( process.env.NODE_ENV === 'production' ){
+if ( process.env.NODE_ENV === 'production' ){
   app.use( function renderErrors( error, req, res, next ){
     if ( res.headersSent ){
       return next( error );
@@ -143,11 +143,9 @@ app.use( function clientErrors( error, req, res, next ){
     , layout: 'layout/default'
     });
   });
-// }
+}
 
 app.use( function devErrors( error, req, res, next ){
-  console.log('devErrors');
-
   // If instance of error, the default error handler will do just fine
   if ( error instanceof Error || res.headersSent ){
     return next( error );
@@ -156,7 +154,6 @@ app.use( function devErrors( error, req, res, next ){
   try {
     res.json( JSON.stringify( error ) );
   } catch( e ) {
-    console.log('sending inspection');
     res.send( util.inspect( error ) );
   }
 });

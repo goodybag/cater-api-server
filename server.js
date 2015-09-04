@@ -42,7 +42,7 @@ cluster.once( 'disconnect', function(){
   // Timeout until we forcefully exit the process
   var exitTimeout = setTimeout( process.exit.bind( process ), 10000 );
 
-  server.close( function(){
+  server.once( 'close', function(){
     clearTimeout( exitTimeout );
     process.exit();
   });

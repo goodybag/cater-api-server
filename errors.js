@@ -50,6 +50,15 @@ errors.internal.NOT_FOUND = {
 };
 errors[errors.internal.NOT_FOUND.code] = errors.internal.NOT_FOUND;
 
+errors.internal.TIMEOUT = {
+  type: "internal"
+, code: "0005"
+, httpCode: "503"
+, name: "TIMEOUT"
+, message: "The request timed out"
+};
+errors[errors.internal.TIMEOUT.code] = errors.internal.TIMEOUT;
+
 /**
  * Authentication Errors
  */

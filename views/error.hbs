@@ -2,22 +2,34 @@
 
 {{#extend "body"}}
 <div class="container">
-  {{#eq error.httpCode '401'}}
-    <h1 class="page-title">Nuh-uh. No, sir!</h1>
-    <p>This is a restricted area.</p>
-  {{/eq}}
-  {{#eq error.httpCode '404'}}
-    <h1 class="page-title">We couldn't find that page!</h1>
-    <p>Check the URL or make sure you are <a href="/login">Logged In</a>.</p>
-  {{/eq}}
+  <div class="cupcake-alert error">
+    {{#eq error.httpCode '401'}}
+      <h1 class="cupcake-alert-title">Nuh-uh. No, sir!</h1>
+      <p>This is a restricted area.</p>
+    {{else}}
+    {{#eq error.httpCode '404'}}
+      <h1 class="cupcake-alert-title">We couldn't find that page!</h1>
+      <p>Check the URL or make sure you are <a href="/login">Logged In</a>.</p>
+    {{else}}
+    {{#eq error.httpCode '503'}}
+      <h1 class="cupcake-alert-title">Request Timed Out</h1>
+      <p>That's not good. Our servers may be experiencing unusually high load. Please refresh and try again.</p>
+    {{else}}
+      <h1 class="cupcake-alert-title">It's not you, it's me</h1>
+      <p>Something went horribly wrong on our end. We're not pointing any fingers, but... it was <em>that</em> guy!</p>
+    {{/eq}}
+    {{/eq}}
+    {{/eq}}
+  </div>
 
-  {{#eq error.httpCode '503'}}
-    <h1 class="page-title">Request Timed Out</h1>
-    <p>That's not good. Either our servers may be experiencing unusually high load. Please refresh and try again.</p>
-  {{else}}
-    <h1 class="page-title">It's not you, it's me</h1>
-    <p>Something went horribly wrong on our end. We're not pointing any fingers, but... it was <em>that</em> guy!</p>
-  {{/eq}}
+  <h4>Why am I seeing this page?</h4>
+  <p>You or someone you know has navigated to Goodybag.com while we were potentially having issues.</p>
+  <h4>Was it my fault?</h4>
+  <p>We're 99.9999999% sure it was <em>not</em> your fault.</p>
+  <h4>Where are my keys?</h4>
+  <p>Did you check your pant pockets from yesterday?</p>
+  <h4>What can I do?</h4>
+  <p>Call your local Goodybag Agent <em>immediately</em> at {{phoneNumber config.phone.support}}</p>
 </div>
 {{/extend}}
 

@@ -24,6 +24,10 @@ module.exports.register = function(app) {
 
       return next( e );
     }, utils.noop );
+
+    app.get('/test-timeout', function(){
+      
+    });
   }
 
   app.use(require('./public'));

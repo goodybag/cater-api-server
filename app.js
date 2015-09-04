@@ -104,8 +104,6 @@ routes.register(app);
 if (config.rollbar) app.use(rollbar.errorHandler(config.rollbar.accessToken));
 
 app.use( function logErrors( error, req, res, next ){
-  console.log('logErrors');
-
   req.logger.error({
     error:  error instanceof Error ? utils.extend( {}
             , errors.runtime.ERROR
@@ -128,7 +126,7 @@ app.use( function clientErrors( error, req, res, next ){
   res.error( errors.internal.UNKNOWN, error );
 });
 
-if ( process.env.NODE_ENV === 'production' ){
+// if ( process.env.NODE_ENV === 'production' ){
   app.use( function renderErrors( error, req, res, next ){
     if ( res.headersSent ){
       return next( error );
@@ -145,17 +143,20 @@ if ( process.env.NODE_ENV === 'production' ){
     , layout: 'layout/default'
     });
   });
-}
+// }
 
 app.use( function devErrors( error, req, res, next ){
+  console.log('devErrors');
+
   // If instance of error, the default error handler will do just fine
-  if ( error instanceof Error ){
+  if ( error instanceof Error || res.headersSent ){
     return next( error );
   }
 
   try {
     res.json( JSON.stringify( error ) );
   } catch( e ) {
+    console.log('sending inspection');
     res.send( util.inspect( error ) );
   }
 });

@@ -5,6 +5,7 @@ if ( config.isProduction ){
   require('newrelic');
 }
 
+var cluster = require('cluster');
 var forky   = require('forky');
 var rollbar = require('rollbar');
 
@@ -13,13 +14,11 @@ require('./db/cache').autoFetchFromRedis( require('./db') );
 process.on('uncaughtException', function(err) {
   console.log('Uncaught Exception', err, err.stack);
   forky.disconnect();
-  process.exit();
 });
 
 process.on('unhandledRejection', function(err) {
   console.log('Unhandled Rejection', err, err.stack);
   forky.disconnect();
-  process.exit();
 });
 
 if (config.rollbar) {
@@ -37,6 +36,16 @@ var server = http.createServer(app);
 
 server.listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
+});
+
+cluster.once( 'disconnect', function(){
+  // Timeout until we forcefully exit the process
+  var exitTimeout = setTimeout( process.exit.bind( process ), 10000 );
+
+  server.close( function(){
+    clearTimeout( exitTimeout );
+    process.exit();
+  });
 });
 
 module.exports = server;

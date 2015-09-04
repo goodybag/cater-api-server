@@ -153,13 +153,21 @@ errors[errors.input.INVALID_ADDRESS.code] = errors.input.INVALID_ADDRESS;
 
 errors.input.INVALID_RESTAURANT = {
   type: "input"
-, code: "0302"
+, code: "0303"
 , httpCode: "400"
 , name: "INVALID_RESTAURANT"
 , message: "The restaurant provided is invalid"
 };
 
-errors[errors.input.INVALID_RESTAURANT.code] = errors.input.INVALID_RESTAURANT;
+errors.input.ADDRESS_EXISTS = {
+  type: "input"
+, code: "0304"
+, httpCode: "400"
+, name: "ADDRESS_EXISTS"
+, message: "You've already added this address"
+};
+
+errors[errors.input.ADDRESS_EXISTS.code] = errors.input.ADDRESS_EXISTS;
 
 /**
  * Stripe Errors

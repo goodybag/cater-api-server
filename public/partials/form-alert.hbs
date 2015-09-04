@@ -1,6 +1,6 @@
 <div class="alert alert-{{#if type}}{{type}}{{else}}success{{/if}} alert-dismissable">
   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-  {{#if message}}{{message}}
+  {{#if message}}{{{message}}}
   {{else}}
     {{!-- Default Messages --}}
     {{#eq type "success"}}<strong>Updated successfully!</strong>{{/eq}}

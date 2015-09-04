@@ -278,7 +278,7 @@ define(function(require, exports, module) {
 
       // TODO: same field names between order and address
       // See comment below
-      var addressFields = _.keys(_.result(Address, 'schema').properties);
+      var addressFields = Order.addressFields;
       if (typeof key === 'object') {
         attrs = key;
         options = val;
@@ -299,6 +299,23 @@ define(function(require, exports, module) {
         this.address = new Address(addr);
 
       return Backbone.Model.prototype.set.call(this, attrs, options);
+    },
+
+    setAddress: function( address, options ){
+      options = _.defaults( options || {}, {
+        save: false
+      });
+
+      address = address instanceof Address ? address : new Address( address );
+
+      var data = address.pick( Order.addressFields );
+      data.address_name = address.get('name');
+
+      this.address = address;
+
+      return this[ options.save ? 'save' : 'set' ]( data, {
+        patch: true
+      });
     },
 
     updateSubtotal: function() {

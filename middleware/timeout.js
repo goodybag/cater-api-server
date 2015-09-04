@@ -1,5 +1,7 @@
-var forky = require('forky');
-var _     = require('lodash');
+var forky   = require('forky');
+var cluster = require('cluster');
+var _       = require('lodash');
+var errors  = require('../errors');
 
 module.exports = function( options ){
   options = _.defaults( options || {}, {
@@ -8,13 +10,11 @@ module.exports = function( options ){
 
   return function( req, res, next ){
     res.setTimeout( options.timeout, function(){
-      req.logger.error('Timeout');
-
-      res.send(503);
       req.on( 'end', function(){
         forky.disconnect();
-        process.exit();
       });
+
+      return next( errors.internal.TIMEOUT );
     });
 
     next();

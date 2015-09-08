@@ -12,7 +12,8 @@
     "start": "node master",
     "test": "grunt namedModules && ./node_modules/mocha/bin/mocha --recursive -R spec test/unit",
     "test-react": "./node_modules/ecstatic/lib/ecstatic.js --cache 0 -p 8000 public",
-    "postinstall": "./node_modules/.bin/bower install"
+    "postinstall": "./node_modules/.bin/bower install",
+    "install-dropoff": "./bin/install-dropoff"
   },
   "namedModules": {
     "underscore": "./node_modules/lodash/lodash.js",
@@ -121,8 +122,7 @@
     "useragent": "^2.1.3",
     "when": "2.2.x",
     "wrench": "~1.5.8",
-    "yelp": "~0.1.1",
-    "brawndo": "dropoff-co/com.dropoff.service.brawndo.client"
+    "yelp": "~0.1.1"
   },
   "devDependencies": {
     "ecstatic": "^0.8.0",

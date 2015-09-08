@@ -56,6 +56,10 @@ route.param('uid', function(req, res, next, id) {
     if (!req.user) {
       restrictOwner(req, res, next);
     } else {
+      if (req.user.attributes.groups.indexOf('guest') > -1) {
+        return restrictOwner(req, res, next);
+      }
+
       req.params.uid = req.user.attributes.id;
       next();
     }

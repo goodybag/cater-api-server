@@ -160,18 +160,13 @@ module.exports.get = function(req, res) {
 
     var view = order.status === 'pending' ? 'checkout' : 'receipt';
 
-    if (req.params.receipt) {
-      view = 'invoice/receipt';
-      context.layout = 'invoice/invoice-layout';
-    }
-
     if ( context.order.review_token !== req.params.review_token ) {
       delete context.order.review_token;
     }
 
     res.render(view, context);
   });
-}
+};
 
 module.exports.create = function(req, res) {
   var order = new models.Order(

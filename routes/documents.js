@@ -7,22 +7,21 @@ var config = require('../config');
 
 var route = module.exports = express.Router();
 
-route.get(
-  config.receipt.orderRoute, m.basicAuth(), m.restrict(['admin', 'receipts']), m.getOrder2({
+route.get( config.receipt.orderRoute
+, m.basicAuth()
+, m.restrict(['admin', 'receipts'])
+, m.getOrder2({
     param: 'oid',
     items: true,
     user: true,
-    userAddresses: true,
     userPaymentMethods: true,
     restaurant: true,
-    deliveryService: true,
     paymentMethod: true,
     amenities: true
-  }),
-  function(req, res, next) {
-    req.params.receipt = true;
-    next();
-  }, controllers.orders.get
+  })
+, m.view( 'invoice/receipt', {
+    layout: 'invoice/invoice-layout'
+  })
 );
 
 route.get('/receipts/order-:oid.pdf', m.s3({

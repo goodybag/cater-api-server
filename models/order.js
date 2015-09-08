@@ -146,6 +146,7 @@ module.exports = Model.extend({
     var query = {
       where: { id: this.attributes.restaurant_id }
     , columns: ['*']
+    , includes: [ {type: 'closed_restaurant_events'} ]
     };
 
     query.columns.push( this.getDeliveryFeeQuery() );

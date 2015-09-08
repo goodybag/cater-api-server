@@ -70,7 +70,11 @@ module.exports.get = function(req, res, next) {
   var order = new models.Order( req.order );
 
   if (!req.user.isAdmin() && !order.toJSON().editable) return res.redirect('/orders/' + order.attributes.id);
-  models.Restaurant.findOne(order.attributes.restaurant_id, function(err, restaurant) {
+  var restaurantQuery = {
+    where: { id: order.attributes.restaurant_id }
+  , includes: [ {type: 'closed_restaurant_events'} ]
+  };
+  models.Restaurant.findOne(restaurantQuery, function(err, restaurant) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (!restaurant) return res.error(errors.internal.UNKNOWN, 'no restaurant for existing order');
     restaurant.getItems(function(err, items) {

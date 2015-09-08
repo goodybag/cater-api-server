@@ -82,8 +82,8 @@
 <div class="container account-settings">
 
   {{#if alert}}
-    <div class="alert alert-success fade in">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <div class="alert alert-success alert-dismissable fade in">
+      <button class="account-settings-save-btn" type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
       <strong>Settings Saved!</strong>
     </div>
   {{/if}}
@@ -156,6 +156,8 @@
       'jquery-loaded'
     ]
   , function($) {
+      $('[data-role="popover"]').gb_popover();
+
       $('.user-settings-form').on('submit', function(e) {
         // Client side validation
         e.preventDefault();

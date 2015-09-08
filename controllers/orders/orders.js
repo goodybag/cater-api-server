@@ -17,6 +17,7 @@ var promoConfig = require('../../configs/promo');
 var DMReq = require('stamps/requests/distance-matrix');
 var deliveryFee = require('stamps/orders/delivery-fee');
 var Address = require('stamps/addresses');
+var UserAddresses = require('stamps/addresses/user-addresses-db');
 var GeocodeRequest = require('stamps/requests/geocode');
 
 var addressFields = [
@@ -159,19 +160,13 @@ module.exports.get = function(req, res) {
 
     var view = order.status === 'pending' ? 'checkout' : 'receipt';
 
-    if (req.params.receipt) {
-      view = 'invoice/receipt';
-      context.layout = 'invoice/invoice-layout';
-    }
-
     if ( context.order.review_token !== req.params.review_token ) {
       delete context.order.review_token;
     }
 
-    logger.info('rendering %s', view, { context: context });
     res.render(view, context);
   });
-}
+};
 
 module.exports.create = function(req, res) {
   var order = new models.Order(
@@ -360,31 +355,32 @@ module.exports.changeStatus = function(req, res) {
     if (req.order.status === 'submitted') {
       logger.info('Done called and status is submitted');
 
-      // TODO: extract this address logic into address model
-      // Save address based on this order's attributes
+      // Save address based on this order's attributes if user has none
       var orderAddressFields = utils.pick(req.order, addressFields);
 
       logger.info('Finding default address for user');
-      // Set `is_default == true` if there's no default set
+
       db.addresses.findOne({user_id: req.user.attributes.id, is_default: true}, function(error, address) {
-        if (error) return res.error(errors.internal.DB_FAILURE, error);
-
-        var noExistingDefault = !address;
-        var addressData = utils.extend(orderAddressFields, { user_id: req.user.attributes.id, is_default: noExistingDefault });
-
-        if (req.order.address_name) {
-          addressData.name = req.order.address_name;
+        if (error) {
+          logger.warn('Error looking up default user address', {
+            error: error
+          });
         }
 
-        logger.info('Saving address');
-        if ( noExistingDefault ){
-          db.addresses.insert( addressData );
-        } else {
-          // No need to change default setting on this address
-          // but allow other changes
-          delete addressData.is_default;
-          db.addresses.update( address.id, addressData );
+        // User already has an address, no need to save first time
+        if ( address ){
+          return;
         }
+
+        orderAddressFields.user_id = req.user.attributes.id;
+
+        UserAddresses( orderAddressFields ).save( function( error ){
+          if (error) {
+            logger.warn('Error saving default user address', {
+              error: error
+            });
+          }
+        });
       });
     }
 
@@ -414,7 +410,7 @@ module.exports.changeStatus = function(req, res) {
     if (utils.flatten(utils.pluck( promoConfig,'promo_code')).indexOf(req.order.promo_code) > -1)
       venter.emit('order:submitted:promo', req.order);
     }
-  }
+  };
 
   var $update = {
     status: req.body.status

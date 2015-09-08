@@ -21,8 +21,9 @@ define( function( require, exports, module ){
     , adjustment_amount: 0
     , user_adjustment_amount: 0
     , guests: 0
-    , delivery_fee: 4
+    , delivery_fee: 0
     , payment_method_id: null
+    , service_fee: 0
     })
     .methods({
       getTax: function(){
@@ -30,7 +31,14 @@ define( function( require, exports, module ){
           return 0;
         }
 
-        var amount = this.getSubTotal() + this.adjustment_amount + this.user_adjustment_amount + this.delivery_fee;
+        var amount = [
+          this.getSubTotal()
+        , this.adjustment_amount
+        , this.user_adjustment_amount
+        , this.delivery_fee
+        , this.service_fee
+        ].reduce( utils.add, 0 );
+
         return Math.round( amount * this.restaurant.region.sales_tax );
       }
 
@@ -60,6 +68,7 @@ define( function( require, exports, module ){
         , this.getTax()
         , this.delivery_fee
         , this.tip
+        , this.service_fee
         ].reduce( utils.add, 0 );
       }
 
@@ -72,6 +81,7 @@ define( function( require, exports, module ){
         , this.delivery_fee
         , this.tip
         , this.getNoContractFee()
+        , this.service_fee
         ].reduce( utils.add, 0 );
       }
 
@@ -103,6 +113,7 @@ define( function( require, exports, module ){
         , this.getTax()
         , this.delivery_fee
         , this.tip
+        , this.service_fee
         ].reduce( utils.add, 0 );
       }
 

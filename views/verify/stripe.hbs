@@ -90,7 +90,7 @@
                   form-group-business-tax-id
                   {{#eq data.legal_entity.type 'individual'}}hide{{/eq}}
                   {{#unless data.legal_entity.type}}hide{{/unless}}">
-        <label for="ssn-last-4">SSN Last 4 Digits</label>
+        <label for="ssn-last-4">SSN Last 4 Digits (or call/email us to provide a photo of your Driver's License instead)</label>
         <input id="ssn-last-4" name="ssn_last_4" type="text" value="{{data.legal_entity.ssn_last_4}}">
       </div>
     </section>
@@ -148,7 +148,7 @@ require( ['jquery-loaded'], function($) {
           .attr('required', null);
       $businessTaxId
         .removeClass('hide')
-        .find('input')
+        .find('input:not([name="ssn_last_4"])')
           .attr('required', true);
     }
   };

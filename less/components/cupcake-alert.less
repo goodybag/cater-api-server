@@ -1,0 +1,23 @@
+.cupcake-alert {
+  margin: 80px 0;
+
+  &:before {
+    content: "";
+    float: left;
+    width: 111px;
+    height: 119px;
+    margin-top: -25px;
+    margin-right: 20px;
+    background-image: url('/img/cupcake-happy.png');
+  }
+
+  &.error:before {
+    background-image: url('/img/cupcake-shocked.png');
+  }
+
+  .cupcake-alert-title {
+    font-size: 2em;
+    line-height: 1.4em;
+    font-weight: 300;
+  }
+}

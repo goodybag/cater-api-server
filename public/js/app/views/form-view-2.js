@@ -19,6 +19,7 @@ define(function(require){
     , 'number':   function( $el ){ return +$el.val(); }
     , 'checkbox': function( $el ){ return $el[0].checked; }
     , 'array':    function( $el ){ return $el.val().trim().split(/\,\s*/g); }
+    , 'tel':      function( $el ){ return ($el.val().match(/\d/g) || []).join(''); }
     , 'list': function( $el ) {
         var result = $el.find('input[type="checkbox"]:checked').map( function() {
           return this.value;
@@ -26,6 +27,14 @@ define(function(require){
 
         return result;
       }
+    }
+
+    // Change the key used in the inputs `name` attribute to the
+    // value mapped here
+  , map: {}
+
+  , defaultFieldGetter: function( key ){
+      return this.$el.find('[name="' + key + '"]')
     }
 
     /**
@@ -103,6 +112,8 @@ define(function(require){
   , getModelData: function(){
       var this_ = this, data = {};
 
+      var map = this.map;
+
       // Scan all named input elements (only pick checked radio inputs)
       var inputs = this.$el.find('[name][type="radio"]:checked, [name]:not([type="radio"])');
 
@@ -112,7 +123,7 @@ define(function(require){
         var k     = $this.attr('name');
         var val   = this_.getDomValue( k, $this );
 
-        data[ k ] = val;
+        data[ k in map ? map[ k ] : k ] = val;
       });
 
       return data;
@@ -126,7 +137,7 @@ define(function(require){
      */
   , getDomValue: function( key, $el ){
       var val, args, helper, type;
-      $el = $el || this.$el.find('[name="' + key + '"]');
+      $el = $el || this.defaultFieldGetter( key );
 
       if ( !$el ) return val;
 

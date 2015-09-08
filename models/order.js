@@ -146,6 +146,7 @@ module.exports = Model.extend({
     var query = {
       where: { id: this.attributes.restaurant_id }
     , columns: ['*']
+    , includes: [ {type: 'closed_restaurant_events'} ]
     };
 
     query.columns.push( this.getDeliveryFeeQuery() );
@@ -1046,6 +1047,7 @@ module.exports = Model.extend({
         payment_status: {$null: true}
       , status: 'accepted'
       , $custom: ['now() > ("orders"."datetime" AT TIME ZONE "orders"."timezone")']
+      , payment_method_id: { $notNull: true }
       }
     , limit: limit
     };

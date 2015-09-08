@@ -2,7 +2,7 @@
 <Response>
   <Say voice="woman">
     Hello.
-    You have received a new Goodybag order for ${{dollars order.total}}
+    You have received a new Goodybag order for ${{dollars order.restaurant_total}}
     {{#eq order.type 'pickup'}}
     for pickup at {{formatDateTime order.pickup_datetime "MM/DD/YYYY h:mm a"}}.
     {{/eq}}

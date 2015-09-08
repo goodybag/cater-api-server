@@ -50,6 +50,15 @@ errors.internal.NOT_FOUND = {
 };
 errors[errors.internal.NOT_FOUND.code] = errors.internal.NOT_FOUND;
 
+errors.internal.TIMEOUT = {
+  type: "internal"
+, code: "0005"
+, httpCode: "503"
+, name: "TIMEOUT"
+, message: "The request timed out"
+};
+errors[errors.internal.TIMEOUT.code] = errors.internal.TIMEOUT;
+
 /**
  * Authentication Errors
  */
@@ -141,6 +150,24 @@ errors.input.INVALID_ADDRESS = {
 };
 
 errors[errors.input.INVALID_ADDRESS.code] = errors.input.INVALID_ADDRESS;
+
+errors.input.INVALID_RESTAURANT = {
+  type: "input"
+, code: "0303"
+, httpCode: "400"
+, name: "INVALID_RESTAURANT"
+, message: "The restaurant provided is invalid"
+};
+
+errors.input.ADDRESS_EXISTS = {
+  type: "input"
+, code: "0304"
+, httpCode: "400"
+, name: "ADDRESS_EXISTS"
+, message: "You've already added this address"
+};
+
+errors[errors.input.ADDRESS_EXISTS.code] = errors.input.ADDRESS_EXISTS;
 
 /**
  * Stripe Errors

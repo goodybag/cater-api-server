@@ -1,5 +1,20 @@
+/**
+ * New Relic agent configuration.
+ *
+ * See lib/config.defaults.js in the agent distribution for a more complete
+ * description of configuration variables and their potential values.
+ */
 exports.config = {
-  app_name : ['Goodybag Production Cater'],
-  license_key : '8afddbe435b8ce56f8adb7b5c547ff563b91b279',
-  logging : { level : 'warn' }
-};
+  /**
+   * Array of application names.
+   */
+  app_name: ['Cater'],
+  logging: {
+    /**
+     * Level at which to log. 'trace' is most useful to New Relic when diagnosing
+     * issues with the agent, 'info' and higher will impose the least overhead on
+     * production applications.
+     */
+    level: 'info'
+  }
+}

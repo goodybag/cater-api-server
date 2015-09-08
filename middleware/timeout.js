@@ -1,16 +1,20 @@
 var forky   = require('forky');
-var config  = require('../config');
+var cluster = require('cluster');
+var _       = require('lodash');
+var errors  = require('../errors');
 
 module.exports = function( options ){
-  return function( req, res, next ){
-    res.setTimeout( config.http.timeout, function(){
-      req.logger.error('Timeout');
+  options = _.defaults( options || {}, {
+    timeout: 10000
+  });
 
-      res.send(503);
+  return function( req, res, next ){
+    res.setTimeout( options.timeout, function(){
       req.on( 'end', function(){
         forky.disconnect();
-        process.exit();
       });
+
+      return next( errors.internal.TIMEOUT );
     });
 
     next();

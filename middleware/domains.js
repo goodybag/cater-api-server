@@ -1,3 +1,5 @@
+var forky = require('forky');
+
 //domain middleware
 module.exports = function(req, res, next) {
   var domain = require('domain').create();
@@ -11,7 +13,10 @@ module.exports = function(req, res, next) {
   domain.run(function() {
     next();
   });
+
+  // Uncaught Exceptions will re-fork
   domain.once('error', function(e) {
-    next(e);
+    forky.disconnect();
+    return next(e);
   });
 };

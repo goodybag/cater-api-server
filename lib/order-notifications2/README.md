@@ -11,10 +11,10 @@ var notifications = require('./order-notifications2');
 var UserOrderAcceptedEmail;
 
 try {
-  UserOrderAcceptedEmail = notifications.get('user-order-accepted-email');
+  UserOrderAcceptedEmail = notifications.get('user-order-accepted-email').create();
 
   // Alternatively, you directly access it:
-  UserOrderAcceptedEmail = notifications.UserOrderAcceptedEmail;
+  UserOrderAcceptedEmail = notifications.UserOrderAcceptedEmail.create();
 } catch ( e ){
   console.warn('Invalid notification');
   process.exit();

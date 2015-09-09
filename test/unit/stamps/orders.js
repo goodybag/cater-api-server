@@ -523,7 +523,7 @@ describe('Orders Stamps', function(){
     });
   });
 
-  describe('Items', function(){
+  describe.only('Items', function(){
     it('.getTotal()', function(){
       var item = orders.item({
         price: 100
@@ -557,19 +557,74 @@ describe('Orders Stamps', function(){
     });
 
     it('.getBaseCost()', function(){
-      
+      var item = orders.item({
+        price: 100
+      });
+
+      assert.equal( item.getBaseCost(), 100 );
     });
 
     it('.getOptionsCost()', function(){
+      var item = orders.item({
+        price: 100
+      , quantity: 2
+      , options_sets: [
+          { options:  [ { price: 50, state: true }
+                      , { price: 50, state: false }
+                      ]
+          }
+        , { options:  [ { price: 50, state: false }
+                      , { price: 100, state: true }
+                      ]
+          }
+        , { options:  [ { price: 50, state: false }
+                      , { price: 100, state: false }
+                      ]
+          }
+        ]
+      });
 
+      assert.equal( item.getOptionsCost(), 150 );
     });
 
     it('.getPriorityAccountCost()', function(){
-      
+      var item = orders.item({
+        price: 200
+      , priority_account_price_hike_percentage: 0.1
+      , quantity: 2
+      , options_sets: [
+          { options:  [ { price: 50, state: true }
+                      , { price: 50, state: false }
+                      ]
+          }
+        , { options:  [ { price: 50, state: false }
+                      , { price: 100, state: true }
+                      ]
+          }
+        ]
+      });
+
+      assert.equal( item.getPriorityAccountCost(), 35 );
     });
 
     it('.getTotal() with Priority Account Price Hike', function(){
-      
+      var item = orders.item({
+        price: 200
+      , priority_account_price_hike_percentage: 0.1
+      , quantity: 2
+      , options_sets: [
+          { options:  [ { price: 50, state: true }
+                      , { price: 50, state: false }
+                      ]
+          }
+        , { options:  [ { price: 50, state: false }
+                      , { price: 100, state: true }
+                      ]
+          }
+        ]
+      });
+
+      assert.equal( item.getTotal(), 770 );
     });
   });
 

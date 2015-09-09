@@ -16,6 +16,7 @@ define( function( require, exports, module ){
       quantity:     1
     , price:        0
     , options_sets: []
+    , priority_account_price_hike_percentage: 0
     })
     .enclose( function(){
 
@@ -47,7 +48,16 @@ define( function( require, exports, module ){
       }
 
     , getPriorityAccountCost: function(){
+        if ( this.priority_account_price_hike_percentage === 0 ){
+          return 0;
+        }
 
+        var amt = [
+          this.getBaseCost()
+        , this.getOptionsCost()
+        ].reduce( utils.add, 0 );
+
+        return Math.round( amt * this.priority_account_price_hike_percentage );
       }
     });
 });

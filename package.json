@@ -12,7 +12,7 @@
     "start": "node master",
     "test": "grunt namedModules && ./node_modules/mocha/bin/mocha --recursive -R spec test/unit",
     "test-react": "./node_modules/ecstatic/lib/ecstatic.js --cache 0 -p 8000 public",
-    "postinstall": "./node_modules/.bin/bower install",
+    "postinstall": "./node_modules/.bin/bower install && npm run install-dropoff",
     "install-dropoff": "./bin/install-dropoff",
     "test-notifications": "./node_modules/.bin/mocha -R spec test/unit/notifications"
   },

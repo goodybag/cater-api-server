@@ -13,7 +13,7 @@ define( function( require, exports, module ){
 
   return require('stampit')()
     .state({
-      quantity:     0
+      quantity:     1
     , price:        0
     , options_sets: []
     })
@@ -22,7 +22,19 @@ define( function( require, exports, module ){
     })
     .methods({
       getTotal: function(){
-        var options = utils.chain( this.options_sets )
+        return [
+          this.getBaseCost()
+        , this.getOptionsCost()
+        , this.getPriorityAccountCost()
+        ].reduce( utils.add, 0 ) * this.quantity;
+      }
+
+    , getBaseCost: function(){
+        return this.price;
+      }
+
+    , getOptionsCost: function(){
+        return utils.chain( this.options_sets )
           .pluck('options')
           .flatten()
           .filter( function( option ){
@@ -32,8 +44,10 @@ define( function( require, exports, module ){
             return t + option.price;
           }, 0 )
           .value();
+      }
 
-        return ( this.price + options ) * this.quantity;
+    , getPriorityAccountCost: function(){
+
       }
     });
 });

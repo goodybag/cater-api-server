@@ -46,8 +46,10 @@
           type="number"
           class="form-control"
           name="priority_account_price_hike_percentage"
-          value="{{user.priority_account_price_hike_percentage}}"
-          step="0.01">
+          value="{{factorToPercent user.priority_account_price_hike_percentage 4}}"
+          step="0.01"
+          data-in="factorToPercent 4"
+          data-out="percentToFactor 4">
         <div class="input-addon">%</div>
       </div>
     </div>

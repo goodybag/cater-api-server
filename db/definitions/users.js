@@ -83,7 +83,7 @@ define(function(require) {
     // The percentage menu pricing increases by for this Priority Account
     // We should deprecate this in the future for a proper `user_plans` concept
   , priority_account_price_hike_percentage: {
-      type: types.numeric( 5, 2 )
+      type: types.numeric( 5, 5 )
     , notNull: true
     , default: 0
     }

@@ -52,6 +52,17 @@
     </div>
   </div>
 
+  {{#if order.alerts.length}}
+  <div class="alerts">
+    {{#each order.alerts}}
+    <div class="alert alert-dismissable alert-{{this.level}}">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      {{this.message}}
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+
   <div>
     <section class="panel-component" id="order-user">
       <h1 class="component-title">User</h1>

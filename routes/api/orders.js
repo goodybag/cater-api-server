@@ -93,18 +93,27 @@ route.put('/:id', m.restrict(['admin']), m.param('id'), m.queryOptions({
   venter.emit('order:paymentStatus:change', payment_status, id);
 
   next();
-}), m.update(db.orders, {
-  callback: function(err, orders) {
-    var orderTypeChanged = orders &&
-      orders[0] &&
-      orders[0].type !== orders[0].old_type;
+})
+  // Update
+, function( req, res, next ){
+    m.db.orders.update( req.queryObj, req.body, req.queryOptions )( req, res, next )
+  }
+  // Handle event emitting and sending result
+, function( req, res ){
+    var orders = req.orders;
 
-    if (orderTypeChanged) {
+    res.json( orders[0] );
+
+    var orderTypeChanged = orders &&
+                            orders[0] &&
+                            orders[0].type !== orders[0].old_type;
+
+    if ( orderTypeChanged ){
       var order = orders[0];
-      venter.emit('order:type:change', order.type, order.old_type, order);
+      venter.emit( 'order:type:change', order.type, order.old_type, order, req.user );
     }
   }
-}));
+);
 
 route.delete('/:id', m.restrict(['admin']), m.param('id'), m.remove(db.orders));
 

@@ -54,7 +54,7 @@ route.get('/', m.restrict('admin'), m.pagination({
   }, m.view('orders', db.orders)
 );
 
-route.post('/', m.restrict(['guest', 'client', 'admin']), controllers.orders.create);
+route.post('/', m.restrict(['guest', 'client', 'admin']), m.geocodeBody(), controllers.orders.create);
 
 route.all('/', function(req, res, next) {
   res.set('Allow', 'GET');

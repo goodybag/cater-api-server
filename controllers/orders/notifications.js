@@ -9,6 +9,20 @@ var Models      = require('../../models');
 var errors      = require('../../errors');
 var db          = require('../../db');
 var venter      = require('../../lib/venter');
+var notifications2 = require('../../lib/order-notifications2');
+
+// Notifications we'll try to pull from 2
+// Function is the build coercion function
+var notifications2Notifications = {
+  'dropoff-order-submitted': function( build, req ){
+    build.email = {
+      from:     'Goodybag'
+    , to:       'dropoff.com'
+    , subject:  build.name
+    , url:      getEmailUrl( req.params.oid, 'dropoff-order-submitted' )
+    };
+  }
+};
 
 var getEmailUrl = function( oid, nid ){
   return [
@@ -17,7 +31,7 @@ var getEmailUrl = function( oid, nid ){
 };
 
 // Order query options
-var $ordersOptions = notifier.$requiredOrderOptions;
+var $ordersOptions = require('../../lib/order-notifications2/notification').orderQueryOptions;
 
 /**
  * Gets the HTTP error for a notification/option combo if it exists
@@ -40,6 +54,14 @@ var getNotificationError = function( notification, options ){
     message: 'Missing required properties'
   , details: missing
   });
+};
+
+var getNotificationDef = function( id ){
+  try {
+    return notifications2.get( id );
+  } catch( e ){
+    return notifier.defs[ id ];
+  }
 };
 
 module.exports.JSON = {};
@@ -79,6 +101,25 @@ module.exports.JSON.list = function( req, res ){
       };
     });
 
+    // For now, manually push Dropoff notification type since we
+    // haven't fully migrated to notifications2
+    Object.keys( notifications2Notifications ).forEach( function( id ){
+      fns.push( function( done ){
+        notifications2
+          .get( id )
+          .create( order, req.user.attributes.id )
+          .build( function( error, build ){
+            if ( error ) return done( error );
+
+            // Coerce to legacy structure
+            build.cid = Math.random().toString(36);
+            notifications2Notifications[ id ]( build, req );
+
+            done( null, build );
+          });
+      });
+    });
+
     utils.async.parallel( fns, function( error, results ){
       if ( error ){
         logger.error( 'Error getting order notifications for order #' + req.params.oid, error );
@@ -95,6 +136,18 @@ module.exports.JSON.sendNotification = function( req, res ){
 
   logger.info( ['Sending notification', req.params.id, ' for order #', req.params.oid ].join('') );
 
+  var onSend = function( error ){
+    if ( error ) return res.error( error );
+    return res.send(204);
+  };
+
+  if ( req.params.id in notifications2Notifications ){
+    return notifications2
+      .get( req.params.id )
+      .create( +req.params.oid, req.user.attributes.id, req.query )
+      .send( onSend );
+  }
+
   var notification = notifier.defs[ req.params.id ];
 
   if ( !notification ){
@@ -110,10 +163,7 @@ module.exports.JSON.sendNotification = function( req, res ){
 
   if ( error ) return res.error( error );
 
-  notifier.send( req.params.id, +req.params.oid, options, function( error ){
-    if ( error ) return res.error( error );
-    return res.send(204);
-  });
+  notifier.send( req.params.id, +req.params.oid, options, onSend );
 };
 
 module.exports.JSON.history = function( req, res ){
@@ -150,7 +200,14 @@ module.exports.JSON.history = function( req, res ){
           // Embed timezone information so the client can adjust
           note.send_date = new Date( note.send_date );
 
-          return utils.extend( note, utils.omit( notifier.defs[ note.nid ], 'id' ) );
+          var def = getNotificationDef( note.nid );
+          note.data_html = '';
+
+          if ( def.historyDataHTML ){
+            note.data_html = def.historyDataHTML( note );
+          }
+
+          return utils.extend( note, utils.omit( def, 'id' ) );
         });
 
         return res.json( notes );
@@ -180,6 +237,27 @@ module.exports.getEmail = function( req, res ){
 
   logger.info( 'Getting order notification email ' + req.params.nid + ' for order #' + req.params.oid );
 
+  function onBuild( error, result ){
+    if ( error ){
+      logger.error( 'Error getting notfication ' + req.params.nid + ' for order #' + req.params.oid, error );
+      return res.error( error );
+    }
+
+    for ( var key in result ){
+      if ( key === 'html' ) continue;
+      res.header( key, result[ key ] );
+    }
+
+    res.send( result.html );
+  }
+
+  if ( req.params.nid in notifications2Notifications ){
+    return notifications2
+      .get( req.params.nid )
+      .create( +req.params.oid, req.user.attributes.id, req.query )
+      .build( onBuild );
+  }
+
   var notification = notifier.defs[ req.params.nid ];
 
   if ( !notification ){
@@ -195,17 +273,5 @@ module.exports.getEmail = function( req, res ){
 
   if ( error ) return res.error( error );
 
-  notifier.getNotification( req.params.nid, +req.params.oid, options, function( error, result ){
-    if ( error ){
-      logger.error( 'Error getting notfication ' + req.params.nid + ' for order #' + req.params.oid, error );
-      return res.error( error );
-    }
-
-    for ( var key in result ){
-      if ( key === 'html' ) continue;
-      res.header( key, result[ key ] );
-    }
-
-    res.send( result.html );
-  });
+  notifier.getNotification( req.params.nid, +req.params.oid, options, onBuild );
 };

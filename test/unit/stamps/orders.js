@@ -555,6 +555,22 @@ describe('Orders Stamps', function(){
 
       assert.equal( item.getTotal(), 500 );
     });
+
+    it('.getBaseCost()', function(){
+      
+    });
+
+    it('.getOptionsCost()', function(){
+
+    });
+
+    it('.getPriorityAccountCost()', function(){
+      
+    });
+
+    it('.getTotal() with Priority Account Price Hike', function(){
+      
+    });
   });
 
   describe('Charges', function(){

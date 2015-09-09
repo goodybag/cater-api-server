@@ -28,6 +28,17 @@ __Setup errthing:__
 ```
 git clone git@github.com:goodybag/cater-api-server.git
 cd cater-api-server
+```
+
+__Setup Dropoff Module Installation__
+
+Create a github personal access token: https://github.com/settings/tokens - You can call it something like, "Goodybag Dropoff Installation Token".
+
+Export it in your environment as `GITHUB_DROPOFF_TOKEN`
+
+__Install deps__
+
+```
 npm install
 ```
 

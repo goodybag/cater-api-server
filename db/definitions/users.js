@@ -79,6 +79,11 @@ define(function(require) {
   , ordrin_password:  { type: types.text }
   , user_agent:       { type: types.text }
   , stripe_id:        { type: types.text }
+  , priority_account_price_hike_percentage: {
+      type: types.numeric( 5, 2 )
+    , notNull: true
+    , default: 0
+    }
   };
 
   definition.indices = {};

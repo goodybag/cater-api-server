@@ -39,6 +39,19 @@
         value="{{user.points}}">
     </div>
 
+    <div class="form-group">
+      <label>Priority Account Rate (0% for no priority status)</label>
+      <div class="input-group">
+        <input
+          type="number"
+          class="form-control"
+          name="priority_account_price_hike_percentage"
+          value="{{user.priority_account_price_hike_percentage}}"
+          step="0.01">
+        <div class="input-addon">%</div>
+      </div>
+    </div>
+
     <div class="inline-columns form-group">
       <div class="col">
         <div name="groups" data-type="list">

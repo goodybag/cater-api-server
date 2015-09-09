@@ -403,6 +403,7 @@ config.production = {
 , restaurantRequestRecipients: [
     'jag@goodybag.com'
   , 'alexlauzon@goodybag.com'
+  , 'louiemata@goodybag.com'
   ]
 
 , notableUserIds: [ 1944 ] // Send various notifications to Om based on user actions

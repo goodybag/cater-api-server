@@ -5,7 +5,7 @@ module.exports = {
 , host:       'qa-brawndo.dropoff.com'
 };
 
-if ( process.env.GB_ENV !== 'production' ){
+if ( process.env.GB_ENV === 'production' ){
   module.exports = {
     privateKey: '7b25b2587f4b2aaa94be72d6108506df47489fc49c6bebb6a8335f7bbfe3831f'
   , publicKey:  'user::6657a44ba8126646d999b930f3827d22835dbe9d6a64c3fa72713f813a105cd2'

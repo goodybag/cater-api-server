@@ -87,6 +87,7 @@ var reports = {
     var restaurantId = req.query.restaurantId;
     var userId = req.query.userId;
     var regionId = parseInt(req.query.region);
+    var paymentStatus = req.query.payment_status;
 
     var filename = [
       status
@@ -151,6 +152,10 @@ var reports = {
     };
     if ( regionId ) {
       where['restaurants.region_id'] = regionId;
+    }
+
+    if ( paymentStatus ) {
+      where['payment_status'] = paymentStatus;
     }
 
     options.order = {};

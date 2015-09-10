@@ -88,6 +88,7 @@ var reports = {
     var userId = req.query.userId;
     var regionId = parseInt(req.query.region);
     var paymentStatus = req.query.payment_status;
+    var paymentMethod = req.query.payment_method;
 
     var filename = [
       status
@@ -156,6 +157,10 @@ var reports = {
 
     if ( paymentStatus ) {
       where['payment_status'] = paymentStatus;
+    }
+
+    if ( paymentMethod ) {
+      where['payment_method_id'] = { $null: paymentMethod === "invoiced" }
     }
 
     options.order = {};

@@ -178,6 +178,13 @@ module.exports = function( options ){
           , message: 'This order\'s location has not been geocoded. This likely means the location address is invalid.'
           });
         }
+
+        if ( !order.location && order.type === 'courier' ){
+          order.alerts.push({
+            level: 'error'
+          , message: 'Cannot send courier notifications without a location set'
+          });
+        }
       }
 
       req.order = order;

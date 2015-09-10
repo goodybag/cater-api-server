@@ -210,6 +210,7 @@ describe('Order Notifications', function(){
       , zip:      '78723'
       , phone:    '1234567890'
       , lat_lng:  { x: 100, y: 50 }
+      , guests:   10
       , user:     { email: 'test@test.com', organization: 'The Test Group', name: 'Turd Ferguson' }
       , notes:    'Food should be hot'
       , delivery_instructions: 'Knock once. NO! Knock twice.'
@@ -228,14 +229,20 @@ describe('Order Notifications', function(){
       , last_name:      'Ferguson'
       , email:          'test@test.com'
       , company_name:   'The Test Group'
-      , remarks:        'Notes:\nFood should be hot\n\nDelivery Instructions:\nKnock once. NO! Knock twice.'
+      , remarks:        [ 'Notes:'
+                        , 'Food should be hot\n'
+                        , 'Delivery Instructions:'
+                        , 'Knock once. NO! Knock twice.'
+                        ].join('\n')
       });
     });
 
     it('.orderDropoffOrigin()', function(){
       var order = {
-        restaurant_location_id: 2
+        id: 1234
+      , restaurant_location_id: 2
       , notes: 'Food should be hot'
+      , guests: 10
       , restaurant: {
           name: 'The Test Restaurant'
         }
@@ -259,10 +266,14 @@ describe('Order Notifications', function(){
       , lng:            '50'
       , phone:          config.phone.orders
       , first_name:     'Goodybag'
-      , last_name:      'Goodybag'
+      , last_name:      '#' + order.id
       , email:          config.emails.orders
       , company_name:   'The Test Restaurant'
-      , remarks:        'Notes:\nFood should be hot'
+      , remarks:        [ 'Head Count:'
+                        , order.guests + '\n'
+                        , 'Notes:'
+                        , 'Food should be hot'
+                        ].join('\n')
       });
     });
 

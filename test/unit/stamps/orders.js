@@ -4,6 +4,7 @@ var utils       = require('utils');
 var config      = require('../../../config');
 var orders      = require('stamps/orders');
 var OrderCharge = require('stamps/orders/charge');
+var PMSItem     = require('stamps/orders/payment-summary-item');
 var fulfillability = require('stamps/orders/fulfillability');
 orders.db        = require('../../../lib/stamps/db/orders')
 
@@ -629,6 +630,58 @@ describe('Orders Stamps', function(){
     it('.getNoContractFee() - has contract', function() {
       var oc = DefaultOrderCharge();
       assert.equal( oc.getNoContractFee(), 0);
+    });
+  });
+
+  describe('Payment Summary Items', function(){
+    it('.toPaymentSummaryItem()', function(){
+      var item = PMSItem({
+
+      });
+
+      assert.deepEqual( item, {
+
+      });
+    });
+
+    it('.toPaymentSummaryItem() courier', function(){
+      var item = PMSItem({
+        
+      });
+
+      assert.deepEqual( item, {
+        
+      });
+    });
+
+    it('.toPaymentSummaryItem() tax exempt', function(){
+      var item = PMSItem({
+        
+      });
+
+      assert.deepEqual( item, {
+        
+      });
+    });
+
+    it('.toPaymentSummaryItem() with adjustment', function(){
+      var item = PMSItem({
+        
+      });
+
+      assert.deepEqual( item, {
+        
+      });
+    });
+
+    it('.toPaymentSummaryItem() with user adjustment', function(){
+      var item = PMSItem({
+        
+      });
+
+      assert.deepEqual( item, {
+        
+      });
     });
   });
 });

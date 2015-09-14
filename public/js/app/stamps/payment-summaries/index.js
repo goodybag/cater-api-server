@@ -10,9 +10,9 @@ var db      = require('db');
 module.exports = stampit();
 
 var stamps = {
-  autoPopulate: require('./auto-populate')
-, base:         require('./base')
+  base:         require('./base')
 , db:           require('./db')
+, email:        require('./email')
 };
 
 module.exports = module.exports.compose.apply(

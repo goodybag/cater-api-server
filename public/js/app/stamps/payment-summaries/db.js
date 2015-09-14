@@ -1,9 +1,12 @@
 var db      = require('db');
 var utils   = require('utils');
+var PMSItem = require('../orders/payment-summary-item');
 
-function getQueryOptions(){
-  return {
-    many: [ { table: 'orders'
+function getQueryOptions( begin, end ){
+  var ordersQuery;
+
+  var options = {
+    many: [ ordersQuery = { table: 'orders'
             , where: {
                 status: 'accepted'
               , restaurant_id: {
@@ -21,7 +24,19 @@ function getQueryOptions(){
             , alias: 'restaurant'
             }
           ]
+  };
+
+  utils.extend( ordersQuery, PMSItem.requiredOrderQueryOptions );
+
+  if ( begin ){
+    options.where.datetime.$gte = begin;
   }
+
+  if ( end ){
+    options.where.datetime.$lt = end;
+  }
+
+  return options;
 }
 
 module.exports = require('stampit')()
@@ -30,21 +45,13 @@ module.exports = require('stampit')()
   })
   .methods({
     fetch: function( callback ){
-      var where = {
-        billing_period_start: this.billing_period_start
-      , billing_period_end:   this.billing_period_end
-      , user_id:              this.user_id
-      };
-
-      if ( this.id ){
-        where = { id: this.id };
+      if ( !this.id ){
+        throw new Error('Invalid ID');
       }
 
-      var options = utils.extend( getQueryOptions(), {
-        order: ['id desc']
-      });
+      var options = getQueryOptions();
 
-      db.user_invoices.findOne( where, options, function( error, result ){
+      db.payment_summaries.findOne( this.id, options, function( error, result ){
         if ( error ) return callback( error );
 
         this.parseDbResult( result );
@@ -66,110 +73,33 @@ module.exports = require('stampit')()
     }
 
   , saveNew: function( callback ){
-      var tx = db.dirac.tx.create();
+      db.payment_summaries.insert( this, function( error, results ){
+        if ( error ) return callback( error );
 
-      tx.begin( function( error ){
-        if ( error ){
-          tx.rollback();
-          return callback( error );
-        }
-
-        tx.user_invoices.insert( this, function( error, results ){
-          if ( error ) return callback( error );
-
-          this.parseResults( results );
-          this.updateOrdersInvoiceId();
-          this.saveOrders( tx, callback );
-        }.bind( this ));
+        this.parseResults( results );
+        
+        return callback( null, this );
       }.bind( this ));
     }
 
   , saveExisting: function( callback ){
-      var tx = db.dirac.tx.create();
+      db.payment_summaries.update( this.id, this, { returning: ['*'] }, function( error, results ){
+        if ( error ) return callback( error );
 
-      tx.begin( function( error ){
-        if ( error ){
-          tx.rollback();
-          return callback( error );
-        }
+        this.parseResults( results );
 
-        tx.user_invoices.update( this.id, this, { returning: ['*'] }, function( error, results ){
-          if ( error ) return callback( error );
-
-          this.parseResults( results );
-          this.updateOrdersInvoiceId();
-          this.saveOrders( tx, callback );
-        }.bind( this ));
+        return callback( null, this );
       }.bind( this ));
-    }
-
-  , saveOrders: function( tx, callback ){
-      var didNotPassTx = false;
-      if ( typeof tx === 'function' ||  !tx ){
-        callback = tx;
-        tx = db.dirac.tx.create();
-        didNotPassTx = true;
-      }
-
-      utils.async.series([
-        didNotPassTx ? tx.begin.bind( tx ) : utils.async.noop
-
-        // Remove existing orders on this invoice
-      , tx.user_invoice_orders.remove.bind(
-          tx.user_invoice_orders
-        , { user_invoice_id: this.id }
-        )
-
-        // Insert user invoice orders
-      , function( next ){
-          // No orders to save
-          if ( this.orders.length === 0 ){
-            return next();
-          }
-
-          tx.user_invoice_orders.insert( this.orders, { returning: ['*'] }, function( error, results ){
-            if ( error ) return next( error );
-
-            this.orders = results;
-
-            return next();
-          }.bind( this ));
-        }.bind( this )
-
-        // Commit
-      , tx.commit.bind( tx )
-      ], function( error ){
-        if ( error ){
-          return tx.rollback( callback.bind( null, error ) );
-        }
-
-        callback( null, this );
-      }.bind( this ));
-    }
-
-  , updateOrdersInvoiceId: function(){
-      this.orders.forEach( function( order ){
-        order.user_invoice_id = this.id;
-      }.bind( this ));
-
-      return this;
     }
 
   , parseResults: function( results ){
       results = results[0] || results;
-      utils.extend( this, results );
+      utils.extend( this, this.parseDbResult( results ) );
     }
 
   , parseDbResult: function( result ){
       if ( result ){
-        result.orders = result.user_invoice_orders.map( function( order ){
-          ['user_invoice_id', 'order_id'].forEach( function( k ){
-            order.order[ k ] = order[ k ];
-          });
-
-          return order.order;
-        });
-
+        result.orders = result.orders.map( PMSItem.create );
         utils.extend( this, result );
       }
 

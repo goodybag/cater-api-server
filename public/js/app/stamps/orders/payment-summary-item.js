@@ -10,10 +10,13 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 define( function( require, exports, module ){
   return require('stampit')()
+    .compose( require('./base') )
     .state({
 
     })
     .methods({
+      toPaymentSummaryItem: function(){
 
+      }
     });
 });

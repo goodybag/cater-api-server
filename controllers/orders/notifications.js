@@ -104,19 +104,24 @@ module.exports.JSON.list = function( req, res ){
     // For now, manually push Dropoff notification type since we
     // haven't fully migrated to notifications2
     Object.keys( notifications2Notifications ).forEach( function( id ){
+      var note = notifications2
+        .get( id )
+        .create( order, req.user.attributes.id );
+
+      if ( !note.isAvailable( order ) ){
+        return;
+      }
+
       fns.push( function( done ){
-        notifications2
-          .get( id )
-          .create( order, req.user.attributes.id )
-          .build( function( error, build ){
-            if ( error ) return done( error );
+        note.build( function( error, build ){
+          if ( error ) return done( error );
 
-            // Coerce to legacy structure
-            build.cid = Math.random().toString(36);
-            notifications2Notifications[ id ]( build, req );
+          // Coerce to legacy structure
+          build.cid = Math.random().toString(36);
+          notifications2Notifications[ id ]( build, req );
 
-            done( null, build );
-          });
+          done( null, build );
+        });
       });
     });
 

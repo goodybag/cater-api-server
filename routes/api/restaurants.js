@@ -19,7 +19,13 @@ route.post('/', m.restrict(['admin']), m.insert(db.restaurants));
 
 route.get('/:id',
   m.restrict(['admin']),
-  m.param('id'),
+  m.param('id', function(value, queryObj, queryOptions) {
+    if (isNaN(+value)) {
+      queryObj.text_id = value;
+    } else {
+      queryObj.id = value;
+    }
+  }),
   m.queryOptions({
     many: [{
       table: 'restaurant_hours',

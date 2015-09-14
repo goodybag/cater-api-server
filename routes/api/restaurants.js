@@ -77,6 +77,22 @@ route.get('/:restaurant_id/orders', m.restrict(['admin']), m.pagination({
   }]
 }), m.find(db.orders));
 
+route.get('/:restaurant_id/orders/current',
+  function(req, res, next) {
+    req.restaurant = {
+      id: req.params.restaurant_id
+    };
+    next();
+  },
+  controllers.restaurants.orders.current,
+  function(req, res, next) {
+    if (req.order) {
+      res.send(req.order);
+    } else {
+      next();
+    }
+  });
+
 route.get('/:restaurant_id/contacts', m.restrict(['admin']), m.param(
   'restaurant_id'), m.find(db.contacts));
 

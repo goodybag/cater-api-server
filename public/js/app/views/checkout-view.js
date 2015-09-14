@@ -162,6 +162,9 @@ define(function(require, exports, module) {
 
       var times = this.model.restaurant.get('delivery_times')[ day ];
 
+      // restaurant doesn't have delivery times
+      if (times.length < 1) return;
+
       this.timepicker.set(
         'disable'
         // Filter the times down to the ones that should be disabled

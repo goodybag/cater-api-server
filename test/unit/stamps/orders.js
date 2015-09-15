@@ -523,7 +523,7 @@ describe('Orders Stamps', function(){
     });
   });
 
-  describe.only('Items', function(){
+  describe('Items', function(){
     it('.getTotal()', function(){
       var item = orders.item({
         price: 100

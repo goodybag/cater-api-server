@@ -100,7 +100,7 @@ route.put('/:id', m.restrict(['admin']), m.param('id'), m.queryOptions({
   }
   // Handle event emitting and sending result
 , function( req, res ){
-    var orders = req.orders;
+    var orders = res.locals.orders;
 
     res.json( orders[0] );
 

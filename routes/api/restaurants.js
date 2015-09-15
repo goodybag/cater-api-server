@@ -17,7 +17,25 @@ route.get('/', m.restrict(['admin']), m.sort('-id'), m.param('region_id'), m.que
 
 route.post('/', m.restrict(['admin']), m.insert(db.restaurants));
 
-route.get('/:id', m.restrict(['admin']), m.param('id'), m.findOne(db.restaurants));
+route.get('/:id',
+  m.restrict(['admin']),
+  m.param('id', function(value, queryObj, queryOptions) {
+    if (isNaN(+value)) {
+      queryObj.text_id = value;
+    } else {
+      queryObj.id = value;
+    }
+  }),
+  m.queryOptions({
+    many: [{
+      table: 'restaurant_hours',
+      alias: 'hours'
+    }, {
+      table: 'restaurant_lead_times',
+      alias: 'lead_times'
+    }]
+  }),
+  m.findOne(db.restaurants));
 
 route.put('/:id', m.restrict(['admin']), m.param('id'), m.update(db.restaurants));
 
@@ -58,6 +76,22 @@ route.get('/:restaurant_id/orders', m.restrict(['admin']), m.pagination({
     alias: 'items'
   }]
 }), m.find(db.orders));
+
+route.get('/:restaurant_id/orders/current',
+  function(req, res, next) {
+    req.restaurant = {
+      id: req.params.restaurant_id
+    };
+    next();
+  },
+  controllers.restaurants.orders.current,
+  function(req, res, next) {
+    if (req.order) {
+      res.send(req.order);
+    } else {
+      next();
+    }
+  });
 
 route.get('/:restaurant_id/contacts', m.restrict(['admin']), m.param(
   'restaurant_id'), m.find(db.contacts));

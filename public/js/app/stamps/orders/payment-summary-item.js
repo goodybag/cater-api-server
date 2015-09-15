@@ -23,8 +23,8 @@ define( function( require, exports, module ){
     });
 
   module.exports.requiredOrderQueryOptions = {
-    many: [ { table: 'order_items', alias: 'items' }
-          , queries.orders.amenities()
+    many: [ /*{ table: 'order_items', alias: 'items' }
+          , queries.orders.amenities()*/
           ]
   , one:  [ { table: 'users', alias: 'user' }
           , { table: 'delivery_services', alias: 'deliveryService' }

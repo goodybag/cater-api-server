@@ -2,20 +2,45 @@ var db      = require('db');
 var utils   = require('utils');
 var PMSItem = require('../orders/payment-summary-item');
 
-function getQueryOptions( begin, end ){
-  var ordersQuery;
+function getQueryOptions( id ){
+  var ordersQuery = {
+    table: 'orders'
+  , where: {
+      status: 'accepted'
+    , restaurant_id: {
+        $custom: ['orders.restaurant_id = payment_summaries.restaurant_id']
+      }
+    , datetime: {
+        $gte: { $custom: ['orders.datetime >= payment_summaries.period_begin'] }
+      , $lt:  { $custom: ['orders.datetime < payment_summaries.period_end'] }
+      }
+    }
+  };
 
   var options = {
-    many: [ ordersQuery = { table: 'orders'
+    with: [
+      { name: 'oi'
+      , type: 'select'
+      , table: 'order_items'
+      , columns: ['order_items.*']
+      , where: {
+
+        }
+      , joins: [
+          { type: 'left', target: 'orders', on: { id: '$order_items.order_id$' } }
+        , { type: 'left', target: 'payment_summaries', on: ordersQuery.where.datetime }
+        ]
+      }
+    ]
+
+  , many: [ ordersQuery
+          , { table: 'order_items'
             , where: {
-                status: 'accepted'
-              , restaurant_id: {
-                  $custom: ['orders.restaurant_id = payment_summaries.restaurant_id']
-                }
-              , datetime: {
-                  $gte: { $custom: ['orders.datetime >= payment_summaries.period_begin'] }
-                , $lt:  { $custom: ['orders.datetime < payment_summaries.period_end'] }
-                }
+                order_id: { $in: {
+                  type: 'select'
+                , table: 'orders'
+                , where: ordersQuery.where
+                } }
               }
             }
           ]
@@ -27,14 +52,6 @@ function getQueryOptions( begin, end ){
   };
 
   utils.extend( ordersQuery, PMSItem.requiredOrderQueryOptions );
-
-  if ( begin ){
-    options.where.datetime.$gte = begin;
-  }
-
-  if ( end ){
-    options.where.datetime.$lt = end;
-  }
 
   return options;
 }
@@ -108,3 +125,24 @@ module.exports = require('stampit')()
   });
 
 module.exports.getQueryOptions = getQueryOptions;
+
+module.exports.find = function( where, options, callback ){
+  if ( typeof options === 'function' ){
+    callback = options;
+    options = {};
+  }
+
+  return db.payment_summaries.find(
+    where
+  , utils.extend( getQueryOptions(), options )
+  , function( error, results ){
+      if ( error ) return callback( error );
+
+      results = results.map( function( pms ){
+        return module.exports.create().parseDbResult( pms );
+      });
+
+      callback( null, results );
+    }
+  );
+};

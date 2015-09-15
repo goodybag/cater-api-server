@@ -90,6 +90,10 @@ module.exports.autoFetchFromRedis = function( db ){
               return callback( e );
             }
 
+            if ( results === null ){
+              results = [];
+            }
+
             results.forEach( function( restaurant ){
               restaurant.region.delivery_services = db.cache.delivery_services.byRegion( region.id );
             });

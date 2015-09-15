@@ -80,6 +80,14 @@ define(function(require) {
   , user_agent:       { type: types.text }
   , stripe_id:        { type: types.text }
   , is_deleted:       { type: types.boolean, nullable: false, default: 'false' }
+
+    // The percentage menu pricing increases by for this Priority Account
+    // We should deprecate this in the future for a proper `user_plans` concept
+  , priority_account_price_hike_percentage: {
+      type: types.numeric( 5, 5 )
+    , notNull: true
+    , default: 0
+    }
   };
 
   definition.indices = {};

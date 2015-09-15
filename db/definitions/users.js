@@ -79,6 +79,7 @@ define(function(require) {
   , ordrin_password:  { type: types.text }
   , user_agent:       { type: types.text }
   , stripe_id:        { type: types.text }
+  , is_deleted:       { type: types.boolean, nullable: false, default: 'false' }
   };
 
   definition.indices = {};

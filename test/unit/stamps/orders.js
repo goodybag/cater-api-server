@@ -717,19 +717,19 @@ describe('Orders Stamps', function(){
       });
     });
 
-    // it('.toPaymentSummaryItem() with user adjustment', function(){
-    //   var item = PMSItem({
-        
-    //   });
+    it.only('.toPaymentSummaryItem() with user adjustment', function(){
+      var item = DefaultPMSItem({
+        user_adjustment_amount: -100
+      });
 
-    //   assert.deepEqual( item.toPaymentSummaryItem(), {
-    //     total: 
-    //   , delivery_fee: 
-    //   , tip: 
-    //   , gb_fee: 
-    //   , sales_tax: 
-    //   , net_payout: 
-    //   });
-    // });
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 375
+      , delivery_fee: 0
+      , tip: 0
+      , gb_fee: -48
+      , sales_tax: -25
+      , net_payout: 402
+      });
+    });
   });
 });

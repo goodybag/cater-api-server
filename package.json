@@ -111,6 +111,7 @@
     "request": "2.25.x",
     "resource.js": "^1.0.2",
     "rollbar": "0.2.x",
+    "scheduler": "https://github.com/goodybag/scheduler.git",
     "selenium-webdriver": "~2.40.0",
     "semver": "~2.1.0",
     "serve-favicon": "^2.2.0",

@@ -146,8 +146,7 @@ route.post('/:restaurant_id/payment-summaries'
   }), m.jsonLocals('payment_summary')
 );
 
-route.get('/:restaurant_id/payment-summaries/:id', m.param('id'), m.param(
-  'restaurant_id'), m.findOne(db.payment_summaries));
+route.get('/:restaurant_id/payment-summaries/:id', controllers.paymentSummaries.get);
 
 route.put('/:restaurant_id/payment-summaries/:id', m.param('id'), m.param(
   'restaurant_id'), m.after(controllers

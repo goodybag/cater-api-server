@@ -8,6 +8,8 @@ var db      = require('../db');
 var venter  = require('../lib/venter');
 var pdfs    = require('../lib/pdfs');
 var m       = require('dirac-middleware');
+var PMS     = require('stamps/payment-summaries/db');
+var errors  = require('../errors');
 
 module.exports.applyRestaurantId = function(){
   return m.param( 'restaurant_id', function( value, query, options ){
@@ -45,6 +47,25 @@ module.exports.emitPaymentSummaryChange = function( options ){
 
     next();
   };
+};
+
+module.exports.get = function( req, res ){
+  PMS({ id: req.params.id })
+    .fetch( function( error, result ){
+      if ( error ){
+        req.logger.warn('Error looking Payment Summary', {
+          error: error
+        });
+
+        return res.error( errors.internal.DB_FAILURE, error );
+      }
+
+      result.orders.forEach( function( order ){
+        order.pmsItem = order.toPaymentSummaryItem();
+      });
+
+      res.json( result );
+    });
 };
 
 module.exports.send = function( req, res ){

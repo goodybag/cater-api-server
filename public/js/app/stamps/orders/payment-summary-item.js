@@ -18,7 +18,7 @@ define( function( require, exports, module ){
     })
     .methods({
       toPaymentSummaryItem: function(){
-
+        return {};
       }
     });
 

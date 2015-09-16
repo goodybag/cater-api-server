@@ -18,9 +18,24 @@ function getQueryOptions( id ){
 
   , many: [
       { table: 'oi', alias: 'items', where: { 'orders.id': '$oi.order_id$' } }
-    , { table: 'order_amenities', alias: 'amenities', mixin: [ { table: 'amenities' } ] }
     ]
   };
+
+  if ( Array.isArray( PMSItem.requiredOrderQueryOptions.many ) ){
+    // Add in the required `many` fields, but omit `orders` since we're
+    // doing some optimizations with a CTE
+    var ordersMany = PMSItem.requiredOrderQueryOptions.many.filter( function( query ){
+      return query.table !== 'orders';
+    });
+
+    ordersQuery.many = ordersQuery.many.concat( ordersMany );
+  }
+
+  for ( var key in PMSItem.requiredOrderQueryOptions ){
+    if ( key === 'many' ) continue;
+
+    ordersQuery[ key ] = PMSItem.requiredOrderQueryOptions[ key ];
+  }
 
   var options = {
     with: [
@@ -44,8 +59,6 @@ function getQueryOptions( id ){
             }
           ]
   };
-
-  // utils.extend( ordersQuery, PMSItem.requiredOrderQueryOptions );
 
   return options;
 }
@@ -126,17 +139,13 @@ module.exports.find = function( where, options, callback ){
     options = {};
   }
 
-  return db.payment_summaries.find(
-    where
-  , utils.extend( getQueryOptions(), options )
-  , function( error, results ){
-      if ( error ) return callback( error );
+  return db.payment_summaries.find( where, function( error, results ){
+    if ( error ) return callback( error );
 
-      results = results.map( function( pms ){
-        return module.exports.create().parseDbResult( pms );
-      });
+    results = results.map( function( pms ){
+      return module.exports.create().parseDbResult( pms );
+    });
 
-      callback( null, results );
-    }
-  );
+    callback( null, results );
+  });
 };

@@ -634,54 +634,99 @@ describe('Orders Stamps', function(){
   });
 
   describe('Payment Summary Items', function(){
+    var DefaultPMSItem = PMSItem
+      .state({
+        type: 'delivery'
+      , region: { sales_tax: 0.0825 }
+      , restaurant: {
+          region: { sales_tax: 0.0825 }
+        , plan: { type: 'flat', data: { fee: 0.1 } }
+        , is_direct_deposit: true
+        , no_contract_fee: 0.047
+        }
+      , items: [
+          { price: 100, quantity: 1 }
+        , { price: 200, quantity: 1 }
+        ]
+      , user: { is_tax_exempt: false }
+      , tip: 50
+      , delivery_fee: 100
+      , payment_method_id: 123
+      });
+
     it('.toPaymentSummaryItem()', function(){
-      var item = PMSItem({
+      var item = DefaultPMSItem({
 
       });
 
-      assert.deepEqual( item, {
-
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 483
+      , delivery_fee: 0
+      , tip: 0
+      , gb_fee: -48
+      , sales_tax: -33
+      , net_payout: 402
       });
     });
 
     it('.toPaymentSummaryItem() courier', function(){
       var item = PMSItem({
-        
+        type: 'courier'
       });
 
-      assert.deepEqual( item, {
-        
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 483
+      , delivery_fee: -100
+      , tip: -50
+      , gb_fee: -33
+      , sales_tax: -33
+      , net_payout: 267
       });
     });
 
-    it('.toPaymentSummaryItem() tax exempt', function(){
-      var item = PMSItem({
+    // it('.toPaymentSummaryItem() tax exempt', function(){
+    //   var item = PMSItem({
         
-      });
+    //   });
 
-      assert.deepEqual( item, {
-        
-      });
-    });
+    //   assert.deepEqual( item.toPaymentSummaryItem(), {
+    //     total: 
+    //   , delivery_fee: 
+    //   , tip: 
+    //   , gb_fee: 
+    //   , sales_tax: 
+    //   , net_payout: 
+    //   });
+    // });
 
-    it('.toPaymentSummaryItem() with adjustment', function(){
-      var item = PMSItem({
+    // it('.toPaymentSummaryItem() with adjustment', function(){
+    //   var item = PMSItem({
         
-      });
+    //   });
 
-      assert.deepEqual( item, {
-        
-      });
-    });
+    //   assert.deepEqual( item.toPaymentSummaryItem(), {
+    //     total: 
+    //   , delivery_fee: 
+    //   , tip: 
+    //   , gb_fee: 
+    //   , sales_tax: 
+    //   , net_payout: 
+    //   });
+    // });
 
-    it('.toPaymentSummaryItem() with user adjustment', function(){
-      var item = PMSItem({
+    // it('.toPaymentSummaryItem() with user adjustment', function(){
+    //   var item = PMSItem({
         
-      });
+    //   });
 
-      assert.deepEqual( item, {
-        
-      });
-    });
+    //   assert.deepEqual( item.toPaymentSummaryItem(), {
+    //     total: 
+    //   , delivery_fee: 
+    //   , tip: 
+    //   , gb_fee: 
+    //   , sales_tax: 
+    //   , net_payout: 
+    //   });
+    // });
   });
 });

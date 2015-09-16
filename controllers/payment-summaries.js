@@ -60,10 +60,6 @@ module.exports.get = function( req, res ){
         return res.error( errors.internal.DB_FAILURE, error );
       }
 
-      result.orders.forEach( function( order ){
-        order.pmsItem = order.toPaymentSummaryItem();
-      });
-
       res.json( result );
     });
 };

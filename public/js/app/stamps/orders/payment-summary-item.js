@@ -1,5 +1,5 @@
 /**
- * Orders.Item
+ * Orders.PaymentSummaryItem
  */
 
 if ( typeof module === "object" && module && typeof module.exports === "object" ){
@@ -9,16 +9,29 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 }
 
 define( function( require, exports, module ){
-  var queries = require('../../../../../db/queries');
-
   module.exports = require('stampit')()
     .compose( require('./base') )
+    .compose( require('./charge') )
     .state({
 
     })
     .methods({
       toPaymentSummaryItem: function(){
-        return {};
+        var result = {
+          total:        this.getTotal()
+        , delivery_fee: this.type === 'courier' ? -this.delivery_fee : 0
+        , tip:          this.type === 'courier' ? -this.tip : 0
+        , gb_fee:      -this.getApplicationCut()
+        , sales_tax:   -this.getTax()
+        , net_payout:   this.getRestaurantCut()
+        };
+
+        // Application Cut includes these things
+        result.gb_fee -= result.sales_tax;
+        result.gb_fee -= result.delivery_fee;
+        result.gb_fee -= result.tip;
+
+        return result;
       }
     });
 

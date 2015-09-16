@@ -15,6 +15,10 @@ function getQueryOptions( id ){
       , $lt:  { $custom: ['orders.datetime < payment_summaries.period_end'] }
       }
     }
+
+  , many: [
+      { table: 'oi', alias: 'items', where: { 'orders.id': '$oi.order_id$' } }
+    ]
   };
 
   var options = {
@@ -24,25 +28,25 @@ function getQueryOptions( id ){
       , table: 'order_items'
       , columns: ['order_items.*']
       , where: {
-
+          'payment_summaries.id': id
         }
       , joins: [
           { type: 'left', target: 'orders', on: { id: '$order_items.order_id$' } }
-        , { type: 'left', target: 'payment_summaries', on: ordersQuery.where.datetime }
+        , { type: 'inner', target: 'payment_summaries', on: ordersQuery.where.datetime }
         ]
       }
     ]
 
   , many: [ ordersQuery
-          , { table: 'order_items'
-            , where: {
-                order_id: { $in: {
-                  type: 'select'
-                , table: 'orders'
-                , where: ordersQuery.where
-                } }
-              }
-            }
+          // , { table: 'order_items'
+          //   , where: {
+          //       order_id: { $in: {
+          //         type: 'select'
+          //       , table: 'orders'
+          //       , where: ordersQuery.where
+          //       } }
+          //     }
+          //   }
           ]
 
   , one:  [ { table: 'restaurants'
@@ -51,7 +55,7 @@ function getQueryOptions( id ){
           ]
   };
 
-  utils.extend( ordersQuery, PMSItem.requiredOrderQueryOptions );
+  // utils.extend( ordersQuery, PMSItem.requiredOrderQueryOptions );
 
   return options;
 }
@@ -66,7 +70,7 @@ module.exports = require('stampit')()
         throw new Error('Invalid ID');
       }
 
-      var options = getQueryOptions();
+      var options = getQueryOptions( this.id );
 
       db.payment_summaries.findOne( this.id, options, function( error, result ){
         if ( error ) return callback( error );

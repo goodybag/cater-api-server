@@ -18,6 +18,7 @@ function getQueryOptions( id ){
 
   , many: [
       { table: 'oi', alias: 'items', where: { 'orders.id': '$oi.order_id$' } }
+    , { table: 'order_amenities', alias: 'amenities', mixin: [ { table: 'amenities' } ] }
     ]
   };
 
@@ -37,18 +38,7 @@ function getQueryOptions( id ){
       }
     ]
 
-  , many: [ ordersQuery
-          // , { table: 'order_items'
-          //   , where: {
-          //       order_id: { $in: {
-          //         type: 'select'
-          //       , table: 'orders'
-          //       , where: ordersQuery.where
-          //       } }
-          //     }
-          //   }
-          ]
-
+  , many: [ ordersQuery ]
   , one:  [ { table: 'restaurants'
             , alias: 'restaurant'
             }

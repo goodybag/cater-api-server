@@ -1,5 +1,6 @@
 var assert      = require('assert');
 var moment      = require('moment');
+var stampit     = require('stampit');
 var utils       = require('utils');
 var config      = require('../../../config');
 var orders      = require('stamps/orders');
@@ -559,7 +560,8 @@ describe('Orders Stamps', function(){
   });
 
   describe('Charges', function(){
-    var DefaultOrderCharge = OrderCharge
+    var DefaultOrderCharge = stampit()
+      .compose( OrderCharge )
       .state({
         type: 'delivery'
       , region: { sales_tax: 0.0825 }
@@ -608,17 +610,17 @@ describe('Orders Stamps', function(){
 
     it('.getApplicationCut() - with service fee', function(){
       var oc = DefaultOrderCharge({ service_fee: 100 });
-      assert.equal( oc.getApplicationCut(), 158 );
+      assert.equal( oc.getApplicationCut(), 167 );
     });
 
     it('.getRestaurantCut() - with service fee', function(){
       var oc = DefaultOrderCharge({ service_fee: 100 });
-      assert.equal( oc.getRestaurantCut(), 313 );
+      assert.equal( oc.getRestaurantCut(), 312 );
     });
 
     it('.getTotal()', function(){
       var oc = DefaultOrderCharge();
-      assert.equal( oc.getTotal(), 321);
+      assert.equal( oc.getTotal(), 321 );
     });
 
     it('.getNoContractFee() - non-contracted', function() {
@@ -634,7 +636,8 @@ describe('Orders Stamps', function(){
   });
 
   describe('Payment Summary Items', function(){
-    var DefaultPMSItem = PMSItem
+    var DefaultPMSItem = stampit()
+      .compose( PMSItem )
       .state({
         type: 'delivery'
       , region: { sales_tax: 0.0825 }
@@ -670,7 +673,7 @@ describe('Orders Stamps', function(){
     });
 
     it('.toPaymentSummaryItem() courier', function(){
-      var item = PMSItem({
+      var item = DefaultPMSItem({
         type: 'courier'
       });
 
@@ -684,35 +687,35 @@ describe('Orders Stamps', function(){
       });
     });
 
-    // it('.toPaymentSummaryItem() tax exempt', function(){
-    //   var item = PMSItem({
-        
-    //   });
+    it('.toPaymentSummaryItem() tax exempt', function(){
+      var item = DefaultPMSItem({
+        user: { is_tax_exempt: true }
+      });
 
-    //   assert.deepEqual( item.toPaymentSummaryItem(), {
-    //     total: 
-    //   , delivery_fee: 
-    //   , tip: 
-    //   , gb_fee: 
-    //   , sales_tax: 
-    //   , net_payout: 
-    //   });
-    // });
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 450
+      , delivery_fee: 0
+      , tip: 0
+      , gb_fee: -45
+      , sales_tax: 0
+      , net_payout: 405
+      });
+    });
 
-    // it('.toPaymentSummaryItem() with adjustment', function(){
-    //   var item = PMSItem({
-        
-    //   });
+    it('.toPaymentSummaryItem() with adjustment', function(){
+      var item = DefaultPMSItem({
+        adjustment_amount: -100
+      });
 
-    //   assert.deepEqual( item.toPaymentSummaryItem(), {
-    //     total: 
-    //   , delivery_fee: 
-    //   , tip: 
-    //   , gb_fee: 
-    //   , sales_tax: 
-    //   , net_payout: 
-    //   });
-    // });
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 375
+      , delivery_fee: 0
+      , tip: 0
+      , gb_fee: -38
+      , sales_tax: -25
+      , net_payout: 312
+      });
+    });
 
     // it('.toPaymentSummaryItem() with user adjustment', function(){
     //   var item = PMSItem({

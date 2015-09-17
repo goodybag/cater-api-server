@@ -1,5 +1,6 @@
 var db      = require('db');
 var utils   = require('utils');
+var errors  = require('errors');
 var PMSItem = require('../orders/payment-summary-item');
 
 function getQueryOptions( id ){
@@ -64,6 +65,7 @@ function getQueryOptions( id ){
 }
 
 module.exports = require('stampit')()
+  .compose( require('./base') )
   .state({
     orders: []
   })
@@ -73,10 +75,20 @@ module.exports = require('stampit')()
         throw new Error('Invalid ID');
       }
 
+      var where = { id: this.id };
+
+      if ( this.restaurant_id ){
+        where.restaurant_id = this.restaurant_id;
+      }
+
       var options = getQueryOptions( this.id );
 
-      db.payment_summaries.findOne( this.id, options, function( error, result ){
+      db.payment_summaries.findOne( where, options, function( error, result ){
         if ( error ) return callback( error );
+
+        if ( !result ){
+          return callback( errors.internal.NOT_FOUND );
+        }
 
         this.parseDbResult( result );
 

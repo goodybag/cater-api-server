@@ -21,5 +21,13 @@ define( function( require, exports, module ){
           })
           .reduce( utils.add, 0 );
       }
+
+    , getItems: function(){
+        return this.orders
+          .map( PMSItem )
+          .map( function( order ){
+            return order.toPaymentSummaryItem();
+          });
+      }
     });
 });

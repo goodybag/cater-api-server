@@ -717,7 +717,7 @@ describe('Orders Stamps', function(){
       });
     });
 
-    it.only('.toPaymentSummaryItem() with user adjustment', function(){
+    it('.toPaymentSummaryItem() with user adjustment', function(){
       var item = DefaultPMSItem({
         user_adjustment_amount: -100
       });

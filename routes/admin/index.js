@@ -684,10 +684,10 @@ route.get('/restaurants/:id/payment-summaries'
 , m.restrict(['admin'])
 , m.param('id')
 , m.queryOptions({
-    many: [{ table: 'contacts' }]
+    many: [{ table: 'payment_summaries' }]
   })
-, m.view( 'admin/restaurant-payment-summaries', db.restaurants, {
-    layout: 'admin/layout'
+, m.view( 'admin/restaurant/payment-summaries', db.restaurants, {
+    layout: 'admin/layout-single-object'
   , method: 'findOne'
   })
 );

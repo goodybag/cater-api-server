@@ -24,6 +24,7 @@ define( function( require, exports, module ){
         , gb_fee:      -this.getApplicationCut()
         , sales_tax:   -this.getTax()
         , net_payout:   this.getRestaurantCut()
+        , order:        this
         };
 
         // Application Cut includes these things
@@ -42,6 +43,11 @@ define( function( require, exports, module ){
   , one:  [ { table: 'users', alias: 'user' }
           , { table: 'delivery_services', alias: 'deliveryService' }
           , { table: 'restaurant_locations', alias: 'location' }
+          , { table: 'restaurants', alias: 'restaurant'
+            , one:  [ { table: 'regions', alias: 'region' }
+                    , { table: 'restaurant_plans', alias: 'plan' }
+                    ]
+            }
           ]
   };
 

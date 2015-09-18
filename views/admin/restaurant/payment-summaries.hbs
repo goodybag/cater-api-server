@@ -126,6 +126,7 @@ require([
         ].join(''), 1000 );
       }
     });
+  });
 
   $(function(){
     var $tableList = $('.table-list');
@@ -135,7 +136,6 @@ require([
     range.setElement('#range-processor');
 
     pmsTable( $tableList, { restaurant_id: {{restaurant.id}} });
-    });
   });
 });
 </script>

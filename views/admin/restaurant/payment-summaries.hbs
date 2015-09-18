@@ -24,8 +24,55 @@
 <nav>{{> restaurant_edit_nav}}</nav>
 {{/extend}}
 
+{{#partial "list-item"}}
+<div class="list-item" data-payment-summary-id="{{this.id}}">
+  <label class="component item-selector">
+    <input type="checkbox">
+  </label>
+  <div class="component main">
+    <a href="/payment-summaries/ps-{{this.id}}.pdf" class="item-title" target="_blank">#{{this.id}}</a>
+    <span class="label-tag label-status small {{this.status}}">{{capitalize this.status}}</span>
+    <dl class="item-details dl-horizontal-auto">
+      <div>
+        <dt>Billing Period:</dt>
+        <dd>{{datepart this.period_begin}} -
+            {{datepart this.period_end~}}</dd>
+      </div>
+    </dl>
+    <div class="more-actions-and-info bottom">
+      <button
+        class="action btn-default"
+        data-id="{{this.id}}"
+        data-action="delete">Delete</button>
+    </div>
+  </div>
+</div>
+{{/partial}}
+
 {{#extend "body"}}
 <h1 class="page-title">Payment Summaries</h1>
+<div class="panel-component panel-island panel-create">
+  <form class="form-horizontal og-range-processor" id="range-processor">
+    <div class="errors hide"></div>
+
+    <div class="form-group">
+      <label>From</label>
+      <input type="date" name="from">
+    </div>
+    <div class="form-group">
+      <label>To</label>
+      <input type="date" name="to">
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary">Create</button>
+      <button class="btn btn-default btn-cancel hide">Cancel</button>
+    </div>
+  </form>
+
+  <div class="progress-indicator hide">
+    <div class="indicator"></div>
+  </div>
+</div>
 <div class="table-list payment-summaries-table-list striped">
   <div class="list-header">
     <label class="component item-selector">
@@ -33,93 +80,62 @@
     </label>
     <div class="component list-info">
       {{restaurant.payment_summaries.length}} Payment Summar
-      {{~#unless (eq restaurant.payment_summaries.length 1)}}ies{{else}}y{{/unless}}
+      {{~#if (eq restaurant.payment_summaries.length 1)}}y{{else}}ies{{/if}}
     </div>
-    <ul class="component list-nav nav">
-      <li class="selected-only popover-wrapper gb-dropdown right">
-        <a data-role="popover" data-target="dropdown-popover" href="#">
-          Set Status
-          <i class="gb-icon-caret-down"></i>
-        </a>
-        <div class="popover-modal dropdown-popover">
-          <a href="#"
-            class="popover-item"
-            data-action="set-status"
-            data-status="pending">
-            <span class="popover-item-icon"></span>
-            <span class="popover-item-label">Pending</span>
-          </a>
-          <a href="#"
-            class="popover-item"
-            data-action="set-status"
-            data-status="emailed">
-            <span class="popover-item-icon"></span>
-            <span class="popover-item-label">Emailed</span>
-          </a>
-          <a href="#"
-            class="popover-item"
-            data-action="set-status"
-            data-status="paid">
-            <span class="popover-item-icon"></span>
-            <span class="popover-item-label">Paid</span>
-          </a>
-          <a href="#"
-            class="popover-item"
-            data-action="set-status"
-            data-status="error">
-            <span class="popover-item-icon"></span>
-            <span class="popover-item-label">Error</span>
-          </a>
-        </div>
-      </li>
-    </ul>
   </div>
   <div class="list-items">
   {{#each restaurant.payment_summaries}}
-    <div class="list-item" data-payment-summary-id="{{this.id}}">
-      <label class="component item-selector">
-        <input type="checkbox">
-      </label>
-      <div class="component main">
-        <a href="/payment-summaries/ps-{{this.id}}.pdf" class="item-title" target="_blank">#{{this.id}}</a>
-        <span class="label-tag label-status small {{this.status}}">{{capitalize this.status}}</span>
-        <dl class="item-details dl-horizontal-auto">
-          <div>
-            <dt>Billing Period:</dt>
-            <dd>{{datepart this.period_begin}} -
-                {{datepart this.period_end~}}</dd>
-          </div>
-        </dl>
-        <div class="more-actions-and-info bottom">
-          <button
-            class="action btn-default"
-            data-payment-summary-id="{{this.id}}"
-            data-action="delete">Delete</button>
-        </div>
-      </div>
-    </div>
+    {{{partial "list-item"}}}
   {{/each}}
   </div>
 </div>
 {{/extend}}
 
 {{#extend "scripts"}}
+<script type="text/x-handlebars-template" id="list-item-template">
+  {{{partial "list-item"}}}
+</script>
+
 <script>
 require([
   'jquery'
+, 'handlebars'
 , 'api'
 , 'utils'
-, 'app/views/admin/invoice-table'
+, 'flash'
+, 'app/views/admin/payment-summaries-table'
+, 'app/views/admin/og-range-selector'
 , 'table-list'
-], function( $, api, utils, invoiceTable ) {
-  api.invoices = api('invoices');
+], function( $, handlebars, api, utils, flash, pmsTable, RangeSelector ) {
+  var range = new RangeSelector();
+
+  var listItemTemplate = handlebars.compile(
+    document.getElementById('list-item-template').innerHTML
+  );
+
+  range.on( 'submit', function( range ){
+    api('restaurants')( {{restaurant.id}} )('payment-summaries').post({
+      period_begin: range.from
+    , period_end:   range.to
+    }, function( error, result ){
+      if ( error ){
+        console.error( error );
+        return flash.info([
+          'Error :(<br>'
+        , '<small class="really-small">Press CMD+Alt+J</small>'
+        ].join(''), 1000 );
+      }
+    });
 
   $(function(){
     var $tableList = $('.table-list');
     $tableList.gb_tablelist();
     $('[data-role="popover"]').gb_popover();
 
-    invoiceTable( $tableList );
+    range.setElement('#range-processor');
+
+    pmsTable( $tableList, { restaurant_id: {{restaurant.id}} });
+    });
   });
 });
 </script>

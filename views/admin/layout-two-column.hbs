@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="{{cdn "/css/ie-lte-9.css"}}">
     <![endif]-->
   </head>
-  <body class="page {{{block "page"}}}">
+  <body class="page single-object-page {{{block "page"}}}">
     {{> admin_navbar}}
 
     {{{block "banner"}}}
@@ -21,12 +21,15 @@
     <div id="main">
       <div class="restaurant-edit">
         <div class="container">
-        <h1 class="page-title">
-          Editing {{restaurant.name}}
-          <a class="header-action" href="/restaurants/{{restaurant.text_id}}" style="font-size:20px; float: right;">Go to Full Menu</a>
-        </h1>
-          <div>
+          <h1 class="page-title">
+            Editing {{restaurant.name}}
+            <a class="header-action" href="/restaurants/{{restaurant.text_id}}" style="font-size:20px; float: right;">Go to Full Menu</a>
+          </h1>
+          <div class="nav-col">
             {{> restaurant_edit_nav }}
+            {{{block "nav-col"}}}
+          </div>
+          <div class="content-col">
             <div class="restaurant-edit-body">
               <div class="alert-container"></div>
               {{{block "body"}}}

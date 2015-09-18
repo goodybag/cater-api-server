@@ -684,7 +684,14 @@ route.get('/restaurants/:id/payment-summaries'
 , m.restrict(['admin'])
 , m.param('id')
 , m.queryOptions({
-    many: [{ table: 'payment_summaries' }]
+    many: [{ table: 'payment_summaries', order: { id: 'desc' } }]
+  })
+, m.viewPlugin('mainNav', {
+    active: 'restaurants'
+  })
+, m.viewPlugin('sidebarNav', {
+    active: 'payment-summaries',
+    baseUrl: '/admin/restaurants/:id'
   })
 , m.view( 'admin/restaurant/payment-summaries', db.restaurants, {
     layout: 'admin/layout-single-object'

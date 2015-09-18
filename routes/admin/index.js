@@ -684,7 +684,7 @@ route.get('/restaurants/:id/payment-summaries'
 , m.restrict(['admin'])
 , m.param('id')
 , m.queryOptions({
-    many: [{ table: 'payment_summaries', order: { id: 'desc' } }]
+    many: [{ table: 'payment_summaries', order: { period_end: 'desc' } }]
   })
 , m.viewPlugin('mainNav', {
     active: 'restaurants'

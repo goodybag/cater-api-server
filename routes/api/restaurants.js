@@ -231,3 +231,26 @@ route.delete('/:restaurant_id/photos/:id', m.restrict(['admin']), m.param(
   db.restaurant_photos));
 
 route.post('/:restaurant_id/notes', m.restrict(['admin']), m.insert(db.restaurant_notes));
+
+route.get('/:restaurant_id/items',
+  m.param('restaurant_id'),
+  function(req, res, next) {
+    req.queryObj.is_hidden = false;
+    next();
+  },
+  m.find(db.items));
+
+route.get('/:restaurant_id/menu',
+  m.param('restaurant_id'),
+  function(req, res, next) {
+    req.queryObj.is_hidden = false;
+    next();
+  },
+  m.queryOptions({
+    many: [{
+      table: 'items',
+      where: {is_hidden: false},
+      pluck: [{ table: 'item_tags', column: 'tag', alias: 'tags' }]
+    }]
+  }),
+  m.find(db.categories));

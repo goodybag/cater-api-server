@@ -239,3 +239,17 @@ route.get('/:restaurant_id/items',
     next();
   },
   m.find(db.items));
+
+route.get('/:restaurant_id/menu',
+  m.param('restaurant_id'),
+  function(req, res, next) {
+    req.queryObj.is_hidden = false;
+    next();
+  },
+  m.queryOptions({
+    many: [{
+      table: 'items',
+      where: {is_hidden: false}
+    }]
+  }),
+  m.find(db.categories));

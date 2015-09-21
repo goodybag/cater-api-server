@@ -31,6 +31,26 @@
     this.numSelected = this.getNumSelected();
   };
 
+  TableList.prototype.append = function( model ){
+    if ( this.options.itemTemplate !== 'function' ){
+      throw new Error('Must provide `itemTemplate` option');
+    }
+
+    this.$el.find('.list-items').append( this.options.itemTemplate( model ) );
+
+    return this;
+  };
+
+  TableList.prototype.prepend = function( model ){
+    if ( this.options.itemTemplate !== 'function' ){
+      throw new Error('Must provide `itemTemplate` option');
+    }
+
+    this.$el.find('.list-items').prepend( this.options.itemTemplate( model ) );
+
+    return this;
+  };
+
   TableList.prototype.getDefaults = function() {
     return TableList.DEFAULTS;
   };

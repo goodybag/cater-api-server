@@ -1,0 +1,22 @@
+<div class="list-item" data-payment-summary-id="{{this.id}}">
+  <label class="component item-selector">
+    <input type="checkbox">
+  </label>
+  <div class="component main">
+    <a href="/payment-summaries/ps-{{this.id}}.pdf" class="item-title" target="_blank">#{{this.id}}</a>
+    <span class="label-tag label-status small {{this.status}}">{{capitalize this.status}}</span>
+    <dl class="item-details dl-horizontal-auto">
+      <div>
+        <dt>Billing Period:</dt>
+        <dd>{{datepart this.period_begin}} -
+            {{datepart this.period_end~}}</dd>
+      </div>
+    </dl>
+    <div class="more-actions-and-info bottom">
+      <button
+        class="action btn-default"
+        data-id="{{this.id}}"
+        data-action="delete">Delete</button>
+    </div>
+  </div>
+</div>

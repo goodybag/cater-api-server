@@ -231,3 +231,11 @@ route.delete('/:restaurant_id/photos/:id', m.restrict(['admin']), m.param(
   db.restaurant_photos));
 
 route.post('/:restaurant_id/notes', m.restrict(['admin']), m.insert(db.restaurant_notes));
+
+route.get('/:restaurant_id/items',
+  m.param('restaurant_id'),
+  function(req, res, next) {
+    req.queryObj.is_hidden = false;
+    next();
+  },
+  m.find(db.items));

@@ -30,6 +30,17 @@ module.exports = require('stampit')()
       return this;
     }
 
+  , fetchRecipients: function( callback ){
+      var where = {
+        restaurant_id: this.id
+      , receives_payment_summaries: true
+      };
+
+      db.contacts.find( where, callback );
+
+      return this;
+    }
+
   , isFetchable: function(){
       return ( !!this.id || (this.restaurant_id && this.period_begin && this.period_end) );
     }

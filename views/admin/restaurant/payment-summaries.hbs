@@ -80,15 +80,16 @@ require([
 ], function( $, handlebars, api, utils, flash, pmsTable, RangeSelector ) {
   var range = new RangeSelector();
 
-
   $(function(){
-    var $tableList = $('.table-list');
-    $tableList.gb_tablelist();
+    var tableList = new $.fn.gb_tablelist.Constructor( $('.table-list'), {
+      itemTemplate: handlebars.partials.restaurant_payment_summary_list_item
+    });
+
     $('[data-role="popover"]').gb_popover();
 
     range.setElement('#range-processor');
 
-    pmsTable( $tableList, { restaurant_id: {{restaurant.id}} });
+    pmsTable( tableList.$el, { restaurant_id: {{restaurant.id}} });
 
     range.on( 'submit', function( range ){
       api('restaurants')( {{restaurant.id}} )('payment-summaries').post({
@@ -102,8 +103,8 @@ require([
           , '<small class="really-small">Press CMD+Alt+J</small>'
           ].join(''), 1000 );
         }
-console.log('success!', result);
-        $tableList.prepend( result );
+
+        tableList.prepend( result );
       });
     });
   });

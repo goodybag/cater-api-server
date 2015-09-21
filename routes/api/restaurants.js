@@ -249,7 +249,8 @@ route.get('/:restaurant_id/menu',
   m.queryOptions({
     many: [{
       table: 'items',
-      where: {is_hidden: false}
+      where: {is_hidden: false},
+      pluck: [{ table: 'item_tags', column: 'tag', alias: 'tags' }]
     }]
   }),
   m.find(db.categories));

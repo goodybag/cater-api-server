@@ -50,14 +50,14 @@ module.exports.emitPaymentSummaryChange = function( options ){
 };
 
 module.exports.get = function( req, res ){
-  PMS({ id: req.params.id })
+  PMS({ id: req.params.id, restaurant_id: req.params.restaurant_id })
     .fetch( function( error, result ){
       if ( error ){
         req.logger.warn('Error looking Payment Summary', {
           error: error
         });
 
-        return res.error( errors.internal.DB_FAILURE, error );
+        return res.error( 'httpCode' in error ? error : errors.internal.DB_FAILURE, error );
       }
 
       res.json( result );
@@ -65,6 +65,9 @@ module.exports.get = function( req, res ){
 };
 
 module.exports.send = function( req, res ){
+  PMS
+    .create({ restaurant_id: req.params})
+
   if ( !Array.isArray( req.body.recipients ) ){
     res.status(400).json({
       message: 'Invalid format for `recipients` field. Must be an Array'

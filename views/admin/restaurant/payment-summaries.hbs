@@ -24,31 +24,6 @@
 <nav>{{> restaurant_edit_nav}}</nav>
 {{/extend}}
 
-{{#partial "list-item"}}
-<div class="list-item" data-payment-summary-id="{{this.id}}">
-  <label class="component item-selector">
-    <input type="checkbox">
-  </label>
-  <div class="component main">
-    <a href="/payment-summaries/ps-{{this.id}}.pdf" class="item-title" target="_blank">#{{this.id}}</a>
-    <span class="label-tag label-status small {{this.status}}">{{capitalize this.status}}</span>
-    <dl class="item-details dl-horizontal-auto">
-      <div>
-        <dt>Billing Period:</dt>
-        <dd>{{datepart this.period_begin}} -
-            {{datepart this.period_end~}}</dd>
-      </div>
-    </dl>
-    <div class="more-actions-and-info bottom">
-      <button
-        class="action btn-default"
-        data-id="{{this.id}}"
-        data-action="delete">Delete</button>
-    </div>
-  </div>
-</div>
-{{/partial}}
-
 {{#extend "body"}}
 <h1 class="page-title">Payment Summaries</h1>
 <div class="panel-component panel-island panel-create">
@@ -85,17 +60,13 @@
   </div>
   <div class="list-items">
   {{#each restaurant.payment_summaries}}
-    {{{partial "list-item"}}}
+    {{> restaurant_payment_summary_list_item}}
   {{/each}}
   </div>
 </div>
 {{/extend}}
 
 {{#extend "scripts"}}
-<script type="text/x-handlebars-template" id="list-item-template">
-  {{{partial "list-item"}}}
-</script>
-
 <script>
 require([
   'jquery'
@@ -109,24 +80,6 @@ require([
 ], function( $, handlebars, api, utils, flash, pmsTable, RangeSelector ) {
   var range = new RangeSelector();
 
-  var listItemTemplate = handlebars.compile(
-    document.getElementById('list-item-template').innerHTML
-  );
-
-  range.on( 'submit', function( range ){
-    api('restaurants')( {{restaurant.id}} )('payment-summaries').post({
-      period_begin: range.from
-    , period_end:   range.to
-    }, function( error, result ){
-      if ( error ){
-        console.error( error );
-        return flash.info([
-          'Error :(<br>'
-        , '<small class="really-small">Press CMD+Alt+J</small>'
-        ].join(''), 1000 );
-      }
-    });
-  });
 
   $(function(){
     var $tableList = $('.table-list');
@@ -136,6 +89,23 @@ require([
     range.setElement('#range-processor');
 
     pmsTable( $tableList, { restaurant_id: {{restaurant.id}} });
+
+    range.on( 'submit', function( range ){
+      api('restaurants')( {{restaurant.id}} )('payment-summaries').post({
+        period_begin: range.from
+      , period_end:   range.to
+      }, function( error, result ){
+        if ( error ){
+          console.error( error );
+          return flash.info([
+            'Error :(<br>'
+          , '<small class="really-small">Press CMD+Alt+J</small>'
+          ].join(''), 1000 );
+        }
+console.log('success!', result);
+        $tableList.prepend( result );
+      });
+    });
   });
 });
 </script>

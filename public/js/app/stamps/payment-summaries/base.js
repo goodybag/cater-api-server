@@ -7,6 +7,7 @@ if ( typeof module === 'object' && module && typeof module.exports === 'object' 
 define( function( require, exports, module ){
   var PMSItem = require('../orders/payment-summary-item');
   var utils   = require('utils');
+  var moment  = require('moment-timezone');
 
   return module.exports = require('stampit')()
     .state({
@@ -28,6 +29,13 @@ define( function( require, exports, module ){
           .map( function( order ){
             return order.toPaymentSummaryItem();
           });
+      }
+
+    , getBillingPeriodFormatted: function(){
+        return [
+          moment( this.billing_period_start ).format('MM/DD/YYYY')
+        , moment( this.billing_period_end ).format('MM/DD/YYYY')
+        ].join(' - ');
       }
     });
 });

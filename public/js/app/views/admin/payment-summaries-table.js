@@ -37,7 +37,7 @@ define( function( require, exports, module ){
       }
     };
 
-    $el.find('[data-action]').click( function( e ){
+    $el.delegate( '[data-action]', 'click', function( e ){
       e.preventDefault();
 
       var $this   = $(this);

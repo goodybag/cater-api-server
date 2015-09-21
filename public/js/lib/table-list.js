@@ -14,7 +14,7 @@
   var TableList = function(el, options) {
     this.$el = $(el);
     this.options = this.getOptions(options);
-
+console.log('options', this.options, options);
     this.init();
 
     return this;
@@ -27,26 +27,29 @@
   TableList.prototype.init = function(){
     this.$items = this.$el.find('.list-item');
     this.$checkboxes = this.$items.find('[type="checkbox"]');
+    this.destroyEvents();
     this.initEvents();
     this.numSelected = this.getNumSelected();
   };
 
   TableList.prototype.append = function( model ){
-    if ( this.options.itemTemplate !== 'function' ){
+    if ( typeof this.options.itemTemplate !== 'function' ){
       throw new Error('Must provide `itemTemplate` option');
     }
 
     this.$el.find('.list-items').append( this.options.itemTemplate( model ) );
+    this.init();
 
     return this;
   };
 
   TableList.prototype.prepend = function( model ){
-    if ( this.options.itemTemplate !== 'function' ){
+    if ( typeof this.options.itemTemplate !== 'function' ){
       throw new Error('Must provide `itemTemplate` option');
     }
 
     this.$el.find('.list-items').prepend( this.options.itemTemplate( model ) );
+    this.init();
 
     return this;
   };
@@ -63,6 +66,11 @@
   TableList.prototype.initEvents = function( first_argument ){
     this.$el.find('.list-header > .item-selector > input').change( this.onItemSelectorAllChange.bind( this ) );
     this.$el.find('.list-items .item-selector > input').change( this.onItemSelectorChange.bind( this ) );
+  };
+
+  TableList.prototype.destroyEvents = function( first_argument ){
+    this.$el.find('.list-header > .item-selector > input').off( 'change', this.onItemSelectorAllChange.bind( this ) );
+    this.$el.find('.list-items .item-selector > input').off(  'change', this.onItemSelectorChange.bind( this ) );
   };
 
   TableList.prototype.getNumSelected = function(){

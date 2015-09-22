@@ -20,7 +20,7 @@ module.exports = require('stampit')()
 
           utils.sendMail2({
             to:       recipients
-          , from:     config.paymentSummaries.fromMail
+          , from:     config.paymentSummaries.fromEmail
           , subject:  'Goodybag Payment Summary #' + this.id
 
           , body: [ 'Hi'

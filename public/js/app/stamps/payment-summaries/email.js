@@ -13,7 +13,9 @@ module.exports = require('stampit')()
       this.fetchRecipients( function( error, recipients ){
         if ( error ) return callback( error );
 
-        pdfs.pms.get( { id: this.id }, function( error, res ){
+        var where = { id: this.id, restaurant_id: this.restaurant_id };
+
+        pdfs.pms.get( where, function( error, res ){
           if ( error ) return callback( error );
 
           utils.sendMail2({
@@ -23,11 +25,8 @@ module.exports = require('stampit')()
 
           , body: [ 'Hi'
                   , '\n\n'
-                  , 'Attached is invoice #:id for billing period :billing_period '
+                  , 'Attached is payment summary #:id for billing period :billing_period '
                   , 'for orders placed through Goodybag.com.'
-                  , '\n\n'
-                  , 'Checks should be made out to: :legal_name\n'
-                  , 'Mailed to: :legal_address'
                   , '\n\n'
                   , 'This is an automated message, but feel free to reply to this '
                   , 'email if you have any questions.'
@@ -38,21 +37,12 @@ module.exports = require('stampit')()
                   ].join('')
                   .replace( ':id', this.id )
                   .replace( ':billing_period', this.getBillingPeriodFormatted() )
-                  .replace( ':legal_name', config.legal.name )
-                  .replace( ':legal_address', Address( config.legal.mailingAddress ).toString() )
 
           , attachment: {
               fileName:     config.paymentSummaries.fileName.replace( ':psdid', this.id )
             , streamSource: res
             }
-          }, function( error ){
-            if ( error ) return callback( error );
-
-            this.status = 'emailed';
-            this.email_sent_date = new Date();
-
-            this.save( callback );
-          }.bind( this ));
+          }, callback );
         }.bind( this ));
       }.bind( this ));
 

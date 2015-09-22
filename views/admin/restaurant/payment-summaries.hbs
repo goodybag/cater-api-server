@@ -26,6 +26,20 @@
 
 {{#extend "body"}}
 <h1 class="page-title">Payment Summaries</h1>
+<table class="table table-striped" id="payment-summary-recipients">
+  <thead>
+    <th>Recipient Name</th>
+    <th>Email</th>
+  </thead>
+  <tbody>
+    {{#each restaurant.contacts}}
+      <tr>
+        <td>{{this.name}}</td>
+        <td>{{this.emails}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
 <div class="panel-component panel-island panel-create">
   <form class="form-horizontal og-range-processor" id="range-processor">
     <div class="errors hide"></div>

@@ -14,9 +14,13 @@
     </dl>
     <div class="more-actions-and-info bottom">
       <a href="/admin/restaurants/{{this.restaurant_id}}/payment-summaries/{{this.id}}/pdf"
-        class="action btn-default">View HTML</a>
+        class="action">View HTML</a>
       <button
-        class="action btn-default"
+        class="action"
+        data-id="{{this.id}}"
+        data-action="email">Send Email</button>
+      <button
+        class="action"
         data-id="{{this.id}}"
         data-action="delete">Delete</button>
     </div>

@@ -607,22 +607,6 @@ route.get('/restaurants/:restaurant_id/locations/:id', m.param('restaurant_id'),
 
 route.get('/restaurants/:rid/menu.csv', controllers.restaurants.menuCsv);
 
-route.get('/ol-greg', m.viewPlugin('mainNav', {
-  active: 'home'
-}), m.db.restaurants.find({}, {
-  limit: 'all',
-  one: [{
-    table: 'regions',
-    alias: 'region'
-  }, {
-    table: 'restaurant_plans',
-    alias: 'plan'
-  }],
-  order: 'name asc'
-}), m.view('admin/ol-greg/home', {
-  layout: 'admin/layout2'
-}));
-
 function getLabelTags(req, res, next) {
   var not = ['white', 'gray-lighter', 'tan'];
 
@@ -701,22 +685,6 @@ route.get('/restaurants/:id/payment-summaries'
   })
 , m.view( 'admin/restaurant/payment-summaries', db.restaurants, {
     layout: 'admin/layout-single-object'
-  , method: 'findOne'
-  })
-);
-
-route.get('/restaurants/:id/payment-summaries/:payment_summary_id'
-, m.restrict(['admin'])
-, m.param('id')
-, function( req, res, next ){
-    res.locals.payment_summary_id = req.params.payment_summary_id;
-    return next();
-  }
-, m.queryOptions({
-    one:  [{ table: 'restaurant_plans', alias: 'plan' }]
-  })
-, m.view( 'admin/restaurant-payment-summary', db.restaurants, {
-    layout: 'admin/layout'
   , method: 'findOne'
   })
 );

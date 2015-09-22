@@ -11,7 +11,6 @@ subcomponents:
 * less/core-admin.less
 * less/core-cater-tool.less
 * less/core-goodybag.less
-* less/core-ol-greg.less
 
 
 The [Kitchen Sink](https://www.goodybag.com/admin/kitchen-sink) is Goodybag's

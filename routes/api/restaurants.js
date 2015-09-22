@@ -155,57 +155,11 @@ route.put('/:restaurant_id/payment-summaries/:id', m.param('id'), m.param(
 route.delete('/:restaurant_id/payment-summaries/:id', m.param('id'), m.param(
   'restaurant_id'), m.remove(db.payment_summaries));
 
+route.post('/:restaurant_id/payment-summaries/:id/send', controllers.paymentSummaries.send);
+
 route.post('/:restaurant_id/transfers', m.restrict(['accounting', 'admin']), m.getRestaurant({
   param: 'restaurant_id'
 }), m.stripe.createRestaurantTransfer());
-
-route.post('/:restaurant_id/payment-summaries/:id/send', controllers.paymentSummaries.send);
-
-route.get('/:restaurant_id/payment-summaries/:payment_summary_id/items', m.pagination(),
-  controllers.paymentSummaries
-  .applyRestaurantId(), m.param('payment_summary_id'), m.queryOptions({
-    one: [{
-      table: 'orders',
-      alias: 'order',
-      one: [{
-        table: 'delivery_services',
-        alias: 'delivery_service'
-      }, {
-        table: 'restaurants',
-        alias: 'restaurant'
-      }]
-    }]
-  }), m.find(db.payment_summary_items)
-);
-
-route.post('/:restaurant_id/payment-summaries/:payment_summary_id/items', m.queryToBody(
-    'payment_summary_id'),
-  m.after(controllers.paymentSummaries.emitPaymentSummaryChange()), m.insert(
-    db.payment_summary_items)
-);
-
-route.get('/:restaurant_id/payment-summaries/:payment_summary_id/items/:id',
-  controllers.paymentSummaries.applyRestaurantId(),
-  m.param('payment_summary_id'), m.param('id'), m.findOne(db.payment_summary_items)
-);
-
-route.put('/:restaurant_id/payment-summaries/:payment_summary_id/items/:id',
-  controllers.paymentSummaries.applyRestaurantIdForNonJoins(),
-  m.param('payment_summary_id'), m.param('id'), m.after(
-    controllers.paymentSummaries.emitPaymentSummaryChange({
-      idField: 'payment_summary_id'
-    })
-  ), m.update(db.payment_summary_items)
-);
-
-route.delete('/:restaurant_id/payment-summaries/:payment_summary_id/items/:id',
-  controllers.paymentSummaries.applyRestaurantIdForNonJoins(),
-  m.param('payment_summary_id'), m.param('id'), m.after(
-    controllers.paymentSummaries.emitPaymentSummaryChange({
-      idField: 'payment_summary_id'
-    })
-  ), m.remove(db.payment_summary_items)
-);
 
 route.get('/:restaurant_id/photos', m.restrict(['client', 'admin']), m.param(
   'restaurant_id'), m.find(db.restaurant_photos));

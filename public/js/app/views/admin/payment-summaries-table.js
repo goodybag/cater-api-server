@@ -22,7 +22,7 @@ define( function( require, exports, module ){
     api = api('restaurants')( options.restaurant_id );
 
     var actions = {
-      'delete': function( $target, $el, id, options ){
+      'delete': function( $target, $el, id ){
         api('payment-summaries')( id ).del( function( error ){
           if ( error ){
             console.error( error );
@@ -33,6 +33,23 @@ define( function( require, exports, module ){
           }
 
           $el.remove();
+        });
+      }
+
+    , 'email': function( $target, $el, id ){
+        api('payment-summaries')( id )('send').post( function( error ){
+          if ( error ){
+            console.error( error );
+            return flash.info([
+              'Error :(<br>'
+            , '<small class="really-small">Press CMD+Alt+J</small>'
+            ].join(''), 1000 );
+          }
+
+          flash.info([
+            'Success!<br>'
+          , '<small class="really-small">Now get back to being who you want to be!</small>'
+          ].join(''), 1000 );
         });
       }
     };

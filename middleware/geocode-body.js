@@ -61,7 +61,7 @@ module.exports = function( options ){
     logger.info( 'geocoding', bodyAddress );
 
     GeocodeRequest()
-      .address( bodyAddress.toString() )
+      .address( bodyAddress.toString({ street2: false }) )
       .send( function( error, result ){
         if ( error ){
           return next( error );

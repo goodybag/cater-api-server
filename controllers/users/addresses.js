@@ -30,7 +30,7 @@ module.exports.create = function(req, res, next) {
   }
 
   GeocodeRequest()
-    .address( address.toString() )
+    .address( address.toString({ street2: false }) )
     .send( function( error, result ){
       if ( error ){
         logger.warn('Error geocoding address', {

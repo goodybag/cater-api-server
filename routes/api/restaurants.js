@@ -159,8 +159,7 @@ route.post('/:restaurant_id/transfers', m.restrict(['accounting', 'admin']), m.g
   param: 'restaurant_id'
 }), m.stripe.createRestaurantTransfer());
 
-route.post('/:restaurant_id/payment-summaries/:payment_summary_id/send',
-  controllers.paymentSummaries.send);
+route.post('/:restaurant_id/payment-summaries/:id/send', controllers.paymentSummaries.send);
 
 route.get('/:restaurant_id/payment-summaries/:payment_summary_id/items', m.pagination(),
   controllers.paymentSummaries

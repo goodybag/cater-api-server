@@ -47,6 +47,7 @@
     , textDecoration: 'none'
     , letterSpacing: '0.4px'
     , verticalAlign: 'bottom'
+    , zIndex: '1000'
     });
 
     var image = document.createElement('img');

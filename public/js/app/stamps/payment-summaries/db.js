@@ -32,11 +32,19 @@ module.exports = require('stampit')()
 
   , fetchRecipients: function( callback ){
       var where = {
-        restaurant_id: this.id
+        restaurant_id: this.restaurant_id
       , receives_payment_summaries: true
       };
 
-      db.contacts.find( where, callback );
+      db.contacts.find( where, function( error, results ){
+        if ( error ){
+          return callback( error );
+        }
+
+        var recipients = utils.flatten( utils.pluck( results, 'emails') );
+
+        return callback( null, recipients );
+      });
 
       return this;
     }

@@ -668,6 +668,7 @@ describe('Orders Stamps', function(){
       , tip: 0
       , gb_fee: -48
       , sales_tax: -33
+      , order: item
       , net_payout: 402
       });
     });
@@ -683,6 +684,7 @@ describe('Orders Stamps', function(){
       , tip: -50
       , gb_fee: -33
       , sales_tax: -33
+      , order: item
       , net_payout: 267
       });
     });
@@ -698,6 +700,7 @@ describe('Orders Stamps', function(){
       , tip: 0
       , gb_fee: -45
       , sales_tax: 0
+      , order: item
       , net_payout: 405
       });
     });
@@ -713,6 +716,7 @@ describe('Orders Stamps', function(){
       , tip: 0
       , gb_fee: -38
       , sales_tax: -25
+      , order: item
       , net_payout: 312
       });
     });
@@ -728,6 +732,7 @@ describe('Orders Stamps', function(){
       , tip: 0
       , gb_fee: -48
       , sales_tax: -25
+      , order: item
       , net_payout: 402
       });
     });

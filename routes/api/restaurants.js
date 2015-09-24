@@ -249,8 +249,23 @@ route.get('/:restaurant_id/menu',
   m.queryOptions({
     many: [{
       table: 'items',
-      where: {is_hidden: false},
-      pluck: [{ table: 'item_tags', column: 'tag', alias: 'tags' }]
+      where: {
+        is_hidden: false
+      },
+      pluck: [{
+        table: 'item_tags',
+        column: 'tag',
+        alias: 'tags'
+      }]
     }]
   }),
   m.find(db.categories));
+
+route.get('/:restaurant_id/past-orders',
+  function(req, res, next) {
+    req.queryObj.user_id = req.user.attributes.id;
+    next();
+  },
+  m.param('restaurant_id'),
+  m.sort('-datetime'),
+  m.find(db.orders));

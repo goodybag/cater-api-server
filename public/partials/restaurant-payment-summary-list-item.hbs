@@ -1,4 +1,7 @@
-<div class="list-item" data-payment-summary-id="{{this.id}}">
+<div
+  class="list-item"
+  data-id="{{this.id}}"
+  data-restaurant-id="{{this.restaurant_id}}">
   <label class="component item-selector">
     <input type="checkbox">
   </label>
@@ -18,10 +21,12 @@
       <button
         class="action"
         data-id="{{this.id}}"
+        data-restaurant-id="{{this.restaurant_id}}"
         data-action="email">Send Email</button>
       <button
         class="action"
         data-id="{{this.id}}"
+        data-restaurant-id="{{this.restaurant_id}}"
         data-action="delete">Delete</button>
     </div>
   </div>

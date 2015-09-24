@@ -71,6 +71,11 @@
       {{restaurant.payment_summaries.length}} Payment Summar
       {{~#if (eq restaurant.payment_summaries.length 1)}}y{{else}}ies{{/if}}
     </div>
+    <ul class="component list-nav nav">
+      <li class="selected-only">
+        <a href="#" data-action="email-selected">Send Email</a>
+      </li>
+    </ul>
   </div>
   <div class="list-items">
   {{#each restaurant.payment_summaries}}
@@ -103,7 +108,7 @@ require([
 
     range.setElement('#range-processor');
 
-    pmsTable( tableList.$el, { restaurant_id: {{restaurant.id}} });
+    pmsTable( tableList.$el );
 
     range.on( 'submit', function( range ){
       api('restaurants')( {{restaurant.id}} )('payment-summaries').post({

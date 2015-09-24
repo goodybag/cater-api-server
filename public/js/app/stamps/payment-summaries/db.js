@@ -4,6 +4,7 @@ var utils   = require('utils');
 var errors  = require('errors');
 var PMSItem = require('../orders/payment-summary-item');
 var pdfs    = require('../../../../../lib/pdfs');
+var logger  = require('../../../../../lib/logger').create('PaymentSummary-DB');
 
 module.exports = require('stampit')()
   .compose( require('./base') )
@@ -84,8 +85,12 @@ module.exports = require('stampit')()
         callback( null, result );
 
         pdfs.pms.build({ restaurant_id: result.restaurant_id, id: result.id }, function( error ){
-
-        });
+          if ( error ){
+            logger.warn('Error build PMS PDF', {
+              error: error
+            });
+          }
+        }.bind( this ));
       }.bind( this );
 
       if ( this.id ){

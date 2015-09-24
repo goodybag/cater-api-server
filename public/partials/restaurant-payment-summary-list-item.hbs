@@ -6,7 +6,9 @@
     <input type="checkbox">
   </label>
   <div class="component main">
-    <a href="/payment-summaries/ps-{{this.id}}.pdf" class="item-title" target="_blank">#{{this.id}}</a>
+    <a href="/payment-summaries/ps-{{this.id}}.pdf" class="item-title" target="_blank">#{{this.id}}
+    {{~#if showRestaurantName}} {{this.restaurant.name}}{{/if~}}
+    </a>
     <span class="label-tag label-status small {{this.status}}">{{capitalize this.status}}</span>
     <dl class="item-details dl-horizontal-auto">
       <div>

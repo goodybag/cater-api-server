@@ -14,7 +14,6 @@
   var TableList = function(el, options) {
     this.$el = $(el);
     this.options = this.getOptions(options);
-console.log('options', this.options, options);
     this.init();
 
     return this;

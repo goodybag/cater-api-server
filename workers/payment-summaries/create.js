@@ -38,6 +38,8 @@ utils.async.waterfall([
     , table: 'rorders'
     , columns: ['restaurant_id']
     } }
+
+  , plan_id: { $notNull: true }
   }, {
     with: [
       { name:  'rorders'

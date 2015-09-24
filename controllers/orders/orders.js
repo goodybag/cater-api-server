@@ -252,7 +252,7 @@ module.exports.update = function(req, res) {
       }
 
       GeocodeRequest()
-        .address( orderAddress.toString() )
+        .address( orderAddress.toString({ street2: false }) )
         .send( function( error, result ){
           if ( error ){
             return next( error );

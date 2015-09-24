@@ -18,8 +18,8 @@ var promo = {
     email: 'christymedlock@goodybag.com'
   , promo_code: ['gbfree0715']
   }
-, toby: {
-    email: 'tobyshields@goodybag.com'
+, ramone: {
+    email: 'ramonejohnson@goodybag.com'
   , promo_code: ['seattlegb', 'seagoody']
   }
 , om: {

@@ -532,6 +532,19 @@ route.get('/restaurants/:restaurant_id/photos', m.viewPlugin('mainNav', {
 
 route.get('/restaurants/:rid/sort', controllers.restaurants.sort);
 
+route.get('/restaurants/:id/widgets'
+  , m.viewPlugin( 'mainNav', { active: 'restaurants' })
+  , m.viewPlugin( 'sidebarNav', {
+      active:   'widgets'
+    , baseUrl:  '/admin/restaurants/:id'
+    })
+  , m.param('id')
+  , m.view('admin/restaurant/widgets', db.restaurants, {
+      layout: 'admin/layout-two-column'
+    , method: 'findOne'
+    })
+  );
+
 /**
  * Restaurant copy
  */

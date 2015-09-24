@@ -1,0 +1,22 @@
+{{#extend "html-title"}} Widgets{{/extend}}
+{{#extend "body"}}
+<h1>Widgets</h1>
+
+<section>
+  <div class="container">
+    <h2 class="component-title">Embedded Order Button</h2>
+
+    <script data-rid="{{restaurant.id}}" class="goodybag-order-button" src="/dist/sharelink.min.js"></script>
+
+    <textarea style="height: 220px">
+<script data-rid="{{restaurant.id}}" class="goodybag-order-button">
+!function(a,b){var c=function(a,b){for(var c in b)a.style[c]=b[c]},d=function(){var a=b.querySelectorAll(".goodybag-order-button");if(!(a.length<1)){var d=b.createElement("button"),e=b.createElement("a");e.title="order with goodybag!",e.href="https://www.goodybag.com/restaurants/"+a[0].getAttribute("data-rid"),c(d,{background:"#ed4242",color:"#ffffff",borderTopColor:"#ed4242",boxShadow:"inset 0 1px 0 rgba(255, 255, 255, 0.1)",position:"fixed",bottom:"0",left:"20px",display:"inline-block",border:"none",borderStyle:"solid",borderWidth:"1px",borderBottomWidth:"0",borderRadius:"4px",borderBottomLeftRadius:0,borderBottomRightRadius:0,borderColor:"#dd1515",padding:"5.5px 18px 4.5px 18px",fontSize:"14px",fontFamily:'"Avenir", Helvetica, sans-serif',lineHeight:"0",textDecoration:"none",letterSpacing:"0.4px",verticalAlign:"bottom"},zIndex:"1000"});var f=b.createElement("img");f.src="https://www.filepicker.io/api/file/2teJMBOMRgmdLfGdl8zO",c(f,{width:"30px",height:"30px",border:"none"});var g=b.createElement("span");g.appendChild(b.createTextNode("Order with Goodybag")),c(g,{position:"relative",bottom:"10px",left:"5px"}),d.appendChild(f),d.appendChild(g),e.appendChild(d),a[0].parentNode.insertBefore(e,a[0])}},e=function(c,d,e){d=b,e="addEventListener",d[e]?d[e]("DOMContentLoaded",c):a.attachEvent("onload",c)};e(function(){d()})}(window,document);
+</script>
+    </textarea>
+  </div>
+</section>
+
+{{/extend}}
+
+{{#extend "scripts"}}
+{{/extend}}

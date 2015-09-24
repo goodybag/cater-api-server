@@ -15,15 +15,9 @@ define( function( require, exports, module ){
   var flash   = require('flash');
 
   return function( $el, options ){
-    if ( !options.restaurant_id ){
-      throw new Error('Must provide options.restaurant_id');
-    }
-
-    api = api('restaurants')( options.restaurant_id );
-
     var actions = {
-      'delete': function( $target, $el, id ){
-        api('payment-summaries')( id ).del( function( error ){
+      'delete': function( $target, $el, rid, id ){
+        api('restaurants')( rid )('payment-summaries')( id ).del( function( error ){
           if ( error ){
             console.error( error );
             return flash.info([
@@ -36,8 +30,8 @@ define( function( require, exports, module ){
         });
       }
 
-    , 'email': function( $target, $el, id ){
-        api('payment-summaries')( id )('send').post( function( error ){
+    , 'email': function( $target, $el, rid, id ){
+        api('restaurants')( rid )('payment-summaries')( id )('send').post( function( error ){
           if ( error ){
             console.error( error );
             return flash.info([
@@ -52,6 +46,23 @@ define( function( require, exports, module ){
           ].join(''), 1000 );
         });
       }
+
+    , 'email-selected': function(){
+
+        var toEmail = [];
+
+        $el.find('.list-item.selected').each( function(){
+          var $pms = $(this);
+
+          toEmail.push({
+            id: $pms.data('id')
+          , restaurant_id: $pms.data('restaurant-id')
+          });
+        });
+        return console.log('email-selected', toEmail);
+
+        // utils.async.each( toEmail, onPms, function( error, ))
+      }
     };
 
     $el.delegate( '[data-action]', 'click', function( e ){
@@ -59,11 +70,13 @@ define( function( require, exports, module ){
 
       var $this   = $(this);
       var id      = +$this.data('id');
+      var rid     = +$this.data('restaurant-id');
       var action  = $this.data('action');
 
       actions[ action ](
         $this
       , $('.list-item[data-payment-summary-id="' + id + '"]')
+      , rid
       , id
       );
     })

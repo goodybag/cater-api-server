@@ -5,8 +5,7 @@ var db = require('../../db');
 var utils = require('../../utils');
 var controllers = require('../../controllers');
 var paletteParser = require('../../lib/parse-palette-from-variables');
-var Datetime = require('stamps/datetime/billing');
-var BillingDatetime = Datetime.compose( require('stamps/datetime/billing') );
+var Datetime = require('stamps/datetime');
 
 var route = module.exports = express.Router();
 
@@ -789,19 +788,23 @@ route.get('/analytics/retention'
 
 route.get('/payment-summaries'
 , function( req, res, next ){
-    var p1 = BillingDatetime().getBillingPeriod();
-    var p2 = BillingDatetime().getPreviousBillingPeriod();
+    var p1 = Datetime().getBillingPeriod();
+    var p2 = Datetime().getPreviousBillingPeriod();
+
+    var options = {
+      one: [{ table: 'restaurants', alias: 'restaurant' }]
+    };
 
     utils.async.parallel([
-      db.payment_summaries.find.bind({
+      db.payment_summaries.find.bind( db.payment_summaries, {
         period_begin: p1.startDate
       , period_end:   p1.endDate
-      })
+      }, options )
 
-    , db.payment_summaries.find.bind({
+    , db.payment_summaries.find.bind( db.payment_summaries, {
         period_begin: p2.startDate
       , period_end:   p2.endDate
-      })
+      }, options )
     ], function( error, results ){
       if ( error ){
         req.logger.warn('Error looking up payment summaries', {
@@ -811,26 +814,28 @@ route.get('/payment-summaries'
         return next( error );
       }
 
-      try {
-        res.locals.payment_summary_groups = results.map( function( pmsList ){
+      res.locals.payment_summary_groups = results.map( function( pmsList ){
+        try {
           return {
             period_begin:       pmsList[0].period_begin
           , period_end:         pmsList[0].period_end
           , payment_summaries:  pmsList
           };
-        });
-      } catch( e ){
-        req.logger.warn('Exception while attempting to parse payment summaries result', {
-          exception: e
-        });
+        } catch( e ){
+          req.logger.warn('Exception while attempting to parse payment summaries result', {
+            exception: e
+          });
 
-        res.locals.payment_summary_groups = [];
-      }
+          console.error( e );
+
+          return null;
+        }
+      }).filter( function( r ){ return !!r; });
 
       return next();
     });
   }
 , m.view( 'admin/payment-summaries', {
-    layout: 'admin/layou2'
+    layout: 'admin/layout2'
   })
 );

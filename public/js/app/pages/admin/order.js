@@ -95,30 +95,24 @@ define(function(require){
 
         $('[name="order_status"]').change(function (e) {
           var silent = !!$(this).find(':selected').data('silent');
-          page.updateOrder({ status: e.target.value },{ silent: silent }, page.flash);
+          page.updateOrder({ status: e.target.value },{ silent: silent }, flash.successOrError.bind( flash ));
         });
 
         $('[name="payment_status"]').change(function (e) {
           var status = e.target.value || null;
           if (status === null) alert('Changing payment status to unprocessed will attempt to recharge the credit card!');
-          page.updateOrder({ payment_status: status }, page.flash);
+          page.updateOrder({ payment_status: status }, flash.successOrError.bind( flash ));
         });
 
         $('[name="payment_method_id"]').change( function( e ){
           var pmid = isNaN(e.target.value) ? null : e.target.value;
-          page.updateOrder({ payment_method_id: pmid }, page.flash);
+          page.updateOrder({ payment_method_id: pmid }, flash.successOrError.bind( flash ));
         });
 
         $('[role="save"]').click( function( e ){
           e.preventDefault();
 
-          page.saveOrder( function( error ){
-            if ( error ){
-              return page.flashError( error );
-            }
-
-            return page.flashSuccess();
-          });
+          page.saveOrder( flash.successOrError.bind( flash ) );
         });
       });
     }
@@ -219,7 +213,7 @@ define(function(require){
   , fetchAndRenderHistory: function(){
       page.getHistory( function( error, items ){
         if ( error ){
-          return page.flashError( error );
+          return flash.error( error );
         }
 
         page.notificationHistory.setItems( items );
@@ -229,7 +223,7 @@ define(function(require){
   , fetchAndRenderNotifications: function(){
       page.getAvailable( function( error, items ){
         if ( error ){
-          return page.flashError( error );
+          return flash.error( error );
         }
 
         page.notifications.setItems( items );
@@ -241,30 +235,6 @@ define(function(require){
         'hide'
       , page.state.get('order_type').indexOf('courier') === -1
       );
-    }
-
-  , flash: function(error) {
-      if (error) {
-        return page.flashError( error );
-      }
-      return page.flashSuccess();
-    }
-
-  , flashSuccess: function(){
-      flash.info([
-        "It's set!<br>"
-      , '<small class="really-small">'
-      , page.successFunnies[ ~~( Math.random() * page.successFunnies.length ) ]
-      , '</small>'
-      ].join(''));
-    }
-
-  , flashError: function( error ){
-      console.error( error );
-      flash.info([
-        'Error :(<br>'
-      , '<small class="really-small">Press CMD+Alt+J</small>'
-      ].join(''), 1000 );
     }
 
   , onNotificationsSend: function(){

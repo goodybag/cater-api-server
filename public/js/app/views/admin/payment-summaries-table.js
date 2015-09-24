@@ -18,37 +18,21 @@ define( function( require, exports, module ){
     var actions = {
       'delete': function( $target, $el, rid, id ){
         api('restaurants')( rid )('payment-summaries')( id ).del( function( error ){
-          if ( error ){
-            console.error( error );
-            return flash.info([
-              'Error :(<br>'
-            , '<small class="really-small">Press CMD+Alt+J</small>'
-            ].join(''), 1000 );
-          }
+          flash.successOrError( error );
 
-          $el.remove();
+          if ( !error ){
+            $el.remove();
+          }
         });
       }
 
     , 'email': function( $target, $el, rid, id ){
-        api('restaurants')( rid )('payment-summaries')( id )('send').post( function( error ){
-          if ( error ){
-            console.error( error );
-            return flash.info([
-              'Error :(<br>'
-            , '<small class="really-small">Press CMD+Alt+J</small>'
-            ].join(''), 1000 );
-          }
-
-          flash.info([
-            'Success!<br>'
-          , '<small class="really-small">Now get back to being who you want to be!</small>'
-          ].join(''), 1000 );
-        });
+        api('restaurants')( rid )('payment-summaries')( id )('send').post(
+          flash.successOrError.bind( flash )
+        );
       }
 
     , 'email-selected': function(){
-
         var toEmail = [];
 
         $el.find('.list-item.selected').each( function(){
@@ -59,9 +43,8 @@ define( function( require, exports, module ){
           , restaurant_id: $pms.data('restaurant-id')
           });
         });
-        return console.log('email-selected', toEmail);
 
-        // utils.async.each( toEmail, onPms, function( error, ))
+        utils.async.each( toEmail, onPms, flash.successOrError.bind( flash ) );
       }
     };
 

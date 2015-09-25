@@ -53,30 +53,6 @@ route.post('/:id/auto-update', m.restrict(['admin']), m.getRestaurant({
   delivery: true
 }), controllers.api.restaurants.autoPopulate);
 
-route.get('/:restaurant_id/orders', m.restrict(['admin']), m.pagination({
-  allowLimit: true
-}), m.param('restaurant_id'), m.param('status'), m.param('start_date',
-  function(value, $where, options) {
-    $where.datetimeRange = $where.datetimeRange || {
-      datetime: {}
-    };
-    $where.datetimeRange.datetime.$gte = value;
-  }), m.param('end_date', function(value, $where, options) {
-  $where.datetimeRange = $where.datetimeRange || {
-    datetime: {}
-  };
-  $where.datetimeRange.datetime.$lt = value;
-}), m.queryOptions({
-  one: [{
-    table: 'restaurants',
-    alias: 'restaurant'
-  }],
-  many: [{
-    table: 'order_items',
-    alias: 'items'
-  }]
-}), m.find(db.orders));
-
 route.get('/:restaurant_id/orders/current',
   function(req, res, next) {
     req.restaurant = {
@@ -249,8 +225,29 @@ route.get('/:restaurant_id/menu',
   m.queryOptions({
     many: [{
       table: 'items',
-      where: {is_hidden: false},
-      pluck: [{ table: 'item_tags', column: 'tag', alias: 'tags' }]
+      where: {
+        is_hidden: false
+      },
+      pluck: [{
+        table: 'item_tags',
+        column: 'tag',
+        alias: 'tags'
+      }]
     }]
   }),
   m.find(db.categories));
+
+route.get('/:restaurant_id/orders',
+  function(req, res, next) {
+    req.queryObj.user_id = req.user.attributes.id;
+    next();
+  },
+  m.param('restaurant_id'),
+  m.sort('-datetime'),
+  m.queryOptions({
+    many: [{
+      table: 'order_items',
+      alias: 'items'
+    }]
+  }),
+  m.find(db.orders));

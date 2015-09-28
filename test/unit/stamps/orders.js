@@ -1,9 +1,11 @@
 var assert      = require('assert');
 var moment      = require('moment');
+var stampit     = require('stampit');
 var utils       = require('utils');
 var config      = require('../../../config');
 var orders      = require('stamps/orders');
 var OrderCharge = require('stamps/orders/charge');
+var PMSItem     = require('stamps/orders/payment-summary-item');
 var fulfillability = require('stamps/orders/fulfillability');
 orders.db        = require('../../../lib/stamps/db/orders')
 
@@ -629,7 +631,8 @@ describe('Orders Stamps', function(){
   });
 
   describe('Charges', function(){
-    var DefaultOrderCharge = OrderCharge
+    var DefaultOrderCharge = stampit()
+      .compose( OrderCharge )
       .state({
         type: 'delivery'
       , region: { sales_tax: 0.0825 }
@@ -678,17 +681,17 @@ describe('Orders Stamps', function(){
 
     it('.getApplicationCut() - with service fee', function(){
       var oc = DefaultOrderCharge({ service_fee: 100 });
-      assert.equal( oc.getApplicationCut(), 158 );
+      assert.equal( oc.getApplicationCut(), 167 );
     });
 
     it('.getRestaurantCut() - with service fee', function(){
       var oc = DefaultOrderCharge({ service_fee: 100 });
-      assert.equal( oc.getRestaurantCut(), 313 );
+      assert.equal( oc.getRestaurantCut(), 312 );
     });
 
     it('.getTotal()', function(){
       var oc = DefaultOrderCharge();
-      assert.equal( oc.getTotal(), 321);
+      assert.equal( oc.getTotal(), 321 );
     });
 
     it('.getNoContractFee() - non-contracted', function() {
@@ -700,6 +703,109 @@ describe('Orders Stamps', function(){
     it('.getNoContractFee() - has contract', function() {
       var oc = DefaultOrderCharge();
       assert.equal( oc.getNoContractFee(), 0);
+    });
+  });
+
+  describe('Payment Summary Items', function(){
+    var DefaultPMSItem = stampit()
+      .compose( PMSItem )
+      .state({
+        type: 'delivery'
+      , region: { sales_tax: 0.0825 }
+      , restaurant: {
+          region: { sales_tax: 0.0825 }
+        , plan: { type: 'flat', data: { fee: 0.1 } }
+        , is_direct_deposit: true
+        , no_contract_fee: 0.047
+        }
+      , items: [
+          { price: 100, quantity: 1 }
+        , { price: 200, quantity: 1 }
+        ]
+      , user: { is_tax_exempt: false }
+      , tip: 50
+      , delivery_fee: 100
+      , payment_method_id: 123
+      });
+
+    it('.toPaymentSummaryItem()', function(){
+      var item = DefaultPMSItem({
+
+      });
+
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 483
+      , delivery_fee: 0
+      , tip: 0
+      , gb_fee: -48
+      , sales_tax: -33
+      , order: item
+      , net_payout: 402
+      });
+    });
+
+    it('.toPaymentSummaryItem() courier', function(){
+      var item = DefaultPMSItem({
+        type: 'courier'
+      });
+
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 483
+      , delivery_fee: -100
+      , tip: -50
+      , gb_fee: -33
+      , sales_tax: -33
+      , order: item
+      , net_payout: 267
+      });
+    });
+
+    it('.toPaymentSummaryItem() tax exempt', function(){
+      var item = DefaultPMSItem({
+        user: { is_tax_exempt: true }
+      });
+
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 450
+      , delivery_fee: 0
+      , tip: 0
+      , gb_fee: -45
+      , sales_tax: 0
+      , order: item
+      , net_payout: 405
+      });
+    });
+
+    it('.toPaymentSummaryItem() with adjustment', function(){
+      var item = DefaultPMSItem({
+        adjustment_amount: -100
+      });
+
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 375
+      , delivery_fee: 0
+      , tip: 0
+      , gb_fee: -38
+      , sales_tax: -25
+      , order: item
+      , net_payout: 312
+      });
+    });
+
+    it('.toPaymentSummaryItem() with user adjustment', function(){
+      var item = DefaultPMSItem({
+        user_adjustment_amount: -100
+      });
+
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 375
+      , delivery_fee: 0
+      , tip: 0
+      , gb_fee: -48
+      , sales_tax: -25
+      , order: item
+      , net_payout: 402
+      });
     });
   });
 });

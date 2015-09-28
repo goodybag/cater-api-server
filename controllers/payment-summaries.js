@@ -8,6 +8,10 @@ var db      = require('../db');
 var venter  = require('../lib/venter');
 var pdfs    = require('../lib/pdfs');
 var m       = require('dirac-middleware');
+var PMS     = require('stamps/payment-summaries/db');
+var errors  = require('../errors');
+
+var PMSEmail = PMS.compose( require('stamps/payment-summaries/email') );
 
 module.exports.applyRestaurantId = function(){
   return m.param( 'restaurant_id', function( value, query, options ){
@@ -47,40 +51,32 @@ module.exports.emitPaymentSummaryChange = function( options ){
   };
 };
 
-module.exports.send = function( req, res ){
-  if ( !Array.isArray( req.body.recipients ) ){
-    res.status(400).json({
-      message: 'Invalid format for `recipients` field. Must be an Array'
+module.exports.get = function( req, res ){
+  PMS({ id: req.params.id, restaurant_id: req.params.restaurant_id })
+    .fetch( function( error, result ){
+      if ( error ){
+        req.logger.warn('Error looking Payment Summary', {
+          error: error
+        });
+
+        return res.error( 'httpCode' in error ? error : errors.internal.DB_FAILURE, error );
+      }
+
+      res.json( result );
     });
-  }
+};
 
-  var id        = req.params[payment_summary_id];
-  var s3        = pdfs.pms.getS3Client();
-  var fileName  = 'payment-summary-' + id + '.pdf';
+module.exports.send = function( req, res ){
+  PMSEmail({ id: req.params.id, restaurant_id: req.params.restaurant_id })
+    .sendEmail( function( error ){
+      if ( error ){
+        req.logger.warn('Error payment summary', {
+          error: error
+        });
 
-  utils.async.waterfall([
-    db.payment_summaries.findOne.bind( db.payment_summaries, id )
-  , function( paymentSummary, next ){
-      s3.getFile( '/' + fileName, function( error, stream ){
-        return next( error, paymentSummary, stream );
-      });
-    }
-  , function( paymentSummary, fileStream, next ){
-      utils.sendMail2({
-        to:         req.body.recipients
-      , from:       'info@goodybag.com'
-      , subject:    'Goodybag Payment Summary #' + id
-      , attachment: { streamSource: fileStream, fileName: fileName  }
-      , text:       [ 'Attached is your Goodybag Payment Summary for '
-                    , moment( paymentSummary.payment_date ).format('MM/DD/YYYY')
-                    ].join('')
-      }, next );
-    }
-  ], function( error ){
-    if ( error ){
-      return res.status(500).json( error );
-    }
+        return res.error( errors.internal.UNKNOWN, error );
+      }
 
-    res.send(204);
-  });
+      res.send(204);
+    });
 };

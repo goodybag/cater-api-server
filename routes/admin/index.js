@@ -2,8 +2,10 @@ var express = require('express');
 
 var m = require('../../middleware');
 var db = require('../../db');
+var utils = require('../../utils');
 var controllers = require('../../controllers');
 var paletteParser = require('../../lib/parse-palette-from-variables');
+var Datetime = require('stamps/datetime');
 
 var route = module.exports = express.Router();
 
@@ -620,22 +622,6 @@ route.get('/restaurants/:restaurant_id/locations/:id', m.param('restaurant_id'),
 
 route.get('/restaurants/:rid/menu.csv', controllers.restaurants.menuCsv);
 
-route.get('/ol-greg', m.viewPlugin('mainNav', {
-  active: 'home'
-}), m.db.restaurants.find({}, {
-  limit: 'all',
-  one: [{
-    table: 'regions',
-    alias: 'region'
-  }, {
-    table: 'restaurant_plans',
-    alias: 'plan'
-  }],
-  order: 'name asc'
-}), m.view('admin/ol-greg/home', {
-  layout: 'admin/layout2'
-}));
-
 function getLabelTags(req, res, next) {
   var not = ['white', 'gray-lighter', 'tan'];
 
@@ -697,26 +683,23 @@ route.get('/restaurants/:id/payment-summaries'
 , m.restrict(['admin'])
 , m.param('id')
 , m.queryOptions({
-    many: [{ table: 'contacts' }]
+    many: [ { table: 'payment_summaries'
+            , order: { period_end: 'desc' }
+            }
+          , { table: 'contacts'
+            , where: { receives_payment_summaries: true }
+            }
+          ]
   })
-, m.view( 'admin/restaurant-payment-summaries', db.restaurants, {
-    layout: 'admin/layout'
-  , method: 'findOne'
+, m.viewPlugin('mainNav', {
+    active: 'restaurants'
   })
-);
-
-route.get('/restaurants/:id/payment-summaries/:payment_summary_id'
-, m.restrict(['admin'])
-, m.param('id')
-, function( req, res, next ){
-    res.locals.payment_summary_id = req.params.payment_summary_id;
-    return next();
-  }
-, m.queryOptions({
-    one:  [{ table: 'restaurant_plans', alias: 'plan' }]
+, m.viewPlugin('sidebarNav', {
+    active: 'payment-summaries',
+    baseUrl: '/admin/restaurants/:id'
   })
-, m.view( 'admin/restaurant-payment-summary', db.restaurants, {
-    layout: 'admin/layout'
+, m.view( 'admin/restaurant/payment-summaries', db.restaurants, {
+    layout: 'admin/layout-single-object'
   , method: 'findOne'
   })
 );
@@ -812,6 +795,60 @@ route.get('/analytics/retention'
 , m.organizationSubmissions()
 , m.orderAnalytics.retention()
 , m.view( 'admin/analytics/retention', {
+    layout: 'admin/layout2'
+  })
+);
+
+route.get('/payment-summaries'
+, function( req, res, next ){
+    var p1 = Datetime().getBillingPeriod();
+    var p2 = Datetime().getPreviousBillingPeriod();
+
+    var options = {
+      one: [{ table: 'restaurants', alias: 'restaurant' }]
+    };
+
+    utils.async.parallel([
+      db.payment_summaries.find.bind( db.payment_summaries, {
+        period_begin: p1.startDate
+      , period_end:   p1.endDate
+      }, options )
+
+    , db.payment_summaries.find.bind( db.payment_summaries, {
+        period_begin: p2.startDate
+      , period_end:   p2.endDate
+      }, options )
+    ], function( error, results ){
+      if ( error ){
+        req.logger.warn('Error looking up payment summaries', {
+          error: error
+        });
+
+        return next( error );
+      }
+
+      res.locals.payment_summary_groups = results.map( function( pmsList ){
+        try {
+          return {
+            period_begin:       pmsList[0].period_begin
+          , period_end:         pmsList[0].period_end
+          , payment_summaries:  pmsList
+          };
+        } catch( e ){
+          req.logger.warn('Exception while attempting to parse payment summaries result', {
+            exception: e
+          });
+
+          console.error( e );
+
+          return null;
+        }
+      }).filter( function( r ){ return !!r; });
+
+      return next();
+    });
+  }
+, m.view( 'admin/payment-summaries', {
     layout: 'admin/layout2'
   })
 );

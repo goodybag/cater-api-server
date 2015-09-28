@@ -257,6 +257,7 @@ config.defaults = {
     }
   , route:        '/admin/restaurants/:restaurant_id/payment-summaries/:id/pdf'
   , dir:          'tmp'
+  , fromEmail:    'payments@goodybag.com'
   }
 
 , receipt: {

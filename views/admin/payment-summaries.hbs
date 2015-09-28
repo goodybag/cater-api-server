@@ -1,0 +1,52 @@
+{{#extend "page"}}page-payment-summaries{{/extend}}
+
+{{#extend "body"}}
+  <div class="container">
+    <h1 class="page-title">Payment Summaries</h1>
+  </div>
+  {{#each payment_summary_groups}}
+    <div class="container pms-container" id="pms-{{add @index 1}}">
+      <div class="table-list payment-summaries-table-list striped">
+        <div class="list-header">
+          <label class="component item-selector">
+            <input type="checkbox">
+          </label>
+          <div class="component list-info">
+            {{this.payment_summaries.length}} Payment Summar
+            {{~#if (eq this.payment_summaries.length 1)}}y{{else}}ies{{/if}}
+            for {{datepart this.period_begin}} - {{datepart this.period_end}}
+          </div>
+          <ul class="component list-nav nav">
+            <li class="selected-only">
+              <a href="#" data-action="email-selected">Send Email</a>
+            </li>
+          </ul>
+        </div>
+        <div class="list-items">
+        {{#each this.payment_summaries}}
+          {{> restaurant_payment_summary_list_item showRestaurantName="true"}}
+        {{/each}}
+        </div>
+      </div>
+    </div>
+  {{/each}}
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require([
+  'jquery'
+, 'api'
+, 'utils'
+, 'app/views/admin/payment-summaries-table'
+, 'table-list'
+], function( $, api, utils, pmsTable ) {
+  $(function(){
+    var $tableList = $('.table-list');
+    $tableList.gb_tablelist();
+    $('[data-role="popover"]').gb_popover();
+    pmsTable( $tableList );
+  });
+});
+</script>
+{{/extend}}

@@ -64,10 +64,10 @@ utils.async.waterfall([
   }
 ], function( error ){
   if ( error ){
-    throw error;
     logger.error('Error processing invoices', {
       error: error
     });
+    throw error;
   }
 
   process.exit( error ? 1 : 0 );

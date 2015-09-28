@@ -14,6 +14,19 @@ define(function(require){
   var flash = {
     defaultDuration: 3000
 
+  , successfuls: [
+      'You are very handsome.'
+    , 'Have a great day!'
+    , 'You. Are. The. Best.'
+    , 'I like what you\'ve done with your hair'
+    , 'Remember the old days?'
+    , 'Please click softer next time :('
+    , 'You rock!'
+    , 'Bet, let, get, pet, Boba Fet'
+    , 'You win... This time.'
+    , 'I knew you could do it!'
+    ]
+
   , info: function( msg, duration ){
       duration = duration || flash.defaultDuration;
 
@@ -22,8 +35,33 @@ define(function(require){
       var closeTimeout = setTimeout( modal.close, duration );
 
       modal.$this.on( 'close', clearTimeout.bind( null, closeTimeout ) );
+
+      return this;
+    }
+
+  , successOrError: function( error ){
+      if ( error ) return this.error( error );
+      return this.success();
+    }
+
+  , success: function(){
+      return flash.info([
+        "Success!<br>"
+      , '<small class="really-small">'
+      , this.successfuls[ ~~( Math.random() * this.successfuls.length ) ]
+      , '</small>'
+      ].join(''));
+    }
+
+  , error: function( error ){
+      console.error( error );
+
+      return flash.info([
+        'Error :(<br>'
+      , '<small class="really-small">Press CMD+Alt+J</small>'
+      ].join(''), 1000 );
     }
   };
 
-  return flash;
+  return Object.create( flash );
 });

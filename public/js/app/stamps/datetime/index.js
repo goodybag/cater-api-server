@@ -22,7 +22,7 @@ define( function( require, exports, module ){
 
   module.exports = module.exports.compose.apply(
     module.exports
-    , utils.values( stamps )
+  , utils.values( stamps )
   );
 
   utils.extend( module.exports, stamps );

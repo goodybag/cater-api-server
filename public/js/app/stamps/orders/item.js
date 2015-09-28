@@ -30,6 +30,13 @@ define( function( require, exports, module ){
         ].reduce( utils.add, 0 ) * this.quantity;
       }
 
+    , getTotalWithoutPriorityAccountCost: function(){
+        return [
+          this.getBaseCost()
+        , this.getOptionsCost()
+        ].reduce( utils.add, 0 ) * this.quantity;
+      }
+
     , getBaseCost: function(){
         return this.price;
       }

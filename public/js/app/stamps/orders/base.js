@@ -33,6 +33,7 @@ define( function( require, exports, module ){
 
         var amount = [
           this.getSubTotal()
+        , this.getPriorityAccountCost()
         , this.adjustment_amount
         , this.user_adjustment_amount
         , this.delivery_fee
@@ -51,7 +52,7 @@ define( function( require, exports, module ){
 
     , getItemTotal: function(){
         return this.getItems().reduce( function( total, item ){
-          return total + item.getTotal();
+          return total + item.getTotalWithoutPriorityAccountCost();
         }, 0 );
       }
 
@@ -95,38 +96,6 @@ define( function( require, exports, module ){
         , this.delivery_fee
         , this.tip
         , this.getNoContractFee()
-        , this.service_fee
-        ].reduce( utils.add, 0 );
-      }
-
-      /**
-       * When calculating the total for payout calculations,
-       * we need to ignore user adjustments. In addition, if the
-       * type of order is `courier`, do not factor in delivery/tip
-       * @return {Number} The total
-       */
-    , getTotalForPayoutCalculations: function(){
-        return [
-          this.getSubTotal()
-        , this.adjustment_amount
-        , this.getTax()
-        , this.type === 'courier' ? 0 : this.delivery_fee
-        , this.type === 'courier' ? 0 : this.tip
-        ].reduce( utils.add, 0 );
-      }
-
-      /**
-       * When calculating the total for payout calculations,
-       * we need to ignore user adjustments.
-       * @return {Number} The total
-       */
-    , getTotalForRestaurant: function(){
-        return [
-          this.getSubTotal()
-        , this.adjustment_amount
-        , this.getTax()
-        , this.delivery_fee
-        , this.tip
         , this.service_fee
         ].reduce( utils.add, 0 );
       }

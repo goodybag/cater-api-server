@@ -50,14 +50,28 @@ define( function( require, exports, module ){
       }
 
     , getItemTotal: function(){
-        return this.items.reduce( function( total, item ){
-          return total + items( item ).getTotal();
+        return this.getItems().reduce( function( total, item ){
+          return total + item.getTotal();
         }, 0 );
+      }
+
+    , getItems: function(){
+        var user = this.user;
+
+        return this.items.map( function( item ){
+          item = items( item );
+
+          if ( user && user.priority_account_price_hike_percentage ){
+            item.priority_account_price_hike_percentage = user.priority_account_price_hike_percentage;
+          }
+
+          return item;
+        });
       }
 
     , getNoContractFee: function(){
         if ( this.restaurant.plan ) return 0;
-        return Math.round(this.getTotalForContractFee() * this.restaurant.no_contract_fee);
+        return Math.round( this.getTotalForContractFee() * this.restaurant.no_contract_fee );
       }
 
     , getTotalForContractFee: function() {
@@ -146,6 +160,12 @@ define( function( require, exports, module ){
         return moment
           .tz( this.datetime, this.timezone )
           .subtract( moment.duration( this.region.lead_time_modifier ) );
+      }
+
+    , getPriorityAccountCost: function(){
+        return this.getItems().reduce( function( total, item ){
+          return total + item.getPriorityAccountTotal();
+        }, 0 );
       }
     });
 });

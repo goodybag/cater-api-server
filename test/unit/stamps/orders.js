@@ -182,6 +182,26 @@ describe('Orders Stamps', function(){
     assert.equal( order.getTotal(), 717 );
   });
 
+  it('.getPriorityAccountCost()', function(){
+    var order = orders({
+      restaurant: {
+        region: { sales_tax: 0.0825 }
+      }
+    , user: { is_tax_exempt: false, priority_account_price_hike_percentage: 0.1 }
+    , items: [
+        { price: 100, quantity: 1 }
+      , { price: 200, quantity: 3 }
+      ]
+    , guests: 5
+    , adjustment_amount: -100
+    , user_adjustment_amount: -50
+    , tip: 50
+    , delivery_fee: 100
+    });
+
+    assert.equal( order.getPriorityAccountCost(), 70 );
+  });
+
   it('Should filter by month', function() {
     var sql = orders.db({ month: 12 }).get();
     assert(sql.$query);

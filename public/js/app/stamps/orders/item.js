@@ -59,5 +59,9 @@ define( function( require, exports, module ){
 
         return Math.round( amt * this.priority_account_price_hike_percentage );
       }
+
+    , getPriorityAccountTotal: function(){
+        return this.getPriorityAccountCost() * this.quantity;
+      }
     });
 });

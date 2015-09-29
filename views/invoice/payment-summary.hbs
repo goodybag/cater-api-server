@@ -53,7 +53,7 @@
     {{/if}}
   {{/if}}
 </address>
-<div class="info-item-date info-item">Payout Date: {{formatDateTime payment_summary.payment_date}}</div>
+<div class="info-item-date info-item">Billing Period: {{formatDateTime payment_summary.period_begin "MM/DD"}} - {{formatDateTime payment_summary.period_end "MM/DD"}}</div>
 <div class="info-item-contact info-item">
   {{#if order.user.name}}
     {{order.user.name}}

@@ -58,7 +58,6 @@ define(function(require){
       page.notificationHistory.on( 'highlight', page.onHighlight );
 
       $(function(){
-        console.log($('[data-role="popover"]'));
         $('[data-role="popover"]').gb_popover();
 
         $('.navbar').navbar({ toggleText: false, toggleLogin: false });
@@ -116,6 +115,18 @@ define(function(require){
           e.preventDefault();
 
           page.saveOrder( flash.successOrError.bind( flash ) );
+        });
+
+        $('#restaurant-selector').delegate( '[data-id]', 'click', function( e ){
+          e.preventDefault();
+
+          page.updateOrder( { restaurant_id: +$(this).data('id') }, function( error ){
+            flash.successOrError( error );
+
+            if ( !error ){
+              document.location.reload();
+            }
+          });
         });
       });
     }

@@ -193,7 +193,10 @@ module.exports.create = function(req, res) {
     },
     function( err ){
       if ( err ) return res.error(errors.internal.DB_FAILURE, err);
-      res.send(201, order.toJSON());
+
+      req.session.save( function(){
+        res.send(201, order.toJSON());
+      });
     });
   });
 }

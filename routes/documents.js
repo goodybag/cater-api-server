@@ -4,6 +4,7 @@ var m = require('../middleware');
 var db = require('../db');
 var controllers = require('../controllers');
 var config = require('../config');
+var PMS = require('stamps/payment-summaries/db');
 
 var route = module.exports = express.Router();
 
@@ -92,40 +93,24 @@ route.get('/payment-summaries/ps-:psid.pdf', m.restrict(['admin']), m.s3({
   bucket: config.paymentSummaries.bucket
 }));
 
-route.get(config.paymentSummaries.route, m.basicAuth(), m.restrict(['admin', 'pms']), m.param('id'), m.param(
-  'restaurant_id'), m.restaurant({
-  param: 'restaurant_id'
-}), m.queryOptions({
-  many: [{
-    table: 'payment_summary_items',
-    alias: 'items',
-    one: [{
-      table: 'orders',
-      alias: 'order',
-      one: [{
-        table: 'delivery_services',
-        alias: 'delivery_service'
-      }, {
-        table: 'restaurants',
-        alias: 'restaurant'
-      }, {
-        table: 'users',
-        alias: 'user'
-      }]
-    }]
-  }],
-  one: [{
-    table: 'restaurants',
-    alias: 'restaurant',
-    one: [{
-      table: 'restaurant_plans',
-      alias: 'plan'
-    }, {
-      table: 'regions',
-      alias: 'region'
-    }]
-  }]
-}), m.view('invoice/payment-summary', db.payment_summaries, {
-  layout: 'invoice/invoice-layout',
-  method: 'findOne'
-}));
+route.get( config.paymentSummaries.route
+, m.basicAuth()
+, m.restrict(['admin', 'pms'])
+, function( req, res, next ){
+    PMS({ restaurant_id: req.params.restaurant_id, id: req.params.id })
+      .fetch( function( error, pms ){
+        if ( error ){
+          return next( error );
+        }
+
+        pms.items = pms.getItems();
+        pms.net_payout = pms.getTotalPayout();
+        res.locals.payment_summary = pms;
+
+        return next();
+      });
+  }
+, m.view('invoice/payment-summary', {
+    layout: 'invoice/invoice-layout'
+  })
+);

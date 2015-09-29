@@ -706,6 +706,18 @@ describe('Orders Stamps', function(){
       assert.equal( oc.getRestaurantCut(), 312 );
     });
 
+    it('.getApplicationCut() - for Priority account', function(){
+      var oc = DefaultOrderCharge();
+      oc.user.priority_account_price_hike_percentage = 0.1;
+      assert.equal( oc.getApplicationCut(),  );
+    });
+
+    it('.getRestaurantCut() - for Priority account', function(){
+      var oc = DefaultOrderCharge();
+      oc.user.priority_account_price_hike_percentage = 0.1;
+      assert.equal( oc.getRestaurantCut(),  );
+    });
+
     it('.getTotal()', function(){
       var oc = DefaultOrderCharge();
       assert.equal( oc.getTotal(), 321);

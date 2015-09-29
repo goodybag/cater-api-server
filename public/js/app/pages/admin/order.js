@@ -58,6 +58,9 @@ define(function(require){
       page.notificationHistory.on( 'highlight', page.onHighlight );
 
       $(function(){
+        console.log($('[data-role="popover"]'));
+        $('[data-role="popover"]').gb_popover();
+
         $('.navbar').navbar({ toggleText: false, toggleLogin: false });
 
         page.notificationHistory.setElement(

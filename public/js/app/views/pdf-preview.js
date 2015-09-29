@@ -7,9 +7,11 @@ define(function(require){
   var notify        = require('notify');
 
   var exports = utils.View.extend({
-    events: {
-      'click .rebuild-pdf':     'onRebuildPdfClick'
-    , 'click .refresh':         'onRefreshClick'
+    events: function () {
+      return {
+        'click .rebuild-pdf':     utils.debounce(this.onRebuildPdfClick, 5000, { leading: true, trailing: false })
+      , 'click .refresh':         'onRefreshClick'
+      }
     }
 
   , initialize: function( options ){
@@ -45,7 +47,9 @@ define(function(require){
     }
 
   , onRebuildPdfClick: function( e ){
-      e.preventDefault();
+      if (e) {
+        e.preventDefault();
+      }
 
       var this_ = this;
 

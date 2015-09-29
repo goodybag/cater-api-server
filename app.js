@@ -9,7 +9,6 @@ var
 , util = require('util')
 , express = require('express')
 , session = require('express-session')
-, RedisStore = require('connect-redis')( session )
 , fs = require('fs')
 , hbs = require('hbs')
 , crypto = require('crypto')

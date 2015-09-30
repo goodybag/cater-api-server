@@ -46,7 +46,7 @@ function startWorker () {
   var d = domain.create();
 
   d.on('error', function (error) {
-    logger.error('Uncaught Exception', err);
+    logger.error('Uncaught Exception', error);
 
     try {
 

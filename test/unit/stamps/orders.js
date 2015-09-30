@@ -709,13 +709,17 @@ describe('Orders Stamps', function(){
     it('.getApplicationCut() - for Priority account', function(){
       var oc = DefaultOrderCharge();
       oc.user.priority_account_price_hike_percentage = 0.1;
-      assert.equal( oc.getApplicationCut(),  );
+      oc.adjustment_amount = 0;
+      oc.user_adjustment_amount = 0;
+      assert.equal( oc.getApplicationCut(), 114 );
     });
 
     it('.getRestaurantCut() - for Priority account', function(){
       var oc = DefaultOrderCharge();
       oc.user.priority_account_price_hike_percentage = 0.1;
-      assert.equal( oc.getRestaurantCut(),  );
+      oc.adjustment_amount = 0;
+      oc.user_adjustment_amount = 0;
+      assert.equal( oc.getRestaurantCut(), 401 );
     });
 
     it('.getTotal()', function(){

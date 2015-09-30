@@ -26,6 +26,7 @@ define( function( require, exports, module ){
         var plan = plans[ this.restaurant.plan.type ];
         return [
           this.getTax()
+        , this.getPriorityAccountCost()
         , this.type === 'courier' ? this.delivery_fee   : 0
         , this.type === 'courier' ? this.tip            : 0
         , plan.getApplicationCut(

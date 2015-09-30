@@ -282,3 +282,22 @@ module.exports.orders.acceptedButNot = function( ids ){
   }
   return $query;
 };
+
+module.exports.orders.amenities = function(){
+  return {
+    table: 'amenities'
+  , alias: 'amenities'
+  , columns: [
+      '*'
+    , { type: 'exists'
+      , expression: {
+          type: 'select'
+        , columns: [ { expression: 1 } ]
+        , table: 'order_amenities'
+        , where: { order_id: '$orders.id$', amenity_id: '$amenities.id$' }
+        }
+      , alias: 'checked'
+      }
+    ]
+  };
+};

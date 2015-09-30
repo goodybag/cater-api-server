@@ -7,7 +7,6 @@ var mosqlUtils  = require('mongo-sql/lib/utils');
 var utils       = require('../utils');
 var logger      = require('../lib/logger').create('DBHelpers');
 var config      = require('../config');
-var PMSItems    = require('../public/js/app/collections/payment-summary-items');
 var odsChecker  = require('../public/js/lib/order-delivery-service-checker');
 
 dirac.db.setMosql( mosql );
@@ -367,32 +366,6 @@ mosql.registerQueryHelper('distinct', function(distinct, values, query){
 
   // distinct
   return (distinct) ? 'distinct ': '';
-});
-
-// Make sure dates are formatted correctly
-dirac.use( function(){
-  var afterPSFinds = function( results, $query, schema, next ){
-    results.forEach( function( r ){
-      r.payment_date = moment( r.payment_date ).format('YYYY-MM-DD');
-
-      // If we did a many to items, let's apply some virtual props
-      if ( Array.isArray( $query.many ) )
-      var many = utils.findWhere( $query.many, { table: 'payment_summary_items' } );
-      if ( many ){
-        r[ many.alias || many.table ] = new PMSItems( r[ many.alias || many.table ], {
-          payment_summary_id: r.id
-        , restaurant_id:      r.restaurant.id
-        , plan:               r.restaurant.plan
-        , sales_tax:          r.restaurant.region.sales_tax
-        }).toJSON({ keepOrder: true });
-      }
-    });
-
-    next();
-  };
-
-  dirac.dals.payment_summaries.after( 'find',     afterPSFinds );
-  dirac.dals.payment_summaries.after( 'findOne',  afterPSFinds );
 });
 
 // Remove existing zip defs, replace with new ones

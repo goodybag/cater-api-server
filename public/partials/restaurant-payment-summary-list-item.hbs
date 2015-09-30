@@ -1,0 +1,35 @@
+<div
+  class="list-item"
+  data-id="{{this.id}}"
+  data-restaurant-id="{{this.restaurant_id}}">
+  <label class="component item-selector">
+    <input type="checkbox">
+  </label>
+  <div class="component main">
+    <a href="/payment-summaries/ps-{{this.id}}.pdf" class="item-title" target="_blank">#{{this.id}}
+    {{~#if showRestaurantName}} {{this.restaurant.name}}{{/if~}}
+    </a>
+    <span class="label-tag label-status small {{this.status}}">{{capitalize this.status}}</span>
+    <dl class="item-details dl-horizontal-auto">
+      <div>
+        <dt>Billing Period:</dt>
+        <dd>{{datepart this.period_begin}} -
+            {{datepart this.period_end~}}</dd>
+      </div>
+    </dl>
+    <div class="more-actions-and-info bottom">
+      <a href="/admin/restaurants/{{this.restaurant_id}}/payment-summaries/{{this.id}}/pdf"
+        class="action">View HTML</a>
+      <button
+        class="action"
+        data-id="{{this.id}}"
+        data-restaurant-id="{{this.restaurant_id}}"
+        data-action="email">Send Email</button>
+      <button
+        class="action"
+        data-id="{{this.id}}"
+        data-restaurant-id="{{this.restaurant_id}}"
+        data-action="delete">Delete</button>
+    </div>
+  </div>
+</div>

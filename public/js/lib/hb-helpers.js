@@ -42,6 +42,18 @@ define(function(require, exports, module) {
       return val;
     },
 
+    partial: (function(){
+      var partials = {};
+
+      return function( name, context ){
+        if ( context && typeof context.fn === 'function' ){
+          partials[ name ] = context.fn;
+        } else {
+          return partials[ name ]( this );
+        }
+      };
+    })(),
+
     surcharge: function(pennies) {
       if (pennies)
         return '$'  + GbHelpers.dollars(pennies);

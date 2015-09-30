@@ -1,0 +1,132 @@
+{{#extend "page"}}page-payment-summaries{{/extend}}
+
+{{#extend "html-title"}}{{truncate restaurant.name 10}}{{/extend}}
+{{#extend "banner"}}
+  <div class="container">
+    <ul class="breadcrumbs main-breadcrumbs">
+      <li>
+        <a href="/admin">Admin Panel</a>
+      </li>
+      <li>
+        <a href="/admin/restaurants">Restaurants</a>
+      </li>
+      <li>
+        <a href="/admin/restaurants/{{restaurant.id}}">
+          {{restaurant.name}}
+        </a>
+      </li>
+      <li>Payment Summaries</li>
+    </ul>
+  </div>
+{{/extend}}
+
+{{#extend "nav-col"}}
+<nav>{{> restaurant_edit_nav}}</nav>
+{{/extend}}
+
+{{#extend "body"}}
+<h1 class="page-title">Payment Summaries</h1>
+<table class="table table-striped" id="payment-summary-recipients">
+  <thead>
+    <th>Recipient Name</th>
+    <th>Email</th>
+  </thead>
+  <tbody>
+    {{#each restaurant.contacts}}
+      <tr>
+        <td>{{this.name}}</td>
+        <td>{{this.emails}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+<div class="panel-component panel-island panel-create">
+  <form class="form-horizontal og-range-processor" id="range-processor">
+    <div class="errors hide"></div>
+
+    <div class="form-group">
+      <label>From</label>
+      <input type="date" name="from">
+    </div>
+    <div class="form-group">
+      <label>To</label>
+      <input type="date" name="to">
+    </div>
+    <div class="form-group">
+      <button class="btn btn-primary">Create</button>
+      <button class="btn btn-default btn-cancel hide">Cancel</button>
+    </div>
+  </form>
+
+  <div class="progress-indicator hide">
+    <div class="indicator"></div>
+  </div>
+</div>
+<div class="table-list payment-summaries-table-list striped">
+  <div class="list-header">
+    <label class="component item-selector">
+      <input type="checkbox">
+    </label>
+    <div class="component list-info">
+      {{restaurant.payment_summaries.length}} Payment Summar
+      {{~#if (eq restaurant.payment_summaries.length 1)}}y{{else}}ies{{/if}}
+    </div>
+    <ul class="component list-nav nav">
+      <li class="selected-only">
+        <a href="#" data-action="email-selected">Send Email</a>
+      </li>
+    </ul>
+  </div>
+  <div class="list-items">
+  {{#each restaurant.payment_summaries}}
+    {{> restaurant_payment_summary_list_item}}
+  {{/each}}
+  </div>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require([
+  'jquery'
+, 'handlebars'
+, 'api'
+, 'utils'
+, 'flash'
+, 'app/views/admin/payment-summaries-table'
+, 'app/views/admin/og-range-selector'
+, 'table-list'
+], function( $, handlebars, api, utils, flash, pmsTable, RangeSelector ) {
+  var range = new RangeSelector();
+
+  $(function(){
+    var tableList = new $.fn.gb_tablelist.Constructor( $('.table-list'), {
+      itemTemplate: handlebars.partials.restaurant_payment_summary_list_item
+    });
+
+    $('[data-role="popover"]').gb_popover();
+
+    range.setElement('#range-processor');
+
+    pmsTable( tableList.$el );
+
+    range.on( 'submit', function( range ){
+      api('restaurants')( {{restaurant.id}} )('payment-summaries').post({
+        period_begin: range.from
+      , period_end:   range.to
+      }, function( error, result ){
+        if ( error ){
+          console.error( error );
+          return flash.info([
+            'Error :(<br>'
+          , '<small class="really-small">Press CMD+Alt+J</small>'
+          ].join(''), 1000 );
+        }
+
+        tableList.prepend( result );
+      });
+    });
+  });
+});
+</script>
+{{/extend}}

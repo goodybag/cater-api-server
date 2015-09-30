@@ -17,6 +17,16 @@ if (!cluster.isMaster) {
 
 function startWorker () {
 
+  var cronJob = new CronJob({
+    cronTime: config.scheduler.cron
+  , onTick: function tick () {
+      if ( scheduler.q.running() < config.scheduler.limit ) {
+        scheduler.runAll( { limit: config.scheduler.limit }, logStats );
+      }
+    }
+  , start: false
+  });
+
   var reduceJobTriggered = function(memo, data) {
     return memo || data.value;
   };
@@ -33,14 +43,6 @@ function startWorker () {
     if ( errors || !utils.isEmpty(stats) ) reporter.logResults( errors, stats );
   };
 
-  var startCronJob = function () {
-    new CronJob(config.scheduler.cron, function tick(){
-      if ( scheduler.q.running() < config.scheduler.limit ) {
-        scheduler.runAll( { limit: config.scheduler.limit }, logStats );
-      }
-    }, null, config.scheduler.start);
-  }
-
   var d = domain.create();
 
   d.on('error', function (error) {
@@ -48,6 +50,13 @@ function startWorker () {
 
     try {
 
+      // stop enqueueing jobs
+      cronJob.stop();
+      scheduler.q.drain = function () {
+        process.exit(1);
+      };
+
+      // wait 30 seconds for the queue to drain
       var killtimer = setTimeout(function () {
           process.exit(1);
       }, 30*1000);
@@ -62,7 +71,11 @@ function startWorker () {
   });
 
   d.run(function () {
-    process.nextTick(startCronJob);
+    process.nextTick(function () {
+      if (config.scheduler.start) {
+        cronJob.start();
+      }
+    });
   });
 
 }

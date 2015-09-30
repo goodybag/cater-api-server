@@ -843,5 +843,28 @@ describe('Orders Stamps', function(){
       , net_payout: 402
       });
     });
+
+    // Skip this because we haven't yet resolved the discrepancy
+    // of tax calculations with payouts and our respresentation
+    it.skip('.toPaymentSummaryItem() with priority account', function(){
+      var item = DefaultPMSItem({
+        user: { is_tax_exempt: false, priority_account_price_hike_percentage: 0.1 }
+      });
+
+      assert.deepEqual( item.toPaymentSummaryItem(),{
+        total: 483
+      , delivery_fee: 0
+      , tip: 0
+      , gb_fee: -48
+      , sales_tax: -33
+      , order: item
+      , net_payout: 402
+      });
+
+      var origNetPayout = item.toPaymentSummaryItem().net_payout;
+      item.user.priority_account_price_hike_percentage = 0.1;
+
+      assert.equal( item.getRestaurantCut(), origNetPayout );
+    });
   });
 });

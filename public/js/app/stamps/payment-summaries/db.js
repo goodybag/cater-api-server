@@ -146,7 +146,7 @@ module.exports = require('stampit')()
           }
         , datetime: {
             $gte: { $custom: ['orders.datetime >= payment_summaries.period_begin'] }
-          , $lt:  { $custom: ['orders.datetime < payment_summaries.period_end'] }
+          , $lt:  { $custom: ['orders.datetime < (payment_summaries.period_end + interval \'1 day\' )'] }
           }
         }
 

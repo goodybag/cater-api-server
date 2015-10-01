@@ -26,7 +26,7 @@ module.exports.register = function(app) {
     }, utils.noop );
 
     app.get('/test-timeout', function(){
-      
+
     });
 
     app.get('/throw-error', function(){
@@ -36,6 +36,8 @@ module.exports.register = function(app) {
     });
   }
 
+  app.use(express.static('./node_modules/goodybag-app/dist/build'));
+  app.use(require('goodybag-app').app);
   app.use(require('./public'));
   app.use(require('./documents'));
   app.use(require('./lunchroom'));

@@ -12,7 +12,7 @@ define( function( require, exports, module ){
   var utils = require('utils');
   var plans = require('restaurant-plans');
 
-  return require('stampit')()
+  var factory = require('stampit')()
     .compose( require('./base') )
     .methods({
       getRestaurantCut: function( options ){
@@ -43,10 +43,14 @@ define( function( require, exports, module ){
        * @return {Number} The total
        */
     , getTotalForPayoutCalculations: function(){
+        var nonPriorityModel = factory( utils.deepExtend( {}, this ) );
+        
+        nonPriorityModel.user.priority_account_price_hike_percentage = 0;
+
         return [
           this.getSubTotal()
         , this.adjustment_amount
-        , this.getTax()
+        , nonPriorityModel.getTax()
         , this.type === 'courier' ? 0 : this.delivery_fee
         , this.type === 'courier' ? 0 : this.tip
         ].reduce( utils.add, 0 );
@@ -69,4 +73,6 @@ define( function( require, exports, module ){
         ].reduce( utils.add, 0 );
       }
     });
+
+  return factory;
 });

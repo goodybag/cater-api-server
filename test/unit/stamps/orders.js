@@ -714,7 +714,7 @@ describe('Orders Stamps', function(){
       oc.user.priority_account_price_hike_percentage = 0.1;
       oc.adjustment_amount = 0;
       oc.user_adjustment_amount = 0;
-      assert.equal( oc.getApplicationCut(), 114 );
+      assert.equal( oc.getApplicationCut(), 113 );
     });
 
     it('.getRestaurantCut() - for Priority account', function(){
@@ -722,7 +722,7 @@ describe('Orders Stamps', function(){
       oc.user.priority_account_price_hike_percentage = 0.1;
       oc.adjustment_amount = 0;
       oc.user_adjustment_amount = 0;
-      assert.equal( oc.getRestaurantCut(), 401 );
+      assert.equal( oc.getRestaurantCut(), 402 );
     });
 
     it('.getTotal()', function(){
@@ -844,9 +844,7 @@ describe('Orders Stamps', function(){
       });
     });
 
-    // Skip this because we haven't yet resolved the discrepancy
-    // of tax calculations with payouts and our respresentation
-    it.skip('.toPaymentSummaryItem() with priority account', function(){
+    it('.toPaymentSummaryItem() with priority account', function(){
       var item = DefaultPMSItem({
         user: { is_tax_exempt: false, priority_account_price_hike_percentage: 0.1 }
       });

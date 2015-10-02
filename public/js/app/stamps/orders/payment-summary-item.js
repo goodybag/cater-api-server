@@ -9,11 +9,20 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 }
 
 define( function( require, exports, module ){
+  var utils = require('utils');
+
   module.exports = require('stampit')()
     .compose( require('./base') )
     .compose( require('./charge') )
     .state({
 
+    })
+    .enclose( function(){
+      // Ignore price hikes in calculations
+      if ( this.user && this.user.priority_account_price_hike_percentage ){
+        this.user = utils.clone( this.user );
+        this.user.priority_account_price_hike_percentage = 0;
+      }
     })
     .methods({
       toPaymentSummaryItem: function(){

@@ -184,6 +184,26 @@ describe('Orders Stamps', function(){
     assert.equal( order.getTotal(), 717 );
   });
 
+  it('.getPriorityAccountCost()', function(){
+    var order = orders({
+      restaurant: {
+        region: { sales_tax: 0.0825 }
+      }
+    , user: { is_tax_exempt: false, priority_account_price_hike_percentage: 0.1 }
+    , items: [
+        { price: 100, quantity: 1 }
+      , { price: 200, quantity: 3 }
+      ]
+    , guests: 5
+    , adjustment_amount: -100
+    , user_adjustment_amount: -50
+    , tip: 50
+    , delivery_fee: 100
+    });
+
+    assert.equal( order.getPriorityAccountCost(), 70 );
+  });
+
   it('Should filter by month', function() {
     var sql = orders.db({ month: 12 }).get();
     assert(sql.$query);
@@ -689,6 +709,22 @@ describe('Orders Stamps', function(){
       assert.equal( oc.getRestaurantCut(), 312 );
     });
 
+    it('.getApplicationCut() - for Priority account', function(){
+      var oc = DefaultOrderCharge();
+      oc.user.priority_account_price_hike_percentage = 0.1;
+      oc.adjustment_amount = 0;
+      oc.user_adjustment_amount = 0;
+      assert.equal( oc.getApplicationCut(), 113 );
+    });
+
+    it('.getRestaurantCut() - for Priority account', function(){
+      var oc = DefaultOrderCharge();
+      oc.user.priority_account_price_hike_percentage = 0.1;
+      oc.adjustment_amount = 0;
+      oc.user_adjustment_amount = 0;
+      assert.equal( oc.getRestaurantCut(), 402 );
+    });
+
     it('.getTotal()', function(){
       var oc = DefaultOrderCharge();
       assert.equal( oc.getTotal(), 321 );
@@ -806,6 +842,27 @@ describe('Orders Stamps', function(){
       , order: item
       , net_payout: 402
       });
+    });
+
+    it('.toPaymentSummaryItem() with priority account', function(){
+      var item = DefaultPMSItem({
+        user: { is_tax_exempt: false, priority_account_price_hike_percentage: 0.1 }
+      });
+
+      assert.deepEqual( item.toPaymentSummaryItem(),{
+        total: 483
+      , delivery_fee: 0
+      , tip: 0
+      , gb_fee: -48
+      , sales_tax: -33
+      , order: item
+      , net_payout: 402
+      });
+
+      var origNetPayout = item.toPaymentSummaryItem().net_payout;
+      item.user.priority_account_price_hike_percentage = 0.1;
+
+      assert.equal( item.getRestaurantCut(), origNetPayout );
     });
   });
 });

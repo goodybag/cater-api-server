@@ -30,6 +30,13 @@ define( function( require, exports, module ){
         ].reduce( utils.add, 0 ) * this.quantity;
       }
 
+    , getTotalWithoutPriorityAccountCost: function(){
+        return [
+          this.getBaseCost()
+        , this.getOptionsCost()
+        ].reduce( utils.add, 0 ) * this.quantity;
+      }
+
     , getBaseCost: function(){
         return this.price;
       }
@@ -58,6 +65,10 @@ define( function( require, exports, module ){
         ].reduce( utils.add, 0 );
 
         return Math.round( amt * this.priority_account_price_hike_percentage );
+      }
+
+    , getPriorityAccountTotal: function(){
+        return this.getPriorityAccountCost() * this.quantity;
       }
     });
 });

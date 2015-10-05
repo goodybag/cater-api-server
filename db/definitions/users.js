@@ -8,9 +8,9 @@ if (typeof module === 'object' && typeof define !== 'function') {
   };
 }
 
-var
-  types = require('../data-types')
-;
+var dirac = require('dirac');
+var utils = require('utils');
+var types = require('../data-types');
 
 define(function(require) {
   var definition = {};
@@ -91,6 +91,48 @@ define(function(require) {
   };
 
   definition.indices = {};
+
+  definition.update = function update( $where, $update, options, callback ){
+    // We should standardize this upstream with a convenience method
+    if ( typeof options == 'function' ){
+      callback = options;
+      options = {};
+    }
+
+    if ( typeof $where != 'object' ) $where = { id: $where };
+
+    if ( !$where.id ) return this._super( $where, $update, options, callback );
+    if ( !Array.isArray( $update.courier_preferences ) ) return this._super( $where, $update, options, callback );
+
+    var updateWithoutPrefs = utils.omit( $update, 'courier_preferences' );
+
+    var tx = this.client || dirac.tx.create();
+
+    utils.async.series([
+      this.client ? utils.async.noop : tx.begin.bind( tx )
+    , Object.keys( updateWithoutPrefs ).length > 0
+      ? tx.users.update.bind(
+          tx.users, $where, updateWithoutPrefs, options
+        )
+      : utils.async.noop
+    , tx.user_courier_preferences.save.bind(
+        tx.user_courier_preferences, $where.id, $update.courier_preferences
+      )
+    , this.client ? utils.async.noop : tx.commit.bind( tx )
+    ], function( error ){
+      if ( error ){
+        if ( this.client ){
+          return callback( error );
+        }
+
+        return tx.rollback( function(){
+          return callback( error );
+        });
+      }
+
+      return callback();
+    }.bind( this ));
+  };
 
   return definition;
 });

@@ -61,13 +61,17 @@ define(function(require) {
     , this.client ? utils.async.noop : tx.commit.bind( tx )
     ], function( error ){
       if ( error ){
+        if ( this.client ){
+          return callback( error );
+        }
+
         return tx.rollback( function(){
           return callback( error );
         });
       }
 
       return callback();
-    });
+    }.bind( this ));
 
     return this;
   };

@@ -35,10 +35,11 @@ define(function(require) {
       throw new Error( 'Invalid second argument. Expected Array, supplied: ' + typeof courier );
     }
 
-    var tx = dirac.tx.create();
+    var tx = this.client || dirac.tx.create();
 
     utils.async.series([
-      tx.begin.bind( tx )
+      // If we're in the middle of a transaction, do not try to begin
+      this.client ? utils.async.noop : tx.begin.bind( tx )
 
       // Remove existing preferences
     , tx.user_courier_preferences.remove.bind( tx.user_courier_preferences, {
@@ -56,7 +57,8 @@ define(function(require) {
         // Otherwise, we're done
       : utils.async.noop
 
-    , tx.commit.bind( tx )
+      // If we're in the middle of a transaction, do not try to commit
+    , this.client ? utils.async.noop : tx.commit.bind( tx )
     ], function( error ){
       if ( error ){
         return tx.rollback( function(){

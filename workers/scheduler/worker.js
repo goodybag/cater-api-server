@@ -52,17 +52,9 @@ function startWorker () {
 
       // stop enqueueing jobs
       cronJob.stop();
-      scheduler.q.drain = function () {
-        process.exit(1);
-      };
 
       // wait 30 seconds for the queue to drain
-      var killtimer = setTimeout(function () {
-          process.exit(1);
-      }, 30*1000);
-
-      killtimer.unref();
-      cluster.worker.disconnect();
+      cluster.worker.send({action: 'disconnect', timeout: 30*1000 });
 
     } catch (err) {
       logger.error('Unable to kill process', err);

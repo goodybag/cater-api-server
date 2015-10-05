@@ -134,5 +134,74 @@ define(function(require) {
     }.bind( this ));
   };
 
+  definition.insert = function( $doc, options, callback ){
+    // We should standardize this upstream with a convenience method
+    if ( typeof options == 'function' ){
+      callback = options;
+      options = {};
+    }
+
+    if ( !Array.isArray( $doc.courier_preferences ) ) return this._super( $doc, options, callback );
+
+    var courier_preferences = $doc.courier_preferences;
+    delete $doc.courier_preferences;
+
+    if ( courier_preferences.length === 0 ) return this._super( $doc, options, callback );
+
+    var tx = this.client || dirac.tx.create();
+
+    utils.async.waterfall([
+      // Begin
+      function( next ){
+        if ( this.client ){
+          return tx.begin( function( error ){
+            return next( error );
+          });
+        }
+
+        return next();
+      }.bind( this )
+
+    , function( next ){
+        tx.users.insert( $doc, options, next );
+      }
+
+    , function( user, next ){
+        tx.user_courier_preferences.save( user.id, courier_preferences, function( error ){
+          if ( error ) return next( error );
+
+          user.courier_preferences = courier_preferences;
+
+          return next( null, user );
+        });
+      }
+
+      // Commit
+    , function( user, next ){
+        if ( this.client ){
+          return tx.commit( function( error ){
+            return next( error, user );
+          });
+        }
+
+        return next( null, user );
+      }.bind( this )
+
+    , function( user, next ){
+        return callback( null, user );
+      }
+    ], function( error ){
+      if ( error ){
+        if ( this.client ){
+          return callback( error );
+        }
+
+        return tx.rollback( function(){
+          return callback( error );
+        });
+      }
+    }.bind( this ));
+  };
+
   return definition;
 });

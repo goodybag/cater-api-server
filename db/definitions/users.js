@@ -107,13 +107,21 @@ define(function(require) {
     var updateWithoutPrefs = utils.omit( $update, 'courier_preferences' );
 
     var tx = this.client || dirac.tx.create();
+    var result;
 
     utils.async.series([
       this.client ? utils.async.noop : tx.begin.bind( tx )
     , Object.keys( updateWithoutPrefs ).length > 0
-      ? tx.users.update.bind(
-          tx.users, $where, updateWithoutPrefs, options
-        )
+      ? function( next ){
+          tx.users.update( $where, updateWithoutPrefs, options, function( error, user ){
+            if ( error ) return next( error );
+
+            result = user[0];
+            result.courier_preferences = $update.courier_preferences;
+
+            return next();
+          });
+        }
       : utils.async.noop
     , tx.user_courier_preferences.save.bind(
         tx.user_courier_preferences, $where.id, $update.courier_preferences
@@ -130,7 +138,7 @@ define(function(require) {
         });
       }
 
-      return callback();
+      return callback( null, [ result ] );
     }.bind( this ));
   };
 

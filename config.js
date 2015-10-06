@@ -77,6 +77,7 @@ config.defaults = {
     'jag@goodybag.com'
   , 'christymedlock@goodybag.com'
   , 'patrickmugavin@goodybag.com'
+  , 'benholland@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -86,6 +87,7 @@ config.defaults = {
     'jag@goodybag.com'
   , 'christymedlock@goodybag.com'
   , 'patrickmugavin@goodybag.com'
+  , 'benholland@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -470,6 +472,7 @@ config.production = {
   , dsOrders: [
       'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
+    , 'benholland@goodybag.com'
 
     // temp
     , 'jacobparker@goodybag.com'
@@ -484,15 +487,18 @@ config.production = {
     , 'jacobparker@goodybag.com'
     , 'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
+    , 'benholland@goodybag.com'
     ]
   , orderNotificationChecks: [
       'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
+    , 'benholland@goodybag.com'
     , 'john@goodybag.com'
     ]
   , reminderPaymentStatusIgnore: [
       'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
+    , 'benholland@goodybag.com'
     ]
   }
 

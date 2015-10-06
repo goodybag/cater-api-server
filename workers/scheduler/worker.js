@@ -56,11 +56,15 @@ function startWorker () {
       if (scheduler.q.length() > 0) {
         // wait for the queue to drain
         scheduler.q.drain = function () {
-          cluster.worker.send({action: 'disconnect'});
+          cluster.worker.disconnect();
         }
       } else {
-        cluster.worker.send({action: 'disconnect'});
+        cluster.worker.disconnect();
       }
+
+      var timeout = setTimeout(function() {
+        process.exit(1);
+      }, 30*1000);
 
     } catch (err) {
       logger.error('Unable to kill process', err);

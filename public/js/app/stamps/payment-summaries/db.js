@@ -82,14 +82,14 @@ module.exports = require('stampit')()
           return callback( error );
         }
 
-        callback( null, result );
-
         pdfs.pms.build({ restaurant_id: result.restaurant_id, id: result.id }, function( error ){
           if ( error ){
             logger.warn('Error build PMS PDF', {
               error: error
             });
           }
+
+          callback( error, result );
         }.bind( this ));
       }.bind( this );
 

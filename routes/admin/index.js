@@ -286,8 +286,11 @@ route.get('/users/:id/basic-info'
       alias: 'region',
       many: [{ table: 'delivery_services' }]
     }],
-    many: [
-      { table: 'user_courier_preferences', alias: 'courier_preferences' }
+    pluck: [
+      { table: 'user_courier_preferences'
+      , alias: 'courier_preferences'
+      , column: 'delivery_service_id'
+      }
     ],
     userGroups: true
   })

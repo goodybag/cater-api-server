@@ -286,6 +286,9 @@ route.get('/users/:id/basic-info'
       alias: 'region',
       many: [{ table: 'delivery_services' }]
     }],
+    many: [
+      { table: 'user_courier_preferences', alias: 'courier_preferences' }
+    ],
     userGroups: true
   })
 , m.db.regions.find({}, {

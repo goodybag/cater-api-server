@@ -3,7 +3,9 @@ var db        = require('db');
 var utils     = require('utils');
 var PMS       = require('stamps/payment-summaries/db');
 var logger    = require('../../lib/logger').create('Worker-PaymentSummaries');
-var now       = require('stamps/datetime')();
+var now       = require('stamps/datetime')({
+                  datetime: process.argv.length < 3 ? new Date() : process.argv[2]
+                });
 var pdfs      = require('../../lib/pdfs');
 var period    = now.getBillingPeriod();
 
@@ -19,15 +21,11 @@ function onRestaurant( restaurant, done ){
   });
 
   pms.fetch( function( error ){
-    if ( error ){
-      if ( error.name !== 'NOT_FOUND' ){
-        return done( error );
-      }
-
-      return pms.save( done );
+    if ( error && error.name !== 'NOT_FOUND' ){
+      return done( error );
     }
 
-    return done( null, pms );
+    return pms.save( done );
   });
 }
 

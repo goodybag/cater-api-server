@@ -5,6 +5,10 @@
 
 {{#extend "title"}} - Receipt{{/extend}}
 
+{{#if (contains user.groups 'admin')}}
+  {{#extend "prefix-title"}}#{{order.id}} {{/extend}}
+{{/if}}
+
 {{#extend "banner"}}
   {{#if (contains user.groups 'order-owner')}}
     {{#if (not order.order_feedback.ease_of_submitting_rating)}}

@@ -26,7 +26,11 @@ define(function(require){
           return val;
         }
 
-        return $el.val().trim().split(/\,\s*/g);
+        if ( val === null ){
+          return [];
+        }
+
+        return val.trim().split(/\,\s*/g);
       }
     , 'number[]': function( $el ){
         return this.typeGetters.array.call( this, $el )

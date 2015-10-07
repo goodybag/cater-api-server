@@ -66,6 +66,8 @@ function startWorker () {
         process.exit(1);
       }, 30*1000);
 
+      timeout.unref();
+
     } catch (err) {
       logger.error('Unable to kill process', err);
     }

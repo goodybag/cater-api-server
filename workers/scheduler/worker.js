@@ -70,6 +70,8 @@ function startWorker () {
 
     } catch (err) {
       logger.error('Unable to kill process', err);
+
+      process.exit(1);
     }
 
   });

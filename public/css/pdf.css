@@ -17,7 +17,7 @@ body {
 }
 
 .page {
-  width: 700px;
+  width: 100%;
   min-height: 920px;
   display: -webkit-box;
   -webkit-box-orient: vertical;

@@ -773,6 +773,7 @@ describe('Orders Stamps', function(){
         total: 483
       , delivery_fee: 0
       , tip: 0
+      , user_adjustment: 0
       , gb_fee: -48
       , sales_tax: -33
       , order: item
@@ -789,6 +790,7 @@ describe('Orders Stamps', function(){
         total: 483
       , delivery_fee: -100
       , tip: -50
+      , user_adjustment: 0
       , gb_fee: -33
       , sales_tax: -33
       , order: item
@@ -805,6 +807,7 @@ describe('Orders Stamps', function(){
         total: 450
       , delivery_fee: 0
       , tip: 0
+      , user_adjustment: 0
       , gb_fee: -45
       , sales_tax: 0
       , order: item
@@ -821,6 +824,7 @@ describe('Orders Stamps', function(){
         total: 375
       , delivery_fee: 0
       , tip: 0
+      , user_adjustment: 0
       , gb_fee: -38
       , sales_tax: -25
       , order: item
@@ -837,6 +841,7 @@ describe('Orders Stamps', function(){
         total: 375
       , delivery_fee: 0
       , tip: 0
+      , user_adjustment: 100
       , gb_fee: -48
       , sales_tax: -25
       , order: item
@@ -853,6 +858,7 @@ describe('Orders Stamps', function(){
         total: 483
       , delivery_fee: 0
       , tip: 0
+      , user_adjustment: 0
       , gb_fee: -48
       , sales_tax: -33
       , order: item

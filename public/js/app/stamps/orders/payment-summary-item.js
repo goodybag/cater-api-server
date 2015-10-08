@@ -27,13 +27,14 @@ define( function( require, exports, module ){
     .methods({
       toPaymentSummaryItem: function(){
         var result = {
-          total:        this.getTotal()
-        , delivery_fee: this.type === 'courier' ? -this.delivery_fee : 0
-        , tip:          this.type === 'courier' ? -this.tip : 0
-        , gb_fee:      -this.getApplicationCut()
-        , sales_tax:   -this.getTax()
-        , net_payout:   this.getRestaurantCut()
-        , order:        this
+          total:            this.getTotal()
+        , delivery_fee:     this.type === 'courier' ? -this.delivery_fee : 0
+        , tip:              this.type === 'courier' ? -this.tip : 0
+        , user_adjustment: -this.user_adjustment_amount
+        , gb_fee:          -this.getApplicationCut()
+        , sales_tax:       -this.getTax()
+        , net_payout:       this.getRestaurantCut()
+        , order:            this
         };
 
         // Application Cut includes these things

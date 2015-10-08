@@ -13,8 +13,8 @@ module.exports = function(groups) {
     if (utils.intersection(req.user.attributes.groups, groups).length === 0){
       // Not logged in at all? Redirect
       if (!req.user.attributes.id){
-        logger.info('User not logged in, redirecting to', '/login?next=' + req.url);
-        return res.redirect('/login?next=' + req.url);
+        logger.info('User not logged in, redirecting to', '/login?next=' + req.originalUrl);
+        return res.redirect('/login?next=' + req.originalUrl);
       }
 
       logger.warn('User attempting to access restricted resource. Sending `404`', {

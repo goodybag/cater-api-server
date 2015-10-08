@@ -5,6 +5,7 @@ var db = require('../db');
 var controllers = require('../controllers');
 var config = require('../config');
 var PMS = require('stamps/payment-summaries/db');
+var Orders = require('stamps/orders');
 
 var route = module.exports = express.Router();
 
@@ -20,6 +21,20 @@ route.get( config.receipt.orderRoute
     paymentMethod: true,
     amenities: true
   })
+, function( req, res, next ){
+    req.order.items = req.order.orderItems;
+    req.order = Orders.create( req.order );
+    res.locals.order.total = req.order.getTotal();
+    res.locals.order.sub_total = req.order.getPriorityAccountSubTotal();
+    res.locals.order.sales_tax = req.order.getTax();
+    res.locals.order.orderItems = req.order.getItems();
+    res.locals.order.orderItems.forEach( function( item ){
+      console.log('subtotal', item.getTotal());
+      item.sub_total = item.getTotal();
+    });
+    console.log('sub', req.order.getPriorityAccountSubTotal(), req.order.getSubTotal());
+    return next();
+  }
 , m.view( 'invoice/receipt', {
     layout: 'invoice/invoice-layout'
   })

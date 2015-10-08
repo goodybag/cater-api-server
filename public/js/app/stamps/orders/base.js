@@ -136,5 +136,12 @@ define( function( require, exports, module ){
           return total + item.getPriorityAccountTotal();
         }, 0 );
       }
+
+    , getPriorityAccountSubTotal: function(){
+        return [
+          this.getSubTotal()
+        , this.getPriorityAccountCost()
+        ].reduce( utils.add, 0 );
+      }
     });
 });

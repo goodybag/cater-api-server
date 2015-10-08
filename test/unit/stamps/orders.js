@@ -7,7 +7,7 @@ var orders      = require('stamps/orders');
 var OrderCharge = require('stamps/orders/charge');
 var PMSItem     = require('stamps/orders/payment-summary-item');
 var fulfillability = require('stamps/orders/fulfillability');
-orders.db        = require('../../../lib/stamps/db/orders')
+orders.db        = require('../../../lib/stamps/db/orders');
 
 var restaurants = require('stampit')()
   .state({

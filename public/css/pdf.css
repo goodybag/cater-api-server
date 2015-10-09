@@ -17,7 +17,7 @@ body {
 }
 
 .page {
-  width: 100%;
+  width: 700px;
   min-height: 920px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -198,8 +198,8 @@ dl > dt {
 
 .gb-table td,
 .gb-table th {
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: 8px;
+  padding-right: 8px;
   text-align: center;
   vertical-align: top;
 }

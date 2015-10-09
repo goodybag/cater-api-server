@@ -3,7 +3,8 @@ define(function( require ){
 
   var $     = require('jquery');
   var utils = require('lodash');
-  utils.search = require('utils').search;
+
+  var search;
 
   var old = $.fn.gb_tablelist;
 
@@ -48,6 +49,10 @@ define(function( require ){
   };
 
   FilterList.prototype.filter = function( input ){
+    if ( typeof search !== 'function' ){
+      throw new Error("Must provide a search function via require('jquery.filter-list').search(...)");
+    }
+
     if ( !input ){
       this.$items.css( 'display', '' );
       return this;
@@ -55,7 +60,7 @@ define(function( require ){
 
     this.$items.css( 'display', 'none' );
 
-    utils.search(
+    search(
       this.data, input, this.fields
     ).forEach( function( item ){
       item.$el.css( 'display', '' );
@@ -91,5 +96,11 @@ define(function( require ){
 
   $(function(){
     $('[data-role="filter-list"]').gb_filterlist();
-  })
+  });
+
+  return {
+    search: function( fn ){
+      search = fn;
+    }
+  };
 });

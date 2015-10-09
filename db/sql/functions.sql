@@ -66,6 +66,14 @@ begin
 end;
 $$ language plpgsql;
 
+create or replace function on_order_restaurant_change()
+returns trigger as $$
+begin
+  perform set_order_default_location( NEW );
+  return NEW;
+end;
+$$ language plpgsql;
+
 create or replace function on_order_type_change()
 returns trigger as $$
 begin

@@ -716,6 +716,7 @@ route.get('/restaurants/:restaurant_id/contacts'
 
 route.get('/orders/:id'
 , m.restrict(['admin'])
+  // Lookup couriers
 , function( req, res, next ){
     var where = {
       where: { 'orders.id': req.params.id }
@@ -736,6 +737,7 @@ route.get('/orders/:id'
   // previous query aliased result as `orders`
   // it should be `delivery_services`
 , m.aliasLocals({ delivery_services: 'orders' })
+
 , m.getOrder2({
     param:                  'id'
   , location:               true
@@ -748,6 +750,16 @@ route.get('/orders/:id'
   , internalNotes:          true
   , alerts:                 true
   })
+
+  // Lookup the restaurants in the order region
+, function( req, res, next ){
+    return m.db.restaurants.find({
+      region_id: req.order.restaurant.region_id
+    }, {
+      order: { name: 'asc' }
+    })( req, res, next );
+  }
+
 , m.view( 'admin/order', {
     layout: 'admin/layout2'
   })

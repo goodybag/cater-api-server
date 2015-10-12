@@ -251,38 +251,60 @@ route.get('/users', m.sort('-id'), m.queryOptions({
   method: 'find'
 }));
 
-route.get('/users/new', m.param('id'), m.db.regions.find({}, {
-  limit: 'all'
-}), m.viewPlugin('mainNav', {
-  active: 'users'
-}), m.view('admin/user/create', {
-  layout: 'admin/layout2',
-  user: {}
-}));
+route.get('/users/new'
+, m.param('id')
+, m.db.regions.find({}, {
+    limit: 'all'
+  })
+, m.viewPlugin('mainNav', {
+    active: 'users'
+  })
+, m.db.delivery_services.find({})
+, m.view('admin/user/create', {
+    layout: 'admin/layout2',
+    user: {}
+  })
+);
 
 route.get('/users/:id', m.redirect('/admin/users/:id/basic-info'));
 
-route.get('/users/:id/basic-info', m.param('id'), m.viewPlugin('mainNav', {
-  active: 'users'
-}), m.viewPlugin('sidebarNav', {
-  active: 'basic-info',
-  baseUrl: '/admin/users/:id'
-}), m.viewPlugin('breadCrumbs', {
-  currentPage: 'Basic Info'
-}), m.queryOptions({
-  one: [{
-    table: 'regions',
-    alias: 'region'
-  }],
-  userGroups: true
-}), m.db.regions.find({}, {
-  limit: 'all'
-}), m.viewPlugin('mainNav', {
-  active: 'users'
-}), m.view('admin/user/edit', db.users, {
-  layout: 'admin/layout-single-object',
-  method: 'findOne'
-}));
+route.get('/users/:id/basic-info'
+, m.param('id')
+, m.viewPlugin('mainNav', {
+    active: 'users'
+  })
+, m.viewPlugin('sidebarNav', {
+    active: 'basic-info',
+    baseUrl: '/admin/users/:id'
+  })
+, m.viewPlugin('breadCrumbs', {
+    currentPage: 'Basic Info'
+  })
+, m.queryOptions({
+    one: [{
+      table: 'regions',
+      alias: 'region',
+      many: [{ table: 'delivery_services' }]
+    }],
+    pluck: [
+      { table: 'user_courier_preferences'
+      , alias: 'courier_preferences'
+      , column: 'delivery_service_id'
+      }
+    ],
+    userGroups: true
+  })
+, m.db.regions.find({}, {
+    limit: 'all'
+  })
+, m.viewPlugin('mainNav', {
+    active: 'users'
+  })
+, m.view('admin/user/edit', db.users, {
+    layout: 'admin/layout-single-object',
+    method: 'findOne'
+  })
+);
 
 route.get('/users/:id/invoices', m.param('id'), m.viewPlugin('mainNav', {
   active: 'users'

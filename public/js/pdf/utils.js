@@ -15,16 +15,6 @@ window.__page = (function(){
   return exports;
 })();
 
-$.fn.innerHeight = function( options ){
-  return Array.prototype.reduce.call(
-    this.find('> *').map( function(){
-      if ( $(this).hasClass('order') ) return $(this).innerHeight();
-      return $(this).outerHeight();
-    })
-  , function( a, b ){ return a + b; }
-  );
-};
-
 console.print = function(){
   // Comment me if you want to live
   return console.log.apply( console, arguments );
@@ -64,44 +54,6 @@ console.print = function(){
   );
 };
 
-// WIP progress function for filling the remaining Table Rows
-// so the tables don't look so bare
-// This isn't being used yet
-var fillRemainingTrs = function( $page ){
-  // Each blank table row should be:
-  var rowHeight = 20;
-
-  // Amount of space to be filled in page
-  var remaining = $page.outerHeight() - Array.prototype.reduce.call(
-    $page.find( options.remainingTableHeightSelector ).map( function(){
-      return $(this).outerHeight();
-    })
-  , function( a, b ){ return a + b; }
-  );
-
-  console.print(
-    "Page Height:", $page.outerHeight(),
-    "Inner Height:",  Array.prototype.reduce.call(
-        $page.find( options.remainingTableHeightSelector ).map( function(){
-          return $(this).outerHeight();
-        })
-      , function( a, b ){ return a + b; }
-      ),
-    "Remaining height:", remaining,
-    "Iterations:", ~~(remaining / rowHeight)
-  );
-
-  var $table = $page.find('table');
-  var colspan = $table.find('th').length;
-
-  // Insert remaining / rowHeight number of rows
-  for ( var i = 0; i < ~~(remaining / rowHeight); ++i ){
-    $table.find('tbody').append(
-      '<tr><td colspan="' + colspan + '" style="height: ' + rowHeight + 'px"></td></tr>'
-    );
-  }
-};
-
 var addPageRuler = function( $page ){
   var tmpl = '<div style="position: absolute; color: red; font-size: 18px; background: rgba(100, 20, 20, 0.1); left: 0; top: {top}px">{top}px</div>';
   $page.css('position', 'relative');
@@ -111,28 +63,59 @@ var addPageRuler = function( $page ){
 };
 
 // Recursively adjust and add new pages
-var adjustPage = function( $page, callback ){
-  if ( $page.find('table tbody tr').length === 0 ) return callback();
-  if ( $page.outerHeight() <= options.magicNumber ) return callback();
+var adjustPage = function( $page, options, callback ){
+  var defaults = {
+    pageHeight: 920
+
+  , onPageClone: function( $page, $clone ){
+
+    }
+
+  , getPageHeight: function( $page ){
+      return $page.outerHeight();
+    }
+
+  , onPageAdjustment: function( $page, $next ){
+
+    }
+  };
+
+  for ( var key in defaults ){
+    if ( !(key in options) ){
+      options[ key ] = defaults[ key ];
+    }
+  }
+
+  var lastItemChild = options.itemSelector + ':last-child';
+
+  if ( $page.find( options.itemSelector ).length === 0 ){
+    options.onPageAdjustment( $page );
+    return callback();
+  }
+  
+  if ( options.getPageHeight( $page ) <= options.pageHeight ){
+    options.onPageAdjustment( $page );
+    return callback();
+  }
 
   var $nextPage = $page.clone();
-  $nextPage.find('table tbody tr').remove();
-  $page.find('.order-bottom-wrapper').remove();
+  $nextPage.find( options.itemSelector ).remove();
+  options.onPageClone( $page, $nextPage );
 
-  // console.print("Page Outer Height:", $page.outerHeight(), "Magic Number:", options.magicNumber);
+  // console.print("Page Outer Height:", options.getPageHeight( $page ));
 
-  // Pop TR's from $page until magic number is met
+  // Pop TR's from $page until page height is in the ideal range
   // Populate $nextPage with those TR's
   var $trs = $();
 
   var whileGreaterThan = function( next ){
-    var outerHeight = $page.outerHeight();
-    console.print("  While Page Height: ", outerHeight, options.magicNumber );
+    var outerHeight = options.getPageHeight( $page );
+    console.print("  While Page Height: ", outerHeight, options.pageHeight );
 
-    if ( outerHeight <= options.magicNumber ) return next();
+    if ( outerHeight <= options.pageHeight ) return next();
 
-    $trs = $trs.add( $page.find('tbody > tr:last-child' ).clone() );
-    $page.find('tbody > tr:last-child' ).remove();
+    $trs = $trs.add( $page.find( lastItemChild  ).clone() );
+    $page.find( lastItemChild  ).remove();
 
     setTimeout(function(){ whileGreaterThan( next ); }, 5 );
   };
@@ -140,6 +123,7 @@ var adjustPage = function( $page, callback ){
   whileGreaterThan( function(){
     $nextPage.find('tbody').append( $trs.get().reverse() );
     $page.after( $nextPage );
-    return adjustPage( $nextPage, callback );
+    options.onPageAdjustment( $page );
+    return adjustPage( $nextPage, options, callback );
   });
 };

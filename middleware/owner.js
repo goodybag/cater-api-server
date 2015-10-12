@@ -14,7 +14,7 @@ module.exports = function( options ){
       if ( req.user.isGuest() )
       if ( 'accept' in req.headers )
       if ( req.headers.accept.split(',').indexOf('text/html') > -1 ){
-        return res.redirect( '/login?next=' + req.url );
+        return res.redirect( '/login?next=' + req.originalUrl );
       }
       return res.send(401);
     }

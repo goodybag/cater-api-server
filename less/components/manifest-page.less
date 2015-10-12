@@ -9,6 +9,7 @@
   -webkit-box-orient: vertical;
   page-break-after: always;
   overflow: hidden;
+  box-sizing: content-box;
 
   padding-top:     @manifest-page-margin-top;
   padding-bottom:  @manifest-page-margin-bottom;
@@ -27,10 +28,6 @@
   }
 
   .page-number {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
     font-size: 12px;
     margin-top: 20px;
     text-align: center;

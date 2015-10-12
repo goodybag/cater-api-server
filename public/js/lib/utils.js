@@ -16,6 +16,7 @@ define(function(require, exports, module) {
   if (isBrowser){
     require('jquery-loaded');
     require('backbone.trackit');
+    require('jquery.filter-list').search( helpers.search );
   }
 
   _.mixin({

@@ -251,38 +251,60 @@ route.get('/users', m.sort('-id'), m.queryOptions({
   method: 'find'
 }));
 
-route.get('/users/new', m.param('id'), m.db.regions.find({}, {
-  limit: 'all'
-}), m.viewPlugin('mainNav', {
-  active: 'users'
-}), m.view('admin/user/create', {
-  layout: 'admin/layout2',
-  user: {}
-}));
+route.get('/users/new'
+, m.param('id')
+, m.db.regions.find({}, {
+    limit: 'all'
+  })
+, m.viewPlugin('mainNav', {
+    active: 'users'
+  })
+, m.db.delivery_services.find({})
+, m.view('admin/user/create', {
+    layout: 'admin/layout2',
+    user: {}
+  })
+);
 
 route.get('/users/:id', m.redirect('/admin/users/:id/basic-info'));
 
-route.get('/users/:id/basic-info', m.param('id'), m.viewPlugin('mainNav', {
-  active: 'users'
-}), m.viewPlugin('sidebarNav', {
-  active: 'basic-info',
-  baseUrl: '/admin/users/:id'
-}), m.viewPlugin('breadCrumbs', {
-  currentPage: 'Basic Info'
-}), m.queryOptions({
-  one: [{
-    table: 'regions',
-    alias: 'region'
-  }],
-  userGroups: true
-}), m.db.regions.find({}, {
-  limit: 'all'
-}), m.viewPlugin('mainNav', {
-  active: 'users'
-}), m.view('admin/user/edit', db.users, {
-  layout: 'admin/layout-single-object',
-  method: 'findOne'
-}));
+route.get('/users/:id/basic-info'
+, m.param('id')
+, m.viewPlugin('mainNav', {
+    active: 'users'
+  })
+, m.viewPlugin('sidebarNav', {
+    active: 'basic-info',
+    baseUrl: '/admin/users/:id'
+  })
+, m.viewPlugin('breadCrumbs', {
+    currentPage: 'Basic Info'
+  })
+, m.queryOptions({
+    one: [{
+      table: 'regions',
+      alias: 'region',
+      many: [{ table: 'delivery_services' }]
+    }],
+    pluck: [
+      { table: 'user_courier_preferences'
+      , alias: 'courier_preferences'
+      , column: 'delivery_service_id'
+      }
+    ],
+    userGroups: true
+  })
+, m.db.regions.find({}, {
+    limit: 'all'
+  })
+, m.viewPlugin('mainNav', {
+    active: 'users'
+  })
+, m.view('admin/user/edit', db.users, {
+    layout: 'admin/layout-single-object',
+    method: 'findOne'
+  })
+);
 
 route.get('/users/:id/invoices', m.param('id'), m.viewPlugin('mainNav', {
   active: 'users'
@@ -716,6 +738,7 @@ route.get('/restaurants/:restaurant_id/contacts'
 
 route.get('/orders/:id'
 , m.restrict(['admin'])
+  // Lookup couriers
 , function( req, res, next ){
     var where = {
       where: { 'orders.id': req.params.id }
@@ -736,6 +759,7 @@ route.get('/orders/:id'
   // previous query aliased result as `orders`
   // it should be `delivery_services`
 , m.aliasLocals({ delivery_services: 'orders' })
+
 , m.getOrder2({
     param:                  'id'
   , location:               true
@@ -748,6 +772,16 @@ route.get('/orders/:id'
   , internalNotes:          true
   , alerts:                 true
   })
+
+  // Lookup the restaurants in the order region
+, function( req, res, next ){
+    return m.db.restaurants.find({
+      region_id: req.order.restaurant.region_id
+    }, {
+      order: { name: 'asc' }
+    })( req, res, next );
+  }
+
 , m.view( 'admin/order', {
     layout: 'admin/layout2'
   })

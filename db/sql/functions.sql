@@ -66,6 +66,14 @@ begin
 end;
 $$ language plpgsql;
 
+create or replace function on_order_restaurant_change()
+returns trigger as $$
+begin
+  perform set_order_default_location( NEW );
+  return NEW;
+end;
+$$ language plpgsql;
+
 create or replace function on_order_type_change()
 returns trigger as $$
 begin
@@ -193,25 +201,48 @@ $$ language plpgsql;
 -- NOTE: Probabilities _NEED_ to add up to 1
 create or replace function get_random_delivery_service_id( oid int )
 returns int as $$
+  declare preferred_delivery_services int[];
 begin
+  -- Get the user's preferred delivery services
+  select array(
+    select user_courier_preferences.delivery_service_id
+    from orders
+    left join user_courier_preferences on
+      user_courier_preferences.user_id = orders.user_id
+    where orders.id = oid
+  ) into preferred_delivery_services;
+
+  -- None specified? Then load in all services available for the order
+  -- 
+  -- NOTE: This does not take into account the delivery zip.
+  --       In the future, we should do this
+  if preferred_delivery_services[1] is null then
+    select array(
+      select delivery_services.id
+      from orders
+      left join restaurants
+        on restaurants.id = orders.restaurant_id
+      left join delivery_services
+        on delivery_services.region_id = restaurants.region_id
+      where orders.id = oid
+    ) into preferred_delivery_services;
+  end if;
+
+  raise notice '%', preferred_delivery_services;
+
   return (
-    with computed_weights as (
-      select random() * sum( ds.region_order_distribution ) r
-        from orders
-          left join restaurants on orders.restaurant_id = restaurants.id
-          left join regions on restaurants.region_id = regions.id
-          left join delivery_services ds on regions.id = ds.region_id
-          where orders.id = oid
-    )
+    with
+     computed_weights as (
+        select random() * sum( ds.region_order_distribution ) r
+        from delivery_services ds
+        where id = any( preferred_delivery_services )
+      )
 
     select id from (
       select ds.id, r, sum( ds.region_order_distribution ) over ( order by ds.id ) s
-      from orders
-        left join restaurants on orders.restaurant_id = restaurants.id
-        left join regions on restaurants.region_id = regions.id
-        left join delivery_services ds on regions.id = ds.region_id
-        cross join computed_weights
-        where orders.id = oid
+      from delivery_services ds
+      cross join computed_weights
+      where ds.id = any( preferred_delivery_services )
     ) q
     where s >= r
     order by id

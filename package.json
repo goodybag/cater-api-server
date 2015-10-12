@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.356",
+  "version": "1.1.357",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -46,7 +46,7 @@
     "cookie-parser": "^1.3.3",
     "cron": "^1.0.4",
     "deep-extend": "~0.2.8",
-    "dirac": "^0.4.13",
+    "dirac": "^0.4.15",
     "dirac-middleware": "~0.1.9",
     "express": "^4.10.6",
     "express-session": "^1.9.3",

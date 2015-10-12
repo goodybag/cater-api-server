@@ -10,6 +10,7 @@ var db              = require('../db');
 var manifest        = require('../lib/order-manifester');
 var orderEditable   = require('./order-editable');
 var odsChecker      = require('../public/js/lib/order-delivery-service-checker');
+var applyPriceHike  = require('./apply-price-hike-to-order')();
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
@@ -213,6 +214,7 @@ module.exports = function( options ){
           });
         }
       , orderEditable().bind(this, req, res)
+      , options.applyPriceHike ? applyPriceHike.bind( this, req, res ) : utils.async.noop
       ], next );
     });
   };

@@ -19,22 +19,9 @@ route.get( config.receipt.orderRoute
     userPaymentMethods: true,
     restaurant: true,
     paymentMethod: true,
-    amenities: true
+    amenities: true,
+    applyPriceHike: true
   })
-, function( req, res, next ){
-    req.order.items = req.order.orderItems;
-    req.order = Orders.create( req.order );
-    res.locals.order.total = req.order.getTotal();
-    res.locals.order.sub_total = req.order.getPriorityAccountSubTotal();
-    res.locals.order.sales_tax = req.order.getTax();
-    res.locals.order.orderItems = req.order.getItems();
-    res.locals.order.orderItems.forEach( function( item ){
-      console.log('subtotal', item.getTotal());
-      item.sub_total = item.getTotal();
-    });
-    console.log('sub', req.order.getPriorityAccountSubTotal(), req.order.getSubTotal());
-    return next();
-  }
 , m.view( 'invoice/receipt', {
     layout: 'invoice/invoice-layout'
   })

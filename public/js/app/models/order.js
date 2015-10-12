@@ -271,6 +271,21 @@ define(function(require, exports, module) {
       }, this);
     },
 
+    save: function(attrs, options) {
+      options || (options = {});
+        attrs || (attrs = _.clone(this.attributes));
+
+        // Filter the data to send to the server
+        delete attrs.restaurant;
+
+        options.data = JSON.stringify(attrs);
+        options.headers = options.headers || {};
+        options.headers['Content-Type'] = 'application/json';
+
+        // Proxy the call to the original save function
+        return Backbone.Model.prototype.save.call(this, attrs, options);
+    },  
+
     set: function(key, val, options) {
       // strip out updates to the address fields and proxy them through to the address model
       var attrs;

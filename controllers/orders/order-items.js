@@ -8,12 +8,8 @@ var db = require('../../db');
 var queries = require('../../db/queries');
 
 module.exports.list = function(req, res, next) {
-  var order = new models.Order({id: parseInt(req.params.oid)});
-  order.getOrderItems(function(error, items) {
-    if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(utils.invoke(items, 'toJSON'));
-  });
-}
+  res.json( res.locals.order.orderItems );
+};
 
 // TODO: remove all the stuff we don't need here
 module.exports.summary = function(req, res, next) {

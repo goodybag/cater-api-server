@@ -135,7 +135,8 @@ route.get('/:oid/items', m.getOrder2({
     userAddresses: true,
     userPaymentMethods: true,
     restaurant: true,
-    deliveryService: true
+    deliveryService: true,
+    applyPriceHike: true
   }), controllers.orders.auth, m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
   controllers.orders.orderItems.list
 );

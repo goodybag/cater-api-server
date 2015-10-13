@@ -108,7 +108,8 @@ route.put('/:oid', m.getOrder2({
     userAddresses: true,
     userPaymentMethods: true,
     restaurant: true,
-    deliveryService: true
+    deliveryService: true,
+    applyPriceHike: true
   }), controllers.orders.auth, m.restrict(['order-owner', 'order-restaurant', 'admin']), m.audit.orderType(),
   controllers.orders.update);
 
@@ -119,7 +120,8 @@ route.patch('/:oid', m.getOrder2({
     userAddresses: true,
     userPaymentMethods: true,
     restaurant: true,
-    deliveryService: true
+    deliveryService: true,
+    applyPriceHike: true
   }), controllers.orders.auth, m.restrict(['order-owner', 'order-restaurant', 'admin']), controllers.orders
   .editability, controllers.orders.update);
 
@@ -130,7 +132,8 @@ route.delete('/:oid', m.getOrder2({
   userAddresses: true,
   userPaymentMethods: true,
   restaurant: true,
-  deliveryService: true
+  deliveryService: true,
+  applyPriceHike: true
 }), controllers.orders.auth, m.restrict(['order-owner', 'order-restaurant', 'admin']), function(req, res,
   next) {
   req.body = {

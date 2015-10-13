@@ -136,15 +136,15 @@ module.exports.get = function(req, res) {
         restaurant.getItems({ where: { 'is_hidden': false } }, function(err, items) {
 
           // Apply user price hike
-          restaurant.items.forEach( function( item ){
+          items.forEach( function( item ){
             var phike = req.user.attributes.priority_account_price_hike_percentage || 0;
-            item.price = Math.round( phike * item.price );
+            item.attributes.price += Math.round( phike * item.attributes.price );
 
-            if ( !Array.isArray( item.options_sets ) ) return;
+            if ( !Array.isArray( item.attributes.options_sets ) ) return;
             
-            item.options_sets.forEach( function( set ){
+            item.attributes.options_sets.forEach( function( set ){
               set.options.forEach( function( option ){
-                option.price = Math.round( phike * item.price );
+                option.price += Math.round( phike * option.price );
               });
             });
           });

@@ -9,7 +9,7 @@ var options = {
     $page.find('.order-bottom-wrapper').remove();
   }
 
-, readyTimeout: 20000
+, readyTimeout: 5000
 };
 
 $(function(){

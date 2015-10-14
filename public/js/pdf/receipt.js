@@ -3,7 +3,7 @@
  */
 
 var options = {
-  readyTimeout: 20000
+  readyTimeout: 5000
 
 , itemSelector: 'table tbody tr'
 

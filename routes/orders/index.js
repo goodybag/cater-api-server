@@ -25,6 +25,7 @@ route.get('/', m.restrict('admin'), m.pagination({
     return m.param('restaurants.region_id')(req, res, next);
   }, m.sort('-id'), m.queryOptions({
     submittedDate: true,
+    applyPriceHike: true,
     one: [{
       table: 'users',
       alias: 'user'

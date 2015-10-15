@@ -8,6 +8,7 @@ var utils       = require('../utils');
 var logger      = require('../lib/logger').create('DBHelpers');
 var config      = require('../config');
 var odsChecker  = require('../public/js/lib/order-delivery-service-checker');
+var Order       = require('stamps/orders/base');
 
 dirac.db.setMosql( mosql );
 
@@ -777,6 +778,12 @@ dirac.use( function( dirac ){
 
     if ( fetchedLocation ){
       results.forEach( transformLocation );
+    }
+
+    if ( $query.applyPriceHike ){
+      results.forEach( function( order ){
+        Order.applyPriceHike( order );
+      });
     }
 
     next();

@@ -78,6 +78,7 @@ define( function( require, exports, module ){
     , getTotalForContractFee: function() {
         return [
           this.getSubTotal()
+        , this.getPriorityAccountCost()
         , this.adjustment_amount
         , this.user_adjustment_amount
         , this.getTax()

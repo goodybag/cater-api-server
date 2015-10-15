@@ -54,7 +54,7 @@ begin
     sub_total := sub_total + (curr * order_item.quantity);
   end loop;
 
-  return sub_total;
+  return (sub_total + (sub_total * price_hike))::int;
 end;
 $$ language plpgsql;
 

@@ -2,6 +2,17 @@
 @gb-persian-pink: #EC87C0;
 @gb-carissma: #E27CB7;
 @gb-pink: #FFF3F7;
+@gb-pink-bright: #FF3DAE;
+
+.form-group a,
+.box a,
+.popover-wrapper a {
+  color: @gb-pink-bright;
+}
+
+.footer {
+  border-top: 16px solid darken(@gb-pink, 6%);
+}
 
 .navbar-logo {
   position: absolute;
@@ -24,7 +35,11 @@
 
 .tile-caption {
   background: rgba(255, 243, 247, 0.2);
-  border-bottom: 2px solid @gb-pastel-magenta;
+  border-top: 1px solid rgba(255, 202, 220, 0.4);
+}
+
+.tile-corner {
+  color: @gb-pink-bright;
 }
 
 .btn-group > input[type="radio"]:checked + .btn, .btn-group > .btn {
@@ -44,17 +59,46 @@
 }
 
 .popover-modal .popover-item a:hover {
-  background-color: darken(@gb-pink, 8%);
+  background-color: darken(@gb-pink, 6%);
 }
 
 .listing {
   border-bottom-color: darken(@gb-pink, 8%);
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
-.listing-rating {
+.listing-rating,
+.listing-feature {
   color: @palette-pink;
 }
 
-.tile-corner {
-  color: @gb-carissma;
+///////////******
+// HOME PAGE ****
+///////////******
+
+.page-section {
+  border-bottom: none;
+}
+
+#section-how-it-works {
+  background: rgba(255, 243, 247, 0.35);
+}
+
+#section-our-happy-customers {
+  background: rgba(255, 243, 247, 0.25);
+}
+
+.page-home #section-our-happy-customers .speech-boxes > .box {
+  background: #fff;
+}
+
+#section-restaurants {
+  background: @gb-pink;
+}
+
+.hero-unit h1 {
+  color: @gb-pink-bright;
 }

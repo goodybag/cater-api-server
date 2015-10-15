@@ -11,16 +11,16 @@ offGrayBrown: #535145;
 */
 
 body {
-  background: #FBF9E5 url('/img/body-bg.png');
+  background: rgba(255, 243, 247, 0.4);
   color: #695A42;
 }
 
 a {
-  color: #0039a1;
+  color: #FF3DAE;
 }
 
 a:hover {
-  color: #0039a1;
+  color: #FF3DAE;
   text-decoration: underline;
 }
 
@@ -270,7 +270,7 @@ a.list-group-item .list-group-item-heading {
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
-  color: #0039a1;
+  color: #FF3DAE;
   text-decoration: underline;
   background: none;
   border: none;

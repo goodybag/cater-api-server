@@ -204,6 +204,31 @@ describe('Orders Stamps', function(){
     assert.equal( order.getPriorityAccountCost(), 70 );
   });
 
+  it('.getTransactionFee()', function(){
+    var order = orders({
+      restaurant: {
+        region: { sales_tax: 0.0825 }
+      , no_contract_fee: 0.1
+      }
+    , items: [
+        { price: 100, quantity: 1 }
+      , { price: 200, quantity: 3 }
+      ]
+    , amenities: [
+        { price: 7, scale: 'flat', enabled: true }
+      , { price: 2, scale: 'multiply', enabled: true }
+      , { price: 1, scale: 'multiply', enabled: false }
+      ]
+    , guests: 5
+    , adjustment_amount: -100
+    , user_adjustment_amount: -50
+    , tip: 50
+    , delivery_fee: 100
+    });
+
+    assert.equal( order.getTransactionFee(), 78 );
+  });
+
   it('Should filter by month', function() {
     var sql = orders.db({ month: 12 }).get();
     assert(sql.$query);

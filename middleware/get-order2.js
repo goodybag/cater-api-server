@@ -11,6 +11,7 @@ var manifest        = require('../lib/order-manifester');
 var orderEditable   = require('./order-editable');
 var odsChecker      = require('../public/js/lib/order-delivery-service-checker');
 var applyPriceHike  = require('./apply-price-hike-to-order')();
+var Order           = require('stamps/orders/base');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
@@ -192,6 +193,10 @@ module.exports = function( options ){
       res.locals.order = order;
       req.logger.options.data.order = { id: order.id };
 
+      if ( options.applyPriceHike ){
+        Order.applyPriceHike( req.order );
+      }
+
       utils.async.series([
         !options.restaurantDbModelFind ? utils.async.noop : function( done ){
           var orderParams = { id: order.id };
@@ -214,7 +219,6 @@ module.exports = function( options ){
           });
         }
       , orderEditable().bind(this, req, res)
-      , options.applyPriceHike ? applyPriceHike.bind( this, req, res ) : utils.async.noop
       ], next );
     });
   };

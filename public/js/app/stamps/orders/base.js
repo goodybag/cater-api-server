@@ -14,7 +14,7 @@ define( function( require, exports, module ){
   var amenities = require('./amenity');
   var moment = require('moment-timezone');
 
-  return require('stampit')()
+  var Order = require('stampit')()
     .state({
       items: []
     , amenities: []
@@ -90,6 +90,7 @@ define( function( require, exports, module ){
     , getTotal: function( options ){
         return [
           this.getSubTotal()
+        , this.getPriorityAccountCost()
         , this.adjustment_amount
         , this.user_adjustment_amount
         , this.getTax()
@@ -144,4 +145,23 @@ define( function( require, exports, module ){
         ].reduce( utils.add, 0 );
       }
     });
+
+  Order.applyPriceHike = function( order ){
+    order.items = order.orderItems || order.items;
+
+    var _order = Order.create( order );
+
+    order.total = _order.getTotal();
+    order.sub_total = _order.getPriorityAccountSubTotal();
+    order.sales_tax = _order.getTax();
+    order.orderItems = _order.getItems();
+console.log('total', _order.getTotal());
+    order.orderItems.forEach( function( item ){
+      item.sub_total = item.getTotal();
+    });
+
+    return order;
+  };
+  
+  return Order;
 });

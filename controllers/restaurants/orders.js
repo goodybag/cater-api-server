@@ -3,6 +3,7 @@ var errors = require('../../errors');
 var utils = require('../../utils');
 var models = require('../../models');
 var applyPriceHike = require('../../middleware/apply-price-hike-to-order')();
+var Order = require('stamps/orders/base');
 
 module.exports.listJSON = function(req, res) {
   var $query = utils.extend({}, req.queryOptions);
@@ -64,7 +65,7 @@ module.exports.current = function(req, res, next) {
     if (order) {
       req.url = req.url.replace(/^\/restaurants\/.*\/orders\/current/, '/orders/' + order.id);
       req.order = res.locals.order = order;
-      applyPriceHike( req, res, function(){} );
+      Order.applyPriceHike( req.order );
       logger.info('Found pending order', { order: req.order });
     }
 

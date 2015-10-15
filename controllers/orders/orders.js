@@ -19,6 +19,7 @@ var deliveryFee = require('stamps/orders/delivery-fee');
 var Address = require('stamps/addresses');
 var UserAddresses = require('stamps/addresses/user-addresses-db');
 var GeocodeRequest = require('stamps/requests/geocode');
+var Order = require('stamps/orders/base');
 var applyPriceHike = require('../../middleware/apply-price-hike-to-order')();
 
 var addressFields = [
@@ -278,7 +279,7 @@ module.exports.update = function(req, res) {
       return res.error( errors.internal.UNKNOWN, error );
     }
 
-    applyPriceHike( req, res, utils.noop );
+    Order.applyPriceHike( res.locals.order );
 
     res.send( res.locals.order );
 

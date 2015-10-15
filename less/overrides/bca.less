@@ -1,6 +1,7 @@
 @gb-pastel-magenta: #EE96C8;
 @gb-persian-pink: #EC87C0;
 @gb-carissma: #E27CB7;
+@gb-pink: #FFF3F7;
 
 .navbar-logo {
   position: absolute;
@@ -15,4 +16,45 @@
     max-width: 130px !important;
     top: 12px;
   }
+}
+
+.tile {
+  background-color: #fff;
+}
+
+.tile-caption {
+  background: rgba(255, 243, 247, 0.2);
+  border-bottom: 1px solid @gb-pastel-magenta;
+}
+
+.btn-group > input[type="radio"]:checked + .btn, .btn-group > .btn {
+  background-color: #fff;
+}
+
+#main {
+  background-color: rgba(255, 243, 247, 0.2);
+}
+
+.page-restaurant-list .restaurant-list-search .search-advanced {
+  background-color: @gb-pink; // 255, 243, 247
+}
+
+.page-restaurant-list .restaurant-list-search section {
+  border-bottom: 1px solid darken(@gb-pink, 8%);
+}
+
+.popover-modal .popover-item a:hover {
+  background-color: darken(@gb-pink, 8%);
+}
+
+.listing {
+  border-bottom-color: darken(@gb-pink, 8%);
+}
+
+.listing-rating {
+  color: @palette-pink;
+}
+
+.tile-corner {
+  color: @gb-carissma;
 }

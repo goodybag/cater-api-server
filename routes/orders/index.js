@@ -97,7 +97,8 @@ route.get('/:oid', m.getOrder2({
     deliveryService: true,
     submittedDate: true,
     amenities: true,
-    orderFeedback: true
+    orderFeedback: true,
+    applyPriceHike: true
   }), controllers.orders.auth, m.restrict(['admin', 'receipts', 'order-owner', 'order-restaurant']),
   controllers.orders.get);
 
@@ -190,7 +191,8 @@ route.get('/:oid/items', m.getOrder2({
     restaurant: true,
     amenities: true,
     deliveryService: true,
-    restaurantDbModelFind: true
+    restaurantDbModelFind: true,
+    applyPriceHike: true
   }), controllers.orders.auth, m.restrict(['admin', 'order-owner', 'order-editor']), controllers.orders.orderItems
   .summary
 );

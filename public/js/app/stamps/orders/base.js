@@ -155,7 +155,8 @@ define( function( require, exports, module ){
     order.sub_total = _order.getPriorityAccountSubTotal();
     order.sales_tax = _order.getTax();
     order.orderItems = _order.getItems();
-console.log('total', _order.getTotal());
+    order.no_contract_amount = _order.getNoContractFee();
+
     order.orderItems.forEach( function( item ){
       item.sub_total = item.getTotal();
     });

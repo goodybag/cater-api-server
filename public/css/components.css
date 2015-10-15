@@ -205,8 +205,28 @@
   padding-left: 0;
 }
 
+.navbar-header {
+  position: relative;
+  width: 50%;
+}
+
+@media screen and (max-width: 768px) {
+  .navbar-header {
+    width: 100%;
+  }
+}
+
+.navbar-brand img {
+  max-width: 145px;
+  position: absolute;
+  top: 18px;
+}
+
 .navbar .contact-info {
-  display: inline-block;
+  position: absolute;
+  top: 15px;
+  left: 165px;
+  display: block;
   vertical-align: middle;
   font-size: 16px;
   margin-top: 2px;
@@ -220,9 +240,19 @@
   color: #ed4242;
 }
 
-@media screen and ( max-width: 982px ){
+@media screen and ( max-width: 1200px ){
   .navbar .contact-info .help-text {
     display: none;
+  }
+}
+
+@media screen and ( max-width: 991px ) and ( min-width: 768px ) {
+  .navbar .contact-info {
+    display: none;
+  }
+
+  .navbar-header {
+    width: 20%;
   }
 }
 

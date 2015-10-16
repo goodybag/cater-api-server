@@ -12,7 +12,7 @@ offGrayBrown: #535145;
 
 body {
   background: rgba(255, 243, 247, 0.4);
-  color: #695A42;
+  color: #905E84;
 }
 
 a {
@@ -27,6 +27,8 @@ a:hover {
 .navbar {
   background: #FFF;
   border-color: #CCCCC0;
+  position: relative;
+  width: 100%;
 }
 
 .navbar-impersonate {
@@ -39,6 +41,10 @@ a:hover {
   border-color: #CCCCC0;
   color: #340F02;
   background-color: #FFFFFF;
+}
+
+.panel-title {
+  color: #905E84;
 }
 
 /**
@@ -150,7 +156,7 @@ a.list-group-item .list-group-item-heading {
  */
 
 .page-title {
-  color: #535145;
+  /*color: #535145;*/
   text-shadow: 0 1px 0 #FFF;
 }
 
@@ -295,4 +301,9 @@ a.list-group-item .list-group-item-heading {
   padding: 6px 12px;
   margin-right: 10px;
   border-radius: 3px;
+}
+
+.back-to-results {
+  display: block;
+  padding-top: 30px;
 }

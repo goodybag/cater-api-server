@@ -239,17 +239,26 @@
 .navbar .contact-info .phone-number {
   display: block;
   color: #ed4242;
+  width: 105px;
 }
 
 @media screen and ( max-width: 540px ) {
   .navbar .contact-info .help-text {
     display: none;
   }
+
+  .navbar .contact-info {
+    top: 15px;
+  }
 }
 
-@media screen and ( max-width: 991px ) and ( min-width: 768px ) {
+@media screen and ( max-width: 1200px ) and ( min-width: 768px ) {
   .navbar .contact-info .help-text {
     display: none;
+  }
+
+  .navbar .contact-info {
+    top: 15px;
   }
 
   .navbar-header {
@@ -295,6 +304,14 @@
   padding-right: 0;
   width: 60%;
   float: right;
+}
+
+.dropdown-menu>li>a {
+  padding: 10px 20px 10px 10px;
+}
+
+.dropdown-menu>li>a:hover, .dropdown-menu>li>a:focus {
+  background-color: #ffd4e3;
 }
 
 @media screen and (max-width: 768px) {

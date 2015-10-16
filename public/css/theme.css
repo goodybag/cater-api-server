@@ -43,6 +43,10 @@ a:hover {
   background-color: #FFFFFF;
 }
 
+.panel .panel-heading {
+  background-color: #FFFDFD;
+}
+
 .panel-title {
   color: #905E84;
 }
@@ -138,7 +142,7 @@ fieldset[disabled] .btn-primary.active {
 }
 
 a.list-group-item:hover {
-  background-color: #F8F8F0;
+  background-color: #FFE6EF;
 }
 
 a.list-group-item.disabled:hover,

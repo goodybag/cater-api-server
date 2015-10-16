@@ -59,8 +59,16 @@
   border-bottom: 1px solid darken(@gb-pink, 8%);
 }
 
+.page-restaurant-list .restaurant-list-search {
+  background: #fff;
+}
+
+.page-restaurant-list .restaurant-list-search .search-params {
+  background-color: #434a54;
+}
+
 .page-restaurant-list .restaurant-list-search .search-advanced {
-  background-color: @gb-pink; // 255, 243, 247
+  background-color: rgba(255, 243, 247, 0.4); // 255, 243, 247
 }
 
 .page-restaurant-list .restaurant-list-search section {
@@ -110,4 +118,56 @@
 
 .hero-unit h1 {
   color: @gb-pink-bright;
+}
+
+.page {
+  padding-top: 92px;
+
+  @media screen and (max-width: (@breakpoint-tablet)) {
+    padding-top: 81px;
+  }
+
+  .container {
+    min-height: 43px;
+  }
+}
+
+.page-home {
+  .navbar .container {
+    margin-top: 10px;
+    margin-bottom: 8px;
+  }
+
+  .navbar-logo {
+    top: 22px;
+  }
+}
+
+
+.page-login,
+.page-register,
+.page-forgot-password {
+  #main {
+    border-bottom: none;
+  }
+
+  .form-group a {
+    color: #434a54;
+  }
+
+  .navbar-caption {
+    padding-left: 180px;
+  }
+
+  .navbar .nav > li > a:hover {
+    background: darken(@gb-pink, 6%);
+  }
+}
+
+.bca-flag {
+  width: 100%;
+  background: @gb-pink;
+  padding: 8px;
+  border-bottom: 1px solid darken(@gb-pink, 10%);
+  text-align: center;
 }

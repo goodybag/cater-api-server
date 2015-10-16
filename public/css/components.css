@@ -75,6 +75,18 @@
   margin-left: 0;
 }
 
+/*
+ * Flags
+ */
+
+.bca-flag {
+ width: 100%;
+ background: #fff3f7;
+ padding: 8px;
+ border-bottom: 1px solid #ffc0d5;
+ text-align: center;
+}
+
 /**
  * Labels
  */

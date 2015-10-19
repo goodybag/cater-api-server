@@ -16,6 +16,7 @@
 
 .navbar-logo {
   position: absolute;
+  left: 10px;
   top: 18px;
   padding: 0 !important;
   height: inherit !important;
@@ -135,11 +136,18 @@
   .form-group a {
     color: #434a54;
   }
+}
 
-  .navbar-caption {
-    padding-left: 180px;
+.page-restaurant-list {
+  @media screen and (max-width: 786px) {
+    .navbar {
+      min-height: 82px;
+    }
   }
+}
 
+.navbar-caption {
+  padding-left: 180px;
 }
 
 .bca-flag {

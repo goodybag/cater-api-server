@@ -1,0 +1,151 @@
+@gb-pastel-magenta: #EE96C8;
+@gb-persian-pink: #EC87C0;
+@gb-carissma: #E27CB7;
+@gb-pink: #FFF3F7;
+@gb-pink-bright: #FF3DAE;
+
+.form-group a,
+.box a,
+.popover-wrapper a {
+  color: @gb-pink-bright;
+}
+
+.footer {
+  border-top: 16px solid darken(@gb-pink, 6%);
+}
+
+.navbar-logo {
+  position: absolute;
+  top: 18px;
+  padding: 0 !important;
+  height: inherit !important;
+  max-height: inherit !important;
+  width: 100% !important;
+  max-width: 145px !important;
+
+  @media screen and (max-width: (@breakpoint-tablet)) {
+    max-width: 130px !important;
+    top: 12px;
+  }
+}
+
+.navbar-with-dropdowns .nav {
+  @media screen and (max-width: (@breakpoint-tablet)) {
+    margin-top: 55px;
+  }
+}
+
+.tile {
+  background-color: #fff;
+}
+
+.btn-group > input[type="radio"]:checked + .btn, .btn-group > .btn {
+  background-color: #fff;
+}
+
+#main {
+  background-color: rgba(255, 243, 247, 0.2);
+  border-bottom: 1px solid darken(@gb-pink, 8%);
+}
+
+.page-restaurant-list .restaurant-list-search {
+  background: #fff;
+}
+
+.page-restaurant-list .restaurant-list-search .search-params {
+  background-color: #434a54;
+}
+
+.page-restaurant-list .restaurant-list-search .search-advanced {
+  background-color: rgba(255, 243, 247, 0.4); // 255, 243, 247
+}
+
+.page-restaurant-list .restaurant-list-search section {
+  border-bottom: 1px solid darken(@gb-pink, 8%);
+}
+
+.listing {
+  border-bottom-color: darken(@gb-pink, 8%);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.listing-rating,
+.listing-feature {
+  color: @gb-pink-bright;
+}
+
+///////////******
+// HOME PAGE ****
+///////////******
+
+.page-section {
+  border-bottom: 1px solid darken(@gb-pink, 8%);
+}
+
+#section-how-it-works {
+  background: rgba(255, 243, 247, 0.35);
+}
+
+#section-our-happy-customers {
+  background: rgba(255, 243, 247, 0.25);
+}
+
+.page-home #section-our-happy-customers .speech-boxes > .box {
+  background: #fff;
+}
+
+#section-restaurants {
+  background: @gb-pink;
+}
+
+.page {
+  padding-top: 92px;
+
+  @media screen and (max-width: (@breakpoint-tablet)) {
+    padding-top: 81px;
+  }
+
+  .container {
+    min-height: 43px;
+  }
+}
+
+.page-home {
+  .navbar .container {
+    margin-top: 10px;
+    margin-bottom: 8px;
+  }
+
+  .navbar-logo {
+    top: 22px;
+  }
+}
+
+
+.page-login,
+.page-register,
+.page-forgot-password {
+  #main {
+    border-bottom: none;
+  }
+
+  .form-group a {
+    color: #434a54;
+  }
+
+  .navbar-caption {
+    padding-left: 180px;
+  }
+
+}
+
+.bca-flag {
+  width: 100%;
+  background: @gb-pink;
+  padding: 8px;
+  border-bottom: 1px solid darken(@gb-pink, 10%);
+  text-align: center;
+}

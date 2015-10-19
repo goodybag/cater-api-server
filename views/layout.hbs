@@ -82,6 +82,7 @@
   </head>
   <body>
     <header id="header" class="{{#if session.oldUser}}navbar-impersonate{{/if}}">
+      <div class="bca-flag">10% from all orders will be donated to breast cancer research through Oct. 31!</div>
       <div class="container">
 
         {{!-- Brand and toggle get grouped for better mobile display --}}
@@ -106,8 +107,43 @@
           <div class="collapse navbar-collapse" id="navbar-collapse">
             {{{block "navbar-stuff"}}}
 
+            <a href="/users/me/rewards" class="gb-points-indicator">
+              <div class="points-wrapper">
+                {{#if user.points}}
+                  {{user.points}}
+                {{else}}
+                  0
+                {{/if}}
+              </div>
+            </a>
+
             {{#if user.id}}
             <ul class="nav navbar-nav navbar-right">
+              <li class="nav-account dropdown">
+                <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
+                  {{#if user.name }} Hi, {{ user.name }} {{else}} My Account {{/if}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a href="/users/me">My Settings</a></li>
+                  <li><a href="/users/me/rewards">My Rewards</a></li>
+                  <li><a href="/auth/logout">Logout</a></li>
+                  {{#contains user.groups 'restaurant'}}
+                    <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
+                  {{else}}
+                    <li><a href="/restaurants" class="btn-link">Home</a></li>
+                  {{/contains}}
+                </ul>
+              </li>
+              <li class="nav-account dropdown">
+                <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
+                  My Orders <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a href="/">Start New Order</a></li>
+                  <li><a href="/users/me/orders">My Orders</a></li>
+                  <li><a href="/users/me/orders/receipts">My Receipts</a></li>
+                </ul>
+              </li>
               {{#contains user.groups 'admin'}}
                 <li class="form-control-wrapper">{{> region_selector}}</li>
               {{/contains}}
@@ -122,42 +158,8 @@
               </li>
               {{/if}}
               {{{block "navbar-links"}}}
-              <li class="nav-account dropdown">
-                <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
-                  My Orders <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                  <li><a href="/">Start New Order</a></li>
-                  <li><a href="/users/me/orders">My Orders</a></li>
-                  <li><a href="/users/me/orders/receipts">My Receipts</a></li>
-                </ul>
-              </li>
-              <li class="nav-account dropdown">
-                <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
-                  {{#if user.name }} {{ user.name }} {{else}} My Account {{/if}} <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                  <li><a href="/users/me">My Settings</a></li>
-                  <li><a href="/users/me/rewards">My Rewards</a></li>
-                  <li><a href="/auth/logout">Logout</a></li>
-                  {{#contains user.groups 'restaurant'}}
-                    <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
-                  {{else}}
-                    <li><a href="/restaurants" class="btn-link">Home</a></li>
-                  {{/contains}}
-                </ul>
-              </li>
             </ul>
 
-            <a href="/users/me/rewards" class="gb-points-indicator">
-              <div class="points-wrapper">
-                {{#if user.points}}
-                  {{user.points}}
-                {{else}}
-                  0
-                {{/if}}
-              </div>
-            </a>
             {{else}}
             <ul class="nav navbar-nav navbar-right">
               <li>

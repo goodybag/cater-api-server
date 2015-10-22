@@ -13,7 +13,7 @@ module.exports = {
   //     cols - an array of column headers (String)
   //     keys - an array of keys on each data object (String)
   //   }
-  table: function(data, opts) {
+  tablify: function(data, opts) {
     var t = new Table();
     var cols = opts.cols;
     var keys = opts.keys;
@@ -31,5 +31,10 @@ module.exports = {
     };
 
     return tableOut;
+  },
+
+  consolify: function(str) {
+    return "\n" + str + "\n\n\n";
   }
+
 };

@@ -1,11 +1,14 @@
 var utils = require('../utils');
 var config = require('../config.json');
 
+var strings = utils.strings;
+var format = utils.format;
+
 var chalk = require('chalk');
 var superb = require('superb');
 
 // Message inside the speech bubble
-var greeting_msg = utils.strings.concat([
+var greeting_msg = strings.concat([
   chalk.blue("Welcome to the "),
   chalk.red.underline(config.name),
   chalk.red("!\n"),
@@ -13,10 +16,10 @@ var greeting_msg = utils.strings.concat([
 ]);
 
 // Message with 'yosay' human
-var greeting_yosay = utils.format.yosayify(greeting_msg);
+var greeting_yosay = format.yosayify(greeting_msg);
 
 // Further info about cli
-var greeting_info = utils.strings.concat([
+var greeting_info = strings.concat([
   config.description,
   " (v",
   config.version,
@@ -26,7 +29,7 @@ var greeting_info = utils.strings.concat([
 ]);
 
 // Finalized greeting
-var greeting = utils.strings.concat([
+var greeting = strings.concat([
   greeting_yosay,
   greeting_info
 ]);

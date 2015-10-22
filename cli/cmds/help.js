@@ -1,4 +1,3 @@
-var shell = require('minish');
 var utils = require('../utils');
 var config = require('../config');
 
@@ -9,11 +8,11 @@ var obj = utils.objects;
 module.exports = function(context) {
   var keys = obj.getKeys(cmdList[0]);
 
-  var tableOut = format.table(cmdList, {
+  var tabled = format.tablify(cmdList, {
     cols: [ 'Command', 'Alias', 'Description' ],
     keys: keys
   });
 
-  shell.write(tableOut);
+  console.log(format.consolify(tabled));
   context.end();
 };

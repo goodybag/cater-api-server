@@ -11,6 +11,16 @@ $ node gcli
 goodybag-cli >
 ```
 
+##Project Structure
+
+* `gcli.js` - Starts the gcli app.
+* `cli/`
+  * `config.json` - Holds configs for goodybag-cli.
+  * `app.js` - Exports the gcli app.
+  * `prompt/` - Takes care of the cli's greeting & prompt messages.
+  * `cmds/` - Holds logic for all commands available on the cli.
+  * `util/` - Contains utility functions commonly used throughout the app.
+
 ##API
 
 ####Help
@@ -75,13 +85,3 @@ goodybag-cli > restart
 **Description:** Restarts the server if it is already running. Otherwise, does not execute.
 
 **Flags:** *none*
-
-##Project Structure
-
-* `gcli.js` - Starts the gcli app.
-* `cli/`
-  * `config.json` - Holds configs for goodybag-cli.
-  * `app.js` - Exports the gcli app.
-  * `prompt/` - Takes care of the cli's greeting & prompt messages.
-  * `cmds/` - Holds logic for all commands available on the cli.
-  * `util/` - Contains utility functions commonly used throughout the app.

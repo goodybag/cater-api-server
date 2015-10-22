@@ -6,7 +6,7 @@ Currently, only compatible with the Mac OS X operating system.
 ##Basic Usage
 
 ```
-$ node gcli.js
+$ node gcli
 
 goodybag-cli >
 ```
@@ -33,7 +33,7 @@ goodybag-cli > version
 
 **Alias:** `v`
 
-**Description:** Prints out the version number of the cli.
+**Description:** Prints out the current version of goodybag-cli.
 
 **Flags:** *none*
 

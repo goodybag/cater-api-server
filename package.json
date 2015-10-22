@@ -130,6 +130,7 @@
   },
   "devDependencies": {
     "chalk": "^1.1.1",
+    "easy-table": "^1.0.0",
     "ecstatic": "^0.8.0",
     "exec-sync": "^0.1.6",
     "loglog-server": "^1.0.6",

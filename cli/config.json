@@ -1,5 +1,32 @@
 {
   "name": "goodybag-cli",
   "description": "The goodybag kickass command line interface.",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "commands": [
+    {
+      "command": "help",
+      "alias": "h",
+      "description": "List of available commands."
+    },
+    {
+      "command": "version",
+      "alias": "v",
+      "description": "Current version."
+    },
+    {
+      "command": "start",
+      "alias": "st",
+      "description": "Starts the server."
+    },
+    {
+      "command": "stop",
+      "alias": "stp",
+      "description": "Stops the server."
+    },
+    {
+      "command": "restart",
+      "alias": "rst",
+      "description": "Restarts the server, if already running."
+    }
+  ]
 }

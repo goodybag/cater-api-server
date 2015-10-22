@@ -18,7 +18,22 @@ goodybag-cli >
 goodybag-cli > help
 ```
 
-**Description:** Prints out a list of available commands.
+**Alias:** `h`
+
+**Description:** Prints out a full list of available commands.
+
+**Flags:** *none*
+
+===
+
+####Version
+```
+goodybag-cli > version
+```
+
+**Alias:** `v`
+
+**Description:** Prints out the version number of the cli.
 
 **Flags:** *none*
 
@@ -28,6 +43,8 @@ goodybag-cli > help
 ```
 goodybag-cli > start
 ```
+
+**Alias:** `st`
 
 **Description:** Starts the server. Also starts `psql`, `redis-server`, `mongod`, and `grunt` if not already running.
 
@@ -40,6 +57,21 @@ goodybag-cli > start
 goodybag-cli > stop
 ```
 
+**Alias:** `stp`
+
 **Description:** Stops the server. Also safely exits `psql`, `redis-server`, `mongod`, and `grunt` if they are running.
+
+**Flags:** *none*
+
+===
+
+####Restart
+```
+goodybag-cli > restart
+```
+
+**Alias:** `rst`
+
+**Description:** Restarts the server if it is already running. Otherwise, does not execute.
 
 **Flags:** *none*

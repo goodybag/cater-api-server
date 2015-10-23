@@ -1,10 +1,7 @@
-var utils = require('../utils');
-var config = require('../config.json');
-var cmdObj = config.commands;
-
-var format = utils.format;
-var strUtil = utils.strings;
-var cmdUtil = utils.commands;
+var format = require('../utils').format;
+var strUtil = require('../utils').strings;
+var cmdUtil = require('../utils').commands;
+var cmdObj = require('../config.json').commands;
 
 var chalk = require('chalk');
 var wrap = require('word-wrap');
@@ -34,22 +31,25 @@ module.exports = function(context) {
 };
 
 function getUsageInfo(arg) {
-  var command = cmdUtil.getCommandOf(arg) || arg;
+  var command = cmdUtil.getCommandOf(arg) || arg;       // extract command
 
-  var label =
+  var label =                                             // format header
     strUtil.concat([
       chalk.blue("Command: "),
-      chalk.green(cmdUtil.getValueOf(command, "usage"))
+      chalk.green(cmdUtil.getValueOf(command, "usage")),
+      "\n",
+      chalk.blue("  Alias: "),
+      chalk.green(cmdUtil.getAliasOf(command))
     ]);
 
-  var description =
+  var description =                                   // format description
     strUtil.concat([
       cmdUtil.getValueOf(command, "help")
     ]);
 
   var wrapDescription = format.wrapify(description);
 
-  var output =
+  var output =                                         // consolidate ouput
     strUtil.concat([
       label,
       "\n\n",
@@ -57,7 +57,8 @@ function getUsageInfo(arg) {
     ]);
 
   var hasFlags = cmdUtil.hasFlags(command);
-  if(hasFlags) {
+
+  if(hasFlags) {                        // add flags to output if they exist
     var flagObj = cmdUtil.getValueOf(command, "flags");
     var flags = chalk.inverse("Flags:");
     var cols = format.columnify(flagObj, [" ", "  "]);
@@ -65,7 +66,7 @@ function getUsageInfo(arg) {
 
     output +=
       strUtil.concat([
-        "\n\n",
+        "\n\n\n",
         flags,
         "\n",
         cols

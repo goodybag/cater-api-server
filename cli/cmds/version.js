@@ -1,9 +1,9 @@
-var utils = require('../utils');
-var config = require('../config');
-
-var format = utils.format;
+var format = require('../utils').format;
+var version = require('../config').version;
 
 module.exports = function(context) {
-  console.log(format.consolify("v" + config.version));
+  // Command: version
+  // Print out version of app
+  console.log(format.consolify("v" + version));
   context.end();
 };

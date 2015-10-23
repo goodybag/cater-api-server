@@ -21,31 +21,39 @@
       "alias": "st",
       "description": "Starts the server.",
       "usage": "start [-p] [-r] [-m] [-g] [-s]",
-      "help": "Starts the server from scratch if no flags are given. This means starting Postgres, redis, mongod, grunt, and finally the goodybag-cater server, in that order. If flags are given, then only the programs specified will start. If a program is already started, it will be ignored.",
+      "help": "Starts the server from scratch if no flags are given. This means starting Postgres, redis, mongod, grunt, and finally the goodybag-cater server, in that order. If flags are given, then only the processes specified will start. If a process is already started, it will be ignored.",
       "flags": {
-        "-p, --postgres": "Open Postgres.",
+        "-p, --postgres": "Open the Postgres app.",
         "-r, --redis": "Start redis-server.",
         "-m, --mongod": "Start mongod.",
         "-g, --grunt": "Start grunt.",
-        "-s, --server": "Start goodybag-cater server."
+        "-s, --server": "Start goodybag-cater-api server."
       }
     },
     "stop": {
       "alias": "stp",
       "description": "Stops the server.",
-      "usage": "",
-      "help": "",
+      "usage": "stop [-p] [-r] [-m] [-g] [-s]",
+      "help": "Stops the server, closing all processes with it (e.g., Postgres, redis, mongod, grunt). If flags are given, then only the processes specified will be stopped. If a process is already stopped, it will be ignored.",
       "flags": {
-
+        "-p, --postgres": "Close the Postgres app.",
+        "-r, --redis": "Stop redis-server.",
+        "-m, --mongod": "Stop mongod.",
+        "-g, --grunt": "Stop grunt.",
+        "-s, --server": "Stop goodybag-cater-api server."
       }
     },
     "restart": {
       "alias": "rst",
-      "description": "Restarts the server, if it is running.",
-      "usage": "",
-      "help": "",
+      "description": "Restarts the server.",
+      "usage": "restart [-p] [-r] [-m] [-g] [-s]",
+      "help": "If no flags are given, the server will experience a full reboot. If flags are given, then only the processes specified will be restarted.",
       "flags": {
-
+        "-p, --postgres": "Restart/start the Postgres app.",
+        "-r, --redis": "Restart/start redis-server.",
+        "-m, --mongod": "Restart/start mongod.",
+        "-g, --grunt": "Restart/start grunt.",
+        "-s, --server": "Restart/start the goodybag-cater-api server."
       }
     }
   }

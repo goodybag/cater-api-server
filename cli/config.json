@@ -2,31 +2,51 @@
   "name": "goodybag-cli",
   "description": "The goodybag kickass command line interface.",
   "version": "0.1.0",
-  "commands": [
-    {
-      "command": "help",
+  "commands": {
+    "help": {
       "alias": "h",
-      "description": "List of available commands."
+      "description": "Table of available commands.",
+      "usage": "help <[COMMAND] ...>",
+      "help": "Prints the basic usage information on each [COMMAND] given (1 or more). Otherwise, prints the full table of available commands.",
+      "flags": {}
     },
-    {
-      "command": "version",
+    "version": {
       "alias": "v",
-      "description": "Current version."
+      "description": "Current version.",
+      "usage": "version",
+      "help": "Prints out the current version of goodybag-cli.",
+      "flags": {}
     },
-    {
-      "command": "start",
+    "start": {
       "alias": "st",
-      "description": "Starts the server."
+      "description": "Starts the server.",
+      "usage": "start [-p] [-r] [-m] [-g] [-s]",
+      "help": "Starts the server from scratch if no flags are given. This means starting Postgres, redis, mongod, grunt, and finally the goodybag-cater server, in that order. If flags are given, then only the programs specified will start. If a program is already started, it will be ignored.",
+      "flags": {
+        "-p, --postgres": "Open Postgres.",
+        "-r, --redis": "Start redis-server.",
+        "-m, --mongod": "Start mongod.",
+        "-g, --grunt": "Start grunt.",
+        "-s, --server": "Start goodybag-cater server."
+      }
     },
-    {
-      "command": "stop",
+    "stop": {
       "alias": "stp",
-      "description": "Stops the server."
+      "description": "Stops the server.",
+      "usage": "",
+      "help": "",
+      "flags": {
+
+      }
     },
-    {
-      "command": "restart",
+    "restart": {
       "alias": "rst",
-      "description": "Restarts the server, if already running."
+      "description": "Restarts the server, if it is running.",
+      "usage": "",
+      "help": "",
+      "flags": {
+
+      }
     }
-  ]
+  }
 }

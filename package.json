@@ -130,6 +130,7 @@
   },
   "devDependencies": {
     "chalk": "^1.1.1",
+    "columnify": "^1.5.2",
     "easy-table": "^1.0.0",
     "ecstatic": "^0.8.0",
     "exec-sync": "^0.1.6",
@@ -139,7 +140,9 @@
     "mocha": "~1.12.0",
     "mocha-perf-reporter": "^0.2.0",
     "omf": "~0.5.0",
+    "opn": "^3.0.2",
     "superb": "^1.2.0",
+    "word-wrap": "^1.1.0",
     "yosay": "^1.0.5"
   },
   "engines": {

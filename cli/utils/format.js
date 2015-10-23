@@ -1,6 +1,8 @@
 var yosay = require('yosay');
 var chalk = require('chalk');
 var Table = require('easy-table');
+var wrap = require('word-wrap');
+var columnify = require("columnify");
 
 module.exports = {
   yosayify: function(msg) {
@@ -8,29 +10,54 @@ module.exports = {
   },
 
   // Expecting:
-  //   data - array of objects to be printed in table
-  //   opts: {
-  //     cols - an array of column headers (String)
-  //     keys - an array of keys on each data object (String)
+  //   data: { - object to be printed in table
+  //     index1: {
+  //       key1: "value1",
+  //       key2: "value2"
+  //     }
   //   }
+  //
+  //   opts: {
+  //     colHeaders - the titles of each column (String array)
+  //     keysToShow - only the keys whose values should be printed (String array)
+  //   }
+
+  // Will print:
+  //   | cols[0] | cols[1] | ... | cols[N] |
+  //   | ------- | ------- | ... | ------- |
+  //   | index1  | value1  | ... | valueN  |
+  //   | index2  | value1  | ... | valueN  |
+  //   | ....... | ....... | ... | ....... |
+  //   | indexN  | value1  | ... | valueN  |
+
   tablify: function(data, opts) {
     var t = new Table();
-    var cols = opts.cols;
-    var keys = opts.keys;
-    var tableOut = "";
+    var colHeaders = opts.colHeaders;
+    var keysToShow = opts.keysToShow;
+    var iCols = Object.keys(data);
 
-    if(data && cols && keys) {
-      data.forEach(function(dd) {
-        cols.forEach(function(col, i) {
-          var key = keys[i];
-          t.cell(chalk.blue(col), dd[key]);
-        });
-        t.newRow();
+    iCols.forEach(function(iCol, i) {
+      colHeaders.forEach(function(header, j) {
+        if(j===0) {
+          t.cell(chalk.blue(header), chalk.green(iCol));
+        } else {
+          t.cell(chalk.blue(header), data[iCol][keysToShow[--j]]);
+        }
       });
-      tableOut = "\n" + t.toString();
-    };
+      t.newRow();
+    });
 
-    return tableOut;
+    return t.toString();
+  },
+
+  wrapify: function(str) {
+    return wrap(str);
+  },
+
+  // Expecting an non-nested obj, and a 'titles' String array
+  // (e.g. ["title1", "title2"])
+  columnify: function(obj, colTitles) {
+    return columnify(obj, {columns: colTitles});
   },
 
   consolify: function(str) {

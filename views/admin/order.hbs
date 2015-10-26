@@ -66,6 +66,42 @@
   <div>
     <section class="panel-component" id="order-user">
       <h1 class="component-title">User</h1>
+      <div class="component-actions">
+        {{!-- Change User --}}
+        <div class="component-action">
+          <span class="popover-wrapper right" id="user-selector">
+            <button data-role="popover" data-target="dropdown-popover" class="btn btn-default btn-dropdown">
+              Change
+              <i class="gb-icon-caret-down"></i>
+            </button>
+            <div class="popover-modal dropdown-popover">
+              <div class="popover-header">&nbsp;
+                <a href="#" class="popover-close-btn gb-icon-x-mark pull-right" data-toggle-role="close"></a>
+              </div>
+              <div class="popover-filter"
+                data-role="filter-list"
+                data-input="> input"
+                data-target="+ .popover-body > .popover-item"
+                data-fields="name,id,organization">
+            
+                <input type="text" placeholder="Filter...">
+              </div>
+              <div class="popover-body">
+                {{#each users}}
+                <a
+                  href="#"
+                  class="popover-item"
+                  data-name="{{this.name}}"
+                  data-organization="{{this.organization}}"
+                  data-id="{{this.id}}">
+                  <span class="popover-item-label">{{this.name}}{{#if this.organization}} - {{this.organization}}{{/if}}</span>
+                </a>
+                {{/each}}
+              </div>
+            </div>
+          </span>
+        </div>
+      </div>
       <dl class="user-profile definition-row-list">
         <div class="row">
           <dt>Name</dt>

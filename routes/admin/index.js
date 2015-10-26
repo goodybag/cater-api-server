@@ -782,6 +782,11 @@ route.get('/orders/:id'
     })( req, res, next );
   }
 
+, m.db.users.find(
+    { name: { $ne: { $or: ['', null] } } }
+  , { order: ['organization asc', 'name asc'] }
+  )
+
 , m.view( 'admin/order', {
     layout: 'admin/layout2'
   })

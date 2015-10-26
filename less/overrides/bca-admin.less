@@ -1,0 +1,80 @@
+@gb-pastel-magenta: #EE96C8;
+@gb-persian-pink: #EC87C0;
+@gb-carissma: #E27CB7;
+@gb-pink: #FFF3F7;
+@gb-pink-bright: #FF3DAE;
+
+.footer {
+  border-top: 16px solid darken(@gb-pink, 6%);
+}
+
+.navbar-logo {
+  position: absolute;
+  left: 0;
+  top: 18px;
+  padding: 0 !important;
+  height: inherit !important;
+  max-height: inherit !important;
+  width: 100% !important;
+  max-width: 145px !important;
+
+  @media screen and (max-width: (@breakpoint-tablet)) {
+    max-width: 130px !important;
+    top: 12px;
+  }
+}
+
+.navbar-with-dropdowns .nav {
+  @media screen and (max-width: (@breakpoint-tablet)) {
+    margin-top: 55px;
+  }
+}
+
+a {
+  color: @gb-pink-bright;
+}
+
+#main-container {
+  min-height: 80vh;
+}
+
+body,
+.table-list a {
+  color: #67465F;
+}
+
+#main {
+  background-color: rgba(255, 243, 247, 0.2);
+  border-bottom: 1px solid darken(@gb-pink, 8%);
+}
+
+.table-list a:hover {
+  color: @gb-pink-bright;
+}
+
+.page-header {
+  margin-bottom: 18px;
+}
+
+.panel-component {
+  padding-top: 18px;
+  padding-bottom: 18px;
+
+  &:last-of-type {
+    padding-bottom: 50px;
+  }
+}
+
+.pdf-preview .pdf-preview-title {
+  padding-bottom: 12px;
+}
+
+.table td {
+  padding: 15px 15px;
+  text-align: center;
+}
+
+#admin-portal li {
+  font-size: 1.5em;
+  line-height: 2.4;
+}

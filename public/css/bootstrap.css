@@ -2555,7 +2555,7 @@ textarea.input-group-lg > .input-group-btn > .btn {
   padding: 10px 15px;
   margin-bottom: -1px;
   background-color: #ffffff;
-  border: 1px solid #dddddd;
+  /*border: 1px solid #dddddd;*/
 }
 
 .list-group-item:first-child {
@@ -2588,7 +2588,8 @@ a.list-group-item .list-group-item-heading {
 a.list-group-item:hover,
 a.list-group-item:focus {
   text-decoration: none;
-  background-color: #f5f5f5;
+  /*background-color: #f5f5f5;*/
+  background-color: pink;
 }
 
 .list-group-item.active,

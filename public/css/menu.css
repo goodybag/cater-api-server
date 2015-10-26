@@ -23,7 +23,7 @@
 }
 
 .menu-picker a {
-  color: #0039a1;
+  color: #FF3DAE;
   font-size: 10pt;
   font-weight: normal;
 }
@@ -41,7 +41,7 @@
 }
 
 .menu-picker .menu-picker-tabs li.active a {
-  color: #0039a1;
+  color: #FF3DAE;
   font-weight: bold;
 }
 

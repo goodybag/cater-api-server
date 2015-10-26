@@ -227,7 +227,6 @@ describe('Order Notifications', function(){
       , phone:          '1234567890'
       , first_name:     'Turd'
       , last_name:      'Ferguson'
-      , email:          'test@test.com'
       , company_name:   'The Test Group'
       , remarks:        [ 'Notes:'
                         , 'Food should be hot\n'

@@ -128,6 +128,18 @@ define(function(require){
             }
           });
         });
+
+        $('#user-selector').delegate( '[data-id]', 'click', function( e ){
+          e.preventDefault();
+
+          page.updateOrder( { user_id: +$(this).data('id') }, function( error ){
+            flash.successOrError( error );
+
+            if ( !error ){
+              document.location.reload();
+            }
+          });
+        });
       });
     }
 

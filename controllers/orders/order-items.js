@@ -6,6 +6,7 @@ var venter = require('../../lib/venter');
 
 var db = require('../../db');
 var queries = require('../../db/queries');
+var Order = require('stamps/orders/base');
 
 module.exports.list = function(req, res, next) {
   res.json( res.locals.order.orderItems );
@@ -97,6 +98,9 @@ module.exports.update = function(req, res, next) {
 
     db.query(sql.query, sql.values, function(error, rows, result) {
       if(error) return res.error(errors.internal.DB_FAILURE, error);
+
+      Order.applyPriceHikeToItem( rows[0], req.order.user.priority_account_price_hike_percentage );
+
       res.send(rows[0]);
 
       venter.emit( 'order:change', req.params.oid );

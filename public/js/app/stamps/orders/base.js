@@ -151,6 +151,7 @@ define( function( require, exports, module ){
     order.items = order.orderItems || order.items;
 
     var _order = Order.create( order );
+    var phike = order.user.priority_account_price_hike_percentage || 0;
 
     order.total = _order.getTotal();
     order.sub_total = _order.getPriorityAccountSubTotal();
@@ -160,9 +161,24 @@ define( function( require, exports, module ){
 
     order.orderItems.forEach( function( item ){
       item.sub_total = item.getTotal();
+      Order.applyPriceHikeToItem( item, phike );
     });
 
     return order;
+  };
+
+  Order.applyPriceHikeToItem = function( item, phike ){
+    phike = phike || 0;
+
+    item.price += Math.round( phike * item.price );
+
+    if ( !Array.isArray( item.options_sets ) ) return;
+    
+    item.options_sets.forEach( function( set ){
+      set.options.forEach( function( option ){
+        option.price += Math.round( phike * option.price );
+      });
+    });
   };
   
   return Order;

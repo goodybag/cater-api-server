@@ -3,9 +3,9 @@ var buildPDF = require('./build-pdf');
 var uploadToS3 = require('./upload-to-s3');
 
 module.exports.fn = function( job, done ){
-  utils.async.waterfall([
-    buildPDF.fn.bind(this, job.data.pdf),
-    uploadToS3.fn.bind(this, job.data.s3)
+  utils.async.series([
+    buildPDF.fn.bind(this, job.data.pdf)
+  , uploadToS3.fn.bind(this, job.data.s3)
   ], done);
 };
 

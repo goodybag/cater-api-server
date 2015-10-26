@@ -10,7 +10,6 @@ var db              = require('../db');
 var manifest        = require('../lib/order-manifester');
 var orderEditable   = require('./order-editable');
 var odsChecker      = require('../public/js/lib/order-delivery-service-checker');
-var applyPriceHike  = require('./apply-price-hike-to-order')();
 var Order           = require('stamps/orders/base');
 
 module.exports = function( options ){

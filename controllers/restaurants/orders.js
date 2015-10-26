@@ -2,7 +2,6 @@ var db = require('../../db');
 var errors = require('../../errors');
 var utils = require('../../utils');
 var models = require('../../models');
-var applyPriceHike = require('../../middleware/apply-price-hike-to-order')();
 var Order = require('stamps/orders/base');
 
 module.exports.listJSON = function(req, res) {

@@ -314,8 +314,7 @@ module.exports = Model.extend({
     // 4. If it is before the delivery date then it is editable by the
     // owner and the admin.
     //
-    // 5. If it is past the delivery date it is editable by the client,
-    // admin, and restaurant manager.
+    // 5. If it is past the delivery date it is editable by the client and admin.
     //
     // 6. If the order has been copied and thus datetime is undefined. Note:
     // certain fields are not copied such as datetime, tip, tip_amount.
@@ -332,7 +331,7 @@ module.exports = Model.extend({
     if (
       (now > deliveryDateTime)
       && (now < cutOffDateTime)
-      && (orderAuth.isAdmin || orderAuth.isOwner || orderAuth.isRestaurantManager)
+      && (orderAuth.isAdmin || orderAuth.isOwner)
     ) return true;
 
     if (this.attributes.datetime === null) return true;

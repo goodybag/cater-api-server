@@ -278,9 +278,7 @@ module.exports.update = function(req, res) {
       return res.error( errors.internal.UNKNOWN, error );
     }
 
-    Order.applyPriceHike( res.locals.order );
-
-    res.send( res.locals.order );
+    res.send( order.toJSON({ plain:true }) );
 
     venter.emit( 'order:change', order.attributes.id );
 

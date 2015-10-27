@@ -79,7 +79,12 @@ module.exports.add = function(req, res, next) {
     orderItem.save(function(error, rows, result) {
       if (error) return res.error(errors.internal.DB_FAILURE, error);
       orderItem.attributes = utils.clone(rows[0]);
-      res.send(201, orderItem.toJSON());
+
+      var result = Order.applyPriceHikeToItem(
+        orderItem.toJSON(), req.order.user.priority_account_price_hike_percentage
+      );
+
+      res.send(201, result);
     });
   });
 }
@@ -99,9 +104,11 @@ module.exports.update = function(req, res, next) {
     db.query(sql.query, sql.values, function(error, rows, result) {
       if(error) return res.error(errors.internal.DB_FAILURE, error);
 
-      Order.applyPriceHikeToItem( rows[0], req.order.user.priority_account_price_hike_percentage );
+      var result = Order.applyPriceHikeToItem(
+        utils.clone( rows[0] ), req.order.user.priority_account_price_hike_percentage
+      );
 
-      res.send(rows[0]);
+      res.send( result );
 
       venter.emit( 'order:change', req.params.oid );
     });

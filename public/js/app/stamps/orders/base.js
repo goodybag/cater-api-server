@@ -179,6 +179,8 @@ define( function( require, exports, module ){
         option.price += Math.round( phike * option.price );
       });
     });
+
+    return item;
   };
   
   return Order;

@@ -11,6 +11,7 @@ var manifest        = require('../lib/order-manifester');
 var orderEditable   = require('./order-editable');
 var odsChecker      = require('../public/js/lib/order-delivery-service-checker');
 var Order           = require('stamps/orders/base');
+var orderAuth       = require('../controllers/orders/orders').auth;
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
@@ -192,7 +193,11 @@ module.exports = function( options ){
       res.locals.order = order;
       req.logger.options.data.order = { id: order.id };
 
-      if ( options.applyPriceHike ){
+      // Apply user/groups to current user in context of order
+      orderAuth( req, res, function(){});
+
+      if ( options.applyPriceHike )
+      if ( req.user.attributes.groups.indexOf('order-restaurant') === -1 ){
         Order.applyPriceHike( req.order );
       }
 

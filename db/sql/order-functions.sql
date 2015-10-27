@@ -22,11 +22,11 @@ returns int as $$
   declare options_total     int := 0;
   declare price_hike numeric(5,5) := 0;
 begin
-  select priority_account_price_hike_percentage
-  from users
-  into price_hike
-  where id = o.user_id
-  limit 1;
+  -- select priority_account_price_hike_percentage
+  -- from users
+  -- into price_hike
+  -- where id = o.user_id
+  -- limit 1;
 
   for order_item in (
     select * from order_items where order_id = o.id

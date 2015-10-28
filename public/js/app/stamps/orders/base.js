@@ -57,17 +57,15 @@ define( function( require, exports, module ){
       }
 
     , getItems: function(){
-        var user = this.user;
-
         return this.items.map( function( item ){
           item = items( item );
 
-          if ( user && user.priority_account_price_hike_percentage ){
-            item.priority_account_price_hike_percentage = user.priority_account_price_hike_percentage;
+          if ( this.priority_account_price_hike_percentage ){
+            item.priority_account_price_hike_percentage = this.priority_account_price_hike_percentage;
           }
 
           return item;
-        });
+        }.bind( this ));
       }
 
     , getNoContractFee: function(){
@@ -151,7 +149,7 @@ define( function( require, exports, module ){
     order.items = order.orderItems || order.items;
 
     var _order = Order.create( order );
-    var phike = order.user.priority_account_price_hike_percentage || 0;
+    var phike = order.priority_account_price_hike_percentage || 0;
 
     order.total = _order.getTotal();
     order.sub_total = _order.getPriorityAccountSubTotal();

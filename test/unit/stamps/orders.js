@@ -189,7 +189,8 @@ describe('Orders Stamps', function(){
       restaurant: {
         region: { sales_tax: 0.0825 }
       }
-    , user: { is_tax_exempt: false, priority_account_price_hike_percentage: 0.1 }
+    , user: { is_tax_exempt: false }
+    , priority_account_price_hike_percentage: 0.1
     , items: [
         { price: 100, quantity: 1 }
       , { price: 200, quantity: 3 }
@@ -711,7 +712,7 @@ describe('Orders Stamps', function(){
 
     it('.getApplicationCut() - for Priority account', function(){
       var oc = DefaultOrderCharge();
-      oc.user.priority_account_price_hike_percentage = 0.1;
+      oc.priority_account_price_hike_percentage = 0.1;
       oc.adjustment_amount = 0;
       oc.user_adjustment_amount = 0;
       assert.equal( oc.getApplicationCut(), 113 );
@@ -719,7 +720,7 @@ describe('Orders Stamps', function(){
 
     it('.getRestaurantCut() - for Priority account', function(){
       var oc = DefaultOrderCharge();
-      oc.user.priority_account_price_hike_percentage = 0.1;
+      oc.priority_account_price_hike_percentage = 0.1;
       oc.adjustment_amount = 0;
       oc.user_adjustment_amount = 0;
       assert.equal( oc.getRestaurantCut(), 402 );
@@ -851,7 +852,8 @@ describe('Orders Stamps', function(){
 
     it('.toPaymentSummaryItem() with priority account', function(){
       var item = DefaultPMSItem({
-        user: { is_tax_exempt: false, priority_account_price_hike_percentage: 0.1 }
+        user: { is_tax_exempt: false }
+      , priority_account_price_hike_percentage: 0.1
       });
 
       assert.deepEqual( item.toPaymentSummaryItem(),{
@@ -866,7 +868,7 @@ describe('Orders Stamps', function(){
       });
 
       var origNetPayout = item.toPaymentSummaryItem().net_payout;
-      item.user.priority_account_price_hike_percentage = 0.1;
+      item.priority_account_price_hike_percentage = 0.1;
 
       assert.equal( item.getRestaurantCut(), origNetPayout );
     });

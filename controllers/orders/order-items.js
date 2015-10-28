@@ -81,7 +81,7 @@ module.exports.add = function(req, res, next) {
       orderItem.attributes = utils.clone(rows[0]);
 
       var result = Order.applyPriceHikeToItem(
-        orderItem.toJSON(), req.order.user.priority_account_price_hike_percentage
+        orderItem.toJSON(), req.order.priority_account_price_hike_percentage
       );
 
       res.send(201, result);
@@ -105,7 +105,7 @@ module.exports.update = function(req, res, next) {
       if(error) return res.error(errors.internal.DB_FAILURE, error);
 
       var result = Order.applyPriceHikeToItem(
-        utils.clone( rows[0] ), req.order.user.priority_account_price_hike_percentage
+        utils.clone( rows[0] ), req.order.priority_account_price_hike_percentage
       );
 
       res.send( result );

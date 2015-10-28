@@ -3,14 +3,15 @@
 ---------------------
 
 create or replace function order_get_price_hike( oid int )
-returns int as $$
+returns numeric(5,5) as $$
 begin
-  return (
-    select users.priority_account_price_hike_percentage
-    from orders
-    left join users on users.id = orders.id
-    where orders.id = oid
-    limit 1
+  return coalesce(
+    ( select users.priority_account_price_hike_percentage
+      from orders
+      left join users on users.id = orders.user_id
+      where orders.id = oid
+      limit 1 )
+  , 0
   );
 end;
 $$ language plpgsql;

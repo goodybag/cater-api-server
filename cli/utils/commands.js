@@ -1,5 +1,4 @@
-var config = require('../config.json');
-var cmdObj = config.commands;
+var cmdObj = require('../config.json').commands;
 var arrUtil = require('./arrays');
 var objUtil = require('./objects');
 

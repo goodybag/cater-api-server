@@ -5,5 +5,9 @@ module.exports = {
       concatString += str;
     });
     return concatString;
+  },
+
+  contains: function(str, substr) {
+    return str.indexOf(substr) !== -1;
   }
 };

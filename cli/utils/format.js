@@ -4,6 +4,9 @@ var Table = require('easy-table');
 var wrap = require('word-wrap');
 var columnify = require("columnify");
 
+var Lineup = require('lineup');
+var lineup = new Lineup();
+
 module.exports = {
   yosayify: function(msg) {
     return yosay(msg);
@@ -60,8 +63,45 @@ module.exports = {
     return columnify(obj, {columns: colTitles});
   },
 
+  notify: function(msg) {
+    console.log();
+    console.log();
+    lineup.sticker.note(msg);
+    lineup.sticker.show({
+      align: 'center',
+      color: 'blue'
+    });
+    console.log();
+  },
+
+  actionify: function(msg, actionType) {
+    if(actionType==="info") {
+      var infoStr = lineup.icon('info') + lineup.colors.blue(' [INFO]    ');
+      lineup.action.info(infoStr, msg);
+    }
+
+    if(actionType==="success") {
+      var successStr = lineup.icon('success') + lineup.colors.green(' [SUCCESS] ');
+      lineup.action.success(successStr, msg);
+    }
+
+    if(actionType==="warn") {
+      var warnStr = lineup.icon('warn') + lineup.colors.yellow(' [WARNING] ');
+      lineup.action.warn(warnStr, msg);
+    }
+
+    if(actionType==="error") {
+      var errorStr = lineup.icon('error') + lineup.colors.red(' [ERROR]   ');
+      lineup.action.error(errorStr, msg);
+    }
+  },
+
   consolify: function(str) {
     return "\n" + str + "\n\n\n";
+  },
+
+  continue: function() {
+    console.log("\nPress [ENTER] to continue.");
   }
 
 };

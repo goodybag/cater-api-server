@@ -134,6 +134,7 @@
     "easy-table": "^1.0.0",
     "ecstatic": "^0.8.0",
     "exec-sync": "^0.1.6",
+    "killprocess": "0.0.2",
     "loglog-server": "^1.0.6",
     "minimist": "^1.1.1",
     "minish": "^0.5.3",

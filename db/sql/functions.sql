@@ -4,6 +4,16 @@
 -- Event Handlers --
 --------------------
 
+create or replace function on_order_user_change()
+returns trigger as $$
+begin
+  update orders
+    set priority_account_price_hike_percentage = order_get_price_hike( NEW.id )
+    where id = NEW.id;
+  return NEW;
+end;
+$$ language plpgsql;
+
 create or replace function on_user_organization_update()
 returns trigger as $$
   declare org_id int;

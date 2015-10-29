@@ -57,7 +57,7 @@ define( function( require, exports, module ){
       }
 
     , getItems: function(){
-        return this.items.map( function( item ){
+        return (this.items || []).map( function( item ){
           item = items( item );
 
           if ( this.priority_account_price_hike_percentage ){
@@ -132,9 +132,7 @@ define( function( require, exports, module ){
       }
 
     , getPriorityAccountCost: function(){
-        return this.getItems().reduce( function( total, item ){
-          return total + item.getPriorityAccountTotal();
-        }, 0 );
+        return Math.round( this.priority_account_price_hike_percentage * this.getSubTotal() );
       }
 
     , getPriorityAccountSubTotal: function(){
@@ -145,10 +143,14 @@ define( function( require, exports, module ){
       }
     });
 
-  Order.applyPriceHike = function( order ){
+  Order.applyPriceHike = function( order, options ){
+    options = utils.defaults( options || {}, {
+      useCachedSubTotal: false
+    });
+
     order.items = order.orderItems || order.items;
 
-    var _order = Order.create( order );
+    var _order = options.useCachedSubTotal ? CachedOrder.create( order ) : Order.create( order );
     var phike = order.priority_account_price_hike_percentage || 0;
 
     order.total = _order.getTotal();
@@ -180,6 +182,19 @@ define( function( require, exports, module ){
 
     return item;
   };
+
+  var CachedOrder = require('stampit')()
+    .compose( Order )
+    .state({
+
+    })
+    .methods({
+      getSubTotal: function(){
+        return this.sub_total;
+      }
+    });
+
+  Order.Cached = CachedOrder;
   
   return Order;
 });

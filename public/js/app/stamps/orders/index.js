@@ -28,6 +28,7 @@ define( function( require, exports, module ){
 
   module.exports.item = require('./item');
   module.exports.amenity = require('./amenity');
+  module.exports.Cached = stamps.base.Cached;
 
   return module.exports;
 });

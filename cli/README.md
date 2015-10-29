@@ -11,6 +11,14 @@ $ node gcli
 goodybag-cli >
 ```
 
+###Setup
+
+```
+$ cp cli/local-config.json.sample cli/local-config.json
+```
+
+This `.json` holds the port numbers for the servers. Verify that this information is correct for your system.
+
 ##Project Structure
 
 * `gcli.js` - Starts the gcli app.
@@ -25,12 +33,12 @@ goodybag-cli >
 
 ####Help
 ```
-goodybag-cli > help
+goodybag-cli > help <[COMMAND] ...>
 ```
 
 **Alias:** `h`
 
-**Description:** Prints out a full list of available commands.
+**Description:** Prints the basic usage information on each [COMMAND] given (1 or more). Otherwise, prints the full table of available commands.
 
 **Flags:** *none*
 
@@ -51,37 +59,32 @@ goodybag-cli > version
 
 ####Start
 ```
-goodybag-cli > start
+goodybag-cli > start [-p] [-r] [-m] [-s]
 ```
 
 **Alias:** `st`
 
-**Description:** Starts the server. Also starts `psql`, `redis-server`, `mongod`, and `grunt` if not already running.
+**Description:** Starts the server from scratch if no flags are given. This means starting `Postgres`, `redis`, `mongod`, and the `goodybag-cater-api` server, in that order. If flags are given, then only the processes specified will start. If a process is already started, it will be ignored.
 
-**Flags:** *none*
+**Flags:**
+* `-p`: Opens the Postgres app.
+* `-r`: Starts `redis-server`.
+* `-m`: Starts `mongod`.
+* `-s`: Starts `goodybag-cater-api` server.
 
 ===
 
 ####Stop
 ```
-goodybag-cli > stop
+goodybag-cli > stop [-p] [-r] [-m] [-s]
 ```
 
 **Alias:** `stp`
 
-**Description:** Stops the server. Also safely exits `psql`, `redis-server`, `mongod`, and `grunt` if they are running.
+**Description:** Stops the server, closing all processes with it (e.g., Postgres, `redis`, `mongod`). If flags are given, then only the processes specified will be stopped. If a process is already stopped, it will be ignored.
 
-**Flags:** *none*
-
-===
-
-####Restart
-```
-goodybag-cli > restart
-```
-
-**Alias:** `rst`
-
-**Description:** Restarts the server if it is already running. Otherwise, does not execute.
-
-**Flags:** *none*
+**Flags:**
+* `-p`: Closes the Postgres app.
+* `-r`: Stops `redis-server`.
+* `-m`: Stops `mongod`.
+* `-s`: Stops `goodybag-cater-api` server.

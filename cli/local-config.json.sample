@@ -1,0 +1,16 @@
+{
+  "processes": {
+    "postgres" : {
+      "port": 5432
+    },
+    "redis-server": {
+      "port": 6379
+    },
+    "mongod": {
+      "port": 27017
+    },
+    "goodybag-cater-api": {
+      "port": 3000
+    }
+  }
+}

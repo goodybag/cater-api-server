@@ -782,7 +782,7 @@ dirac.use( function( dirac ){
 
     if ( $query.applyPriceHike ){
       results.forEach( function( order ){
-        Order.applyPriceHike( order );
+        Order.applyPriceHike( order, $query.applyPriceHike );
       });
     }
 

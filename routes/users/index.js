@@ -131,9 +131,13 @@ route.get('/:uid/orders/receipts', restrictOwner, m.param('uid', function(user_i
   $query.where = $query.where || {};
   $query.where.user_id = user_id;
 }), m.param('status', 'accepted'), m.sort('-datetime'), m.queryOptions({
+  applyPriceHike: {
+    useCachedSubTotal: true
+  },
   one: [{
     table: 'restaurants',
-    alias: 'restaurant'
+    alias: 'restaurant',
+    one: [{ table: 'regions', alias: 'region' }]
   }, {
     table: 'users',
     alias: 'user'

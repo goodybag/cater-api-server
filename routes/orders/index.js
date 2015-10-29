@@ -11,11 +11,15 @@ var route = module.exports = express.Router();
  *  Orders resource.  The collection of all orders.
  */
 
-route.get('/', m.restrict('admin'), m.pagination({
+route.get('/'
+, m.restrict('admin')
+, m.pagination({
     pageParam: 'p'
-  }), m.param('status'), m.param('type'),
+})
+, m.param('status')
+, m.param('type')
   // Cas IDs to ints so indexOf checks work
-  function(req, res, next) {
+, function(req, res, next) {
     if (!Array.isArray(req.query['restaurants.region_id'])) return next();
     req.query['restaurants.region_id'] = req.query['restaurants.region_id'].map(function(id) {
       return parseInt(id);
@@ -23,15 +27,20 @@ route.get('/', m.restrict('admin'), m.pagination({
 
     // Setup the url->sql where clause
     return m.param('restaurants.region_id')(req, res, next);
-  }, m.sort('-id'), m.queryOptions({
+  }
+, m.sort('-id')
+, m.queryOptions({
     submittedDate: true,
-    applyPriceHike: true,
+    applyPriceHike: {
+      useCachedSubTotal: true
+    },
     one: [{
       table: 'users',
       alias: 'user'
     }, {
       table: 'restaurants',
-      alias: 'restaurant'
+      alias: 'restaurant',
+      one: [{ table: 'regions', alias: 'region' }]
     }, {
       table: 'delivery_services',
       alias: 'delivery_service'
@@ -43,8 +52,8 @@ route.get('/', m.restrict('admin'), m.pagination({
         id: '$orders.restaurant_id$'
       }
     }]
-  }),
-  function(req, res, next) {
+  })
+, function(req, res, next) {
     res.locals.status = req.params.status;
     if (req.params.status == 'accepted') {
       req.queryOptions.statusDateSort = {
@@ -52,7 +61,8 @@ route.get('/', m.restrict('admin'), m.pagination({
       };
     }
     return next();
-  }, m.view('orders', db.orders)
+  }
+, m.view('orders', db.orders)
 );
 
 route.post('/', m.restrict(['guest', 'client', 'admin']), m.geocodeBody(), controllers.orders.create);

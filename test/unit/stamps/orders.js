@@ -8,6 +8,7 @@ var OrderCharge = require('stamps/orders/charge');
 var PMSItem     = require('stamps/orders/payment-summary-item');
 var fulfillability = require('stamps/orders/fulfillability');
 orders.db        = require('../../../lib/stamps/db/orders');
+var OrderRewards = require('stamps/orders/rewards');
 
 var restaurants = require('stampit')()
   .state({
@@ -899,11 +900,27 @@ describe('Orders Stamps', function(){
     });
   });
 
-  it('.applyPriceHikeToOrder()', function(){
+  describe('OrderRewards', function(){
+    var DefaultOrderRewards = stampit()
+      .compose( OrderRewards )
+      .state({
+        
+      });
 
-  });
+    it('.isEligibleForHolidayPromo()', function(){
 
-  it('.applyPriceHikeToOrder() with cached subtotal', function(){
+    });
 
+    it('.isEligibleForMondayPromo()', function(){
+
+    });
+
+    it('.getEligibleHoliday()', function(){
+
+    });
+
+    it('.getPoints()', function(){
+
+    });
   });
 });

@@ -135,6 +135,15 @@ describe('Orders Stamps', function(){
     assert.equal( order.getSubTotal(), 3350 );
   });
 
+  it('.getSubTotal() Cached', function(){
+    var order = orders.Cached({
+      sub_total: 100
+    , guests: 7
+    });
+
+    assert.equal( order.getSubTotal(), 100 );
+  });
+
   it('.getTotal()', function(){
     var order = orders({
       restaurant: {
@@ -149,6 +158,22 @@ describe('Orders Stamps', function(){
       , { price: 2, scale: 'multiply', enabled: true }
       , { price: 1, scale: 'multiply', enabled: false }
       ]
+    , guests: 5
+    , adjustment_amount: -100
+    , user_adjustment_amount: -50
+    , tip: 50
+    , delivery_fee: 100
+    });
+
+    assert.equal( order.getTotal(), 772 );
+  });
+
+  it('.getTotal() with Cached SubTotal', function(){
+    var order = orders.Cached({
+      restaurant: {
+        region: { sales_tax: 0.0825 }
+      }
+    , sub_total: 717
     , guests: 5
     , adjustment_amount: -100
     , user_adjustment_amount: -50
@@ -872,5 +897,13 @@ describe('Orders Stamps', function(){
 
       assert.equal( item.getRestaurantCut(), origNetPayout );
     });
+  });
+
+  it('.applyPriceHikeToOrder()', function(){
+
+  });
+
+  it('.applyPriceHikeToOrder() with cached subtotal', function(){
+
   });
 });

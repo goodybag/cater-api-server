@@ -20,16 +20,17 @@ module.exports = function(context) {
     m: "not started",
     s: "not started"
   };
-  var attempts = {
-    p: 0,
-    r: 0,
-    m: 0,
-    s: 0
-  };
 
   // Command: start
   // Starts server from scratch.
   if(noflags) {
+    var attempts = {
+      p: 0,
+      r: 0,
+      m: 0,
+      s: 0
+    };
+
     // show initial state
     console.log();
 
@@ -145,7 +146,18 @@ module.exports = function(context) {
           var r_child = exec('redis-server');
 
           r_child.stdout.on('data', function(data) {
+            if(status.r==="finished") {
+              console.log();
+              console.log();
+              format.actionify(
+                chalk.green("Received a response from Redis: "), "info"
+              );
+              console.log();
+            }
             console.log(data);
+            if(status.r==="finished") {
+              format.continue();
+            }
           });
 
           r_child.stderr.on('data', function(data) {
@@ -172,7 +184,18 @@ module.exports = function(context) {
           var m_child = exec('mongod');
 
           m_child.stdout.on('data', function(data) {
+            if(status.m==="finished") {
+              console.log();
+              console.log();
+              format.actionify(
+                chalk.green("Received a response from MongoDB: "), "info"
+              );
+              console.log();
+            }
             console.log(data);
+            if(status.m==="finished") {
+              format.continue();
+            }
           });
 
           m_child.stderr.on('data', function(data) {
@@ -232,9 +255,15 @@ module.exports = function(context) {
     }, 1000);
 
   // Command start [-p] [-r] [-m] [-s]
-  // Starts specified processes from flags.
+  // Starts only specified processes from flags.
   } else {
     var highestRankedFlag = getHighestRanked(flags);
+    var attempts = {
+      p: 0,
+      r: 0,
+      m: 0,
+      s: 0
+    };
 
     // show initial state, only if flag has been specified
     console.log();
@@ -351,9 +380,20 @@ module.exports = function(context) {
           var r_child = exec('redis-server');
 
           r_child.stdout.on('data', function(data) {
+            if(status.r==="finished") {
+              console.log();
+              console.log();
+              format.actionify(
+                chalk.green("Received a response from Redis: "), "info"
+              );
+              console.log();
+            }
             console.log(data);
             if(strUtil.contains(data, 'ready to accept')) {
               status.r = "ready";
+            }
+            if(status.r==="finished") {
+              format.continue();
             }
           });
 
@@ -382,9 +422,20 @@ module.exports = function(context) {
           var m_child = exec('mongod');
 
           m_child.stdout.on('data', function(data) {
+            if(status.m==="finished") {
+              console.log();
+              console.log();
+              format.actionify(
+                chalk.green("Received a response from MongoDB: "), "info"
+              );
+              console.log();
+            }
             console.log(data);
             if(strUtil.contains(data, 'waiting for connections')) {
               status.m = "ready";
+            }
+            if(status.r==="finished") {
+              format.continue();
             }
           });
 
@@ -482,11 +533,6 @@ function procsRunning() {
   });
 
   return running;
-}
-
-function flaggedProcsRunning(flags) {
-  var rankedFlags = getRankedFlags(flags);
-
 }
 
 function getHighestRanked(flags) {

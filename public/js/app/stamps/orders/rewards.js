@@ -27,14 +27,14 @@ define( function( require, exports, module ){
       }
 
     , isEligibleForMondayPromo: function(){
-        var submitted = moment( order.submitted );
-        return submitted.day() == 1 && submitted >= moment( config.rewardsPromo.start );
+        var submitted = moment( this.submitted );
+        return submitted.day() == 1 && submitted >= moment( this.mondayPromo.start );
       }
 
     , getEligibleHoliday: function(){
-        var submitted = moment( order.submitted );
+        var submitted = moment( this.submitted );
 
-        return utils.find(config.rewardHolidays, function(holiday) {
+        return utils.find( this.holidays, function( holiday ){
           return submitted >= moment( holiday.start ) && submitted < moment( holiday.end );
         });
       }
@@ -42,10 +42,10 @@ define( function( require, exports, module ){
     , getPoints: function(){
         var result = this.getTotal();
 
-        if ( this.isEligibleForHolidayPromo ){
+        if ( this.isEligibleForHolidayPromo() ){
           result *= this.getEligibleHoliday().rate;
-        } else if ( this.isEligibleForMondayPromo ){
-          result *= config.rewardsPromo.rate;
+        } else if ( this.isEligibleForMondayPromo() ){
+          result *= this.mondayPromo.rate;
         }
 
         return Math.floor( result * REWARDS_RATE );

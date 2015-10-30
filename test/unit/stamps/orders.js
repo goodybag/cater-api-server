@@ -901,26 +901,84 @@ describe('Orders Stamps', function(){
   });
 
   describe('OrderRewards', function(){
+    var TSFORMAT = 'YYYY-MM-DD HH:mm:ss';
+
     var DefaultOrderRewards = stampit()
       .compose( OrderRewards )
       .state({
-        
+        restaurant: {
+          region: { sales_tax: 0.0825 }
+        }
       });
 
     it('.isEligibleForHolidayPromo()', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().format( TSFORMAT )
 
+      , holidays: [
+          { start: moment().add( 'hours', -1 ).format( TSFORMAT )
+          , end: moment().add( 'hours', 1 ).format( TSFORMAT )
+          , rate: '2.0'
+          , description: 'Some Holiday'
+          }
+        ]
+      });
+
+      assert( order.isEligibleForHolidayPromo() );
+
+      order.submitted = moment().add( 'hours', -2 ).format( TSFORMAT );
+
+      assert( !order.isEligibleForHolidayPromo() );
     });
 
     it('.isEligibleForMondayPromo()', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().day('Monday').format( TSFORMAT )
+      });
 
-    });
+      assert( order.isEligibleForMondayPromo() );
 
-    it('.getEligibleHoliday()', function(){
+      order.submitted = moment().day('Tuesday').format( TSFORMAT );
 
+      assert( !order.isEligibleForMondayPromo() );
     });
 
     it('.getPoints()', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().day('Tuesday').format( TSFORMAT )
+      , holidays: []
+      , items: [{ price: 1000, quantity: 1 }]
+      });
 
+      assert.equal( order.getPoints(), 10 );
+    });
+
+    it('.getPoints() - monday', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().day('Monday').format( TSFORMAT )
+      , holidays: []
+      , items: [{ price: 1000, quantity: 1 }]
+      });
+
+      assert.equal( order.getPoints(), 21 );
+    });
+
+    it('.getPoints() - holiday', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().format( TSFORMAT )
+
+      , holidays: [
+          { start: moment().add( 'hours', -1 ).format( TSFORMAT )
+          , end: moment().add( 'hours', 1 ).format( TSFORMAT )
+          , rate: '2.0'
+          , description: 'Some Holiday'
+          }
+        ]
+
+      , items: [{ price: 1000, quantity: 1 }]
+      });
+
+      assert.equal( order.getPoints(), 21 );
     });
   });
 });

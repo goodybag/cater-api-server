@@ -106,18 +106,23 @@
           <div class="collapse navbar-collapse" id="navbar-collapse">
             {{{block "navbar-stuff"}}}
 
-            <a href="/users/me/rewards" class="gb-points-indicator">
-              <div class="points-wrapper">
-                {{#if user.points}}
-                  {{user.points}}
-                {{else}}
-                  0
-                {{/if}}
-              </div>
-            </a>
-
             {{#if user.id}}
             <ul class="nav navbar-nav navbar-right">
+              {{#contains user.groups 'admin'}}
+                <li class="form-control-wrapper">{{> region_selector}}</li>
+              {{/contains}}
+              {{#contains user.groups 'restaurant'}}
+                <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
+              {{/contains}}
+              {{#if session.oldUser}}
+              <li>
+                <a href="/users/return" class="users-return navbar-btn">
+                  Return to {{session.oldUser.name}}
+                </a>
+              </li>
+              {{/if}}
+              {{{block "navbar-links"}}}
+
               <li class="nav-account dropdown">
                 <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
                   {{#if user.name }} Hi, {{ user.name }} {{else}} My Account {{/if}} <span class="caret"></span>
@@ -143,21 +148,18 @@
                   <li><a href="/users/me/orders/receipts">My Receipts</a></li>
                 </ul>
               </li>
-              {{#contains user.groups 'admin'}}
-                <li class="form-control-wrapper">{{> region_selector}}</li>
-              {{/contains}}
-              {{#contains user.groups 'restaurant'}}
-                <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
-              {{/contains}}
-              {{#if session.oldUser}}
-              <li>
-                <a href="/users/return" class="users-return navbar-btn">
-                  Return to {{session.oldUser.name}}
-                </a>
-              </li>
-              {{/if}}
-              {{{block "navbar-links"}}}
+              
             </ul>
+
+            <a href="/users/me/rewards" class="gb-points-indicator">
+              <div class="points-wrapper">
+                {{#if user.points}}
+                  {{user.points}}
+                {{else}}
+                  0
+                {{/if}}
+              </div>
+            </a>
 
             {{else}}
             <ul class="nav navbar-nav navbar-right">

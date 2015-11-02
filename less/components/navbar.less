@@ -127,7 +127,7 @@ body {
   text-decoration: none;
   margin-right: 12px;
 
-  @media screen and (max-width: (@breakpoint-tablet)) {
+  @media screen and (max-width: (@breakpoint-mobile)) {
     position: absolute;
     right: 60px;
     padding-top: @navbar-mobile-height / 2;
@@ -227,7 +227,7 @@ body {
 
 // Make the navbar not so tall on mobile
 // Adjust breakpoint to account for nav items
-@media screen and (max-width: (@breakpoint-tablet)) {
+@media screen and (max-width: (@breakpoint-mobile)) {
   @anchor-padding-top: (@navbar-mobile-height / 2) + @anchor-padding-offset;
   @anchor-padding-bottom: (@navbar-mobile-height / 2) - @anchor-padding-offset;
 

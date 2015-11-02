@@ -864,3 +864,13 @@ route.get('/payment-summaries'
     layout: 'admin/layout2'
   })
 );
+
+/*
+*  Job Scheduler
+*/
+route.get('/scheduler'
+, m.restrict(['admin'])
+, m.view( 'admin/scheduler.hbs', {
+    layout: 'admin/layout2'
+  })
+);

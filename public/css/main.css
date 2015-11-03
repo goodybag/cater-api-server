@@ -28,7 +28,6 @@ header {
   border-bottom: 1px solid #CCCCC0;
   z-index: 2;
   position: relative;
-  min-height: 55px;
 }
 
 .navbar-brand {
@@ -50,18 +49,11 @@ header {
 
 #footer {
   text-align: center;
-  /*background: #FFFFFF;*/
-  background: #434a54;
+  background: #FFFFFF;
   border-top: solid 1px #CFCFC4;
   padding-top: 32px;
   padding-bottom: 90px;
   margin-top: 60px;
-  color: #FFF;
-  border-top: 16px solid #ffd4e3;
-}
-
-#footer a {
-  color: #FFF;
 }
 
 .footer-nav {

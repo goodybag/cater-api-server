@@ -120,7 +120,11 @@ module.exports = function( options ){
     }
 
     if ( options.items ){
-      $options.many.push({ table: 'order_items', alias: 'orderItems' })
+      $options.many.push({
+        table: 'order_items'
+      , alias: 'orderItems'
+      , order: ['recipient asc']
+      });
     }
 
     if ( options.paymentMethod ){

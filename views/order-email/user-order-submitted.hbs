@@ -2,46 +2,10 @@
   <table cellpadding="0" cellspacing="0" style="width: 100%;">
     <tr>
       <td>
-        <table cellpadding="0" cellspacing="0" style="width: 100%;">
-          <tr>
-            <td style="width: 46%; padding-bottom: 22px;">
-              {{#eq order.type 'pickup'}}
-              {{> order_email_details_user_pickup }}
-              {{else}}
-              {{> order_email_details_user_delivery }}
-              {{/eq}}
-            </td>
-            <td style="width: 54%; padding-top: 2px; padding-bottom: 22px; padding-left: 12px;">
-              <h1 style="line-height: 36px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 500; font-size: 28px; font-family: Helvetica, arial, sans-serif; text-align: left; color: #695a42">Order #{{order.id}}<br>has been <span style="color: #5BC0DE; font-weight: 700">Submitted</span> and is now in review</h1>
-              <p style="text-align: left; line-height: 22px; font-weight: 300; font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px;">Order placed at <a style="color: #1155cc" href="{{config.baseUrl}}/restaurants/{{order.restaurant.id}}">{{order.restaurant.name}}</a></p>
-            </td>
-          </tr>
-        </table>
-
-        {{> email_order_items order}}
-
-        <!--<BigOlButton>-->
-        <table cellpadding="0" cellspacing="0" style="width: 100%;">
-          <tr>
-            <td width="50%"></td>
-            <td style="padding-top: 30px; font-size: 24px; font-weight: 300;">
-              <a href="{{config.baseUrl}}/orders/{{order.id}}" style="text-decoration: none; color: #ffffff; font-family: Helvetica, arial, sans-serif;">
-                <table cellpadding="0" cellspacing="0" style="">
-                  <tr>
-                    <td style="padding-top: 10px; padding-right: 28px; padding-bottom: 10px; padding-left: 28px; white-space: nowrap; background: #DC0500; border-radius: 4px; border: solid #B80300 1px; font-family: Helvetica, arial, sans-serif; color: #ffffff">
-                      <a href="{{config.baseUrl}}/orders/{{order.id}}" style="color: #ffffff; font-size: 20px; text-decoration: none; font-family: Helvetica, arial, sans-serif;">View full order</a>
-                    </td>
-                  </tr>
-                </table>
-              </a>
-            </td>
-            <td width="50%"></td>
-          </tr>
-        </table>
-        <!--</BigOlButton>-->
-
+        {{> order_email_big_button
+            text="Test"
+            url=(concat config.baseUrl '/orders/' order.id) }}
       </td>
     </tr>
   </table>
-
 {{/extend}}

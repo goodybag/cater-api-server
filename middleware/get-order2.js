@@ -212,7 +212,6 @@ module.exports = function( options ){
 
             req.order.restaurant = restaurant;
             res.locals.order.restaurant = restaurant;
-
             return done();
           });
         }

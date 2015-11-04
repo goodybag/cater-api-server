@@ -25,12 +25,21 @@ route.get( config.receipt.orderRoute
   })
 );
 
-route.get('/receipts/order-:oid.pdf', m.s3({
-  path: '/' + config.receipt.fileName,
-  key: config.amazon.awsId,
-  secret: config.amazon.awsSecret,
-  bucket: config.receipt.bucket
-}));
+route.get('/receipts/order-:oid.pdf'
+, m.getOrder2({
+    param: 'oid'
+  , user: true
+  , restaurant: true
+  })
+, controllers.orders.auth
+, m.restrict(['admin', 'order-owner'])
+, m.s3({
+    path: '/' + config.receipt.fileName,
+    key: config.amazon.awsId,
+    secret: config.amazon.awsSecret,
+    bucket: config.receipt.bucket
+  })
+);
 
 
 // Temporary for job fair
@@ -49,9 +58,14 @@ route.get('/jobs/customer-service-specialist.pdf', m.s3({
 }));
 
 route.get('/manifests/manifest-:oid.pdf'
-  // For now, don't restrict so I don't have to re-write the ?review_token mess
-  // , m.restrict(['admin', 'restaurant'])
-  , m.s3({
+, m.getOrder2({
+    param: 'oid'
+  , user: true
+  , restaurant: true
+  })
+, controllers.orders.auth
+, m.restrict(['admin', 'order-restaurant'])
+, m.s3({
     path: '/manifest-:oid.pdf',
     key: config.amazon.awsId,
     secret: config.amazon.awsSecret,

@@ -615,6 +615,16 @@ define(function(require, exports, module) {
         })
       , '"></iframe>'
       ].join('');
+    },
+
+    concat: function(){
+      var isArray = Array.isArray( arguments[0] );
+
+      return Array.prototype.slice
+        .call( arguments, 0, arguments.length - 1 )
+        .reduce( function( result, part ){
+          return isArray ? result.concat( part ) : ( result + part );
+        }, isArray ? [] : '' );
     }
   };
 

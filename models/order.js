@@ -362,6 +362,7 @@ module.exports = Model.extend({
     , 'tip'
     , 'payment_method_id'
     , 'delivery_service_id'
+    , 'lat_lng'
     ];
     var self = this;
     var tasks = [

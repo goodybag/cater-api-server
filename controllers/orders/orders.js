@@ -160,7 +160,7 @@ module.exports.get = function(req, res) {
 
     var view = order.status === 'pending' ? 'checkout' : 'receipt';
 
-    if ( context.order.review_token !== req.params.review_token ) {
+    if ( context.order.review_token !== req.query.review_token ) {
       delete context.order.review_token;
     }
 

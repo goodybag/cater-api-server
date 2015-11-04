@@ -195,6 +195,7 @@ module.exports = function( options ){
       res.locals.order = order;
       req.logger.options.data.order = { id: order.id };
 
+console.log('REVIEW TOKEN', req.order.review_token);
       utils.async.series([
         !options.restaurantDbModelFind ? utils.async.noop : function( done ){
           var orderParams = { id: order.id };
@@ -212,7 +213,6 @@ module.exports = function( options ){
 
             req.order.restaurant = restaurant;
             res.locals.order.restaurant = restaurant;
-
             return done();
           });
         }

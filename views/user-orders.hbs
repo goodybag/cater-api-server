@@ -56,11 +56,15 @@
 
   require([
       'jquery'
+    , 'utils'
+    , 'user'
     , 'app/views/orders-list-view'
     , 'app/views/orders-calendar-view'
     , 'app/views/orders-filter-view'
     ]
-  , function($, OrdersListView, OrdersCalendarView, OrdersFilterView) {
+  , function($, utils, user, OrdersListView, OrdersCalendarView, OrdersFilterView) {
+      utils.extend( user, {{{json user}}} );
+
       var ordersListView = new OrdersListView({
         el: '.orders-list'
       });

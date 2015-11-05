@@ -2,8 +2,27 @@
   <table cellpadding="0" cellspacing="0" style="width: 100%;">
     <tr>
       <td>
+        {{> order_email_gutter}}
+        {{> order_email_big_header text="Your order is placed!"}}
+        {{> order_email_gutter}}
+        {{> order_email_horizontal_rule}}
+
+        <h2 style="text-align: left; font-size: 17px; font-weight: 500">
+          <a href="{{config.baseUrl}}/orders/{{order.id}}" style="font-weight: 300; color: #5592E5">Order #{{order.id}}</a> - {{order.restaurant.name}}
+        </h2>
+
+        {{> order_email_gutter}}
+
+        {{> order_email_order_details_user}}
+
+        {{> order_email_gutter}}
+        {{> order_email_horizontal_rule}}
+        {{> order_email_gutter}}
+
+        {{> order_email_items_table}}
+
         {{> order_email_big_button
-            text="Test"
+            text="View full order"
             url=(concat config.baseUrl '/orders/' order.id) }}
       </td>
     </tr>

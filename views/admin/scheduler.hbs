@@ -1,0 +1,16 @@
+{{#extend "page"}}scheduler{{/extend}}
+
+{{#extend "css"}}
+<style>
+  iframe {
+    display: block;
+    border: none;
+    height: 100vh;
+    width: 100vw;
+}
+</style>
+{{/extend}}
+
+{{#extend "body"}}
+<iframe src="/admin/scheduler-app" frameborder="0"></iframe>
+{{/extend}}

@@ -110,6 +110,7 @@
     "request": "2.25.x",
     "resource.js": "^1.0.2",
     "rollbar": "0.2.x",
+    "scheduler-app": "goodybag/scheduler-app",
     "selenium-webdriver": "~2.40.0",
     "semver": "~2.1.0",
     "serve-favicon": "^2.2.0",

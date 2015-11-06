@@ -157,6 +157,8 @@ app.use( function devErrors( error, req, res, next ){
   }
 });
 
+app.use(require('scheduler-app')(config.postgresConnStr))
+
 app.set('view engine', 'hbs');
 app.set('port', config.http.port || 3000);
 

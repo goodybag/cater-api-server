@@ -60,6 +60,13 @@
 </div>
 
 <div class="row">
+  <div class="form-group col-sm-6">
+    <label for="secondary-phone">Secondary Phone</label>
+    <input type="tel" name="secondary_contact_phone" class="form-control secondary-contact-phone" value="{{phoneNumber address.secondary_contact_phone}}" placeholder="512 555 1234">
+  </div>
+</div>
+
+<div class="row">
   <div class="form-group col-lg-8">
     <label for="delivery-instructions">Delivery Instructions</label>
     <textarea id="delivery-instructions" name="delivery_instructions" class="form-control address-delivery-instructions" placeholder="Notes such as gate codes or access instructions">{{address.delivery_instructions}}</textarea>

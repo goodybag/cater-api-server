@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html style="background-color: #ffffff;">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+      @media screen and (max-width: 600px) {
+        .main-width-constraint {
+          width: 100% !important;
+        }
+
+        .main-width-gutter {
+          width: 10px !important;
+        }
+
+        .main-width-gutters-padding {
+          padding-left: 10px !important;
+          padding-right: 10px !important;
+        }
+      }
+    </style>
+
+    {{{block "css"}}}
+  </head>
+  <body style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 20px; background-color: #ffffff; font-family: Helvetica Neue, Helvetica, arial, sans-serif; color: #434a54; font-size: 14px; text-align: center; border: solid #CCCCC0 1px;">
+
+    <!--<Header>-->
+    <table cellpadding="0" cellspacing="0" style="width: 100%; background: #ffffff;">
+      <tr>
+        <td class="main-width-gutter" width="50%"></td>
+        <td class="main-width-constraint" width="600" style="padding-top: 12px; padding-bottom: 5px; text-align: left">
+          <table cellpadding="0" cellspacing="0" style="width: 600px;">
+            <tr>
+              <td valign="middle" style="text-align: center">
+                <img border="0" src="{{cdn "/img/logo.png"}}" alt="Goodybag">
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td class="main-width-gutter" width="50%"></td>
+      </tr>
+    </table>
+    <!--</Header>-->
+
+    <!--<MainContainer>-->
+    <table cellpadding="0" cellspacing="0" style="width: 100%;">
+      <tr>
+        <td class="main-width-gutter" width="50%"></td>
+        <td class="main-width-constraint" width="600">
+          <table class="main-width-constraint" cellpadding="0" cellspacing="0" style="width: 600px">
+            <tr>
+              <td style="width: 100%">
+
+                {{{block "body"}}}
+
+                <!--<NormalText>-->
+                <table cellpadding="0" cellspacing="0" style="width: 100%;">
+                  <tr>
+                    <td style="width: 100%; padding-top: 28px; padding-bottom: 2px; padding-left: 10px; padding-right: 10px; line-height: 22px; font-weight: 300; font-family: Helvetica Neue, Helvetica, arial, sans-serif; color: #434a54; font-size: 13px; text-align: center;">
+                      Need to change this order? Have questions? Contact us at {{phoneNumber config.phone.support}} or reply to this email!
+                    </td>
+                  </tr>
+                </table>
+                <!--</NormalText>-->
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td class="main-width-gutter" width="50%"></td>
+      </tr>
+    </table>
+    <!--</MainContainer>-->
+  </body>
+</html>

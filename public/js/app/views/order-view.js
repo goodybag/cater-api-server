@@ -76,6 +76,10 @@ define(function(require, exports, module) {
         return date.isValid() ? datetime : null;
       },
 
+      phone: function() {
+        return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '') || null;
+      },
+
       secondary_contact_phone: function() {
         return this.$el.find(this.fieldMap.secondary_contact_phone).val().replace(/[^\d]/g, '') || null;
       },

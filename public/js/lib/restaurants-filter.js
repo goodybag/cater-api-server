@@ -51,7 +51,7 @@ define( function( require, exports, module ){
     , 'diets': function( restaurant ){
         return utils.intersection(
           restaurant.tags, query.diets
-        ).length > 0;
+        ).length === query.diets.length;
       }
 
     , 'mealTypes': function( restaurant ){

@@ -6,6 +6,7 @@ var stampit = require('stampit');
 var db      = require('../../db');
 var utils   = require('../../utils');
 var yelp    = require('yelp');
+var m       = require('../../middleware');
 
 var ybusinesses = stampit()
   .compose( require('stamps/yelp-business/fetch') )
@@ -84,3 +85,25 @@ module.exports.autoPopulate = function( req, res ){
     res.sendStatus(204);
   });
 };
+
+module.exports.getBankAccounts = [
+  m.getRestaurant({
+    param:  'id'
+  , stripe: true
+  })
+
+, function( req, res ){
+    res.json( req.restaurant.stripe_account.bank_accounts.data[0] || {} );
+  }
+];
+
+module.exports.updateBankAccount = [
+  m.getRestaurant({
+    param:  'id'
+  , stripe: true
+  })
+
+, function( req, res ){
+    
+  }
+];

@@ -204,3 +204,13 @@ route.get('/:restaurant_id/orders',
     }]
   }),
   m.find(db.orders));
+
+route.get('/:id/bank-account'
+, m.restrict(['admin'])
+, controllers.api.restaurants.getBankAccount
+);
+
+route.put('/:id/bank-account'
+, m.restrict(['admin'])
+, controllers.api.restaurants.updateBankAccount
+);

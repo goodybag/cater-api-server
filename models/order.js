@@ -350,6 +350,7 @@ module.exports = Model.extend({
     var copyableColumns = [
       'user_id'
     , 'restaurant_id'
+    , 'type'
     , 'street'
     , 'city'
     , 'state'

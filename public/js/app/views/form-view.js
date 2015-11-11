@@ -51,6 +51,9 @@ define(function(require, exports, module) {
      */
     fieldMap: {},
 
+    // A list of fields to always save when sending over the wire
+    alwaysSave: [],
+
     clearErrors: function() {
       this.$el.find('.form-group.has-error').removeClass('has-error');
     },
@@ -105,6 +108,12 @@ define(function(require, exports, module) {
         return callback.call(this);
       }
       var view = this;
+
+      if ( Array.isArray( this.alwaysSave ) && this.alwaysSave.length > 0 ){
+        this.alwaysSave.forEach( function( field ){
+          diff[ field ] = this.model.get( field );
+        }.bind( this ));
+      }
 
       if ( this.setThenSave ){
         this.model.set( diff );

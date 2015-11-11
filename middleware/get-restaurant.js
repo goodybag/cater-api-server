@@ -15,14 +15,17 @@ module.exports = function( options ){
   , items:        true
   , amenities:    true
   , photos:       true
+  , stripe:       false
   });
 
   return function( req, res, next ){
-    var logger = req.logger.create('Middleware-GetRestaurant');
-
     var $where = {};
 
     var param = req.params[options.param];
+
+    var logger = req.logger.create('Middleware-GetRestaurant', {
+      restaurant_id: param
+    });
 
     // use + instead of parseInt because:
     // parseInt('888-mini-cafe') === 888
@@ -46,6 +49,8 @@ module.exports = function( options ){
     }
 
     if ( options.delivery ){
+      $options.many.push({ table: 'restaurant_hours', alias: 'hours' });
+      $options.many.push({ table: 'restaurant_pickup_lead_times', alias: 'pickup_lead_times' });
       $options.many.push({ table: 'restaurant_delivery_times', alias: 'delivery_times' });
       $options.many.push({ table: 'restaurant_delivery_zips', alias: 'delivery_zips' });
       $options.many.push({ table: 'restaurant_lead_times', alias: 'lead_times' });
@@ -94,6 +99,18 @@ module.exports = function( options ){
 
       req.restaurant = restaurant;
       res.locals.restaurant = restaurant;
+
+      if ( options.stripe ){
+        return utils.stripe.accounts.retrieve( restaurant.stripe_id, function( error, acct ){
+          if ( error ){
+            logger.warn('Error looking up stripe account')
+          }
+
+          restaurant.stripe_account = acct;
+
+          return next();
+        });
+      }
 
       return next();
     });

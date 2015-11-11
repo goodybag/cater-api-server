@@ -14,7 +14,7 @@ var utils = require('../../utils');
 // Mark order as points are given
 var task = function() {
   var query = {
-    limit: 2
+    limit: 1000
   , where: {
       created_at: { $gte: config.rewardsStartDate }
     }

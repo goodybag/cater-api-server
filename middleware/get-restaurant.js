@@ -16,6 +16,7 @@ module.exports = function( options ){
   , amenities:    true
   , photos:       true
   , stripe:       false
+  , contacts:     false
   });
 
   return function( req, res, next ){
@@ -82,6 +83,12 @@ module.exports = function( options ){
       , columns: [ 'note', { expression: 'created_at at time zone \'' + req.user.attributes.region.timezone + '\'', alias: 'created_at' } ]
       , order: 'created_at desc'
       , one: [ { table: 'users', alias: 'user' } ]
+      });
+    }
+
+    if ( options.contacts ){
+      $options.many.push({
+        table: 'contacts'
       });
     }
 

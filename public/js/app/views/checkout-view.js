@@ -73,6 +73,7 @@ define(function(require, exports, module) {
 
     patch: true,
     setThenSave: false,
+    alwaysSave: ['type'],
 
     errorTypeMessages: {
       required: 'Please enter a valid {noun}'

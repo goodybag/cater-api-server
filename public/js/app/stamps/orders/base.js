@@ -14,7 +14,7 @@ define( function( require, exports, module ){
   var amenities = require('./amenity');
   var moment = require('moment-timezone');
 
-  return require('stampit')()
+  var Order = require('stampit')()
     .state({
       items: []
     , amenities: []
@@ -57,17 +57,15 @@ define( function( require, exports, module ){
       }
 
     , getItems: function(){
-        var user = this.user;
-
-        return this.items.map( function( item ){
+        return (this.items || []).map( function( item ){
           item = items( item );
 
-          if ( user && user.priority_account_price_hike_percentage ){
-            item.priority_account_price_hike_percentage = user.priority_account_price_hike_percentage;
+          if ( this.priority_account_price_hike_percentage ){
+            item.priority_account_price_hike_percentage = this.priority_account_price_hike_percentage;
           }
 
           return item;
-        });
+        }.bind( this ));
       }
 
     , getNoContractFee: function(){
@@ -78,6 +76,7 @@ define( function( require, exports, module ){
     , getTotalForContractFee: function() {
         return [
           this.getSubTotal()
+        , this.getPriorityAccountCost()
         , this.adjustment_amount
         , this.user_adjustment_amount
         , this.getTax()
@@ -90,6 +89,7 @@ define( function( require, exports, module ){
     , getTotal: function( options ){
         return [
           this.getSubTotal()
+        , this.getPriorityAccountCost()
         , this.adjustment_amount
         , this.user_adjustment_amount
         , this.getTax()
@@ -132,9 +132,69 @@ define( function( require, exports, module ){
       }
 
     , getPriorityAccountCost: function(){
-        return this.getItems().reduce( function( total, item ){
-          return total + item.getPriorityAccountTotal();
-        }, 0 );
+        return Math.round( this.priority_account_price_hike_percentage * this.getSubTotal() );
+      }
+
+    , getPriorityAccountSubTotal: function(){
+        return [
+          this.getSubTotal()
+        , this.getPriorityAccountCost()
+        ].reduce( utils.add, 0 );
       }
     });
+
+  Order.applyPriceHike = function( order, options ){
+    options = utils.defaults( options || {}, {
+      useCachedSubTotal: false
+    });
+
+    order.items = order.orderItems || order.items;
+
+    var _order = options.useCachedSubTotal ? CachedOrder.create( order ) : Order.create( order );
+    var phike = order.priority_account_price_hike_percentage || 0;
+
+    order.total = _order.getTotal();
+    order.sub_total = _order.getPriorityAccountSubTotal();
+    order.sales_tax = _order.getTax();
+    order.orderItems = _order.getItems();
+    order.no_contract_amount = _order.getNoContractFee();
+
+    order.orderItems.forEach( function( item ){
+      item.sub_total = item.getTotal();
+      Order.applyPriceHikeToItem( item, phike );
+    });
+
+    return order;
+  };
+
+  Order.applyPriceHikeToItem = function( item, phike ){
+    phike = phike || 0;
+
+    item.price += Math.round( phike * item.price );
+
+    if ( !Array.isArray( item.options_sets ) ) return;
+    
+    item.options_sets.forEach( function( set ){
+      set.options.forEach( function( option ){
+        option.price += Math.round( phike * option.price );
+      });
+    });
+
+    return item;
+  };
+
+  var CachedOrder = require('stampit')()
+    .compose( Order )
+    .state({
+
+    })
+    .methods({
+      getSubTotal: function(){
+        return this.sub_total;
+      }
+    });
+
+  Order.Cached = CachedOrder;
+  
+  return Order;
 });

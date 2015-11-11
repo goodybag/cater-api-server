@@ -2,6 +2,20 @@
 -- Order Functions --
 ---------------------
 
+create or replace function order_get_price_hike( oid int )
+returns numeric(5,5) as $$
+begin
+  return coalesce(
+    ( select users.priority_account_price_hike_percentage
+      from orders
+      left join users on users.id = orders.user_id
+      where orders.id = oid
+      limit 1 )
+  , 0
+  );
+end;
+$$ language plpgsql;
+
 -- Order.sub_total
 create or replace function order_sub_total( oid int )
 returns int as $$

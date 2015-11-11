@@ -231,6 +231,11 @@ define(function(require) {
     , editable: ['client', 'admin']
     }
   , lat_lng: { type: types.point, editable: ['order-owner'] }
+  , priority_account_price_hike_percentage: {
+      type: types.numeric( 5, 5 )
+    , notNull: true
+    , default: 0
+    }
   };
 
   definition.indices = {};

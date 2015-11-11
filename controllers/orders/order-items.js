@@ -6,14 +6,11 @@ var venter = require('../../lib/venter');
 
 var db = require('../../db');
 var queries = require('../../db/queries');
+var Order = require('stamps/orders/base');
 
 module.exports.list = function(req, res, next) {
-  var order = new models.Order({id: parseInt(req.params.oid)});
-  order.getOrderItems(function(error, items) {
-    if (error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(utils.invoke(items, 'toJSON'));
-  });
-}
+  res.json( res.locals.order.orderItems );
+};
 
 // TODO: remove all the stuff we don't need here
 module.exports.summary = function(req, res, next) {
@@ -82,7 +79,12 @@ module.exports.add = function(req, res, next) {
     orderItem.save(function(error, rows, result) {
       if (error) return res.error(errors.internal.DB_FAILURE, error);
       orderItem.attributes = utils.clone(rows[0]);
-      res.send(201, orderItem.toJSON());
+
+      var result = Order.applyPriceHikeToItem(
+        orderItem.toJSON(), req.order.priority_account_price_hike_percentage
+      );
+
+      res.send(201, result);
     });
   });
 }
@@ -101,7 +103,12 @@ module.exports.update = function(req, res, next) {
 
     db.query(sql.query, sql.values, function(error, rows, result) {
       if(error) return res.error(errors.internal.DB_FAILURE, error);
-      res.send(rows[0]);
+
+      var result = Order.applyPriceHikeToItem(
+        utils.clone( rows[0] ), req.order.priority_account_price_hike_percentage
+      );
+
+      res.send( result );
 
       venter.emit( 'order:change', req.params.oid );
     });

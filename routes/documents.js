@@ -5,6 +5,7 @@ var db = require('../db');
 var controllers = require('../controllers');
 var config = require('../config');
 var PMS = require('stamps/payment-summaries/db');
+var Orders = require('stamps/orders');
 
 var route = module.exports = express.Router();
 
@@ -18,7 +19,8 @@ route.get( config.receipt.orderRoute
     userPaymentMethods: true,
     restaurant: true,
     paymentMethod: true,
-    amenities: true
+    amenities: true,
+    applyPriceHike: true
   })
 , m.view( 'invoice/receipt', {
     layout: 'invoice/invoice-layout'

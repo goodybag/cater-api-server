@@ -45,7 +45,7 @@ define( function( require, exports, module ){
     , getTotalForPayoutCalculations: function(){
         var nonPriorityModel = factory( utils.deepExtend( {}, this ) );
         
-        nonPriorityModel.user.priority_account_price_hike_percentage = 0;
+        nonPriorityModel.priority_account_price_hike_percentage = 0;
 
         return [
           this.getSubTotal()

@@ -7,7 +7,8 @@ var orders      = require('stamps/orders');
 var OrderCharge = require('stamps/orders/charge');
 var PMSItem     = require('stamps/orders/payment-summary-item');
 var fulfillability = require('stamps/orders/fulfillability');
-orders.db        = require('../../../lib/stamps/db/orders')
+orders.db        = require('../../../lib/stamps/db/orders');
+var OrderRewards = require('stamps/orders/rewards');
 
 var restaurants = require('stampit')()
   .state({
@@ -135,6 +136,15 @@ describe('Orders Stamps', function(){
     assert.equal( order.getSubTotal(), 3350 );
   });
 
+  it('.getSubTotal() Cached', function(){
+    var order = orders.Cached({
+      sub_total: 100
+    , guests: 7
+    });
+
+    assert.equal( order.getSubTotal(), 100 );
+  });
+
   it('.getTotal()', function(){
     var order = orders({
       restaurant: {
@@ -149,6 +159,22 @@ describe('Orders Stamps', function(){
       , { price: 2, scale: 'multiply', enabled: true }
       , { price: 1, scale: 'multiply', enabled: false }
       ]
+    , guests: 5
+    , adjustment_amount: -100
+    , user_adjustment_amount: -50
+    , tip: 50
+    , delivery_fee: 100
+    });
+
+    assert.equal( order.getTotal(), 772 );
+  });
+
+  it('.getTotal() with Cached SubTotal', function(){
+    var order = orders.Cached({
+      restaurant: {
+        region: { sales_tax: 0.0825 }
+      }
+    , sub_total: 717
     , guests: 5
     , adjustment_amount: -100
     , user_adjustment_amount: -50
@@ -189,7 +215,8 @@ describe('Orders Stamps', function(){
       restaurant: {
         region: { sales_tax: 0.0825 }
       }
-    , user: { is_tax_exempt: false, priority_account_price_hike_percentage: 0.1 }
+    , user: { is_tax_exempt: false }
+    , priority_account_price_hike_percentage: 0.1
     , items: [
         { price: 100, quantity: 1 }
       , { price: 200, quantity: 3 }
@@ -711,7 +738,7 @@ describe('Orders Stamps', function(){
 
     it('.getApplicationCut() - for Priority account', function(){
       var oc = DefaultOrderCharge();
-      oc.user.priority_account_price_hike_percentage = 0.1;
+      oc.priority_account_price_hike_percentage = 0.1;
       oc.adjustment_amount = 0;
       oc.user_adjustment_amount = 0;
       assert.equal( oc.getApplicationCut(), 113 );
@@ -719,7 +746,7 @@ describe('Orders Stamps', function(){
 
     it('.getRestaurantCut() - for Priority account', function(){
       var oc = DefaultOrderCharge();
-      oc.user.priority_account_price_hike_percentage = 0.1;
+      oc.priority_account_price_hike_percentage = 0.1;
       oc.adjustment_amount = 0;
       oc.user_adjustment_amount = 0;
       assert.equal( oc.getRestaurantCut(), 402 );
@@ -752,7 +779,7 @@ describe('Orders Stamps', function(){
           region: { sales_tax: 0.0825 }
         , plan: { type: 'flat', data: { fee: 0.1 } }
         , is_direct_deposit: true
-        , no_contract_fee: 0.047
+        , no_contract_fee: 0
         }
       , items: [
           { price: 100, quantity: 1 }
@@ -851,7 +878,8 @@ describe('Orders Stamps', function(){
 
     it('.toPaymentSummaryItem() with priority account', function(){
       var item = DefaultPMSItem({
-        user: { is_tax_exempt: false, priority_account_price_hike_percentage: 0.1 }
+        user: { is_tax_exempt: false }
+      , priority_account_price_hike_percentage: 0.1
       });
 
       assert.deepEqual( item.toPaymentSummaryItem(),{
@@ -866,9 +894,91 @@ describe('Orders Stamps', function(){
       });
 
       var origNetPayout = item.toPaymentSummaryItem().net_payout;
-      item.user.priority_account_price_hike_percentage = 0.1;
+      item.priority_account_price_hike_percentage = 0.1;
 
       assert.equal( item.getRestaurantCut(), origNetPayout );
+    });
+  });
+
+  describe('OrderRewards', function(){
+    var TSFORMAT = 'YYYY-MM-DD HH:mm:ss';
+
+    var DefaultOrderRewards = stampit()
+      .compose( OrderRewards )
+      .state({
+        restaurant: {
+          region: { sales_tax: 0.0825 }
+        }
+      });
+
+    it('.isEligibleForHolidayPromo()', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().format( TSFORMAT )
+
+      , holidays: [
+          { start: moment().add( 'hours', -1 ).format( TSFORMAT )
+          , end: moment().add( 'hours', 1 ).format( TSFORMAT )
+          , rate: '2.0'
+          , description: 'Some Holiday'
+          }
+        ]
+      });
+
+      assert( order.isEligibleForHolidayPromo() );
+
+      order.submitted = moment().add( 'hours', -2 ).format( TSFORMAT );
+
+      assert( !order.isEligibleForHolidayPromo() );
+    });
+
+    it('.isEligibleForMondayPromo()', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().day('Monday').format( TSFORMAT )
+      });
+
+      assert( order.isEligibleForMondayPromo() );
+
+      order.submitted = moment().day('Tuesday').format( TSFORMAT );
+
+      assert( !order.isEligibleForMondayPromo() );
+    });
+
+    it('.getPoints()', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().day('Tuesday').format( TSFORMAT )
+      , holidays: []
+      , items: [{ price: 1000, quantity: 1 }]
+      });
+
+      assert.equal( order.getPoints(), 10 );
+    });
+
+    it('.getPoints() - monday', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().day('Monday').format( TSFORMAT )
+      , holidays: []
+      , items: [{ price: 1000, quantity: 1 }]
+      });
+
+      assert.equal( order.getPoints(), 21 );
+    });
+
+    it('.getPoints() - holiday', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().format( TSFORMAT )
+
+      , holidays: [
+          { start: moment().add( 'hours', -1 ).format( TSFORMAT )
+          , end: moment().add( 'hours', 1 ).format( TSFORMAT )
+          , rate: '2.0'
+          , description: 'Some Holiday'
+          }
+        ]
+
+      , items: [{ price: 1000, quantity: 1 }]
+      });
+
+      assert.equal( order.getPoints(), 21 );
     });
   });
 });

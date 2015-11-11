@@ -15,6 +15,9 @@ var Transaction = require('./transaction');
 var TransactionError = require('./transaction-error');
 var ordrInTrayBuilder = require('../lib/tray-builder');
 var moment = require('moment-timezone');
+var RewardsOrder = require('stamps/orders/rewards');
+
+RewardsOrder = RewardsOrder.compose( require('stamps/orders/base').Cached );
 
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
@@ -54,17 +57,14 @@ var modifyAttributes = function(callback, err, orders) {
         order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
         utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
 
-        // Handle reward promos
-        var submitted = moment(order.attributes.submitted);
-
-        // Check all mondays past 4/21
-        var eligible = submitted.day() == 1 && submitted >= moment(config.rewardsPromo.start);
-
-        if ( eligible ) {
-          order.attributes.points = Math.floor(order.attributes.total * config.rewardsPromo.rate / 100);
-        } else {
-          order.attributes.points = Math.floor(order.attributes.total / 100);
+        // Add a mock region object for RewardsOrder
+        if ( !order.attributes.restaurant.region ){
+          order.attributes.restaurant.region = {
+            sales_tax: order.attributes.restaurant.sales_tax
+          };
         }
+
+        order.attributes.points = RewardsOrder( order.attributes ).getPoints();
 
         // Fix the conflict-free property joined from region/restaurant
         order.attributes.restaurant.timezone = order.attributes.restaurant.restaurant_timezone;

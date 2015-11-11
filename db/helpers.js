@@ -8,6 +8,11 @@ var utils       = require('../utils');
 var logger      = require('../lib/logger').create('DBHelpers');
 var config      = require('../config');
 var odsChecker  = require('../public/js/lib/order-delivery-service-checker');
+var Order       = require('stamps/orders/base');
+
+var RewardsOrder = require('stamps/orders/rewards');
+
+RewardsOrder = RewardsOrder.compose( require('stamps/orders/base').Cached );
 
 dirac.db.setMosql( mosql );
 
@@ -703,25 +708,7 @@ dirac.use( function( dirac ){
   var onOrder = function( order ){
     Object.defineProperty( order, 'points', {
       get: function(){
-        // Handle reward promos
-        var submitted = moment( order.submitted );
-
-        var holiday = utils.find(config.rewardHolidays, function(holiday) {
-          return submitted >= moment( holiday.start ) && submitted < moment( holiday.end );
-        });
-
-        if ( holiday ) {
-          return Math.floor( order.total * holiday.rate / 100 );
-        }
-
-        // Check all mondays past 4/21
-        var eligible = submitted.day() == 1 && submitted >= moment( config.rewardsPromo.start );
-
-        if ( eligible ) {
-          return Math.floor( order.total * config.rewardsPromo.rate / 100 );
-        }
-
-        return Math.floor( order.total / 100 );
+        return RewardsOrder.create( this ).getPoints();
       }
     });
 
@@ -777,6 +764,12 @@ dirac.use( function( dirac ){
 
     if ( fetchedLocation ){
       results.forEach( transformLocation );
+    }
+
+    if ( $query.applyPriceHike ){
+      results.forEach( function( order ){
+        Order.applyPriceHike( order, $query.applyPriceHike );
+      });
     }
 
     next();

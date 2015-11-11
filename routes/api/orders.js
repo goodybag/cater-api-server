@@ -126,7 +126,7 @@ route.get('/:id/delivery-fee', m.getOrder2({
   restaurant: true,
   location: true,
   deliveryService: true
-}), controllers.orders.auth, controllers.orders.getDeliveryFee);
+}), controllers.orders.getDeliveryFee);
 
 route.get('/:oid/items', m.getOrder2({
     param: 'oid',
@@ -135,14 +135,15 @@ route.get('/:oid/items', m.getOrder2({
     userAddresses: true,
     userPaymentMethods: true,
     restaurant: true,
-    deliveryService: true
-  }), controllers.orders.auth, m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
+    deliveryService: true,
+    applyPriceHike: true
+  }), m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
   controllers.orders.orderItems.list
 );
 
 route.post('/:order_id/generate_edit_token', m.getOrder2({
   param: 'order_id'
-}), controllers.orders.auth, m.restrict(['order-owner', 'admin']), controllers.orders.generateEditToken);
+}), m.restrict(['order-owner', 'admin']), controllers.orders.generateEditToken);
 
 route.post('/:oid/rebuild-pdf/:type', m.restrict(['admin']), controllers.orders.rebuildPdf);
 
@@ -179,28 +180,28 @@ route.delete('/:order_id/internal-notes/:id', m.restrict(['admin']), m.param('id
 
 route.post('/:order_id/amenities', m.getOrder2({
   param: 'order_id'
-}), controllers.orders.auth, m.restrict(['order-owner', 'admin']), m.insert(db.order_amenities));
+}), m.restrict(['order-owner', 'admin']), m.insert(db.order_amenities));
 
 // list amenities per order
 route.get('/:order_id/amenities', m.getOrder2({
   param: 'order_id'
-}), controllers.orders.auth, m.restrict(['order-owner', 'admin']), m.param('order_id'), m.find(db.order_amenities));
+}), m.restrict(['order-owner', 'admin']), m.param('order_id'), m.find(db.order_amenities));
 
 // list specific order amenity
 route.get('/:order_id/amenities/:amenity_id', m.getOrder2({
   param: 'order_id'
-}), controllers.orders.auth, m.restrict(['order-owner', 'admin']), m.param('order_id'), m.param(
+}), m.restrict(['order-owner', 'admin']), m.param('order_id'), m.param(
   'amenity_id'), m.find(db.order_amenities));
 
 // delete all order amenities
 route.delete('/:order_id/amenities', m.getOrder2({
   param: 'order_id'
-}), controllers.orders.auth, m.restrict(['order-owner', 'admin']), m.param('order_id'), m.remove(db.order_amenities));
+}), m.restrict(['order-owner', 'admin']), m.param('order_id'), m.remove(db.order_amenities));
 
 // delete specific order amenity
 route.delete('/:order_id/amenities/:amenity_id', m.getOrder2({
   param: 'order_id'
-}), controllers.orders.auth, m.restrict(['order-owner', 'admin']), m.param('order_id'), m.param(
+}), m.restrict(['order-owner', 'admin']), m.param('order_id'), m.param(
   'amenity_id'), m.remove(db.order_amenities));
 
 /**
@@ -208,6 +209,6 @@ route.delete('/:order_id/amenities/:amenity_id', m.getOrder2({
  */
 route.put('/:order_id/feedback', m.getOrder2({
   param: 'order_id'
-}), controllers.orders.auth, m.restrict(['order-owner', 'admin']), m.queryOptions({
+}), m.restrict(['order-owner', 'admin']), m.queryOptions({
   returning: ['id']
 }), m.param('order_id'), m.update(db.order_feedback));

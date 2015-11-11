@@ -19,9 +19,8 @@ define( function( require, exports, module ){
     })
     .enclose( function(){
       // Ignore price hikes in calculations
-      if ( this.user && this.user.priority_account_price_hike_percentage ){
-        this.user = utils.clone( this.user );
-        this.user.priority_account_price_hike_percentage = 0;
+      if ( this.priority_account_price_hike_percentage ){
+        this.priority_account_price_hike_percentage = 0;
       }
     })
     .methods({

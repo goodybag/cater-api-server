@@ -115,6 +115,10 @@ module.exports = function( options ){
 
           restaurant.stripe_account = acct;
 
+          if ( acct.bank_accounts.data.length > 0 ){
+            restaurant.bank_account = acct.bank_accounts.data[0];
+          }
+
           return next();
         });
       }

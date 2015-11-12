@@ -607,10 +607,13 @@ define(function(require, exports, module) {
       return [
         '<iframe class="direction-iframe" '
       , 'width="100%" height="450" frameborder="0" src="'
-      , config.google.mapsEmbedURL
-      , utils.queryParams({
+      , b && b.street ? config.google.directionsEmbedURL : config.google.mapsEmbedURL
+      , b && b.street ? utils.queryParams({
           origin: Address( a ).toString()
         , destination: Address( b ).toString()
+        , key: config.google.apiKey
+        }) : utils.queryParams({
+          q: Address( a )
         , key: config.google.apiKey
         })
       , '"></iframe>'

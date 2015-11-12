@@ -63,15 +63,23 @@ define(function(require){
       , model: options.models.restaurant
       });
 
-      editBankView.on( 'success', alertView.show.bind( alertView, {
-        type: 'success'
-      , message: 'Updated bank account successfully!'
-      }));
+      editBankView.on( 'success', function(){
+        alertView.show({
+          type: 'success'
+        , message: 'Updated bank account successfully!'
+        });
 
-      editBankView.on( 'error', alertView.show.bind( alertView, {
-        type: 'danger'
-      , message: 'Error saving bank account'
-      }));
+        window.scrollTo(0,0);
+      });
+
+      editBankView.on( 'error', function(){
+        alertView.show({
+          type: 'danger'
+        , message: 'Error saving bank account'
+        });
+
+        window.scrollTo(0,0);
+      });
     }
   };
 

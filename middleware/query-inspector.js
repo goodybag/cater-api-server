@@ -4,9 +4,11 @@
  * MoSQL query object on the request looked as the response ended
  */
 
+var utils = require('../utils');
+
 module.exports = function( options ){
   return function( req, res, next ){
-    if ( !req.params.query_inspector ) return next();
+    if ( !req.query.query_inspector ) return next();
 
     var oend = res.end;
 

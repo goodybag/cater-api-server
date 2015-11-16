@@ -28,6 +28,16 @@ route.get('/'
     // Setup the url->sql where clause
     return m.param('restaurants.region_id')(req, res, next);
   }
+, m.param('contracted_status', function( value, where, options ){
+    // Contracted status can only be contracted/non-contracted
+    if ( ['contracted', 'non-contracted'].indexOf( value ) === -1 ){
+      return;
+    }
+
+    where['restaurants.plan_id'] = {
+      $null: value === 'non-contracted'
+    };
+  })
 , m.sort('-id')
 , m.queryOptions({
     submittedDate: true,

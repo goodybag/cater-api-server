@@ -12,6 +12,7 @@ define(function(require, exports, module) {
   var states = require('states');
   var utils = require('utils');
   var moment = require('moment-timezone');
+  var Fulfillability = require('stamps/orders/fulfillability');
 
   var regex = {
     url: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
@@ -373,6 +374,10 @@ define(function(require, exports, module) {
 
     validateOrderFulfillability: function( order ){
       var errors = [];
+
+      console.log('validateOrderFulfillability',
+        Fulfillability.create( order.toJSON() ).why()
+      );
 
       if ( !this.isValidZip( order ) ){
         errors.push( 'is_bad_zip' );

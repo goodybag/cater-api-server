@@ -36,6 +36,10 @@ define( function( require, exports, module ){
           );
         }
       }
+
+      if ( this.restaurant && this.restaurant.hours_of_operation ){
+        this.restaurant.hours = this.restaurant.hours_of_operation;
+      }
     })
     .methods({
       // Since _all_ of these strategies are required to be fulfillable

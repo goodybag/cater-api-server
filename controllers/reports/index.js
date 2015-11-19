@@ -114,6 +114,7 @@ var reports = {
     , 'User Name'
     , 'User Email'
     , 'Company Name'
+    , 'User Phone'
     , 'Subtotal'
     , 'Delivery Fee'
     , 'Tax'
@@ -246,6 +247,7 @@ var reports = {
           , order.user.name
           , order.user.email
           , order.user.organization
+          , order.phone
           , dollars(order.getSubTotal())
           , dollars(order.delivery_fee)
           , dollars(order.getTax())

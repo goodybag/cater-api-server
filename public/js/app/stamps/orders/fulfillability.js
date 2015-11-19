@@ -137,7 +137,7 @@ define( function( require, exports, module ){
           if ( !this.datetime ) return true;
 
           var leadTimes = this.getAllSupportedLeadTimes();
-console.log('leadTimes', this.restaurant.supported_order_types, leadTimes);
+
           if ( leadTimes.length === 0 ) return false;
 
           var minutes = moment.duration(
@@ -146,7 +146,6 @@ console.log('leadTimes', this.restaurant.supported_order_types, leadTimes);
 
           return leadTimes
             .some( function( time ){
-              console.log(minutes, '>=', time.lead_time, '&&', this.guests, '<=', time.max_guests)
               return [
                 minutes >= time.lead_time
               , !this.guests ? true : this.guests <= time.max_guests

@@ -5,7 +5,8 @@
 module.exports = {
   apiKey: 'AIzaSyBbsgtm6Tqdh3ZyWfRj2Mg_eSZDW8ajLss'
 
-, mapsEmbedURL: 'https://www.google.com/maps/embed/v1/directions'
+, mapsEmbedURL: 'https://www.google.com/maps/embed/v1/place'
+, directionsEmbedURL: 'https://www.google.com/maps/embed/v1/directions'
 
 , adwords: {
     conversionId: 973544387

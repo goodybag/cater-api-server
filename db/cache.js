@@ -51,12 +51,10 @@ module.exports.setupBasicStructure = function( db ){
   };
 
   db.cache.restaurants.byId = function( id ){
-    console.log('searching for', id);
     var restaurants;
     for ( var regionId in db.cache.restaurants ){
       restaurants = db.cache.restaurants[ regionId ].valueOf();
 
-      console.log('searching region', regionId, 'with', restaurants.length, 'restaurants');
       for ( var i = 0; i < restaurants.length; i++ ){
         if ( restaurants[ i ].id === id ){
           return restaurants[ i ];

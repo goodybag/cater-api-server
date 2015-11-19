@@ -1,0 +1,182 @@
+{{#extend "title"}} - Account Settings{{/extend}}
+
+{{#extend "page"}}account-settings-home{{/extend}}
+
+{{#extend "body"}}
+<!--<Navbar>-->
+<header class="navbar navbar-with-dropdowns {{#if session.oldUser}}navbar-impersonate{{/if}} collapsed">
+  <div class="container">
+    <a href="/">
+      <img src="/img/logo.png" alt="Goodybag.com" class="navbar-logo">
+    </a>
+    <div class="navbar-caption">
+      <span class="full"><strong>Let us help you with your order!</strong></span> <span class="full full-number">{{phoneNumber config.phone.support}}</span>
+      <span class="short">{{phoneNumber config.phone.support}}</span>
+    </div>
+
+    <div class="nav">
+      {{#if session.oldUser}}
+      <li>
+        <a href="/users/return">Return to {{session.oldUser.name}}</a>
+      </li>
+      {{/if}}
+      {{#contains user.groups 'admin'}}
+      <span class="gb-dropdown">{{> region_selector}}</span>
+      {{/contains}}
+      <span class="popover-wrapper gb-dropdown same-width-modal">
+        <button
+        class="btn btn-default btn-dropdown"
+        data-role="popover"
+        data-target="dropdown-popover">
+        My Orders
+        <i class="gb-icon-caret-down"></i>
+      </button>
+
+      <div class="popover-modal dropdown-popover">
+        <ul class="popover-body">
+          <li class="popover-item">
+            <a href="/">Start New Order</a>
+          </li>
+          <li class="popover-item">
+            <a href="/users/me/orders">My Orders</a>
+          </li>
+          <li class="popover-item">
+            <a href="/users/me/orders/receipts">My Receipts</a>
+          </li>
+        </ul>
+      </div>
+      </span>
+      <span class="popover-wrapper gb-dropdown same-width-modal">
+        <button
+          class="btn btn-default btn-dropdown"
+          data-role="popover"
+          data-target="dropdown-popover">
+          {{#if user.name}}{{user.name}}{{else}}My Account{{/if}}
+          <i class="gb-icon-caret-down"></i>
+        </button>
+
+        <div class="popover-modal dropdown-popover">
+          <ul class="popover-body">
+            <li class="popover-item">
+              <a href="/users/me">Settings</a>
+            </li>
+            <li class="popover-item">
+              <a href="/users/me/rewards">My Rewards</a>
+            </li>
+            <li class="popover-item">
+              <a href="/auth/logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </span>
+    </div>
+
+    <a class="gb-points" href="/users/me/rewards">{{commatize user.points}} points</a>
+
+    <button class="navbar-toggle btn btn-default btn-small" data-icon="gb-icon-hamburger"></button>
+
+  </div>
+</header>
+<!--</Navbar>-->
+
+<div class="container account-settings">
+
+  {{#if alert}}
+    <div class="alert alert-success alert-dismissable fade in">
+      <button class="account-settings-save-btn" type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <strong>Settings Saved!</strong>
+    </div>
+  {{/if}}
+
+  <h1 class="text-center page-title">Account Settings</h1>
+  <div class="row panel">
+    <section class="list-group-item">
+      <form class="user-settings-form" action="/users/me" method="post">
+        <input type="hidden" name="_method" value="put"/>
+        <div class="form-group">
+          <label for="input-name" class="control-label">Name</label>
+          <input type="text" id="input-name" name="name" class="form-control name col-lg-12" value="{{user.name}}">
+        </div>
+        <div class="form-group" id="order-organization">
+          <label for="input-org" class="control-label">Organization</label>
+          <input type="text" id="input-org" name="organization" class="form-control organization" value="{{user.organization}}">
+        </div>
+        <div class="form-group">
+          <label for="input-email" class="control-label">Email</label>
+          <input type="email" id="input-email" name="email" class="form-control email" value="{{user.email}}">
+        </div>
+        <div class="form-group">
+          <div class="radio">
+            <label>
+              <input class="organization-type" name="organization_type" type="radio" value="individual" {{#if (eq user.organization_type 'individual') }} checked="checked" {{/if}}>
+              Individual
+            </label>
+          </div>
+          <div class="radio">
+            <label>
+              <input class="organization-type" name="organization_type" type="radio" value="business" {{#if (eq user.organization_type 'business') }} checked="checked" {{/if}}>
+              Business
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="input-pass1" class="control-label">Password</label>
+          <input type="password" name="password" id="input-pass1" class="form-control password">
+        </div>
+        <div class="form-group">
+          <label for="input-pass2" class="control-label">Confirm Password</label>
+          <input type="password" id="input-pass2" class="form-control confirm_password">
+        </div>
+        <div class="clearfix">
+          <button type="submit" class="btn btn-primary pull-right">Save</button>
+        </div>
+      </form>
+    </section>
+    <section class="list-group-item">
+      <div class="user-other-settings">
+        <div class="section-title">Address Book</div>
+        <div><a href="/users/me/addresses">Manage Addresses</a></div>
+        <div><a href="/users/me/addresses#add-new-address">Add New Address</a></div>
+      </div>
+    </section>
+    <section class="list-group-item">
+      <div class="user-other-settings">
+        <div class="section-title">Credit Cards</div>
+        <div><a href="/users/me/cards">Manage Credit Cards</a></div>
+        <div><a href="/users/me/cards#add-payment-method">Add Credit Card</a></div>
+      </div>
+    </section>
+  </div>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require([
+      'jquery-loaded'
+    ]
+  , function($) {
+      $('[data-role="popover"]').gb_popover();
+
+      $('.user-settings-form').on('submit', function(e) {
+        // Client side validation
+        e.preventDefault();
+        var fields = ['name', 'email', 'organization', 'password'];
+        var data = {};
+        for (var i=0, l=fields.length; i<l; i++)
+          data[fields[i]] = $('.user-settings-form .' + fields[i]).val();
+        if (data.password && data.password !== $('.user-settings-form .confirm_password').val())
+          return alert('passwords must match');
+        if (!data.password) delete data.password;
+
+        if ($("[name='organization_type']:checked").val() === "business"
+          && $(".organization").val() === "") {
+          return alert('please enter an organization name');
+        }
+
+        this.submit();
+      });
+    }
+  );
+</script>
+{{/extend}}

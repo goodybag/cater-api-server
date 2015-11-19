@@ -36,8 +36,7 @@ module.exports.register = function(app) {
     });
   }
 
-  app.use(express.static('./node_modules/goodybag-app/dist/build'));
-  app.use(require('goodybag-app').app);
+  app.use(require('@goodybag/cater-web').app);
   app.use(require('./public'));
   app.use(require('./documents'));
   app.use(require('./lunchroom'));

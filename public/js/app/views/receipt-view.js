@@ -191,8 +191,7 @@ define(function(require, exports, module) {
             return {
               address:  utils.extend( order.address.toJSON(), {
                           name: context.order.address_name,
-                          secondary_contact_phone: context.order.secondary_contact_phone,
-                          status: context.order.status
+                          secondary_contact_phone: context.order.secondary_contact_phone
                         }),
               states: states
             };

@@ -35,10 +35,12 @@ define( function( require, exports, module ){
           , this.timezone
           );
         }
-      }
-
-      if ( this.restaurant && this.restaurant.hours_of_operation ){
-        this.restaurant.hours = this.restaurant.hours_of_operation;
+      } else if ( this.datetime ){
+        this.datetime = moment.tz(
+          this.datetime
+        , [ this.dateFormat, this.timeFormat ].join(' ')
+        , this.timezone
+        );
       }
     })
     .methods({
@@ -135,8 +137,8 @@ define( function( require, exports, module ){
           if ( !this.datetime ) return true;
 
           var leadTimes = this.getAllSupportedLeadTimes();
-
-          if ( leadTimes.length === 0 ) return true;
+console.log('leadTimes', this.restaurant.supported_order_types, leadTimes);
+          if ( leadTimes.length === 0 ) return false;
 
           var minutes = moment.duration(
             this.datetime - moment.tz( this.timezone )
@@ -144,6 +146,7 @@ define( function( require, exports, module ){
 
           return leadTimes
             .some( function( time ){
+              console.log(minutes, '>=', time.lead_time, '&&', this.guests, '<=', time.max_guests)
               return [
                 minutes >= time.lead_time
               , !this.guests ? true : this.guests <= time.max_guests

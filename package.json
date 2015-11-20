@@ -28,7 +28,7 @@
     "order-delivery-service-checker": "./public/js/lib/order-delivery-service-checker.js"
   },
   "dependencies": {
-    "@goodybag/cater-web": "^0.0.1",
+    "@goodybag/cater-web": "^0.0.2",
     "Faker": "0.5.x",
     "amanda": "~0.4.7",
     "analytics-node": "~0.6.0",

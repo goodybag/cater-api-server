@@ -85,6 +85,9 @@ module.exports.editability = function(req, res, next) {
 module.exports.get = function(req, res) {
   var logger = req.logger.create('Controller-Get');
   var order = req.order;
+  // Save this for later when we're informing the legacy models
+  // how to not be dumb
+  var orderRestaurant = order.restaurant;
   var amenities = order.restaurant.amenities;
   var orderModel = new models.Order( order );
 
@@ -164,6 +167,9 @@ module.exports.get = function(req, res) {
     if ( context.order.review_token !== req.query.review_token ) {
       delete context.order.review_token;
     }
+
+    // Inform the legacy models to use new fulfillability logic
+    context.order.restaurant._cached = orderRestaurant;
 
     res.render(view, context);
   });

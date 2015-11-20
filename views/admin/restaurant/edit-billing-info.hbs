@@ -1,113 +1,167 @@
 {{#extend "html-title"}}{{truncate restaurant.name 10}}{{/extend}}
 {{#extend "body"}}
-  <form class="ap-form form-vertical">
-    <h2>Contract Info</h2>
-    <div class="form-group" id="no-contract-fee-group">
-      <label>No Contract Transaction Fee</label>
-      <div class="input-group">
-        <input
-        type="text"
-        class="form-control"
-        name="no_contract_fee"
-        id="input-no_contract_fee"
-        data-in="factorToPercent"
-        data-out="percentToFactor 4"
-        value="{{factorToPercent restaurant.no_contract_fee}}">
-        <div class="input-addon">%</div>
-      </div>
-    </div>
-
-    {{#if restaurant.stripe_id}}
-    <h2>Stripe Info</h2>
-    <ul>
-      <li><a href="/verify/{{restaurant.uuid}}">Stripe Verification</a></li>
-      <li><a href="/verify/{{restaurant.uuid}}/upload">Stripe ID Upload</a></li>
-      <li><a href="https://dashboard.stripe.com/applications/users/{{restaurant.stripe_id}}">View account on Stripe</a></li>
-    </ul>
-    <label class="control-label">Customer URI</label>
-    <blockquote class="blockquote blockquote-info">{{restaurant.stripe_id}}</blockquote>
-    {{/if}}
-
-    {{#if restaurant.balanced_customer_uri}}
-    <h2>Balanced Info</h2>
-    <label class="control-label">Customer URI</label>
-    <blockquote class="blockquote blockquote-info">{{restaurant.balanced_customer_uri}}</blockquote>
-    {{/if}}
-
-    <h2>Billing Info</h2>
-    <div class="form-group">
-      <label class="control-label">Street</label>
-      <input name="billing_street" type="text" class="form-control restaurant-address restaurant-billing_street" value="{{restaurant.billing_street}}" placeholder="123 Fake St.">
-    </div>
-    <div class="form-group">
-      <label class="control-label">Street 2</label>
-      <input name="billing_street2" type="text" class="form-control restaurant-address restaurant-billing_street2" value="{{restaurant.billing_street2}}" placeholder="Suite 220">
-    </div>
-    <div class="form-group">
-      <label class="control-label">City</label>
-      <input name="billing_city" type="text" class="form-control restaurant-address restaurant-billing_city" value="{{restaurant.billing_city}}" placeholder="Austin">
-    </div>
-    <div class="form-group">
-      <label class="control-label">State</label>
-      <select class="form-control restaurant-address restaurant-billing_state" name="billing_state">
-        {{#each states}}
-        <option value="{{this.abbr}}" label="{{this.abbr}}"{{#eq ../restaurant.billing_state this.abbr}} selected="selected"{{/eq}}>{{this.name}}</option>
-        {{/each}}
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="control-label">Zip</label>
-      <input name="billing_zip" type="text" maxlength="5" class="form-control restaurant-address restaurant-billing_zip" value="{{restaurant.billing_zip}}" placeholder="78701">
-    </div>
-    <div class="form-group">
-      <label class="control-label" for="input-rate">GB Fee (0 for tiered)</label>
-      <div class="input-group">
-        <input
+  <div id="main-form">
+    <form class="ap-form form-vertical">
+      <h2>Contract Info</h2>
+      <div class="form-group" id="no-contract-fee-group">
+        <label>No Contract Transaction Fee</label>
+        <div class="input-group">
+          <input
           type="text"
           class="form-control"
-          name="gb_fee"
-          id="input-gb_fee"
+          name="no_contract_fee"
+          id="input-no_contract_fee"
           data-in="factorToPercent"
           data-out="percentToFactor 4"
-          value="{{factorToPercent restaurant.gb_fee}}">
-        <div class="input-addon">%</div>
+          value="{{factorToPercent restaurant.no_contract_fee}}">
+          <div class="input-addon">%</div>
+        </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="pms_contact_id_selector" class="control-label">Default Contact for Payment Summaries</label>
-      <select name="pms_contact_id" id="pms_contact_id_selector" type="number">
-        <option value="null">None</option>
-        {{#each restaurant.contacts}}
-          <option value="{{this.id}}"{{#eq ../restaurant.pms_contact_id this.id}} selected="true"{{/eq}}>{{this.name}}</option>
-        {{/each}}
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="plan_selector" class="control-label">Plan</label>
-      <select name="plan_id" id="plan_selector" type="number">
-        <option value="null">None</option>
-        {{#each restaurant_plans}}
-          <option value="{{this.id}}"{{#eq ../restaurant.plan_id this.id}} selected="true"{{/eq}}>{{this.name}}</option>
-        {{/each}}
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="control-label" for="input-is_direct_deposit">
-        <input type="checkbox" class="form-control" name="is_direct_deposit" id="input-is_direct_deposit" {{#if restaurant.is_direct_deposit}}checked="checked"{{/if}}>
-         Uses Direct Deposit?
-      </label>
-    </div>
-    <div class="form-group">
-      <label class="control-label" for="input-collect_payments">
-        <input type="checkbox" class="form-control" name="collect_payments" id="input-collect_payments" {{#if restaurant.collect_payments}}checked="checked"{{/if}}>
-        Collect Payments
-      </label>
-      <small>Enabling this option means that all payments will be transferred to our platform account on Stripe. The funds will not go to the restaurant account.</small>
-    </div>
-    <div class="form-group actions">
-      <button class="btn-update" type="submit">Update</button>
-    </div>
-  </form>
+    
+      {{#if restaurant.stripe_id}}
+      <h2>Stripe Info</h2>
+      <ul>
+        <li><a href="/verify/{{restaurant.uuid}}">Stripe Verification</a></li>
+        <li><a href="/verify/{{restaurant.uuid}}/upload">Stripe ID Upload</a></li>
+        <li><a href="https://dashboard.stripe.com/applications/users/{{restaurant.stripe_id}}">View account on Stripe</a></li>
+      </ul>
+      <label class="control-label">Customer URI</label>
+      <blockquote class="blockquote blockquote-info">{{restaurant.stripe_id}}</blockquote>
+      {{/if}}
+    
+      {{#if restaurant.balanced_customer_uri}}
+      <h2>Balanced Info</h2>
+      <label class="control-label">Customer URI</label>
+      <blockquote class="blockquote blockquote-info">{{restaurant.balanced_customer_uri}}</blockquote>
+      {{/if}}
+    
+      <h2>Billing Info</h2>
+      <div class="form-group">
+        <label class="control-label">Street</label>
+        <input name="billing_street" type="text" class="form-control restaurant-address restaurant-billing_street" value="{{restaurant.billing_street}}" placeholder="123 Fake St.">
+      </div>
+      <div class="form-group">
+        <label class="control-label">Street 2</label>
+        <input name="billing_street2" type="text" class="form-control restaurant-address restaurant-billing_street2" value="{{restaurant.billing_street2}}" placeholder="Suite 220">
+      </div>
+      <div class="form-group">
+        <label class="control-label">City</label>
+        <input name="billing_city" type="text" class="form-control restaurant-address restaurant-billing_city" value="{{restaurant.billing_city}}" placeholder="Austin">
+      </div>
+      <div class="form-group">
+        <label class="control-label">State</label>
+        <select class="form-control restaurant-address restaurant-billing_state" name="billing_state">
+          {{#each states}}
+          <option value="{{this.abbr}}" label="{{this.abbr}}"{{#eq ../restaurant.billing_state this.abbr}} selected="selected"{{/eq}}>{{this.name}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="control-label">Zip</label>
+        <input name="billing_zip" type="text" maxlength="5" class="form-control restaurant-address restaurant-billing_zip" value="{{restaurant.billing_zip}}" placeholder="78701">
+      </div>
+      <div class="form-group">
+        <label class="control-label" for="input-rate">GB Fee (0 for tiered)</label>
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            name="gb_fee"
+            id="input-gb_fee"
+            data-in="factorToPercent"
+            data-out="percentToFactor 4"
+            value="{{factorToPercent restaurant.gb_fee}}">
+          <div class="input-addon">%</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="pms_contact_id_selector" class="control-label">Default Contact for Payment Summaries</label>
+        <select name="pms_contact_id" id="pms_contact_id_selector" type="number">
+          <option value="null">None</option>
+          {{#each restaurant.contacts}}
+            <option value="{{this.id}}"{{#eq ../restaurant.pms_contact_id this.id}} selected="true"{{/eq}}>{{this.name}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="plan_selector" class="control-label">Plan</label>
+        <select name="plan_id" id="plan_selector" type="number">
+          <option value="null">None</option>
+          {{#each restaurant_plans}}
+            <option value="{{this.id}}"{{#eq ../restaurant.plan_id this.id}} selected="true"{{/eq}}>{{this.name}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="control-label" for="input-is_direct_deposit">
+          <input type="checkbox" class="form-control" name="is_direct_deposit" id="input-is_direct_deposit" {{#if restaurant.is_direct_deposit}}checked="checked"{{/if}}>
+           Uses Direct Deposit?
+        </label>
+      </div>
+      <div class="form-group">
+        <label class="control-label" for="input-collect_payments">
+          <input type="checkbox" class="form-control" name="collect_payments" id="input-collect_payments" {{#if restaurant.collect_payments}}checked="checked"{{/if}}>
+          Collect Payments
+        </label>
+        <small>Enabling this option means that all payments will be transferred to our platform account on Stripe. The funds will not go to the restaurant account.</small>
+      </div>
+      <div class="form-group actions">
+        <button class="btn-update" type="submit">Update</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="bank-account">
+    <h2>Bank Account</h2>
+    <p>Note: We do not ask the restaurant for their Bank name or account type, so that will need to be manually set here.</p>
+    <form id="bank-account-form" class="ap-form form-vertical">
+      <div class="form-group">
+        <label class="control-label">Bank Name</label>
+        <input
+          name="account_bank_name"
+          type="text"
+          class="form-control restaurant-account_bank_name"
+          value="{{restaurant.bank_account.metadata.bank_name}}">
+      </div>
+      <div class="form-group">
+        <div class="form-group-inline">
+          <label class="control-label">Account Number</label>
+          <input
+            name="account_number"
+            type="text"
+            class="form-control restaurant-account_number"
+            placeholder="******{{restaurant.bank_account.last4}}">
+        </div>
+        <div class="form-group-inline">
+          <label class="control-label">Routing Number</label>
+          <input
+            name="routing_number"
+            type="text"
+            class="form-control restaurant-routing_number"
+            value="{{restaurant.bank_account.routing_number}}">
+        </div>
+        <div class="form-group-inline">
+          <label>
+            <input
+              type="radio"
+              name="account_type"
+              {{#eq restaurant.bank_account.metadata.account_type 'checking'}}checked{{/eq}}
+              value="checking"> Checking
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="account_type"
+              {{#eq restaurant.bank_account.metadata.account_type 'savings'}}checked{{/eq}}
+              value="savings"> Savings
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-update" type="submit">Update Bank Account</button>
+      </div>
+    </form>
+  </div>
 {{/extend}}
 
 {{#extend "scripts"}}

@@ -415,23 +415,26 @@ route.get('/restaurants/:id/basic-info', m.param('id'), m.viewPlugin('mainNav', 
   method: 'findOne'
 }));
 
-route.get('/restaurants/:id/billing-info', m.param('id'), m.viewPlugin('mainNav', {
-  active: 'restaurants'
-}), m.viewPlugin('sidebarNav', {
-  active: 'billing-info',
-  baseUrl: '/admin/restaurants/:id'
-}), m.states(), m.db.regions.find({}, {
-  limit: 'all'
-}), m.db.restaurant_plans.find({}, {
-  limit: 'all'
-}), m.queryOptions({
-  many: [{
-    table: 'contacts'
-  }]
-}), m.view('admin/restaurant/edit-billing-info', db.restaurants, {
-  layout: 'admin/layout-two-column',
-  method: 'findOne'
-}));
+route.get('/restaurants/:id/billing-info'
+, m.viewPlugin('mainNav', {
+    active: 'restaurants'
+  })
+, m.viewPlugin('sidebarNav', {
+    active: 'billing-info',
+    baseUrl: '/admin/restaurants/:id'
+  })
+, m.states()
+, m.db.regions.find({}, { limit: 'all' })
+, m.db.restaurant_plans.find({}, { limit: 'all' })
+, m.getRestaurant({
+    param:    'id'
+  , contacts: true
+  , stripe:   true
+  })
+, m.view('admin/restaurant/edit-billing-info', {
+    layout: 'admin/layout-two-column'
+  })
+);
 
 route.get('/restaurants/:id/transfers', m.param('id'), m.getRestaurant({
   param: 'id'

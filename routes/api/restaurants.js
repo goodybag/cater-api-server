@@ -7,44 +7,45 @@ var venter = require('../../lib/venter');
 
 var route = module.exports = express.Router();
 
-route.get('/', m.restrict(['admin']), m.sort('-id'), m.param('region_id'), m.queryOptions({
-  many: [],
-  one: [{
-    table: 'regions',
-    alias: 'region'
-  }]
-}), m.find(db.restaurants));
+route.get('/'
+, m.restrict(['admin'])
+, m.sort('-id')
+, m.param('region_id')
+, m.queryOptions({
+    many: [],
+    one: [{
+      table: 'regions',
+      alias: 'region'
+    }]
+  })
+, m.find(db.restaurants)
+);
 
 route.post('/', m.restrict(['admin']), m.insert(db.restaurants));
 
-route.get('/:id',
-  m.restrict(['admin']),
-  m.param('id', function(value, queryObj, queryOptions) {
-    if (isNaN(+value)) {
-      queryObj.text_id = value;
-    } else {
-      queryObj.id = value;
-    }
-  }),
-  m.queryOptions({
-    many: [{
-      table: 'restaurant_hours',
-      alias: 'hours'
-    }, {
-      table: 'restaurant_lead_times',
-      alias: 'lead_times'
-    }]
-  }),
-  m.findOne(db.restaurants));
+route.get('/:id'
+, m.restrict(['admin'])
+, m.getRestaurant({
+    param: 'id'
+  , stripe: true
+  })
+, m.jsonLocals('restaurant')
+);
 
 route.put('/:id', m.restrict(['admin']), m.param('id'), m.update(db.restaurants));
 
-route.patch('/:id', m.restrict(['admin']), m.param('id'), m.getRestaurant({
-  param: 'id'
-}), m.updateStripeCustomer({
-  required: 'restaurant',
-  pick: ['name']
-}), m.update(db.restaurants));
+route.patch('/:id'
+, m.restrict(['admin'])
+, m.param('id')
+, m.getRestaurant({
+    param: 'id'
+  })
+, m.updateStripeCustomer({
+    required: 'restaurant',
+    pick: ['name']
+  })
+, m.update(db.restaurants)
+);
 
 route.delete('/:id', m.restrict(['admin']), m.param('id'), m.remove(db.restaurants));
 
@@ -203,3 +204,13 @@ route.get('/:restaurant_id/orders',
     }]
   }),
   m.find(db.orders));
+
+route.get('/:id/bank-account'
+, m.restrict(['admin'])
+, controllers.api.restaurants.getBankAccount
+);
+
+route.put('/:id/bank-account'
+, m.restrict(['admin'])
+, controllers.api.restaurants.updateBankAccount
+);

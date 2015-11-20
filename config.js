@@ -282,6 +282,7 @@ config.defaults = {
 , defaultMonoLogo: 'https://www.filepicker.io/api/file/mbhVfKiSRO0W7SMV7Ygv'
 
 , enums: ['tags', 'meal_types', 'meal_styles', 'cuisines']
+, enableCaterWeb: local.enableCaterWeb || false
 };
 
 config.dev = {
@@ -339,6 +340,7 @@ config.dev = {
     { bucket: 'dev-receipts.goodybag.com' }
   )
 
+, enableCaterWeb: true
 };
 
 config.staging = {
@@ -396,6 +398,7 @@ config.staging = {
     { bucket: 'staging-receipts.goodybag.com' }
   )
 
+, enableCaterWeb: true
 };
 
 config.production = {

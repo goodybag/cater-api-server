@@ -36,7 +36,10 @@ module.exports.register = function(app) {
     });
   }
 
-  app.use(require('@goodybag/cater-web').app);
+  if (config.enableCaterWeb) {
+      app.use(require('@goodybag/cater-web').app);
+  }
+
   app.use(require('./public'));
   app.use(require('./documents'));
   app.use(require('./lunchroom'));

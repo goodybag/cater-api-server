@@ -339,8 +339,6 @@ config.dev = {
 , receipt: _.extend( {}, config.defaults.receipt,
     { bucket: 'dev-receipts.goodybag.com' }
   )
-
-, enableCaterWeb: true
 };
 
 config.staging = {

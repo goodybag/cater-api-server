@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@goodybag/cater-web": "^0.0.2",
+    "@goodybag/scheduler-app": "^0.0.7",
     "Faker": "0.5.x",
     "amanda": "~0.4.7",
     "analytics-node": "~0.6.0",
@@ -109,7 +110,6 @@
     "request": "2.25.x",
     "resource.js": "^1.0.2",
     "rollbar": "0.2.x",
-    "scheduler-app": "goodybag/scheduler-app",
     "selenium-webdriver": "~2.40.0",
     "semver": "~2.1.0",
     "serve-favicon": "^2.2.0",

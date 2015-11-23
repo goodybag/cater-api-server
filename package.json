@@ -12,8 +12,7 @@
     "start": "node master",
     "test": "grunt namedModules && ./node_modules/mocha/bin/mocha --recursive -R spec test/unit",
     "test-react": "./node_modules/ecstatic/lib/ecstatic.js --cache 0 -p 8000 public",
-    "postinstall": "./node_modules/.bin/bower install && npm run install-dropoff",
-    "install-dropoff": "./bin/install-dropoff",
+    "postinstall": "./node_modules/.bin/bower install",
     "test-notifications": "./node_modules/.bin/mocha -R spec test/unit/notifications"
   },
   "namedModules": {
@@ -29,6 +28,7 @@
   },
   "dependencies": {
     "@goodybag/cater-web": "^0.0.2",
+    "@goodybag/dropoff-client": "^5.0.0",
     "Faker": "0.5.x",
     "amanda": "~0.4.7",
     "analytics-node": "~0.6.0",

@@ -73,7 +73,7 @@ if (config.isProduction || config.isStaging) {
 }
 
 app.use( require('dirac-middleware')({ envelope: false }) );
-// app.use( m.queryInspector() );
+// app.use( require('./middleware/query-inspector')() );
 
 app.use( function( req, res, next ){
   res.locals.reqQuery = req.query;

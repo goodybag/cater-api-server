@@ -36,7 +36,7 @@ define(function(require){
 
       page.order = options.order;
 
-      page.state.set( 'order_type', options.order.get('type') );
+      page.state.set( 'type', options.order.get('type') );
       page.state.set( 'restaurant_location_id', options.order.get('restaurant_location_id') );
 
       page.state.on( 'change', page.onStateChange );
@@ -77,8 +77,8 @@ define(function(require){
           new Views.PdfPreview({ el: this });
         });
 
-        $('[name="order_type"]').change( function( e ){
-          page.state.set( 'order_type', $(this).val() );
+        $('[name="type"]').change( function( e ){
+          page.state.set( 'type', $(this).val() );
         });
 
         $('[name="delivery_service_id"]').change( function( e ){
@@ -88,7 +88,7 @@ define(function(require){
             ]);
           }
 
-          page.state.set( 'order_courier', +$(this).val() );
+          page.state.set( 'delivery_service_id', +$(this).val() );
         });
 
         $('[name="restaurant_location_id"]').change( function( e ){
@@ -140,24 +140,25 @@ define(function(require){
             }
           });
         });
+
+        $('[name="courier_tracking_id"]').keyup( function( e ){
+          var v = $(this).val();
+
+          if ( v !== page.order.get('courier_tracking_id') ){
+            page.state.set( 'courier_tracking_id', v );
+          }
+        });
       });
     }
 
   , saveOrder: function( callback ){
-      var props = {
-        type: page.state.get('order_type')
-      , restaurant_location_id: page.state.get('restaurant_location_id')
-      };
-
-      // Index of because of the whole `silent` thing
-      if ( props.type && props.type.indexOf('courier') > -1 ){
-        props.delivery_service_id = page.state.get('order_courier');
-      }
-
-      return page.updateOrder( props, function( error ){
+      return page.updateOrder( page.state.toJSON(), function( error ){
         if ( error ) return callback( error );
 
         callback();
+
+        // Reset state
+        page.state = new utils.Model();
 
         page.onSave();
       });
@@ -257,9 +258,9 @@ define(function(require){
     }
 
   , updateCourierServiceSelector: function(){
-      $('.form-group-courier').toggleClass(
+      $('.form-group-courier, #courier-tracking-id-row').toggleClass(
         'hide'
-      , page.state.get('order_type').indexOf('courier') === -1
+      , page.state.get('type').indexOf('courier') === -1
       );
     }
 
@@ -280,7 +281,7 @@ define(function(require){
 
   , onStateChange: function( state ){
       var handlers = {
-        order_type: function(){
+        type: function(){
           page.updateCourierServiceSelector();
         }
       };

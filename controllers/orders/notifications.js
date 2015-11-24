@@ -150,7 +150,19 @@ module.exports.JSON.sendNotification = function( req, res ){
     return notifications2
       .get( req.params.id )
       .create( +req.params.oid, req.user.attributes.id, req.query )
-      .send( onSend );
+      .send( function( error, result ){
+        if ( error ){
+          return onSend( error );
+        }
+
+        if ( req.params.id !== 'dropoff-order-submitted' ){
+          return onSend( null, result );
+        }
+
+        // Dropoff Order Submitted should also update the
+        // order's courier_tracking_id
+        db.orders.update( req.params.oid, { courier_tracking_id: result.data.url }, onSend );
+      });
   }
 
   var notification = notifier.defs[ req.params.id ];

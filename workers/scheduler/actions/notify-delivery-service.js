@@ -12,7 +12,9 @@ module.exports.fn = function(job, done) {
     data: job
   });
 
-  var orderId = job.data.orderId;
+  job.options = job.options || {};
+
+  var orderId = job.data.order_id;
 
   logger.info('Sending delivery service order submitted notification');
 
@@ -28,13 +30,25 @@ module.exports.fn = function(job, done) {
     if ( dsnid in notifier2.get() ){
       return notifier2
         .get( dsnid )
-        .create( order.id, job.data.user_id )
-        .send( done );
+        .create( order.id, job.data.user_id, job.options )
+        .send( function( error, result ){
+          if ( error ){
+            return done( error );
+          }
+
+          if ( dsnid !== 'dropoff-order-submitted' ){
+            return done( null, result );
+          }
+
+          // Dropoff Order Submitted should also update the
+          // order's courier_tracking_id
+          db.orders.update( orderId, { courier_tracking_id: result.data.url }, done );
+        });
     }
 
     var nid = dsnid in notifier.defs ? dsnid : 'delivery-service-order-submitted';
 
-    notifier.send( nid, orderId, done );
+    notifier.send( nid, orderId, job.options, done );
   });
 };
 

@@ -8,6 +8,27 @@
 
     <script src="{{cdn "/components/jquery/jquery.js"}}"></script>
     <script src="{{cdn "/js/pdf/utils.js"}}"></script>
+    <script>
+      var options = {
+        readyTimeout: 5000
+
+      , itemSelector: 'table tbody tr'
+
+      , onPageClone: function( $page, $clone ){
+          $page.find('.order-bottom-wrapper').remove();
+        }
+      };
+
+      $(function(){
+        adjustPage( $('.page'), options, function(){
+          window.__page.ready();
+        });
+
+        setTimeout( function(){
+          if ( !window.__page.isReady() ) window.__page.ready();
+        }, options.readyTimeout );
+      });
+    </script>
     {{{block "scripts"}}}
   </head>
   <body>

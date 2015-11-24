@@ -56,6 +56,10 @@ route.param('uid', function(req, res, next, id) {
     if (!req.user) {
       restrictOwner(req, res, next);
     } else {
+      if (req.user.attributes.groups.indexOf('guest') > -1) {
+        return restrictOwner(req, res, next);
+      }
+
       req.params.uid = req.user.attributes.id;
       next();
     }
@@ -99,9 +103,13 @@ route.get('/:uid/orders', restrictOwner
     $query.where = $query.where || {};
     $query.where.user_id = user_id;
   }), m.param('status'), m.param('type'), m.sort('-id'), m.queryOptions({
+    applyPriceHike: {
+      useCachedSubTotal: true
+    },
     one: [{
       table: 'restaurants',
-      alias: 'restaurant'
+      alias: 'restaurant',
+      one: [{ table: 'regions', alias: 'region' }]
     }, {
       table: 'users',
       alias: 'user'
@@ -123,9 +131,13 @@ route.get('/:uid/orders/receipts', restrictOwner, m.param('uid', function(user_i
   $query.where = $query.where || {};
   $query.where.user_id = user_id;
 }), m.param('status', 'accepted'), m.sort('-datetime'), m.queryOptions({
+  applyPriceHike: {
+    useCachedSubTotal: true
+  },
   one: [{
     table: 'restaurants',
-    alias: 'restaurant'
+    alias: 'restaurant',
+    one: [{ table: 'regions', alias: 'region' }]
   }, {
     table: 'users',
     alias: 'user'

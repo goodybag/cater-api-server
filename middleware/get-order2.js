@@ -10,6 +10,8 @@ var db              = require('../db');
 var manifest        = require('../lib/order-manifester');
 var orderEditable   = require('./order-editable');
 var odsChecker      = require('../public/js/lib/order-delivery-service-checker');
+var Order           = require('stamps/orders/base');
+var orderAuth       = require('../controllers/orders/orders').auth;
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
@@ -120,7 +122,11 @@ module.exports = function( options ){
     }
 
     if ( options.items ){
-      $options.many.push({ table: 'order_items', alias: 'orderItems' })
+      $options.many.push({
+        table: 'order_items'
+      , alias: 'orderItems'
+      , order: ['recipient asc']
+      });
     }
 
     if ( options.paymentMethod ){
@@ -162,9 +168,42 @@ module.exports = function( options ){
         order.manifest = manifest.create( order.orderItems );
       }
 
+      if ( options.alerts ){
+        order.alerts = [];
+
+        if ( !order.lat_lng ){
+          order.alerts.push({
+            level: 'error'
+          , message: 'This order was not able to be geocoded. This likely means the address is invalid.'
+          });
+        }
+
+        if ( order.location && !order.location.lat_lng ){
+          order.alerts.push({
+            level: 'error'
+          , message: 'This order\'s location has not been geocoded. This likely means the location address is invalid.'
+          });
+        }
+
+        if ( !order.location && order.type === 'courier' ){
+          order.alerts.push({
+            level: 'error'
+          , message: 'Cannot send courier notifications without a location set'
+          });
+        }
+      }
+
       req.order = order;
       res.locals.order = order;
       req.logger.options.data.order = { id: order.id };
+
+      // Apply user/groups to current user in context of order
+      orderAuth( req, res, function(){});
+
+      if ( options.applyPriceHike )
+      if ( req.user.attributes.groups.indexOf('order-restaurant') === -1 ){
+        Order.applyPriceHike( req.order );
+      }
 
       utils.async.series([
         !options.restaurantDbModelFind ? utils.async.noop : function( done ){
@@ -183,7 +222,6 @@ module.exports = function( options ){
 
             req.order.restaurant = restaurant;
             res.locals.order.restaurant = restaurant;
-
             return done();
           });
         }

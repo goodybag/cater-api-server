@@ -1,11 +1,14 @@
 var assert      = require('assert');
 var moment      = require('moment');
+var stampit     = require('stampit');
 var utils       = require('utils');
 var config      = require('../../../config');
 var orders      = require('stamps/orders');
 var OrderCharge = require('stamps/orders/charge');
+var PMSItem     = require('stamps/orders/payment-summary-item');
 var fulfillability = require('stamps/orders/fulfillability');
-orders.db        = require('../../../lib/stamps/db/orders')
+orders.db        = require('../../../lib/stamps/db/orders');
+var OrderRewards = require('stamps/orders/rewards');
 
 var restaurants = require('stampit')()
   .state({
@@ -133,6 +136,15 @@ describe('Orders Stamps', function(){
     assert.equal( order.getSubTotal(), 3350 );
   });
 
+  it('.getSubTotal() Cached', function(){
+    var order = orders.Cached({
+      sub_total: 100
+    , guests: 7
+    });
+
+    assert.equal( order.getSubTotal(), 100 );
+  });
+
   it('.getTotal()', function(){
     var order = orders({
       restaurant: {
@@ -147,6 +159,22 @@ describe('Orders Stamps', function(){
       , { price: 2, scale: 'multiply', enabled: true }
       , { price: 1, scale: 'multiply', enabled: false }
       ]
+    , guests: 5
+    , adjustment_amount: -100
+    , user_adjustment_amount: -50
+    , tip: 50
+    , delivery_fee: 100
+    });
+
+    assert.equal( order.getTotal(), 772 );
+  });
+
+  it('.getTotal() with Cached SubTotal', function(){
+    var order = orders.Cached({
+      restaurant: {
+        region: { sales_tax: 0.0825 }
+      }
+    , sub_total: 717
     , guests: 5
     , adjustment_amount: -100
     , user_adjustment_amount: -50
@@ -180,6 +208,27 @@ describe('Orders Stamps', function(){
     });
 
     assert.equal( order.getTotal(), 717 );
+  });
+
+  it('.getPriorityAccountCost()', function(){
+    var order = orders({
+      restaurant: {
+        region: { sales_tax: 0.0825 }
+      }
+    , user: { is_tax_exempt: false }
+    , priority_account_price_hike_percentage: 0.1
+    , items: [
+        { price: 100, quantity: 1 }
+      , { price: 200, quantity: 3 }
+      ]
+    , guests: 5
+    , adjustment_amount: -100
+    , user_adjustment_amount: -50
+    , tip: 50
+    , delivery_fee: 100
+    });
+
+    assert.equal( order.getPriorityAccountCost(), 70 );
   });
 
   it('Should filter by month', function() {
@@ -555,10 +604,82 @@ describe('Orders Stamps', function(){
 
       assert.equal( item.getTotal(), 500 );
     });
+
+    it('.getBaseCost()', function(){
+      var item = orders.item({
+        price: 100
+      });
+
+      assert.equal( item.getBaseCost(), 100 );
+    });
+
+    it('.getOptionsCost()', function(){
+      var item = orders.item({
+        price: 100
+      , quantity: 2
+      , options_sets: [
+          { options:  [ { price: 50, state: true }
+                      , { price: 50, state: false }
+                      ]
+          }
+        , { options:  [ { price: 50, state: false }
+                      , { price: 100, state: true }
+                      ]
+          }
+        , { options:  [ { price: 50, state: false }
+                      , { price: 100, state: false }
+                      ]
+          }
+        ]
+      });
+
+      assert.equal( item.getOptionsCost(), 150 );
+    });
+
+    it('.getPriorityAccountCost()', function(){
+      var item = orders.item({
+        price: 200
+      , priority_account_price_hike_percentage: 0.1
+      , quantity: 2
+      , options_sets: [
+          { options:  [ { price: 50, state: true }
+                      , { price: 50, state: false }
+                      ]
+          }
+        , { options:  [ { price: 50, state: false }
+                      , { price: 100, state: true }
+                      ]
+          }
+        ]
+      });
+
+      assert.equal( item.getPriorityAccountCost(), 35 );
+    });
+
+    it('.getTotal() with Priority Account Price Hike', function(){
+      var item = orders.item({
+        price: 200
+      , priority_account_price_hike_percentage: 0.1
+      , quantity: 2
+      , options_sets: [
+          { options:  [ { price: 50, state: true }
+                      , { price: 50, state: false }
+                      ]
+          }
+        , { options:  [ { price: 50, state: false }
+                      , { price: 100, state: true }
+                      ]
+          }
+        ]
+      });
+
+      assert.equal( item.getTotal(), 770 );
+    });
   });
 
   describe('Charges', function(){
-    var DefaultOrderCharge = OrderCharge
+    var DefaultOrderCharge = stampit()
+      .compose( OrderCharge )
       .state({
         type: 'delivery'
       , region: { sales_tax: 0.0825 }
@@ -607,17 +728,33 @@ describe('Orders Stamps', function(){
 
     it('.getApplicationCut() - with service fee', function(){
       var oc = DefaultOrderCharge({ service_fee: 100 });
-      assert.equal( oc.getApplicationCut(), 158 );
+      assert.equal( oc.getApplicationCut(), 167 );
     });
 
     it('.getRestaurantCut() - with service fee', function(){
       var oc = DefaultOrderCharge({ service_fee: 100 });
-      assert.equal( oc.getRestaurantCut(), 313 );
+      assert.equal( oc.getRestaurantCut(), 312 );
+    });
+
+    it('.getApplicationCut() - for Priority account', function(){
+      var oc = DefaultOrderCharge();
+      oc.priority_account_price_hike_percentage = 0.1;
+      oc.adjustment_amount = 0;
+      oc.user_adjustment_amount = 0;
+      assert.equal( oc.getApplicationCut(), 113 );
+    });
+
+    it('.getRestaurantCut() - for Priority account', function(){
+      var oc = DefaultOrderCharge();
+      oc.priority_account_price_hike_percentage = 0.1;
+      oc.adjustment_amount = 0;
+      oc.user_adjustment_amount = 0;
+      assert.equal( oc.getRestaurantCut(), 402 );
     });
 
     it('.getTotal()', function(){
       var oc = DefaultOrderCharge();
-      assert.equal( oc.getTotal(), 321);
+      assert.equal( oc.getTotal(), 321 );
     });
 
     it('.getNoContractFee() - non-contracted', function() {
@@ -629,6 +766,219 @@ describe('Orders Stamps', function(){
     it('.getNoContractFee() - has contract', function() {
       var oc = DefaultOrderCharge();
       assert.equal( oc.getNoContractFee(), 0);
+    });
+  });
+
+  describe('Payment Summary Items', function(){
+    var DefaultPMSItem = stampit()
+      .compose( PMSItem )
+      .state({
+        type: 'delivery'
+      , region: { sales_tax: 0.0825 }
+      , restaurant: {
+          region: { sales_tax: 0.0825 }
+        , plan: { type: 'flat', data: { fee: 0.1 } }
+        , is_direct_deposit: true
+        , no_contract_fee: 0
+        }
+      , items: [
+          { price: 100, quantity: 1 }
+        , { price: 200, quantity: 1 }
+        ]
+      , user: { is_tax_exempt: false }
+      , tip: 50
+      , delivery_fee: 100
+      , payment_method_id: 123
+      });
+
+    it('.toPaymentSummaryItem()', function(){
+      var item = DefaultPMSItem({
+
+      });
+
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 483
+      , delivery_fee: 0
+      , tip: 0
+      , user_adjustment: 0
+      , gb_fee: -48
+      , sales_tax: -33
+      , order: item
+      , net_payout: 402
+      });
+    });
+
+    it('.toPaymentSummaryItem() courier', function(){
+      var item = DefaultPMSItem({
+        type: 'courier'
+      });
+
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 483
+      , delivery_fee: -100
+      , tip: -50
+      , user_adjustment: 0
+      , gb_fee: -33
+      , sales_tax: -33
+      , order: item
+      , net_payout: 267
+      });
+    });
+
+    it('.toPaymentSummaryItem() tax exempt', function(){
+      var item = DefaultPMSItem({
+        user: { is_tax_exempt: true }
+      });
+
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 450
+      , delivery_fee: 0
+      , tip: 0
+      , user_adjustment: 0
+      , gb_fee: -45
+      , sales_tax: 0
+      , order: item
+      , net_payout: 405
+      });
+    });
+
+    it('.toPaymentSummaryItem() with adjustment', function(){
+      var item = DefaultPMSItem({
+        adjustment_amount: -100
+      });
+
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 375
+      , delivery_fee: 0
+      , tip: 0
+      , user_adjustment: 0
+      , gb_fee: -38
+      , sales_tax: -25
+      , order: item
+      , net_payout: 312
+      });
+    });
+
+    it('.toPaymentSummaryItem() with user adjustment', function(){
+      var item = DefaultPMSItem({
+        user_adjustment_amount: -100
+      });
+
+      assert.deepEqual( item.toPaymentSummaryItem(), {
+        total: 375
+      , delivery_fee: 0
+      , tip: 0
+      , user_adjustment: 100
+      , gb_fee: -48
+      , sales_tax: -25
+      , order: item
+      , net_payout: 402
+      });
+    });
+
+    it('.toPaymentSummaryItem() with priority account', function(){
+      var item = DefaultPMSItem({
+        user: { is_tax_exempt: false }
+      , priority_account_price_hike_percentage: 0.1
+      });
+
+      assert.deepEqual( item.toPaymentSummaryItem(),{
+        total: 483
+      , delivery_fee: 0
+      , tip: 0
+      , user_adjustment: 0
+      , gb_fee: -48
+      , sales_tax: -33
+      , order: item
+      , net_payout: 402
+      });
+
+      var origNetPayout = item.toPaymentSummaryItem().net_payout;
+      item.priority_account_price_hike_percentage = 0.1;
+
+      assert.equal( item.getRestaurantCut(), origNetPayout );
+    });
+  });
+
+  describe('OrderRewards', function(){
+    var TSFORMAT = 'YYYY-MM-DD HH:mm:ss';
+
+    var DefaultOrderRewards = stampit()
+      .compose( OrderRewards )
+      .state({
+        restaurant: {
+          region: { sales_tax: 0.0825 }
+        }
+      });
+
+    it('.isEligibleForHolidayPromo()', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().format( TSFORMAT )
+
+      , holidays: [
+          { start: moment().add( 'hours', -1 ).format( TSFORMAT )
+          , end: moment().add( 'hours', 1 ).format( TSFORMAT )
+          , rate: '2.0'
+          , description: 'Some Holiday'
+          }
+        ]
+      });
+
+      assert( order.isEligibleForHolidayPromo() );
+
+      order.submitted = moment().add( 'hours', -2 ).format( TSFORMAT );
+
+      assert( !order.isEligibleForHolidayPromo() );
+    });
+
+    it('.isEligibleForMondayPromo()', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().day('Monday').format( TSFORMAT )
+      });
+
+      assert( order.isEligibleForMondayPromo() );
+
+      order.submitted = moment().day('Tuesday').format( TSFORMAT );
+
+      assert( !order.isEligibleForMondayPromo() );
+    });
+
+    it('.getPoints()', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().day('Tuesday').format( TSFORMAT )
+      , holidays: []
+      , items: [{ price: 1000, quantity: 1 }]
+      });
+
+      assert.equal( order.getPoints(), 10 );
+    });
+
+    it('.getPoints() - monday', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().day('Monday').format( TSFORMAT )
+      , holidays: []
+      , items: [{ price: 1000, quantity: 1 }]
+      });
+
+      assert.equal( order.getPoints(), 21 );
+    });
+
+    it('.getPoints() - holiday', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().format( TSFORMAT )
+
+      , holidays: [
+          { start: moment().add( 'hours', -1 ).format( TSFORMAT )
+          , end: moment().add( 'hours', 1 ).format( TSFORMAT )
+          , rate: '2.0'
+          , description: 'Some Holiday'
+          }
+        ]
+
+      , items: [{ price: 1000, quantity: 1 }]
+      });
+
+      assert.equal( order.getPoints(), 21 );
     });
   });
 });

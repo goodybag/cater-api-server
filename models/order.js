@@ -15,6 +15,9 @@ var Transaction = require('./transaction');
 var TransactionError = require('./transaction-error');
 var ordrInTrayBuilder = require('../lib/tray-builder');
 var moment = require('moment-timezone');
+var RewardsOrder = require('stamps/orders/rewards');
+
+RewardsOrder = RewardsOrder.compose( require('stamps/orders/base').Cached );
 
 var modifyAttributes = function(callback, err, orders) {
   if (!err) {
@@ -54,17 +57,14 @@ var modifyAttributes = function(callback, err, orders) {
         order.attributes.restaurant.delivery_times = utils.defaults(order.attributes.restaurant.delivery_times, utils.object(utils.range(7), utils.map(utils.range(7), function() { return []; })));
         utils.each(restaurantFields, function(field) { delete order.attributes[field]; });
 
-        // Handle reward promos
-        var submitted = moment(order.attributes.submitted);
-
-        // Check all mondays past 4/21
-        var eligible = submitted.day() == 1 && submitted >= moment(config.rewardsPromo.start);
-
-        if ( eligible ) {
-          order.attributes.points = Math.floor(order.attributes.total * config.rewardsPromo.rate / 100);
-        } else {
-          order.attributes.points = Math.floor(order.attributes.total / 100);
+        // Add a mock region object for RewardsOrder
+        if ( !order.attributes.restaurant.region ){
+          order.attributes.restaurant.region = {
+            sales_tax: order.attributes.restaurant.sales_tax
+          };
         }
+
+        order.attributes.points = RewardsOrder( order.attributes ).getPoints();
 
         // Fix the conflict-free property joined from region/restaurant
         order.attributes.restaurant.timezone = order.attributes.restaurant.restaurant_timezone;
@@ -146,6 +146,7 @@ module.exports = Model.extend({
     var query = {
       where: { id: this.attributes.restaurant_id }
     , columns: ['*']
+    , includes: [ {type: 'closed_restaurant_events'} ]
     };
 
     query.columns.push( this.getDeliveryFeeQuery() );
@@ -308,13 +309,12 @@ module.exports = Model.extend({
     //
     // 2. If it is 3 days past the delivery date it is no editable.
     //
-    // 3. If the tip is not 0 then the restaurant cannot edit it.
+    // 3. The restaurant cannot edit it.
     //
     // 4. If it is before the delivery date then it is editable by the
     // owner and the admin.
     //
-    // 5. If it is past the delivery date it is editable by the client,
-    // admin, and restaurant manager.
+    // 5. If it is past the delivery date it is editable by the client and admin.
     //
     // 6. If the order has been copied and thus datetime is undefined. Note:
     // certain fields are not copied such as datetime, tip, tip_amount.
@@ -325,13 +325,13 @@ module.exports = Model.extend({
 
     if (utils.contains(['canceled', 'rejected'], this.attributes.status)) return false;
     if (now > cutOffDateTime) return false;
-    if (this.attributes.tip > 0 && orderAuth.isRestaurantManager) return false;
+    if (orderAuth.isRestaurantManager) return false;
 
     if (now < deliveryDateTime && (orderAuth.isAdmin || orderAuth.isOwner)) return true;
     if (
       (now > deliveryDateTime)
       && (now < cutOffDateTime)
-      && (orderAuth.isAdmin || orderAuth.isOwner || orderAuth.isRestaurantManager)
+      && (orderAuth.isAdmin || orderAuth.isOwner)
     ) return true;
 
     if (this.attributes.datetime === null) return true;
@@ -350,6 +350,7 @@ module.exports = Model.extend({
     var copyableColumns = [
       'user_id'
     , 'restaurant_id'
+    , 'type'
     , 'street'
     , 'city'
     , 'state'
@@ -362,6 +363,7 @@ module.exports = Model.extend({
     , 'tip'
     , 'payment_method_id'
     , 'delivery_service_id'
+    , 'lat_lng'
     ];
     var self = this;
     var tasks = [
@@ -1046,6 +1048,7 @@ module.exports = Model.extend({
         payment_status: {$null: true}
       , status: 'accepted'
       , $custom: ['now() > ("orders"."datetime" AT TIME ZONE "orders"."timezone")']
+      , payment_method_id: { $notNull: true }
       }
     , limit: limit
     };

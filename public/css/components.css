@@ -220,7 +220,7 @@
   color: #ed4242;
 }
 
-@media screen and ( max-width: 982px ){
+@media screen and ( max-width: 982px ) {
   .navbar .contact-info .help-text {
     display: none;
   }

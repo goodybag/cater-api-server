@@ -2,58 +2,54 @@
 <link rel="stylesheet" href="/css/payment-summary-pdf.css">
 {{/extend}}
 
-{{#extend "scripts"}}
-<script src="/js/pdf/payment-summary.js"></script>
-{{/extend}}
-
 {{#extend "info"}}
 <h2 class="customer-company-name info-item">
-  {{#if restaurant.name}}
-    {{restaurant.name}}
+  {{#if payment_summary.restaurant.name}}
+    {{payment_summary.restaurant.name}}
   {{else}}
     [Your Organization]
   {{/if}}
 </h2>
 <address class="info-item-address info-item">
-  {{#if restaurant.billing_street}}
-    {{restaurant.billing_street}}
+  {{#if payment_summary.restaurant.billing_street}}
+    {{payment_summary.restaurant.billing_street}}
   {{else}}
-    {{#if restaurant.street}}
-      {{restaurant.street}}
+    {{#if payment_summary.restaurant.street}}
+      {{payment_summary.restaurant.street}}
     {{else}}
       [123 Your St.]
     {{/if}}
   {{/if}}
   <br />
-  {{#if restaurant.billing_city}}
-    {{restaurant.billing_city}}
+  {{#if payment_summary.restaurant.billing_city}}
+    {{payment_summary.restaurant.billing_city}}
   {{else}}
-    {{#if restaurant.city}}
-      {{restaurant.city}}
+    {{#if payment_summary.restaurant.city}}
+      {{payment_summary.restaurant.city}}
     {{else}}
       [Your City]
     {{/if}}
   {{/if}},
-  {{#if restaurant.billing_state}}
-    {{restaurant.billing_state}}
+  {{#if payment_summary.restaurant.billing_state}}
+    {{payment_summary.restaurant.billing_state}}
   {{else}}
-    {{#if restaurant.state}}
-      {{restaurant.state}}
+    {{#if payment_summary.restaurant.state}}
+      {{payment_summary.restaurant.state}}
     {{else}}
       [Your State]
     {{/if}}
   {{/if}}
-  {{#if restaurant.billing_zip}}
-    {{restaurant.billing_zip}}
+  {{#if payment_summary.restaurant.billing_zip}}
+    {{payment_summary.restaurant.billing_zip}}
   {{else}}
-    {{#if restaurant.zip}}
-      {{restaurant.zip}}
+    {{#if payment_summary.restaurant.zip}}
+      {{payment_summary.restaurant.zip}}
     {{else}}
       [Your Zip]
     {{/if}}
   {{/if}}
 </address>
-<div class="info-item-date info-item">Payout Date: {{formatDateTime payment_summary.payment_date}}</div>
+<div class="info-item-date info-item">Billing Period: {{formatDateTime payment_summary.period_begin "MM/DD"}} - {{formatDateTime payment_summary.period_end "MM/DD"}}</div>
 <div class="info-item-contact info-item">
   {{#if order.user.name}}
     {{order.user.name}}
@@ -77,11 +73,12 @@
     <thead>
       <tr>
         <th>Order Info</th>
-        <th>Delivery Fee</th>
-        <th>Tip</th>
         <th>Order Total</th>
-        <th>GB Fee</th>
-        <th>Sales Tax</th>
+        <th>Delivery Fee Deducted</th>
+        <th>Tip Deducted</th>
+        <th>Adjst. Reimbursed</th>
+        <th>GB Fee Deducted</th>
+        <th>Sales Tax Deducted</th>
         <th>Net Payout</th>
       </tr>
     </thead>
@@ -90,15 +87,16 @@
       {{#each payment_summary.items}}
       <tr>
         <td>
-          <div><strong>{{this.order.id}}</strong></div>
+          <div><strong>#{{this.order.id}}</strong></div>
           <div>{{#if this.order.user.organization}}{{this.order.user.organization}}{{else}}{{this.order.user.name}}{{/if}}</div>
           <div>{{formatDateTime this.order.datetime}}</div>
         </td>
+        <td>${{dollars this.total}}</td>
         <td>${{dollars this.delivery_fee}}</td>
         <td>${{dollars this.tip}}</td>
-        <td>${{dollars this.order_total}}</td>
-        <td>-${{dollars this.gb_fee_amount}}</td>
-        <td>-${{dollars this.sales_tax_amount}}</td>
+        <td>${{dollars this.user_adjustment}}</td>
+        <td>${{dollars this.gb_fee}}</td>
+        <td>${{dollars this.sales_tax}}</td>
         <td>${{dollars this.net_payout}}</td>
       </tr>
       {{/each}}
@@ -122,7 +120,7 @@
       <div class="total-wrapper">
         <dl class="dl-horizontal dl-order-total">
           <dt>Total:</dt>
-          <dd>${{dollars payment_summary.total_payout}}</dd>
+          <dd>${{dollars payment_summary.net_payout}}</dd>
         </dl>
       </div>
     </div>

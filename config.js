@@ -44,6 +44,7 @@ config.defaults = {
 , invoice: require('./configs/invoice')
 , promo: require('./configs/promo')
 , hipchat: require('./configs/hipchat')
+, dropoff: require('./configs/dropoff')
 
 , deliveryTime: {
     padding: 15
@@ -76,6 +77,7 @@ config.defaults = {
     'jag@goodybag.com'
   , 'christymedlock@goodybag.com'
   , 'patrickmugavin@goodybag.com'
+  , 'ericmehrten@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -85,6 +87,7 @@ config.defaults = {
     'jag@goodybag.com'
   , 'christymedlock@goodybag.com'
   , 'patrickmugavin@goodybag.com'
+  , 'ericmehrten@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -123,7 +126,7 @@ config.defaults = {
   }
 
 , rewardHolidays: [
-    { start: '2014-09-02 00:00:00', end: '2014-09-03 00:00:00', rate: '2.0', description: 'Post-Labor Day' }
+    { start: '2015-09-08 00:00:00', end: '2015-09-09 00:00:00', rate: '2.0', description: 'Post-Labor Day' }
   , { start: '2015-05-26 00:00:00', end: '2015-05-27 00:00:00', rate: '2.0', description: 'Post-Memorial Day' }
   ]
 
@@ -207,7 +210,7 @@ config.defaults = {
     username:'goodybaginc'
   , apiKey: 'R_174d19bb5c13f986cfa863e18a186441'
   }
-  
+
 , operation: {
     hours: '6AM to 7PM',
     timezone: 'Central',
@@ -256,6 +259,7 @@ config.defaults = {
     }
   , route:        '/admin/restaurants/:restaurant_id/payment-summaries/:id/pdf'
   , dir:          'tmp'
+  , fromEmail:    'payments@goodybag.com'
   }
 
 , receipt: {
@@ -278,6 +282,7 @@ config.defaults = {
 , defaultMonoLogo: 'https://www.filepicker.io/api/file/mbhVfKiSRO0W7SMV7Ygv'
 
 , enums: ['tags', 'meal_types', 'meal_styles', 'cuisines']
+, enableCaterWeb: local.enableCaterWeb || false
 };
 
 config.dev = {
@@ -334,7 +339,6 @@ config.dev = {
 , receipt: _.extend( {}, config.defaults.receipt,
     { bucket: 'dev-receipts.goodybag.com' }
   )
-
 };
 
 config.staging = {
@@ -392,6 +396,7 @@ config.staging = {
     { bucket: 'staging-receipts.goodybag.com' }
   )
 
+, enableCaterWeb: true
 };
 
 config.production = {
@@ -403,6 +408,7 @@ config.production = {
 , restaurantRequestRecipients: [
     'jag@goodybag.com'
   , 'alexlauzon@goodybag.com'
+  , 'louiemata@goodybag.com'
   ]
 
 , notableUserIds: [ 1944 ] // Send various notifications to Om based on user actions
@@ -467,6 +473,7 @@ config.production = {
   , dsOrders: [
       'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
+    , 'ericmehrten@goodybag.com'
 
     // temp
     , 'jacobparker@goodybag.com'
@@ -481,15 +488,18 @@ config.production = {
     , 'jacobparker@goodybag.com'
     , 'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
+    , 'ericmehrten@goodybag.com'
     ]
   , orderNotificationChecks: [
       'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
+    , 'ericmehrten@goodybag.com'
     , 'john@goodybag.com'
     ]
   , reminderPaymentStatusIgnore: [
       'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
+    , 'ericmehrten@goodybag.com'
     ]
   }
 
@@ -498,6 +508,7 @@ config.production = {
   , supportPhones: [
       '2105779226' // Christy Medlock
     , '3153457641' // Patrick Mugavin
+    , '4083065272' // Eric Mehrten
     ]
   }
 

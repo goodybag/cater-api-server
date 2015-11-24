@@ -28,6 +28,7 @@ function parseBody(body) {
     region_id: body.region_id || 1,
     groups: body.groups || [],
     is_tax_exempt: body.is_tax_exempt || false,
-    is_invoiced: body.is_invoiced || false
+    is_invoiced: body.is_invoiced || false,
+    is_deleted: body.is_deleted || false
   };
 }

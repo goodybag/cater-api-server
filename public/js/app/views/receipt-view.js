@@ -83,8 +83,7 @@ define(function(require, exports, module) {
       OrderView.prototype.setModel.apply(this, arguments);
 
       this.listenTo(this.model, {
-        'change:sub_total change:tip': this.onPriceChange,
-        'change:phone': this.onPhoneChange
+        'change:sub_total change:tip': this.onPriceChange
       }, this);
 
       this.listenTo(this.model.restaurant, {
@@ -156,10 +155,6 @@ define(function(require, exports, module) {
       this.$el.find('.totals').html(Handlebars.partials['totals']({order: updatedOrder, step: this.step}));
     },
 
-    onPhoneChange: function(model, value, options) {
-      this.$el.find(this.fieldMap.phone).val(Handlebars.helpers['phoneNumber'](value))
-    },
-
     changeStatus: function(status, notify) {
       this.model.changeStatus(status, notify, this.options.review_token, function(err) {
         if (err) return alert(err);
@@ -195,7 +190,9 @@ define(function(require, exports, module) {
           orderAddress: function() {
             return {
               address:  utils.extend( order.address.toJSON(), {
-                          name: context.order.address_name
+                          name: context.order.address_name,
+                          secondary_contact_phone: context.order.secondary_contact_phone,
+                          hasSecondaryPhone: true
                         }),
               states: states
             };
@@ -205,7 +202,6 @@ define(function(require, exports, module) {
         // {{#with}} HBS helper not working with context functions
         context.orderAddress = context.orderAddress();
 
-        console.log('rendering with', context);
         this.$el.find('.delivery-info').html(Handlebars.partials.order_info(context));
         this.initDatepicker();
       }

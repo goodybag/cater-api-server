@@ -62,6 +62,11 @@ module.exports = function( options ){
       res.locals.session = req.session;
       res.locals.user = utils.omit(req.user.toJSON(), options.omissions);
 
+      if ( !req.user.isGuest() ){
+        req.logger.options.data.req.user = req.logger.options.data.req.user || {};
+        req.logger.options.data.req.user.id = req.user.attributes.id;
+      }
+
       next();
     });
   };

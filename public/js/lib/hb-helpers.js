@@ -42,6 +42,18 @@ define(function(require, exports, module) {
       return val;
     },
 
+    partial: (function(){
+      var partials = {};
+
+      return function( name, context ){
+        if ( context && typeof context.fn === 'function' ){
+          partials[ name ] = context.fn;
+        } else {
+          return partials[ name ]( this );
+        }
+      };
+    })(),
+
     surcharge: function(pennies) {
       if (pennies)
         return '$'  + GbHelpers.dollars(pennies);
@@ -595,14 +607,27 @@ define(function(require, exports, module) {
       return [
         '<iframe class="direction-iframe" '
       , 'width="100%" height="450" frameborder="0" src="'
-      , config.google.mapsEmbedURL
-      , utils.queryParams({
+      , b && b.street ? config.google.directionsEmbedURL : config.google.mapsEmbedURL
+      , b && b.street ? utils.queryParams({
           origin: Address( a ).toString()
         , destination: Address( b ).toString()
+        , key: config.google.apiKey
+        }) : utils.queryParams({
+          q: Address( a )
         , key: config.google.apiKey
         })
       , '"></iframe>'
       ].join('');
+    },
+
+    concat: function(){
+      var isArray = Array.isArray( arguments[0] );
+
+      return Array.prototype.slice
+        .call( arguments, 0, arguments.length - 1 )
+        .reduce( function( result, part ){
+          return isArray ? result.concat( part ) : ( result + part );
+        }, isArray ? [] : '' );
     }
   };
 

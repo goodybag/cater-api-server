@@ -11,14 +11,14 @@
 
   <blockquote style="background: #f9f9f9; border-left: 5px solid #ccc; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;">{{options.changedDescription}}</blockquote>
 
-  <p>Here is your updated order reflecting that change: <a href="{{config.baseUrl}}/manifests/manifest-{{order.id}}.pdf">{{config.baseUrl}}/manifests/manifest-{{order.id}}.pdf</a></p>
+  <p>Here is your updated order reflecting that change: <a href="{{config.baseUrl}}/manifests/manifest-{{order.id}}.pdf?review_token={{order.review_token}}">{{config.baseUrl}}/manifests/manifest-{{order.id}}.pdf</a></p>
 
   <p>PLEASE CONFIRM that you have received this email by replying!</p>
 
   <p>Thanks,</p>
 
-  <strong>Christy Medlock</strong>
-  <div>Concierge Specialist | Goodybag</div>
-  <div>tel: 512.270.6555 </div>
-  <div>christymedlock@goodybag.com | goodybag.com</div>
+  <strong>Patrick Mugavin</strong>
+  <div>Customer Service Manager | Goodybag</div>
+  <div>tel: {{phoneNumber config.phone.support}} </div>
+  <div>PatrickMugavin@goodybag.com | goodybag.com</div>
 </div>

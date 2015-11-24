@@ -1,0 +1,24 @@
+<!--<OrderDetails>-->
+<table cellpadding="0" cellspacing="0" style="width: 100%">
+  <tr>
+    <td style="text-align: center; width: 15px; padding-right: 10px; padding-bottom: 18px; vertical-align: top; font-size: 13px; line-height: 18px"><img src="{{cdn "/img/calendar_15px.png"}}" width="15" height="14"></td>
+    <td style="text-align: left; padding-bottom: 18px; vertical-align: top; font-size: 13px; line-height: 18px">{{datepart order.datetime}}</td>
+  </tr>
+  <tr>
+    <td style="text-align: center; width: 15px; padding-right: 10px; padding-bottom: 18px; vertical-align: top; font-size: 13px; line-height: 18px"><img src="{{cdn "/img/clock_15px.png"}}" width="15" height="15"></td>
+    <td style="text-align: left; padding-bottom: 18px; vertical-align: top; font-size: 13px; line-height: 18px">{{timepart order.datetime}}</td>
+  </tr>
+  <tr>
+    <td style="text-align: center; width: 15px; padding-right: 10px; vertical-align: top; font-size: 13px; line-height: 18px"><img src="{{cdn "/img/locationpin_15px.png"}}" width="11" height="15"></td>
+    <td style="text-align: left; vertical-align: top; font-size: 13px; line-height: 18px">
+      {{order.street}}
+      {{#if order.street2}}
+        <br>
+        {{order.street2}}
+      {{/if}}
+      <br>
+      {{order.city}}, {{order.state}} {{order.zip}}
+    </td>
+  </tr>
+</table>
+<!--</OrderDetails>-->

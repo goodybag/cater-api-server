@@ -15,6 +15,31 @@ var m = require('../middleware')
 module.exports.register = function(app) {
   logger.info('Registering routes');
 
+  if ( process.env.NODE_ENV !== 'production' ){
+    app.get('/test-error/:status', function( req, res, next ){
+      req.xhr = req.query.xhr == 'true';
+
+      var e = new Error('Test error message');
+      e.httpCode = req.params.status;
+
+      return next( e );
+    }, utils.noop );
+
+    app.get('/test-timeout', function(){
+
+    });
+
+    app.get('/throw-error', function(){
+      process.nextTick( function(){
+        throw new Error('Deliberate error');
+      });
+    });
+  }
+
+  if (config.enableCaterWeb) {
+      app.use(require('@goodybag/cater-web').app);
+  }
+
   app.use(require('./public'));
   app.use(require('./documents'));
   app.use(require('./lunchroom'));

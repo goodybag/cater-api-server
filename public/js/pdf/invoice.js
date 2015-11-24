@@ -1,29 +1,19 @@
 /**
- * Invoice
+ * Receipt
  */
 
 var options = {
-  // Describes when to break the page
-  magicNumber: 750
+  itemSelector: 'table tbody tr'
 
-, readyTimeout: 20000
+, onPageClone: function( $page, $clone ){
+    $page.find('.order-bottom-wrapper').remove();
+  }
 
-  // Used to select the elements in a $page that will determine
-  // the innerHeight of the element (since page is has a min-height),
-  // we need to figure out $page.outerHeight() - inner.outerHeight()
-, remainingTableHeightSelector: [
-    '> :not(.order)'
-  , '.order > :not(.order-bottom-wrapper)'
-  , '.order-bottom-wrapper > *'
-  ].join(', ')
+, readyTimeout: 5000
 };
 
 $(function(){
-  // Add in variable height els
-  options.magicNumber += $('header').outerHeight();
-  options.magicNumber += $('.order-info').outerHeight();
-
-  adjustPage( $('.page'), function(){
+  adjustPage( $('.page'), options, function(){
     window.__page.ready();
   });
 

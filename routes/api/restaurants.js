@@ -7,26 +7,45 @@ var venter = require('../../lib/venter');
 
 var route = module.exports = express.Router();
 
-route.get('/', m.restrict(['admin']), m.sort('-id'), m.param('region_id'), m.queryOptions({
-  many: [],
-  one: [{
-    table: 'regions',
-    alias: 'region'
-  }]
-}), m.find(db.restaurants));
+route.get('/'
+, m.restrict(['admin'])
+, m.sort('-id')
+, m.param('region_id')
+, m.queryOptions({
+    many: [],
+    one: [{
+      table: 'regions',
+      alias: 'region'
+    }]
+  })
+, m.find(db.restaurants)
+);
 
 route.post('/', m.restrict(['admin']), m.insert(db.restaurants));
 
-route.get('/:id', m.restrict(['admin']), m.param('id'), m.findOne(db.restaurants));
+route.get('/:id'
+, m.restrict(['admin'])
+, m.getRestaurant({
+    param: 'id'
+  , stripe: true
+  })
+, m.jsonLocals('restaurant')
+);
 
 route.put('/:id', m.restrict(['admin']), m.param('id'), m.update(db.restaurants));
 
-route.patch('/:id', m.restrict(['admin']), m.param('id'), m.getRestaurant({
-  param: 'id'
-}), m.updateStripeCustomer({
-  required: 'restaurant',
-  pick: ['name']
-}), m.update(db.restaurants));
+route.patch('/:id'
+, m.restrict(['admin'])
+, m.param('id')
+, m.getRestaurant({
+    param: 'id'
+  })
+, m.updateStripeCustomer({
+    required: 'restaurant',
+    pick: ['name']
+  })
+, m.update(db.restaurants)
+);
 
 route.delete('/:id', m.restrict(['admin']), m.param('id'), m.remove(db.restaurants));
 
@@ -35,29 +54,21 @@ route.post('/:id/auto-update', m.restrict(['admin']), m.getRestaurant({
   delivery: true
 }), controllers.api.restaurants.autoPopulate);
 
-route.get('/:restaurant_id/orders', m.restrict(['admin']), m.pagination({
-  allowLimit: true
-}), m.param('restaurant_id'), m.param('status'), m.param('start_date',
-  function(value, $where, options) {
-    $where.datetimeRange = $where.datetimeRange || {
-      datetime: {}
+route.get('/:restaurant_id/orders/current',
+  function(req, res, next) {
+    req.restaurant = {
+      id: req.params.restaurant_id
     };
-    $where.datetimeRange.datetime.$gte = value;
-  }), m.param('end_date', function(value, $where, options) {
-  $where.datetimeRange = $where.datetimeRange || {
-    datetime: {}
-  };
-  $where.datetimeRange.datetime.$lt = value;
-}), m.queryOptions({
-  one: [{
-    table: 'restaurants',
-    alias: 'restaurant'
-  }],
-  many: [{
-    table: 'order_items',
-    alias: 'items'
-  }]
-}), m.find(db.orders));
+    next();
+  },
+  controllers.restaurants.orders.current,
+  function(req, res, next) {
+    if (req.order) {
+      res.send(req.order);
+    } else {
+      next();
+    }
+  });
 
 route.get('/:restaurant_id/contacts', m.restrict(['admin']), m.param(
   'restaurant_id'), m.find(db.contacts));
@@ -112,8 +123,7 @@ route.post('/:restaurant_id/payment-summaries'
   }), m.jsonLocals('payment_summary')
 );
 
-route.get('/:restaurant_id/payment-summaries/:id', m.param('id'), m.param(
-  'restaurant_id'), m.findOne(db.payment_summaries));
+route.get('/:restaurant_id/payment-summaries/:id', controllers.paymentSummaries.get);
 
 route.put('/:restaurant_id/payment-summaries/:id', m.param('id'), m.param(
   'restaurant_id'), m.after(controllers
@@ -122,58 +132,11 @@ route.put('/:restaurant_id/payment-summaries/:id', m.param('id'), m.param(
 route.delete('/:restaurant_id/payment-summaries/:id', m.param('id'), m.param(
   'restaurant_id'), m.remove(db.payment_summaries));
 
+route.post('/:restaurant_id/payment-summaries/:id/send', controllers.paymentSummaries.send);
+
 route.post('/:restaurant_id/transfers', m.restrict(['accounting', 'admin']), m.getRestaurant({
   param: 'restaurant_id'
 }), m.stripe.createRestaurantTransfer());
-
-route.post('/:restaurant_id/payment-summaries/:payment_summary_id/send',
-  controllers.paymentSummaries.send);
-
-route.get('/:restaurant_id/payment-summaries/:payment_summary_id/items', m.pagination(),
-  controllers.paymentSummaries
-  .applyRestaurantId(), m.param('payment_summary_id'), m.queryOptions({
-    one: [{
-      table: 'orders',
-      alias: 'order',
-      one: [{
-        table: 'delivery_services',
-        alias: 'delivery_service'
-      }, {
-        table: 'restaurants',
-        alias: 'restaurant'
-      }]
-    }]
-  }), m.find(db.payment_summary_items)
-);
-
-route.post('/:restaurant_id/payment-summaries/:payment_summary_id/items', m.queryToBody(
-    'payment_summary_id'),
-  m.after(controllers.paymentSummaries.emitPaymentSummaryChange()), m.insert(
-    db.payment_summary_items)
-);
-
-route.get('/:restaurant_id/payment-summaries/:payment_summary_id/items/:id',
-  controllers.paymentSummaries.applyRestaurantId(),
-  m.param('payment_summary_id'), m.param('id'), m.findOne(db.payment_summary_items)
-);
-
-route.put('/:restaurant_id/payment-summaries/:payment_summary_id/items/:id',
-  controllers.paymentSummaries.applyRestaurantIdForNonJoins(),
-  m.param('payment_summary_id'), m.param('id'), m.after(
-    controllers.paymentSummaries.emitPaymentSummaryChange({
-      idField: 'payment_summary_id'
-    })
-  ), m.update(db.payment_summary_items)
-);
-
-route.delete('/:restaurant_id/payment-summaries/:payment_summary_id/items/:id',
-  controllers.paymentSummaries.applyRestaurantIdForNonJoins(),
-  m.param('payment_summary_id'), m.param('id'), m.after(
-    controllers.paymentSummaries.emitPaymentSummaryChange({
-      idField: 'payment_summary_id'
-    })
-  ), m.remove(db.payment_summary_items)
-);
 
 route.get('/:restaurant_id/photos', m.restrict(['client', 'admin']), m.param(
   'restaurant_id'), m.find(db.restaurant_photos));
@@ -197,3 +160,57 @@ route.delete('/:restaurant_id/photos/:id', m.restrict(['admin']), m.param(
   db.restaurant_photos));
 
 route.post('/:restaurant_id/notes', m.restrict(['admin']), m.insert(db.restaurant_notes));
+
+route.get('/:restaurant_id/items',
+  m.param('restaurant_id'),
+  function(req, res, next) {
+    req.queryObj.is_hidden = false;
+    next();
+  },
+  m.find(db.items));
+
+route.get('/:restaurant_id/menu',
+  m.param('restaurant_id'),
+  function(req, res, next) {
+    req.queryObj.is_hidden = false;
+    next();
+  },
+  m.queryOptions({
+    many: [{
+      table: 'items',
+      where: {
+        is_hidden: false
+      },
+      pluck: [{
+        table: 'item_tags',
+        column: 'tag',
+        alias: 'tags'
+      }]
+    }]
+  }),
+  m.find(db.categories));
+
+route.get('/:restaurant_id/orders',
+  function(req, res, next) {
+    req.queryObj.user_id = req.user.attributes.id;
+    next();
+  },
+  m.param('restaurant_id'),
+  m.sort('-datetime'),
+  m.queryOptions({
+    many: [{
+      table: 'order_items',
+      alias: 'items'
+    }]
+  }),
+  m.find(db.orders));
+
+route.get('/:id/bank-account'
+, m.restrict(['admin'])
+, controllers.api.restaurants.getBankAccount
+);
+
+route.put('/:id/bank-account'
+, m.restrict(['admin'])
+, controllers.api.restaurants.updateBankAccount
+);

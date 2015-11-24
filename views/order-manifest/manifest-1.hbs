@@ -1,14 +1,5 @@
 {{#extend "scripts"}}
 <script>
-  var config = {
-    pageHeight:               920
-  , phantomPageHeightOffset:  -240
-  };
-
-  var isPhantom = function(){
-    return navigator.userAgent.indexOf('PhantomJS') > - 1;
-  };
-
   var fillerTmpl = function( options ){
     return [
       '<tr class="filler">'
@@ -19,70 +10,9 @@
     ].join('\n');
   };
 
-  var getInnerHeight = function( $el ){
-    return Array.prototype.slice.call(
-      $el.find('> *')
-    ).map( function( el ){
-      var $this = $(el);
-
-      if ( ['fixed', 'absolute'].indexOf( $this.css('position') ) > -1 ){
-        return 0;
-      }
-
-      return $this.outerHeight(true);
-    }).reduce( function( a, b ){
-      return a + b;
-    });
-  };
-
-  var adjustManifestPage = function( $page, callback ){
-    console.print('inner', getInnerHeight( $page ) );
-
-    var getDiff = function( $el ){
-      return [
-        config.pageHeight
-      , isPhantom() ? config.phantomPageHeightOffset : 0
-      , getInnerHeight( $el )
-      , parseFloat( $el.css('padding-top') )
-      , parseFloat( $el.css('padding-bottom') )
-      ].reduce( function( a, b ){ return a - b; });
-    };
-
-    var fillRemaining = function( $page, height ){
-      console.print('Filling table with: ', height);
-      $page.find('tbody').append( fillerTmpl({ height: height }) );
-    };
-
-    var diff = getDiff( $page );
-
-    // Table fits on page, add the filler and callback
-    if ( diff >= 0 ){
-      fillRemaining( $page, diff );
-      return callback();
-    }
-
-    // $page's inner contents are larger than the paper would allow
-    // Remove table rows until this page fits
-    var $trs = $();
-    var whileGreaterThan = function( callback ){
-      if ( getDiff( $page ) >= 0 ) return callback();
-
-      $trs = $trs.add( $page.find('tbody > tr:last-child' ).clone() );
-      $page.find('tbody > tr:last-child' ).remove();
-
-      setTimeout(function(){ whileGreaterThan( callback ); }, 5 );
-    };
-
-    whileGreaterThan( function(){
-      var diff = getDiff( $page );
-      if ( diff > 0 ) fillRemaining( $page, diff );
-
-      var $clone = $page.clone();
-      $clone.find('table tbody tr').remove();
-      $clone.find('tbody').append( $trs.get().reverse() );
-      $page.after( $clone );
-      adjustManifestPage( $clone, callback );
-    });
+  var fillRemaining = function( $page, height ){
+    console.print('Filling table with: ', height);
+    $page.find('tbody').append( fillerTmpl({ height: height }) );
   };
 
   var fixPageNumbers = function(){
@@ -94,7 +24,23 @@
   };
 
   $(function(){
-    adjustManifestPage( $('.table-page').eq(0), function(){
+    var options = {
+      itemSelector: 'table tbody > tr'
+
+    , pageHeight: 930
+
+    , getPageHeight: function( $page ){
+        return $page.find('.inner').outerHeight();
+      }
+
+    , onPageAdjustment: function( $page ){
+        var height = options.pageHeight - options.getPageHeight( $page );
+        height -= $page.find('.page-number').outerHeight();
+        fillRemaining( $page, height );
+      }
+    };
+
+    adjustPage( $('.table-page'), options, function(){
       fixPageNumbers();
       window.__page.ready();
     });
@@ -104,77 +50,79 @@
 
 {{#extend "body"}}
 <section class="manifest-page table-page">
-  {{> order_manifest_header}}
+  <div class="inner">
+    {{> order_manifest_header}}
 
-  <table class="manifest-table">
-    <thead>
-      <tr>
-        <th class="checkbox"><img src="{{cdn "/img/checkmark_white.svg"}}" width="18"></th>
-        <th class="item">Item</th>
-        <th class="options-notes">Options/Notes</th>
-        <th class="recipient">Recipient</th>
-        <th class="feeds">Feeds</th>
-        <th class="qty">Qty</th>
-        <th class="price">Price</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each order.manifest}}
-      <tr>
-        <td class="checkbox"></td>
-        <td class="item">
-          {{this.name}}
-          <div class="options">
-            {{#each this.options_sets}}
-            {{#if this.name.length}}
-              <div class="option-group-name">{{this.name}}:</div>
-            {{/if}}
-            <ul class="option-group">
-              {{#each this.options}}
-                <li>{{this.name}}</li>
+    <table class="manifest-table">
+      <thead>
+        <tr>
+          <th class="checkbox"><img src="{{cdn "/img/checkmark_white.svg"}}" width="18"></th>
+          <th class="item">Item</th>
+          <th class="options-notes">Options/Notes</th>
+          <th class="recipient">Recipient</th>
+          <th class="feeds">Feeds</th>
+          <th class="qty">Qty</th>
+          <th class="price">Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each order.manifest}}
+        <tr>
+          <td class="checkbox"></td>
+          <td class="item">
+            {{this.name}}
+            <div class="options">
+              {{#each this.options_sets}}
+              {{#if this.name.length}}
+                <div class="option-group-name">{{this.name}}:</div>
+              {{/if}}
+              <ul class="option-group">
+                {{#each this.options}}
+                  <li>{{this.name}}</li>
+                {{/each}}
+              </ul>
               {{/each}}
-            </ul>
-            {{/each}}
-          </div>
-          {{!-- <div class="options">
-            {{#each this.options_sets}}
-              {{#if @index}}<br>{{/if}}
-              {{#if this.name.length}}{{this.name}}: {{/if}}
-              {{join this.options ", " "name"}}
-            {{/each}}
-          </div> --}}
-        </td>
-        <td class="options-notes">{{this.notes}}</td>
-        <td class="recipient">{{{join this.recipients "<br>"}}}</td>
-        <td class="feeds">{{this.feeds_max}}</td>
-        <td class="qty">x{{this.quantity}}</td>
-        <td class="price">${{dollars this.sub_total}}</td>
-      </tr>
-      {{/each}}
-      {{#each order.restaurant.amenities}}
-      {{#if checked}}
-      <tr>
-        <td class="checkbox"></td>
-        <td class="item">{{name}}{{#if description}} - {{description}}{{/if}}</td>
-        <td class="options"></td>
-        <td class="recipient"></td>
-        <td class="feeds"></td>
-        <td class="qty">{{#eq scale "multiply"}}x{{../../../order.guests}}{{/eq}}</td>
-        <td class="price">
-          {{#eq scale "multiply"}}
-          {{surcharge (multiply price ../../../order.guests)}}
-          {{/eq}}
-          {{#eq scale "flat"}}
-          {{surcharge price}}
-          {{/eq}}
-        </td>
-      </tr>
-      {{/if}}
-      {{/each}}
-    </tbody>
-  </table>
-  <div class="page-number">
-    Page <span class="current">1</span>/<span class="total">2</span>
+            </div>
+            {{!-- <div class="options">
+              {{#each this.options_sets}}
+                {{#if @index}}<br>{{/if}}
+                {{#if this.name.length}}{{this.name}}: {{/if}}
+                {{join this.options ", " "name"}}
+              {{/each}}
+            </div> --}}
+          </td>
+          <td class="options-notes">{{this.notes}}</td>
+          <td class="recipient">{{{join this.recipients "<br>"}}}</td>
+          <td class="feeds">{{this.feeds_max}}</td>
+          <td class="qty">x{{this.quantity}}</td>
+          <td class="price">${{dollars this.sub_total}}</td>
+        </tr>
+        {{/each}}
+        {{#each order.restaurant.amenities}}
+        {{#if checked}}
+        <tr>
+          <td class="checkbox"></td>
+          <td class="item">{{name}}{{#if description}} - {{description}}{{/if}}</td>
+          <td class="options"></td>
+          <td class="recipient"></td>
+          <td class="feeds"></td>
+          <td class="qty">{{#eq scale "multiply"}}x{{../../../order.guests}}{{/eq}}</td>
+          <td class="price">
+            {{#eq scale "multiply"}}
+            {{surcharge (multiply price ../../../order.guests)}}
+            {{/eq}}
+            {{#eq scale "flat"}}
+            {{surcharge price}}
+            {{/eq}}
+          </td>
+        </tr>
+        {{/if}}
+        {{/each}}
+      </tbody>
+    </table>
+    <div class="page-number">
+      Page <span class="current">1</span>/<span class="total">2</span>
+    </div>
   </div>
 </section>
 

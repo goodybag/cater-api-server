@@ -2,6 +2,7 @@ var db = require('../../db');
 var errors = require('../../errors');
 var utils = require('../../utils');
 var models = require('../../models');
+var Order = require('stamps/orders/base');
 
 module.exports.listJSON = function(req, res) {
   var $query = utils.extend({}, req.queryOptions);
@@ -23,6 +24,11 @@ module.exports.current = function(req, res, next) {
 
   var options = {
     many: [{ table: 'order_items', alias: 'orderItems' }]
+  , one:  [ { table: 'restaurants', alias: 'restaurant'
+            , one: [{ table: 'regions', alias: 'region' }]
+            }
+          , { table: 'users', alias: 'user' }
+          ]
   };
 
   var edit_token = req.query.edit_token || req.params.edit_token || req.body.edit_token;
@@ -57,7 +63,8 @@ module.exports.current = function(req, res, next) {
 
     if (order) {
       req.url = req.url.replace(/^\/restaurants\/.*\/orders\/current/, '/orders/' + order.id);
-      req.order = order;
+      req.order = res.locals.order = order;
+      Order.applyPriceHike( req.order );
       logger.info('Found pending order', { order: req.order });
     }
 
@@ -70,7 +77,11 @@ module.exports.get = function(req, res, next) {
   var order = new models.Order( req.order );
 
   if (!req.user.isAdmin() && !order.toJSON().editable) return res.redirect('/orders/' + order.attributes.id);
-  models.Restaurant.findOne(order.attributes.restaurant_id, function(err, restaurant) {
+  var restaurantQuery = {
+    where: { id: order.attributes.restaurant_id }
+  , includes: [ {type: 'closed_restaurant_events'} ]
+  };
+  models.Restaurant.findOne(restaurantQuery, function(err, restaurant) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (!restaurant) return res.error(errors.internal.UNKNOWN, 'no restaurant for existing order');
     restaurant.getItems(function(err, items) {

@@ -271,6 +271,21 @@ define(function(require, exports, module) {
       }, this);
     },
 
+    save: function(attrs, options) {
+      options || (options = {});
+        attrs || (attrs = _.clone(this.attributes));
+
+        // Filter the data to send to the server
+        delete attrs.restaurant;
+
+        options.data = JSON.stringify(attrs);
+        options.headers = options.headers || {};
+        options.headers['Content-Type'] = 'application/json';
+
+        // Proxy the call to the original save function
+        return Backbone.Model.prototype.save.call(this, attrs, options);
+    },  
+
     set: function(key, val, options) {
       // strip out updates to the address fields and proxy them through to the address model
       var attrs;
@@ -278,7 +293,7 @@ define(function(require, exports, module) {
 
       // TODO: same field names between order and address
       // See comment below
-      var addressFields = _.keys(_.result(Address, 'schema').properties);
+      var addressFields = Order.addressFields;
       if (typeof key === 'object') {
         attrs = key;
         options = val;
@@ -299,6 +314,23 @@ define(function(require, exports, module) {
         this.address = new Address(addr);
 
       return Backbone.Model.prototype.set.call(this, attrs, options);
+    },
+
+    setAddress: function( address, options ){
+      options = _.defaults( options || {}, {
+        save: false
+      });
+
+      address = address instanceof Address ? address : new Address( address );
+
+      var data = address.pick( Order.addressFields );
+      data.address_name = address.get('name');
+
+      this.address = address;
+
+      return this[ options.save ? 'save' : 'set' ]( data, {
+        patch: true
+      });
     },
 
     updateSubtotal: function() {

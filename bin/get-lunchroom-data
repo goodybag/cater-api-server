@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+
+// Usage:
+//   ./bin/get-lunchroom-data [restaurant_id[, restaurant_id[, ...]]]
+
+var db = require('../db');
+
+var where = {
+  'categories.name': 'Lunchroom 1'
+};
+
+if ( process.argv.length > 2 ){
+  where['restaurants.id'] = {
+    $in: process.argv.slice( 2 ).map( function( id ){ return +id; })
+  };
+}
+
+var options = {
+  columns: [
+    'items.id'
+  , { table: 'restaurants', name: 'name', alias: 'restaurant' }
+  , { table: 'restaurants', name: 'id', alias: 'restaurant_id' }
+  , 'items.name'
+  , 'items.description'
+  , 'items.price'
+  , 'items.photo_url'
+  , 'items.category_id'
+  ]
+
+, pluck: [{ table: 'item_tags', column: 'tag', alias: 'tags' }]
+
+, joins: [
+    { type: 'left', target: 'categories', on: { id: '$items.category_id$' } }
+  , { type: 'left', target: 'restaurants', on: { id: '$categories.restaurant_id$' } }
+  ]
+};
+
+db.items.find( where, options, function( error, results ){
+  if ( error ) throw error;
+
+  var groups = results.reduce( function( groups, result ){
+    if ( !(result.restaurant in groups) ){
+      groups[ result.restaurant ] = {
+        title: result.restaurant
+      , items: []
+      };
+    }
+
+    groups[ result.restaurant ].items.push( result );
+
+    return groups;
+  }, {} );
+
+  console.log( require('util').inspect( groups, { depth: null } ) );
+
+  process.exit(0);
+});

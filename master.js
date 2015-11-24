@@ -1,9 +1,12 @@
-var forky = require('forky');
 var config = require('./config');
 var logger = require('./lib/logger').create('Master');
 
 logger.info( 'Forking %s workers', config.numWorkers );
-forky( __dirname + '/server', config.numWorkers );
+
+require('forky')({
+  path: __dirname + '/server'
+, workers: config.numWorkers
+});
 
 if ( config.isDev ){
   process.on('uncaughtException', function( error ){
@@ -15,6 +18,4 @@ if ( config.isDev ){
     logger.error( 'Unhandled Rejection', error );
     console.error( error, error.stack );
   });
-
-  require('./workers/scheduler');
 }

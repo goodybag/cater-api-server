@@ -87,6 +87,8 @@ var reports = {
     var restaurantId = req.query.restaurantId;
     var userId = req.query.userId;
     var regionId = parseInt(req.query.region);
+    var paymentStatus = req.query.payment_status;
+    var paymentMethod = req.query.payment_method;
 
     var filename = [
       status
@@ -112,6 +114,7 @@ var reports = {
     , 'User Name'
     , 'User Email'
     , 'Company Name'
+    , 'User Phone'
     , 'Subtotal'
     , 'Delivery Fee'
     , 'Tax'
@@ -151,6 +154,14 @@ var reports = {
     };
     if ( regionId ) {
       where['restaurants.region_id'] = regionId;
+    }
+
+    if ( paymentStatus ) {
+      where['payment_status'] = paymentStatus;
+    }
+
+    if ( paymentMethod ) {
+      where['payment_method_id'] = { $null: paymentMethod === "invoiced" }
     }
 
     options.order = {};
@@ -236,6 +247,7 @@ var reports = {
           , order.user.name
           , order.user.email
           , order.user.organization
+          , order.phone
           , dollars(order.getSubTotal())
           , dollars(order.delivery_fee)
           , dollars(order.getTax())

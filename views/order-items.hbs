@@ -129,12 +129,12 @@
       <div class="adjustment editable">
         <div class="row">
           <div class="col-lg-8">
-            <textarea class="form-control adjustment-description" rows="3" name="adjustment_description">{{order.adjustment.description}}</textarea>
+            <textarea class="form-control adjustment-description" rows="3" name="adjustment_description">{{order.adjustment_description}}</textarea>
           </div>
           <div class="col-lg-4">
             <dl class="adjustment-input pull-right">
               <dt>Adjustment:</dt>
-              <dd><input type="number" class="form-control adjustment-amount" value="{{dollars order.adjustment.amount}}" name="adjustment_amount"></dd>
+              <dd><input type="number" class="form-control adjustment-amount" value="{{dollars order.adjustment_amount}}" name="adjustment_amount"></dd>
             </dl>
           </div>
         </div>
@@ -151,11 +151,11 @@
         </div>
       </div>
       {{else}}
-      {{#if (or order.adjustment.amount order.user_adjustment_amount)}}
+      {{#if (or order.adjustment_amount order.user_adjustment_amount)}}
       <div class="row adjustment">
         <div class="col-lg-8">
-          {{#if order.adjustment.description}}
-          <p class="adjustment-description">{{order.adjustment.description}}</p>
+          {{#if order.adjustment_description}}
+          <p class="adjustment-description">{{order.adjustment_description}}</p>
           {{/if}}
           {{#if order.user_adjustment_description}}
           <p class="adjustment-description">{{order.user_adjustment_description}}</p>
@@ -164,7 +164,7 @@
         <div class="col-lg-4">
           <dl class="dl-horizontal order-totals adjustment-amount-description pull-right">
             <dt>Adjustment:</dt>
-            {{#if order.adjustment.amount}}<dd class="adjustment-amount">{{dollars order.adjustment.amount}}<dd>{{/if}}
+            {{#if order.adjustment_amount}}<dd class="adjustment-amount">{{dollars order.adjustment_amount}}<dd>{{/if}}
             {{#if order.user_adjustment_amount}}<dd class="adjustment-amount">{{dollars order.user_adjustment_amount}}<dd>{{/if}}
           </dl>
         </div>

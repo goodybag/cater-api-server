@@ -5,6 +5,10 @@
 
 {{#extend "title"}} - Receipt{{/extend}}
 
+{{#if (contains user.groups 'admin')}}
+  {{#extend "prefix-title"}}#{{order.id}} {{/extend}}
+{{/if}}
+
 {{#extend "banner"}}
   {{#if (contains user.groups 'order-owner')}}
     {{#if (not order.order_feedback.ease_of_submitting_rating)}}
@@ -158,7 +162,7 @@
           {{/if}}
 
           {{#if isRestaurantManager}}
-            <a href="/manifests/manifest-{{order.id}}.pdf" target="_blank" class="btn btn-default">Download PDF</a>
+            <a href="/manifests/manifest-{{order.id}}.pdf?review_token={{order.review_token}}" target="_blank" class="btn btn-default">Download PDF</a>
           {{else}}
             <a href="/receipts/order-{{order.id}}.pdf" target="_blank" class="btn btn-default">Download PDF</a>
           {{/if}}

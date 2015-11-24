@@ -51,7 +51,8 @@ define(function(require, exports, module) {
       adjustment_description: '[name="adjustment_description"]',
       adjustment_amount: '[name="adjustment_amount"]',
       user_adjustment_description: '[name="user_adjustment_description"]',
-      user_adjustment_amount: '[name="user_adjustment_amount"]'
+      user_adjustment_amount: '[name="user_adjustment_amount"]',
+      secondary_contact_phone: '.secondary-contact-phone'
     },
 
     fieldGetters: {
@@ -77,6 +78,10 @@ define(function(require, exports, module) {
 
       phone: function() {
         return this.$el.find(this.fieldMap.phone).val().replace(/[^\d]/g, '') || null;
+      },
+
+      secondary_contact_phone: function() {
+        return this.$el.find(this.fieldMap.secondary_contact_phone).val().replace(/[^\d]/g, '') || null;
       },
 
       adjustment_amount: function() {
@@ -172,8 +177,7 @@ define(function(require, exports, module) {
       this.model = model;
 
       this.listenTo(this.model, {
-        'change:total': this.onPriceChange,
-        'change:phone': this.onPhoneChange
+        'change:total': this.onPriceChange
       }, this);
 
       this.listenTo(this.model.restaurant, {

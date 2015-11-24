@@ -7,6 +7,9 @@ var Address = require('./address');
 var queries = require('../db/queries');
 var config = require('../config');
 var logger = require('./logger').create('User');
+var RewardsOrder = require('stamps/orders/rewards');
+
+RewardsOrder = RewardsOrder.compose( require('stamps/orders/base').Cached );
 
 var table = 'users';
 
@@ -332,55 +335,64 @@ var User = module.exports = Model.extend({
     });
   }
 
-, addPointsForOrder: function( order, callback, client ) {
-    var points = order.attributes.points || 0;
-    if (isNaN(points)) return callback(new Error('cannot calculate points for order'));
-
+, addPointsForOrder: function( orderId, callback, client ) {
     db.getClient(function (error, client, done) {
-      var tasks = {
-        begin: function (cb) {
-          client.query('BEGIN', cb);
-        }
-      , updateUserPoints: function (cb) {
-          var query = {
-            type: 'update'
-          , table: 'users'
-          , updates: {
-              $inc: {points: points}
-            }
-          , where: {
-              id: order.attributes.user_id
-            }
-          };
-
-          var sql = db.builder.sql(query);
-          client.query(sql.query, sql.values, cb);
-        }
-      , setPointsAwardedForOrder: function (cb) {
-          var query = {
-            type: 'update'
-          , table: 'orders'
-          , updates: {
-              points_awarded: true
-            }
-          , where: {
-              id: order.attributes.id
-            , points_awarded: false
-            }
-          };
-          var sql = db.builder.sql(query);
-          client.query(sql.query, sql.values, cb);
-        }
+      var options = {
+        one:  [ { table: 'restaurants'
+                , alias: 'restaurant'
+                , one: [{ table: 'regions', alias: 'region' }]
+                }
+              ]
       };
+      
+      db.orders.findOne( orderId, options, function( error, order ){
+        if ( error ) return callback( error );
 
-      utils.async.series([
-        tasks.begin
-      , tasks.updateUserPoints
-      , tasks.setPointsAwardedForOrder
-      ], function (error, results) {
-        client.query(error ? 'ROLLBACK' : 'COMMIT', function(e, rows, result) {
-          done();
-          return callback(e || error);
+        var tasks = {
+          begin: function (cb) {
+            client.query('BEGIN', cb);
+          }
+        , updateUserPoints: function (cb) {
+            var query = {
+              type: 'update'
+            , table: 'users'
+            , updates: {
+                $inc: {points: order.points}
+              }
+            , where: {
+                id: order.user_id
+              }
+            };
+
+            var sql = db.builder.sql(query);
+            client.query(sql.query, sql.values, cb);
+          }
+        , setPointsAwardedForOrder: function (cb) {
+            var query = {
+              type: 'update'
+            , table: 'orders'
+            , updates: {
+                points_awarded: true
+              }
+            , where: {
+                id: order.id
+              , points_awarded: false
+              }
+            };
+            var sql = db.builder.sql(query);
+            client.query(sql.query, sql.values, cb);
+          }
+        };
+
+        utils.async.series([
+          tasks.begin
+        , tasks.updateUserPoints
+        , tasks.setPointsAwardedForOrder
+        ], function (error, results) {
+          client.query(error ? 'ROLLBACK' : 'COMMIT', function(e, rows, result) {
+            done();
+            return callback(e || error);
+          });
         });
       });
     });
@@ -410,15 +422,25 @@ var User = module.exports = Model.extend({
     , user_id: userId
     , created_at: { $gte: config.rewardsStartDate }
     };
-    var options = { submittedDate: true };
+
+    var options = {
+      submittedDate: true
+    , one:  [ { table: 'restaurants'
+              , alias: 'restaurant'
+              , one: [{ table: 'regions', alias: 'region' }]
+              }
+            ]
+    };
+
     db.orders.find(query, options, function(error, orders){
       if (error) return callback(error);
 
-      var points = 0;
-      if (!orders.length) return callback(null, points);
-      orders.forEach(function(order){
-        points += (order.points || 0);
-      });
+      var points = (orders || [])
+        .map( function( order ){
+          return RewardsOrder( order ).getPoints();
+        })
+        .reduce( utils.add, 0 );
+
       return callback(null, points);
     });
   }

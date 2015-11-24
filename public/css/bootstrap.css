@@ -2589,6 +2589,7 @@ a.list-group-item:hover,
 a.list-group-item:focus {
   text-decoration: none;
   background-color: #f5f5f5;
+  background-color: pink;
 }
 
 .list-group-item.active,

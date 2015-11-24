@@ -55,9 +55,18 @@
 <div class="row">
   <div class="form-group col-sm-6">
     <label for="phone">Phone <small>(required)</small></label>
-    <input type="text" id="phone" name="phone" class="form-control address-phone" value="{{phoneNumber address.phone}}" placeholder="512 555 1234">
+    <input type="tel" id="phone" name="phone" class="form-control address-phone" value="{{phoneNumber address.phone}}" placeholder="512 555 1234">
   </div>
 </div>
+
+{{#if address.hasSecondaryPhone}}
+<div class="row">
+  <div class="form-group col-sm-6">
+    <label for="secondary-phone">Secondary Phone</label>
+    <input type="tel" name="secondary_contact_phone" class="form-control secondary-contact-phone" value="{{phoneNumber address.secondary_contact_phone}}" placeholder="512 555 1234">
+  </div>
+</div>
+{{/if}}
 
 <div class="row">
   <div class="form-group col-lg-8">

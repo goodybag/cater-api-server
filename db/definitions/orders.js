@@ -200,6 +200,7 @@ define(function(require) {
       type: types.int
     , nullable: false
     , default: 0
+    , editable: []
     }
   , delivery_fee: {
       type: types.int
@@ -210,6 +211,7 @@ define(function(require) {
       type: types.int
     , nullable: false
     , default: 0
+    , editable: []
     }
   , search_vector: {
       type: types.tsvector
@@ -219,8 +221,8 @@ define(function(require) {
   , user_adjustment_amount: { type: types.int, nullable: false, default: 0, editable: ['admin'] }
   , user_adjustment_description: { type: types.text, nullable: true, editable: ['admin'] }
   , delivery_service_id: { type: types.int, references: { table: 'delivery_services', column: 'id' } }
-  , restaurant_total: { type: types.int, nullable: false, default: 0 }
-  , restaurant_sales_tax: { type: types.int, nullable: false, default: 0 }
+  , restaurant_total: { type: types.int, nullable: false, default: 0, editable: [] }
+  , restaurant_sales_tax: { type: types.int, nullable: false, default: 0, editable: [] }
   , restaurant_location_id: { type: types.int, references: { table: 'restaurant_locations', column: 'id' } }
   , secondary_contact_phone: {
       type: types.varchar(10)
@@ -229,6 +231,11 @@ define(function(require) {
     , editable: ['client', 'admin']
     }
   , lat_lng: { type: types.point, editable: ['order-owner'] }
+  , priority_account_price_hike_percentage: {
+      type: types.numeric( 5, 5 )
+    , notNull: true
+    , default: 0
+    }
   };
 
   definition.indices = {};

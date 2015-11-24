@@ -4,6 +4,8 @@ var db = require('../../db')
   , utils = require('../../utils')
   , config = require('../../config')
   , states = require('../../public/js/lib/states')
+  , Addresses = require('stamps/addresses/user-addresses-db')
+  , GeocodeRequest = require('stamps/requests/geocode')
   , models = require('../../models');
 
 /**
@@ -12,19 +14,50 @@ var db = require('../../db')
  * Set the first address as default, for convenience
  */
 module.exports.create = function(req, res, next) {
-  models.Address.find({ where: {user_id: req.params.uid, is_default: true}}, function(error, addresses) {
-    var noExistingDefault = !addresses.length;
-    var address = new models.Address(utils.extend(
-      {},
-      req.body,
-      {user_id: req.session.user.id, is_default: !!(req.body.is_default || noExistingDefault)} // ensure is_default is boolean
-    ));
+  var logger = req.logger.create('Controller-Create-Address');
 
-    address.save(function(error, address) {
-      if (error) return res.error(errors.internal.DB_FAILURE, error);
-      res.send(204);
+  logger.info('Create user Address');
+
+  var address = Addresses( req.body );
+
+  address.setLogger( logger );
+
+  address.user_id = req.params.uid;
+
+  if ( !address.hasMinimumComponents() ){
+    logger.warn('Invalid address');
+    return res.error( errors.input.INVALID_ADDRESS );
+  }
+
+  GeocodeRequest()
+    .address( address.toString({ street2: false }) )
+    .send( function( error, result ){
+      if ( error ){
+        logger.warn('Error geocoding address', {
+          error: error
+        });
+
+        return res.error( 'httpCode' in error ? error : errors.internal.UNKNOWN, error );
+      }
+
+      if ( !result.isValidAddress() ){
+        return res.error( errors.input.INVALID_ADDRESS );
+      }
+
+      utils.extend( address, result.toAddress() );
+
+      address.save( function( error ){
+        if ( error ){
+          logger.warn('Error saving address', {
+            error: error
+          });
+
+          return res.error( 'httpCode' in error ? error : errors.internal.DB_FAILURE, error );
+        }
+
+        return res.json( address );
+      });
     });
-  });
 };
 
 /**
@@ -58,28 +91,57 @@ module.exports.get = function(req, res, next) {
  * set other addresses to false.
  */
 module.exports.update = function(req, res, next) {
-  var updates = utils.pick(req.body, ['name', 'street', 'street2', 'city', 'state', 'zip', 'is_default', 'phone', 'delivery_instructions']);
+  var logger = req.logger.create('Controller-Update-Address');
 
-  // TODO: make this a transaction
-  utils.async.series([
-    function unmarkPreviousDefaults(callback) {
-      if (updates.is_default) {
-        models.Address.update({
-          updates: { is_default: false },
-          where:   { is_default: true, user_id: req.params.uid }
-        }, callback);
-      } else {
-        callback(null);
-      }
-    },
-    function updateAddress(callback) {
-      var address = new models.Address(utils.extend(updates, {id: req.params.aid}));
-      address.save(callback);
+  logger.info('Update user Address');
+
+  db.addresses.findOne( { user_id: req.params.uid, id: req.params.aid }, function( error, existing ){
+    if ( error ){
+      logger.warn('Error looking up adddress', {
+        error: error
+      });
+
+      return res.error( errors.internal.DB_FAILURE, error );
     }
-  ],
-  function updateComplete(error, results) {
-    if (error) return res.error(errors.internal.DB_FAILURE, error);
-    return res.send(204);
+
+    var address = Addresses( utils.extend( existing, req.body ) );
+
+    address.setLogger( logger );
+
+    if ( !address.hasMinimumComponents() ){
+      logger.warn('Invalid address');
+      return res.error( errors.input.INVALID_ADDRESS );
+    }
+
+    GeocodeRequest()
+      .address( address.toString() )
+      .send( function( error, result ){
+        if ( error ){
+          logger.warn('Error geocoding address', {
+            error: error
+          });
+
+          return res.error( 'httpCode' in error ? error : errors.internal.UNKNOWN, error );
+        }
+
+        if ( !result.isValidAddress() ){
+          return res.error( errors.input.INVALID_ADDRESS );
+        }
+
+        address.lat_lng = result.toAddress().lat_lng;
+
+        address.save( function( error ){
+          if ( error ){
+            logger.warn('Error saving address', {
+              error: error
+            });
+
+            return res.error( 'httpCode' in error ? error : errors.internal.DB_FAILURE, error );
+          }
+
+          return res.json( address );
+        });
+      });
   });
 };
 
@@ -87,7 +149,12 @@ module.exports.update = function(req, res, next) {
  * DELETE /users/:uid/addresses/:aid
  */
 module.exports.remove = function(req, res, next) {
-  models.Address.findOne(parseInt(req.params.aid), function(error, address) {
+  var query = { where: {
+    user_id:  req.params.uid
+  , id:       req.params.aid
+  }};
+
+  models.Address.findOne(query, function(error, address) {
     if (error) return res.error(errors.internal.DB_FAILURE, error);
     if (address === null) return res.send(404);
 

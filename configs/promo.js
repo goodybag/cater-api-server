@@ -12,14 +12,14 @@ var promo = {
   }
 , jacob: {
     email: 'jacobparker@goodybag.com'
-  , promo_code: ['goodybag315', 'gb415', 'gbaustin15', 'gbstar15', 'gbamaz15', 'gbfree0715', 'gbgift0815']
+  , promo_code: ['goodybag315', 'gb415', 'gbaustin15', 'gbstar15', 'gbamaz15', 'gbfree0715', 'gbgift0815', 'gbfreesea']
   }
 , christy: {
     email: 'christymedlock@goodybag.com'
   , promo_code: ['gbfree0715']
   }
-, toby: {
-    email: 'tobyshields@goodybag.com'
+, ramone: {
+    email: 'ramonejohnson@goodybag.com'
   , promo_code: ['seattlegb', 'seagoody']
   }
 , om: {

@@ -31,6 +31,12 @@
         <td>{{phoneNumber order.secondary_contact_phone}}</td>
       </tr>
       {{/if}}
+      {{#if order.address_name}}
+      <tr>
+        <td>Office Name</td>
+        <td>{{order.address_name}}</td>
+      </tr>
+      {{/if}}
       <tr>
         <td>Office Address</td>
         <td>{{> plain_address order}}</td>

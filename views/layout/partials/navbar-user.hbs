@@ -1,12 +1,15 @@
 <header class="navbar navbar-with-dropdowns {{#if session.oldUser}}navbar-impersonate{{/if}} collapsed">
   <div class="container">
     <a href="/">
-      <img src="/img/logo.png" alt="Goodybag.com" class="navbar-logo">
+      <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
     </a>
+
+    {{#unless (contains user.groups 'admin')}}
     <div class="navbar-caption">
       <span class="full"><strong>Let us help you with your order!</strong></span> <span class="full full-number">{{phoneNumber config.phone.support}}</span>
       <span class="short">{{phoneNumber config.phone.support}}</span>
     </div>
+    {{/unless}}
 
     <div class="nav">
       {{#if session.oldUser}}
@@ -45,7 +48,7 @@
           class="btn btn-default btn-dropdown"
           data-role="popover"
           data-target="dropdown-popover">
-          {{#if user.name}}{{user.name}}{{else}}My Account{{/if}}
+          {{#if user.name}}Hi, {{user.name}}{{else}}My Account{{/if}}
           <i class="gb-icon-caret-down"></i>
         </button>
 

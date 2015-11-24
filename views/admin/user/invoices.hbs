@@ -9,6 +9,7 @@
 {{/extend}}
 
 {{#extend "body"}}
+
 <div class="table-list invoices-table-list striped">
   <div class="list-header">
     <label class="component item-selector">
@@ -55,11 +56,50 @@
           </a>
         </div>
       </li>
+      <li id="no-hover" class="popover-wrapper gb-dropdown right no-hover">
+        <a data-role="popover" data-target="dropdown-popover" href="#">
+          <span class="send-to">Add Email</span>
+          <i class="gb-icon-caret-down"></i>
+        </a>
+        <div class="popover-modal dropdown-popover">
+          <div class="popover-item popover-email">
+            <span class="popover-item-icon"><i class="gb-icon-email"></i></span>
+            <span class="popover-item-label email-text">{{user.email}}</span>
+          </div>
+          {{#each user.invoice_recipients}}
+          <div class="popover-item popover-email">
+            <span class="popover-item-icon"><i class="gb-icon-email"></i></span>
+            <span class="popover-item-label email-text">{{email}}</span>
+          </div>
+          {{/each}}
+          <div class="selected-only">
+            <form class="popover-item popover-form">
+              <input
+                type="button"
+                class="action-button"
+                value="Send"
+                data-action="send-emails">
+            </form>
+          </div>
+          <div class="not-selected-only">
+            <form class="popover-item popover-form">
+              <input type="email" class="email-address-in">
+              <button
+                class="action-button"
+                data-user-id="{{user.id}}"
+                data-user-name="{{user.name}}"
+                data-action="save-emails">
+                Add
+              </button>
+            </form>
+          </div>
+        </div>
+      </li>
     </ul>
   </div>
   <div class="list-items">
   {{#each invoices}}
-    <div class="list-item" data-id="{{this.id}}">
+    <div class="list-item" data-invoice-id="{{this.id}}">
       <label class="component item-selector">
         <input type="checkbox">
       </label>
@@ -88,13 +128,13 @@
         <div class="more-actions-and-info bottom">
           <button
             class="action btn-default"
-            data-id="{{this.id}}"
+            data-invoice-id="{{this.id}}"
             data-action="send-email">
               {{~#is this.status 'pending' 'error'}}Send Email{{else}}Re-Send Email{{/is~}}
           </button>
           <button
             class="action btn-default"
-            data-id="{{this.id}}"
+            data-invoice-id="{{this.id}}"
             data-action="delete">Delete</button>
         </div>
       </div>
@@ -130,7 +170,38 @@ require([
     $('[data-role="popover"]').gb_popover();
 
     invoiceTable( $tableList );
+
+    //Checkbox logic
+    var $sendto = $('.send-to');
+    var $nohover = $('#no-hover');
+    var $selectableEmails = $('#no-hover .popover-email');
+    var sendtoView = false;
+    $(':checkbox').change(function() {
+      // resets class toggle
+      $selectableEmails.off('click');
+
+      if($('.selected').length > 0) {
+        sendtoView = true;
+      } else {
+        sendtoView = false;
+      }
+
+      if(sendtoView) {
+        $sendto.text("Send To");
+        $nohover.removeClass('no-hover');
+        $selectableEmails.on('click', function() {
+          $(this).toggleClass('selected-email');
+        });
+      } else {
+        $sendto.text("Add Email");
+        $nohover.addClass('no-hover');
+        $selectableEmails.removeClass('selected-email');
+        $selectableEmails.off('click');
+      }
+    });
+
   });
 });
 </script>
+
 {{/extend}}

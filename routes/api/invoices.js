@@ -49,8 +49,12 @@ route.delete('/:id', m.restrict(['admin']), m.param('id'), m.remove(db.user_invo
 
 route.post('/:id/emails', m.restrict(['admin']), controllers.api.invoices.sendEmail);
 
+route.post('/:id/emails/:email', m.restrict(['admin']), controllers.api.invoices.sendCustomEmail);
+
 route.post('/:user_invoice_id/orders/:order_id', m.restrict(['admin']), m.queryToBody(
   'user_invoice_id'), m.queryToBody('order_id'), m.insert(db.user_invoice_orders));
 
 route.delete('/:user_invoice_id/orders/:order_id', m.restrict(['admin']), m.param(
   'user_invoice_id'), m.param('order_id'), m.remove(db.user_invoice_orders));
+
+route.post('/recipients', m.restrict(['admin']), m.insert(db.user_invoice_recipients));

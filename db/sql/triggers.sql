@@ -1,3 +1,17 @@
+drop trigger if exists on_order_user_change on orders;
+create trigger on_order_user_change
+    after insert or update of user_id
+    on orders
+    for each row
+    execute procedure on_order_user_change();
+
+drop trigger if exists on_order_restaurant_change on orders;
+create trigger on_order_restaurant_change
+    after update of restaurant_id
+    on orders
+    for each row
+    execute procedure on_order_restaurant_change();
+
 drop trigger if exists order_order_items_change on order_items;
 create trigger order_order_items_change
   after insert or update of quantity, price, options_sets

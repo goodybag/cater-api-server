@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Goodybag{{{block "title"}}}</title>
+    <title>{{block "prefix-title"}}Goodybag{{{block "title"}}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="shortcut icon" href="{{cdn "favicon.ico"}}">
@@ -94,7 +94,7 @@
               <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/">
-              <img src="{{cdn "img/logo.png"}}" alt="Goodybag">
+              <img src="{{cdn "/img/logo.png"}}" alt="Goodybag">
             </a>
             <div class="contact-info">
               <span class="help-text">Let us help you with your order!</span>
@@ -122,19 +122,10 @@
               </li>
               {{/if}}
               {{{block "navbar-links"}}}
+
               <li class="nav-account dropdown">
                 <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
-                  My Orders <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                  <li><a href="/">Start New Order</a></li>
-                  <li><a href="/users/me/orders">My Orders</a></li>
-                  <li><a href="/users/me/orders/receipts">My Receipts</a></li>
-                </ul>
-              </li>
-              <li class="nav-account dropdown">
-                <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
-                  {{#if user.name }} {{ user.name }} {{else}} My Account {{/if}} <span class="caret"></span>
+                  {{#if user.name }} Hi, {{ user.name }} {{else}} My Account {{/if}} <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
                   <li><a href="/users/me">My Settings</a></li>
@@ -147,6 +138,17 @@
                   {{/contains}}
                 </ul>
               </li>
+              <li class="nav-account dropdown">
+                <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
+                  My Orders <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a href="/">Start New Order</a></li>
+                  <li><a href="/users/me/orders">My Orders</a></li>
+                  <li><a href="/users/me/orders/receipts">My Receipts</a></li>
+                </ul>
+              </li>
+              
             </ul>
 
             <a href="/users/me/rewards" class="gb-points-indicator">
@@ -158,6 +160,7 @@
                 {{/if}}
               </div>
             </a>
+
             {{else}}
             <ul class="nav navbar-nav navbar-right">
               <li>
@@ -218,7 +221,7 @@
     {{> config}}
 
     {{> olark }}
-    
+
     {{#if config.isProduction}}
       {{> adroll }}
     {{/if}}

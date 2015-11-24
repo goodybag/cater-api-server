@@ -25,7 +25,7 @@ var task = function() {
     if (error) return logger.create('DB').error("failed to get orders", {error: error}), utils.rollbar.reportMessage(error);
     if (orders.length == 0) return done();
     utils.async.each(orders, function(order, callback){
-      models.User.addPointsForOrder(order, function(error){
+      models.User.addPointsForOrder(order.attributes.id, function(error){
         if (error) {
           var message = "failed to add points to user: " +
             order.attributes.user_id +

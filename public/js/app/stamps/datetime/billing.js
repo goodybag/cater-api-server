@@ -5,7 +5,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 }
 
 define( function( require, exports, module ){
-  var mooment = require('moment-timezone');
+  var moment = require('moment-timezone');
   var stampit = require('stampit');
   var billingP = require('./billing-period');
 
@@ -15,10 +15,9 @@ define( function( require, exports, module ){
         var start, end;
 
         // Zero out values less granular than `month`
-        var d     = this._moment.toString();
+        var d     = this._moment.format('YYYY-MM-DD');
         var start = moment( d ).startOf('month');
         var end   = moment( d ).startOf('month');
-
         if ( this._moment.date() < 15 ){
           start.set( 'date', 1 );
           end.set( 'date', 15 );

@@ -1,5 +1,6 @@
 define( function( require ){
   var utils = require('utils');
+  var $     = require('jquery-loaded');
 
   var Views = {
     CheckoutView:       require('app/views/checkout-view')
@@ -23,7 +24,19 @@ define( function( require ){
         amenities: amenities
       });
 
+      page.affixOrderSummary();
+
       analytics.page('Checkout');
+    },
+
+    affixOrderSummary: function () {
+      $('.order-summary').affix({
+        offset: {
+          top: function () { return $('.list-group').offset().top }
+        , bottom: 225
+        }
+      });
+
     }
   };
 

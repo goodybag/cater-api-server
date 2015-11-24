@@ -18,6 +18,8 @@ cuisines = cuisines.sort();
 
 var models = require('../../models');
 var restaurantDefinitionSchema = require('../../db/definitions/restaurants').schema;
+var OrderItem = require('stamps/orders/item');
+var Order = require('stamps/orders/base');
 
 utils.findWhere(states, {abbr: 'TX'}).default = true;
 
@@ -133,6 +135,12 @@ module.exports.get = function(req, res) {
         if (err) return callback(err);
         if (!restaurant) return res.status(404).render('404');
         restaurant.getItems({ where: { 'is_hidden': false } }, function(err, items) {
+
+          // Apply user price hike
+          items.forEach( function( item ){
+            Order.applyPriceHikeToItem( item.attributes, req.user.attributes.priority_account_price_hike_percentage );
+          });
+
           callback(err, restaurant);
         });
       });

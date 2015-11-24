@@ -74,6 +74,14 @@ module.exports = function(grunt) {
       }
     }
 
+   , uglify: {
+      sharelink: {
+        files: {
+          'public/dist/sharelink.min.js': ['public/js/lib/sharelink.js']
+        }
+      }
+    }
+
   , shell: {
       handlebars: {
         options: { stdout: true, stderr: true }
@@ -113,7 +121,6 @@ module.exports = function(grunt) {
         , "public/dist/<%= pkg.version %>/cater-tool.css":         "less/core-cater-tool.less"
         , "public/dist/<%= pkg.version %>/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
         , "public/dist/<%= pkg.version %>/css/admin.css":          "less/core-admin.less"
-        , "public/dist/<%= pkg.version %>/ol-greg.css":            "less/core-ol-greg.less"
         , "public/dist/<%= pkg.version %>/order-manifest.css":     "less/core-order-manifest.less"
         , "public/dist/<%= pkg.version %>/css/goodybag.css":       "less/core-goodybag.less"
         }
@@ -135,6 +142,7 @@ module.exports = function(grunt) {
         , { src: 'public/css/receipt.css', dest: 'public/dist/<%= pkg.version %>/css/receipt.css' }
         , { src: 'public/css/order.css', dest: 'public/dist/<%= pkg.version %>/css/order.css' }
         , { src: 'public/css/gb-icon.css', dest: 'public/dist/<%= pkg.version %>/css/gb-icon.css' }
+        , { src: 'public/css/menu.css', dest: 'public/dist/<%= pkg.version %>/css/menu.css' }
         , { src: 'public/img/olark-buttons-light.png', dest: 'public/dist/<%= pkg.version %>/img/olark-buttons-light.png' }
         , { src: 'public/components/bootstrap/fonts/glyphicons-halflings-regular.woff',
             dest: 'public/dist/<%= pkg.version %>/fonts/glyphicons-halflings-regular.woff' }
@@ -345,7 +353,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask( 'analyze',      ['complexity'] );
-  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'copy:legacy', 'concat', 'shell:handlebars', 'babel', 'requirejs'] );
+  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'copy:legacy', 'concat', 'shell:handlebars', 'babel', 'uglify', 'requirejs'] );
   grunt.registerTask( 'default',      ['less', 'namedModules', 'shell:handlebars', 'shell:cacheRedis', 'copy:legacy', 'loglog', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 

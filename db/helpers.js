@@ -7,8 +7,12 @@ var mosqlUtils  = require('mongo-sql/lib/utils');
 var utils       = require('../utils');
 var logger      = require('../lib/logger').create('DBHelpers');
 var config      = require('../config');
-var PMSItems    = require('../public/js/app/collections/payment-summary-items');
 var odsChecker  = require('../public/js/lib/order-delivery-service-checker');
+var Order       = require('stamps/orders/base');
+
+var RewardsOrder = require('stamps/orders/rewards');
+
+RewardsOrder = RewardsOrder.compose( require('stamps/orders/base').Cached );
 
 dirac.db.setMosql( mosql );
 
@@ -369,32 +373,6 @@ mosql.registerQueryHelper('distinct', function(distinct, values, query){
   return (distinct) ? 'distinct ': '';
 });
 
-// Make sure dates are formatted correctly
-dirac.use( function(){
-  var afterPSFinds = function( results, $query, schema, next ){
-    results.forEach( function( r ){
-      r.payment_date = moment( r.payment_date ).format('YYYY-MM-DD');
-
-      // If we did a many to items, let's apply some virtual props
-      if ( Array.isArray( $query.many ) )
-      var many = utils.findWhere( $query.many, { table: 'payment_summary_items' } );
-      if ( many ){
-        r[ many.alias || many.table ] = new PMSItems( r[ many.alias || many.table ], {
-          payment_summary_id: r.id
-        , restaurant_id:      r.restaurant.id
-        , plan:               r.restaurant.plan
-        , sales_tax:          r.restaurant.region.sales_tax
-        }).toJSON({ keepOrder: true });
-      }
-    });
-
-    next();
-  };
-
-  dirac.dals.payment_summaries.after( 'find',     afterPSFinds );
-  dirac.dals.payment_summaries.after( 'findOne',  afterPSFinds );
-});
-
 // Remove existing zip defs, replace with new ones
 // TODO: use transaction
 dirac.use( function( dirac ){
@@ -730,25 +708,7 @@ dirac.use( function( dirac ){
   var onOrder = function( order ){
     Object.defineProperty( order, 'points', {
       get: function(){
-        // Handle reward promos
-        var submitted = moment( order.submitted );
-
-        var holiday = utils.find(config.rewardHolidays, function(holiday) {
-          return submitted >= moment( holiday.start ) && submitted < moment( holiday.end );
-        });
-
-        if ( holiday ) {
-          return Math.floor( order.total * holiday.rate / 100 );
-        }
-
-        // Check all mondays past 4/21
-        var eligible = submitted.day() == 1 && submitted >= moment( config.rewardsPromo.start );
-
-        if ( eligible ) {
-          return Math.floor( order.total * config.rewardsPromo.rate / 100 );
-        }
-
-        return Math.floor( order.total / 100 );
+        return RewardsOrder.create( this ).getPoints();
       }
     });
 
@@ -788,8 +748,30 @@ dirac.use( function( dirac ){
     });
   };
 
+  var transformLocation = function( order ){
+    if ( !order.location ) return;
+    if ( !order.location.lat_lng ) return;
+    order.location.lat_lng = pg.types.getTypeParser(600)( order.location.lat_lng );
+  };
+
   var afterOrderFind = function( results, $query, schema, next ){
     results.forEach( onOrder );
+
+    var fetchedLocation = ( $query.one || [] )
+      .some( function( relation ){
+        return relation.table === 'restaurant_locations'
+      });
+
+    if ( fetchedLocation ){
+      results.forEach( transformLocation );
+    }
+
+    if ( $query.applyPriceHike ){
+      results.forEach( function( order ){
+        Order.applyPriceHike( order, $query.applyPriceHike );
+      });
+    }
+
     next();
   };
 

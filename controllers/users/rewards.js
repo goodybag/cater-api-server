@@ -21,16 +21,24 @@ module.exports.list = function( req, res ){
                         user_id:        req.params.uid
                       }, {
                         order:          { datetime: 'desc' }
-                      , one:            [{ table: 'restaurants', alias: 'restaurant' }]
+                      , one:            [ { table: 'restaurants'
+                                          , alias: 'restaurant'
+                                          , one: [{ table: 'regions', alias: 'region' }]
+                                          }
+                                        ]
                       , submittedDate:  true
                       })
 
-  , 'orders':         Models.Order.find.bind( Models.Order, {
-                        where: {
-                          status: { $or: ['submitted', 'accepted', 'delivered'] }
-                        , points_awarded: true
-                        , user_id: req.params.uid
-                        }
+  , 'orders':         db.orders.find.bind( db.orders, {
+                        status: { $or: ['submitted', 'accepted', 'delivered'] }
+                      , points_awarded: true
+                      , user_id: req.params.uid
+                      }, {
+                        one:  [ { table: 'restaurants'
+                                , alias: 'restaurant'
+                                , one: [{ table: 'regions', alias: 'region' }]
+                                }
+                              ]
                       })
 
   , cards: function( done ){
@@ -58,7 +66,7 @@ module.exports.list = function( req, res ){
 
     res.locals.user.pendingPoints = results.pendingPoints;
     res.locals.pendingOrders      = results.pendingOrders;
-    res.locals.orders             = utils.invoke( results.orders, 'toJSON' );
+    res.locals.orders             = results.orders;
     res.locals.cards              = results.cards;
 
     res.render('rewards');

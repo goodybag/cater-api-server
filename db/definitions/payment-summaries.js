@@ -42,6 +42,8 @@ define(function(require) {
   , adjustment_text: {
       type: types.text
     }
+  , period_begin: { type: types.date, nullable: false }
+  , period_end: { type: types.date, nullable: false }
   };
 
   definition.indices = {};

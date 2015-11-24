@@ -1,6 +1,6 @@
 define(function (require, exports, module) {
   var Backbone  = require('backbone');
-  var Handlebars = require('Handlebars');
+  var Handlebars = require('handlebars');
 
   return module.exports = Backbone.View.extend({
     events: {
@@ -17,7 +17,7 @@ define(function (require, exports, module) {
   , fieldGetter: {
       contact_phone: function () {
         return this.$el.find(this.fieldMap.contact_phone).val().replace(/[^\d]/g, '') || null;
-      }  
+      }
     }
 
   , initialize: function () {
@@ -48,7 +48,7 @@ define(function (require, exports, module) {
   , getFieldValues: function () {
       var k, r = {};
       for (k in this.fieldMap) {
-        r[k] = k in this.fieldGetter ? 
+        r[k] = k in this.fieldGetter ?
           this.fieldGetter[k].call(this) : this.$el.find( this.fieldMap[k] ).val();
       }
       return r;

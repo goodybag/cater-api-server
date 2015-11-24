@@ -11,10 +11,10 @@ var notifications = require('./order-notifications2');
 var UserOrderAcceptedEmail;
 
 try {
-  UserOrderAcceptedEmail = notifications.get('user-order-accepted-email');
+  UserOrderAcceptedEmail = notifications.get('user-order-accepted-email').create();
 
   // Alternatively, you directly access it:
-  UserOrderAcceptedEmail = notifications.UserOrderAcceptedEmail;
+  UserOrderAcceptedEmail = notifications.UserOrderAcceptedEmail.create();
 } catch ( e ){
   console.warn('Invalid notification');
   process.exit();
@@ -158,13 +158,13 @@ Create a notification instance from a Notification Factory:
 ```javascript
 // Create a Dropoff delivery notification for order 1000
 // Using actor user 123
-var notification = notifications.DropoffCreateDelivery(1000, 123)
+var notification = notifications.DropoffCreateDelivery.create(1000, 123)
 ```
 
-A NotificationFactory has the following function signature:
+NotificationFactory.create has the following function signature:
 
 ```javascript
-( order_id, user_id ) -> Notification
+NotificationFactory.create( order_id, user_id ) -> Notification
 ```
 
 The notification has the following members:

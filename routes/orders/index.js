@@ -11,11 +11,15 @@ var route = module.exports = express.Router();
  *  Orders resource.  The collection of all orders.
  */
 
-route.get('/', m.restrict('admin'), m.pagination({
+route.get('/'
+, m.restrict('admin')
+, m.pagination({
     pageParam: 'p'
-  }), m.param('status'), m.param('type'),
+})
+, m.param('status')
+, m.param('type')
   // Cas IDs to ints so indexOf checks work
-  function(req, res, next) {
+, function(req, res, next) {
     if (!Array.isArray(req.query['restaurants.region_id'])) return next();
     req.query['restaurants.region_id'] = req.query['restaurants.region_id'].map(function(id) {
       return parseInt(id);
@@ -23,14 +27,30 @@ route.get('/', m.restrict('admin'), m.pagination({
 
     // Setup the url->sql where clause
     return m.param('restaurants.region_id')(req, res, next);
-  }, m.sort('-id'), m.queryOptions({
+  }
+, m.param('contracted_status', function( value, where, options ){
+    // Contracted status can only be contracted/non-contracted
+    if ( ['contracted', 'non-contracted'].indexOf( value ) === -1 ){
+      return;
+    }
+
+    where['restaurants.plan_id'] = {
+      $null: value === 'non-contracted'
+    };
+  })
+, m.sort('-id')
+, m.queryOptions({
     submittedDate: true,
+    applyPriceHike: {
+      useCachedSubTotal: true
+    },
     one: [{
       table: 'users',
       alias: 'user'
     }, {
       table: 'restaurants',
-      alias: 'restaurant'
+      alias: 'restaurant',
+      one: [{ table: 'regions', alias: 'region' }]
     }, {
       table: 'delivery_services',
       alias: 'delivery_service'
@@ -42,8 +62,8 @@ route.get('/', m.restrict('admin'), m.pagination({
         id: '$orders.restaurant_id$'
       }
     }]
-  }),
-  function(req, res, next) {
+  })
+, function(req, res, next) {
     res.locals.status = req.params.status;
     if (req.params.status == 'accepted') {
       req.queryOptions.statusDateSort = {
@@ -51,10 +71,11 @@ route.get('/', m.restrict('admin'), m.pagination({
       };
     }
     return next();
-  }, m.view('orders', db.orders)
+  }
+, m.view('orders', db.orders)
 );
 
-route.post('/', m.restrict(['guest', 'client', 'admin']), controllers.orders.create);
+route.post('/', m.restrict(['guest', 'client', 'admin']), m.geocodeBody(), controllers.orders.create);
 
 route.all('/', function(req, res, next) {
   res.set('Allow', 'GET');
@@ -97,8 +118,9 @@ route.get('/:oid', m.getOrder2({
     deliveryService: true,
     submittedDate: true,
     amenities: true,
-    orderFeedback: true
-  }), controllers.orders.auth, m.restrict(['admin', 'receipts', 'order-owner', 'order-restaurant']),
+    orderFeedback: true,
+    applyPriceHike: true
+  }), m.restrict(['admin', 'receipts', 'order-owner', 'order-restaurant']),
   controllers.orders.get);
 
 route.put('/:oid', m.getOrder2({
@@ -108,8 +130,9 @@ route.put('/:oid', m.getOrder2({
     userAddresses: true,
     userPaymentMethods: true,
     restaurant: true,
-    deliveryService: true
-  }), controllers.orders.auth, m.restrict(['order-owner', 'order-restaurant', 'admin']), m.audit.orderType(),
+    deliveryService: true,
+    applyPriceHike: true
+  }), m.restrict(['order-owner', 'order-restaurant', 'admin']), m.audit.orderType(),
   controllers.orders.update);
 
 route.patch('/:oid', m.getOrder2({
@@ -119,8 +142,9 @@ route.patch('/:oid', m.getOrder2({
     userAddresses: true,
     userPaymentMethods: true,
     restaurant: true,
-    deliveryService: true
-  }), controllers.orders.auth, m.restrict(['order-owner', 'order-restaurant', 'admin']), controllers.orders
+    deliveryService: true,
+    applyPriceHike: true
+  }), m.restrict(['order-owner', 'order-restaurant', 'admin']), controllers.orders
   .editability, controllers.orders.update);
 
 route.delete('/:oid', m.getOrder2({
@@ -130,8 +154,9 @@ route.delete('/:oid', m.getOrder2({
   userAddresses: true,
   userPaymentMethods: true,
   restaurant: true,
-  deliveryService: true
-}), controllers.orders.auth, m.restrict(['order-owner', 'order-restaurant', 'admin']), function(req, res,
+  deliveryService: true,
+  applyPriceHike: true
+}), m.restrict(['order-owner', 'order-restaurant', 'admin']), function(req, res,
   next) {
   req.body = {
     status: 'canceled'
@@ -150,7 +175,7 @@ route.all('/:oid', m.restrict(['client', 'restaurant', 'admin']), function(req, 
 
 route.get('/:oid/status-history', m.restrict(['client', 'admin']), controllers.orders.listStatus);
 
-// people with restaurant review token can access this route.  leave auth to controllers.orders.auth.
+// people with restaurant review token can access this route.  leave auth t.
 route.post('/:oid/status-history', m.getOrder2({
     param: 'oid',
     items: true,
@@ -159,7 +184,7 @@ route.post('/:oid/status-history', m.getOrder2({
     userPaymentMethods: true,
     restaurant: true,
     deliveryService: true
-  }), controllers.orders.auth, m.restrict(['admin', 'order-owner', 'order-restaurant']), controllers.orders
+  }), m.restrict(['admin', 'order-owner', 'order-restaurant']), controllers.orders
   .changeStatus
 );
 
@@ -187,8 +212,9 @@ route.get('/:oid/items', m.getOrder2({
     restaurant: true,
     amenities: true,
     deliveryService: true,
-    restaurantDbModelFind: true
-  }), controllers.orders.auth, m.restrict(['admin', 'order-owner', 'order-editor']), controllers.orders.orderItems
+    restaurantDbModelFind: true,
+    applyPriceHike: true
+  }), m.restrict(['admin', 'order-owner', 'order-editor']), controllers.orders.orderItems
   .summary
 );
 
@@ -200,7 +226,7 @@ route.post('/:oid/items', m.getOrder2({
     userPaymentMethods: true,
     restaurant: true,
     deliveryService: true
-  }), controllers.orders.auth, m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
+  }), m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
   controllers.orders.editability, controllers.orders.orderItems.add
 );
 
@@ -223,7 +249,7 @@ route.put('/:oid/items/:iid', m.getOrder2({
     userPaymentMethods: true,
     restaurant: true,
     deliveryService: true
-  }), controllers.orders.auth, m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
+  }), m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
   controllers.orders.editability, controllers.orders.orderItems.update
 );
 
@@ -235,7 +261,7 @@ route.patch('/:oid/items/:iid', m.getOrder2({
     userPaymentMethods: true,
     restaurant: true,
     deliveryService: true
-  }), controllers.orders.auth, m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
+  }), m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
   controllers.orders.editability, controllers.orders.orderItems.update
 );
 
@@ -248,7 +274,7 @@ route.delete(
     userPaymentMethods: true,
     restaurant: true,
     deliveryService: true
-  }), controllers.orders.auth, m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
+  }), m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
   controllers.orders.editability, controllers.orders.orderItems.remove
 );
 
@@ -281,7 +307,7 @@ route.get('/:oid/add-items', m.getOrder2({
     restaurant: true,
     deliveryService: true,
     restaurantDbModelFind: true
-  }), controllers.orders.auth, m.restrict(['admin', 'order-owner', 'order-editor']), controllers.restaurants
+  }), m.restrict(['admin', 'order-owner', 'order-editor']), controllers.restaurants
   .orders.get
 );
 
@@ -297,4 +323,4 @@ route.get('/:oid/payment', m.getOrder2({
   restaurant: true,
   deliveryService: true,
   restaurantDbModelFind: true
-}), controllers.orders.auth, m.restrict(['admin', 'order-owner']), m.view('order-payment', {}));
+}), m.restrict(['admin', 'order-owner']), m.view('order-payment', {}));

@@ -51,7 +51,7 @@ define( function( require, exports, module ){
     , 'diets': function( restaurant ){
         return utils.intersection(
           restaurant.tags, query.diets
-        ).length > 0;
+        ).length === query.diets.length;
       }
 
     , 'mealTypes': function( restaurant ){
@@ -71,8 +71,9 @@ define( function( require, exports, module ){
       restaurants = restaurants.filter( filters[ filter ] );
     });
 
-    if ( query.search ){
-      restaurants = utils.search( restaurants, query.search, ['name'] );
+    if ( typeof query.search === 'string' )
+    if ( query.search.trim() ){
+      restaurants = utils.search( restaurants, query.search.trim(), ['name'] );
     }
 
     var fulfillabilityOptions = utils.extend( orderParams, { timezone: options.timezone } );

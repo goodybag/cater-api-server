@@ -63,6 +63,13 @@ module.exports = {
     }
   })[ process.env.GB_ENV ]
 
+, "dropoff.com": {
+    type: 'messaging'
+  , scope: 'global'
+  , publicKey: require('./dropoff').publicKey
+  , privateKey: require('./dropoff').privateKey
+  }
+
 , "rollbar.com": ({
     type: 'reporting'
   , scope: 'global'

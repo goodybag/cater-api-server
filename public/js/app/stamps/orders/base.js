@@ -12,8 +12,9 @@ define( function( require, exports, module ){
   var utils = require('utils');
   var items = require('./item');
   var amenities = require('./amenity');
+  var moment = require('moment-timezone');
 
-  return require('stampit')()
+  var Order = require('stampit')()
     .state({
       items: []
     , amenities: []
@@ -32,6 +33,7 @@ define( function( require, exports, module ){
 
         var amount = [
           this.getSubTotal()
+        , this.getPriorityAccountCost()
         , this.adjustment_amount
         , this.user_adjustment_amount
         , this.delivery_fee
@@ -49,19 +51,32 @@ define( function( require, exports, module ){
       }
 
     , getItemTotal: function(){
-        return this.items.reduce( function( total, item ){
-          return total + items( item ).getTotal();
+        return this.getItems().reduce( function( total, item ){
+          return total + item.getTotalWithoutPriorityAccountCost();
         }, 0 );
+      }
+
+    , getItems: function(){
+        return (this.items || []).map( function( item ){
+          item = items( item );
+
+          if ( this.priority_account_price_hike_percentage ){
+            item.priority_account_price_hike_percentage = this.priority_account_price_hike_percentage;
+          }
+
+          return item;
+        }.bind( this ));
       }
 
     , getNoContractFee: function(){
         if ( this.restaurant.plan ) return 0;
-        return Math.round(this.getTotalForContractFee() * this.restaurant.no_contract_fee);
+        return Math.round( this.getTotalForContractFee() * this.restaurant.no_contract_fee );
       }
 
     , getTotalForContractFee: function() {
         return [
           this.getSubTotal()
+        , this.getPriorityAccountCost()
         , this.adjustment_amount
         , this.user_adjustment_amount
         , this.getTax()
@@ -74,44 +89,13 @@ define( function( require, exports, module ){
     , getTotal: function( options ){
         return [
           this.getSubTotal()
+        , this.getPriorityAccountCost()
         , this.adjustment_amount
         , this.user_adjustment_amount
         , this.getTax()
         , this.delivery_fee
         , this.tip
         , this.getNoContractFee()
-        , this.service_fee
-        ].reduce( utils.add, 0 );
-      }
-
-      /**
-       * When calculating the total for payout calculations,
-       * we need to ignore user adjustments. In addition, if the
-       * type of order is `courier`, do not factor in delivery/tip
-       * @return {Number} The total
-       */
-    , getTotalForPayoutCalculations: function(){
-        return [
-          this.getSubTotal()
-        , this.adjustment_amount
-        , this.getTax()
-        , this.type === 'courier' ? 0 : this.delivery_fee
-        , this.type === 'courier' ? 0 : this.tip
-        ].reduce( utils.add, 0 );
-      }
-
-      /**
-       * When calculating the total for payout calculations,
-       * we need to ignore user adjustments.
-       * @return {Number} The total
-       */
-    , getTotalForRestaurant: function(){
-        return [
-          this.getSubTotal()
-        , this.adjustment_amount
-        , this.getTax()
-        , this.delivery_fee
-        , this.tip
         , this.service_fee
         ].reduce( utils.add, 0 );
       }
@@ -132,5 +116,85 @@ define( function( require, exports, module ){
         , this.tip
         ].reduce( utils.add, 0 );
       }
+
+    , getPickupDateTime: function(){
+        if ( !this.region ){
+          throw new Error('Cannot calculate pickup datetime without `region`');
+        }
+
+        if ( !this.datetime ){
+          throw new Error('Cannot calculate pickup datetime without `datetime`');
+        }
+
+        return moment
+          .tz( this.datetime, this.timezone )
+          .subtract( moment.duration( this.region.lead_time_modifier ) );
+      }
+
+    , getPriorityAccountCost: function(){
+        return Math.round( this.priority_account_price_hike_percentage * this.getSubTotal() );
+      }
+
+    , getPriorityAccountSubTotal: function(){
+        return [
+          this.getSubTotal()
+        , this.getPriorityAccountCost()
+        ].reduce( utils.add, 0 );
+      }
     });
+
+  Order.applyPriceHike = function( order, options ){
+    options = utils.defaults( options || {}, {
+      useCachedSubTotal: false
+    });
+
+    order.items = order.orderItems || order.items;
+
+    var _order = options.useCachedSubTotal ? CachedOrder.create( order ) : Order.create( order );
+    var phike = order.priority_account_price_hike_percentage || 0;
+
+    order.total = _order.getTotal();
+    order.sub_total = _order.getPriorityAccountSubTotal();
+    order.sales_tax = _order.getTax();
+    order.orderItems = _order.getItems();
+    order.no_contract_amount = _order.getNoContractFee();
+
+    order.orderItems.forEach( function( item ){
+      item.sub_total = item.getTotal();
+      Order.applyPriceHikeToItem( item, phike );
+    });
+
+    return order;
+  };
+
+  Order.applyPriceHikeToItem = function( item, phike ){
+    phike = phike || 0;
+
+    item.price += Math.round( phike * item.price );
+
+    if ( !Array.isArray( item.options_sets ) ) return;
+    
+    item.options_sets.forEach( function( set ){
+      set.options.forEach( function( option ){
+        option.price += Math.round( phike * option.price );
+      });
+    });
+
+    return item;
+  };
+
+  var CachedOrder = require('stampit')()
+    .compose( Order )
+    .state({
+
+    })
+    .methods({
+      getSubTotal: function(){
+        return this.sub_total;
+      }
+    });
+
+  Order.Cached = CachedOrder;
+  
+  return Order;
 });

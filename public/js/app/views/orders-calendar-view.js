@@ -6,9 +6,13 @@ define(function(require, exports, module) {
 
   // Deps
   var $ = require('jquery');
+  var utils = require('utils');
   var moment = require('moment');
   var FullCalendar = require('fullcalendar');
   var Handlebars = require('handlebars');
+  var user = require('user');
+
+  require('jquery-ui');
 
   // Lib
   var utils = require('utils');
@@ -61,11 +65,25 @@ define(function(require, exports, module) {
     },
 
     setupCalendar: function() {
-      this.$calendar.fullCalendar({
+      var options = {
         viewRender:       this.viewRender.bind(this)
       , dayRender:        this.dayRender.bind(this)
       , eventRender:      this.eventRender.bind(this)
-      });
+      };
+
+      if ( user.groups.indexOf('admin') > -1 ){
+        utils.extend( options, {
+          editable:         true
+        , disableDragging:  false
+        , eventDrop:        function( e, delta, reverseFn ){
+                              this.changeOrderDate( e.id, e._start, function( error ){
+
+                              });
+                            }.bind( this )
+        });
+      }
+
+      this.$calendar.fullCalendar( options );
 
       this.render();
     },
@@ -195,6 +213,22 @@ define(function(require, exports, module) {
      */
     clear: function() {
       this.$calendar.fullCalendar('removeEvents');
+    },
+
+    changeOrderDate: function( orderId, date, callback ){
+      $.ajax({
+        type: 'PUT'
+      , url: '/api/orders/' + orderId
+      , json: true
+      , headers: { 'Content-Type': 'application/json' }
+      , data: JSON.stringify({
+                datetime: moment( date ).format('YYYY-MM-DD HH:mm:ss')
+              })
+      , success: function( order ){
+          callback( null, order );
+        }
+      , error: callback
+      });
     }
   });
 });

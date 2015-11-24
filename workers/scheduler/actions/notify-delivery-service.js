@@ -31,6 +31,11 @@ module.exports.fn = function(job, done) {
       return notifier2
         .get( dsnid )
         .create( order.id, job.data.user_id, job.options )
+        // NOTE:
+        // This send handler is duplicated in:
+        //    controllers/orders/notifications.js
+        // If you change something here, be sure to check out that file
+        // TODO: Fix this situation
         .send( function( error, result ){
           if ( error ){
             return done( error );

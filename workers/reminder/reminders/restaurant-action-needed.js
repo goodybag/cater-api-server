@@ -12,6 +12,7 @@ var db              = require('../../../db');
 var utils           = require('../../../utils');
 var notifier        = require('../../../lib/order-notifier');
 var config          = require('../../../config');
+var moment          = require('moment-timezone');
 
 var getQuery = function( storage ){
   // 1. Filter submitted orders over an hour
@@ -66,10 +67,18 @@ var withinBusinessHours = function (order) {
   return now.isBetween(start, end);
 };
 
+var getOrders = function ( storage, callback ) {
+  db.orders.find( getQuery( storage ), getOptions( storage ), function( error, results ){
+    if ( error ) return callback( error );
+
+    results = results.filter( withinBusinessHours );
+
+    return callback( null, results );
+  });
+};
+
 var notifyOrderFn = function( order ) {
   return function( done ) {
-    if (!withinBusinessHours(order)) return done(null);
-
     notifier.send( 'order-submitted-needs-action-sms', order.id, function(error) {
       done( error, error ? null : order );
     });
@@ -81,7 +90,7 @@ module.exports.schema = {
 };
 
 module.exports.check = function( storage, callback ){
-  db.orders.find( getQuery( storage ), getOptions( storage ), function( error, results ){
+  getOrders( storage,  function ( error, results ) {
     if ( error ) return callback( error );
     return callback( null, results.length > 0 );
   });
@@ -94,7 +103,7 @@ module.exports.work = function( storage, callback ){
   , errors: { text: 'Errors', value: 0 }
   };
 
-  db.orders.find( getQuery( storage ), getOptions( storage ), function( error, orders ){
+  getOrders( storage, function( error, orders ){
     if ( error ) return callback( error );
     stats.orders.value = orders.length;
     utils.async.parallelNoBail(orders.map(notifyOrderFn), function done(errors, results) {

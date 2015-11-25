@@ -13,7 +13,7 @@
   <h1>User Invoice Recipients</h1>
 
   <div class="form-group invoice-recipients-form-group">
-    <label>Add Email</label>
+    <label>Add Another Email</label>
     <div class="input-group">
       <span class="input-addon">+</span>
       <input type="email" class="form-control">
@@ -27,7 +27,12 @@
         <tr>
           <td>
             <span data-icon="gb-icon-email">
-              {{email}}
+              <span class="view-email">{{email}}</span>
+              <input class="input-edit-email" type="text" value="{{email}}">
+            </span>
+            <span class="edit-buttons">
+              <button class="btn btn-red edit-button-save">Save</button>
+              <button class="btn btn-white edit-button-cancel">Cancel</button>
             </span>
             <span class="edit-group">
               <i class="gb-icon-pencil"></i>
@@ -44,60 +49,22 @@
 
 {{#extend "scripts"}}
 <script>
-require([
-  'app/models/user'
-, 'app/views/admin/edit-user-view'
-, 'app/views/admin/invoice-table'
-, 'jquery-loaded'
-, 'api'
-, 'utils'
-, 'table-list'
-], function( User, View, invoiceTable, $, api, utils ) {
-  api.invoices = api('invoices');
-
-  var user = new User( {{{json user}}} );
-  var view = new View( {
-    model: user
-  , el: '#users-edit'
-  , patch: true
-  });
+require(['jquery-loaded']
+, function( $ ) {
 
   $(function(){
-    var $tableList = $('.table-list');
-    $tableList.gb_tablelist();
-    $('[data-role="popover"]').gb_popover();
+    var $editPencil = $('.gb-icon-pencil');
+    var $cancelButton = $('.edit-button-cancel');
 
-    invoiceTable( $tableList );
-
-    //Checkbox logic
-    var $sendto = $('.send-to');
-    var $nohover = $('#no-hover');
-    var $selectableEmails = $('#no-hover .popover-email');
-    var sendtoView = false;
-    $(':checkbox').change(function() {
-      // resets class toggle
-      $selectableEmails.off('click');
-
-      if($('.selected').length > 0) {
-        sendtoView = true;
-      } else {
-        sendtoView = false;
-      }
-
-      if(sendtoView) {
-        $sendto.text("Send To");
-        $nohover.removeClass('no-hover');
-        $selectableEmails.on('click', function() {
-          $(this).toggleClass('selected-email');
-        });
-      } else {
-        $sendto.text("Add Email");
-        $nohover.addClass('no-hover');
-        $selectableEmails.removeClass('selected-email');
-        $selectableEmails.off('click');
-      }
+    // Event handler to switch to edit view
+    $editPencil.on("click", function() {
+      $(this).closest("td").addClass("edit-view");
     });
 
+    // Event handler to switch back from edit view
+    $cancelButton.on("click", function() {
+      $(this).closest("td").removeClass("edit-view");
+    })
   });
 });
 </script>

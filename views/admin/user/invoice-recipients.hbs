@@ -1,0 +1,82 @@
+{{#extend "page"}}page-users{{/extend}}
+
+{{#extend "page-head"}}
+{{> admin_user_page_head}}
+{{/extend}}
+
+{{#extend "nav-col"}}
+{{> admin_user_sidebar_nav}}
+{{/extend}}
+
+{{#extend "body"}}
+
+<div>
+  {{user.email}}
+  {{#each user.invoice_recipients}}
+    <div>{{email}}</div>
+  {{/each}}
+</div>
+
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require([
+  'app/models/user'
+, 'app/views/admin/edit-user-view'
+, 'app/views/admin/invoice-table'
+, 'jquery-loaded'
+, 'api'
+, 'utils'
+, 'table-list'
+], function( User, View, invoiceTable, $, api, utils ) {
+  api.invoices = api('invoices');
+
+  var user = new User( {{{json user}}} );
+  var view = new View( {
+    model: user
+  , el: '#users-edit'
+  , patch: true
+  });
+
+  $(function(){
+    var $tableList = $('.table-list');
+    $tableList.gb_tablelist();
+    $('[data-role="popover"]').gb_popover();
+
+    invoiceTable( $tableList );
+
+    //Checkbox logic
+    var $sendto = $('.send-to');
+    var $nohover = $('#no-hover');
+    var $selectableEmails = $('#no-hover .popover-email');
+    var sendtoView = false;
+    $(':checkbox').change(function() {
+      // resets class toggle
+      $selectableEmails.off('click');
+
+      if($('.selected').length > 0) {
+        sendtoView = true;
+      } else {
+        sendtoView = false;
+      }
+
+      if(sendtoView) {
+        $sendto.text("Send To");
+        $nohover.removeClass('no-hover');
+        $selectableEmails.on('click', function() {
+          $(this).toggleClass('selected-email');
+        });
+      } else {
+        $sendto.text("Add Email");
+        $nohover.addClass('no-hover');
+        $selectableEmails.removeClass('selected-email');
+        $selectableEmails.off('click');
+      }
+    });
+
+  });
+});
+</script>
+
+{{/extend}}

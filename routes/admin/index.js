@@ -334,6 +334,23 @@ route.get('/users/:id/invoices', m.param('id'), m.viewPlugin('mainNav', {
   method: 'findOne'
 }));
 
+route.get('/users/:id/invoice-recipients', m.param('id'), m.viewPlugin('mainNav', {
+  active: 'users'
+}), m.viewPlugin('sidebarNav', {
+  active: 'invoice-recipients',
+  baseUrl: '/admin/users/:id'
+}), m.viewPlugin('breadCrumbs', {
+  currentPage: 'Invoice Recipients'
+}), m.queryOptions({
+  many: [{
+    table: 'user_invoice_recipients',
+    alias: 'invoice_recipients'
+  }]
+}), m.view('admin/user/invoice-recipients', db.users, {
+  layout: 'admin/layout-single-object',
+  method: 'findOne'
+}));
+
 /**
  * Invoices standalone
  */

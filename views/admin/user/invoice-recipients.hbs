@@ -9,12 +9,35 @@
 {{/extend}}
 
 {{#extend "body"}}
+<div class="invoice-recipients-container">
+  <h1>User Invoice Recipients</h1>
 
-<div>
-  {{user.email}}
-  {{#each user.invoice_recipients}}
-    <div>{{email}}</div>
-  {{/each}}
+  <div class="form-group invoice-recipients-form-group">
+    <label>Add Email</label>
+    <div class="input-group">
+      <span class="input-addon">+</span>
+      <input type="email" class="form-control">
+    </div>
+  </div>
+
+  <table class="table table-striped invoice-recipients-table-list">
+    <!-- user.email -->
+    <tbody>
+      {{#each user.invoice_recipients}}
+        <tr>
+          <td>
+            <span data-icon="gb-icon-email">
+              {{email}}
+            </span>
+            <span class="edit-group">
+              <i class="gb-icon-pencil"></i>
+              <i class="gb-icon-x-mark"></i>
+            </span>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
 </div>
 
 {{/extend}}

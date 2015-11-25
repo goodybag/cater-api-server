@@ -38,6 +38,14 @@
     margin-right: 10px;
   }
 
+  .input-edit-email {
+    display: none;
+  }
+
+  .edit-buttons {
+    display: none;
+  }
+
   .edit-group {
     float: right;
 
@@ -48,6 +56,23 @@
         cursor: pointer;
         color: @palette-gray;
       }
+    }
+  }
+
+  .edit-view {
+    .view-email,
+    .edit-group {
+      display: none;
+    }
+
+    .input-edit-email {
+      display: inline-block;
+      width: 60%;
+    }
+
+    .edit-buttons {
+      display: inline-block;
+      float: right;
     }
   }
 }

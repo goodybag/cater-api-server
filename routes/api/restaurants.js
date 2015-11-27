@@ -190,6 +190,14 @@ route.get('/:restaurant_id/menu',
   }),
   m.find(db.categories));
 
+route.get('/:restaurant_id/categories',
+  m.param('restaurant_id'),
+  function(req, res, next) {
+    req.queryObj.is_hidden = false;
+    next();
+  },
+  m.find(db.categories));
+
 route.get('/:restaurant_id/orders',
   function(req, res, next) {
     req.queryObj.user_id = req.user.attributes.id;

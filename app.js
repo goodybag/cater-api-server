@@ -65,7 +65,7 @@ app.use(middleware.setSession());
 app.use(middleware.storeUserAgent());
 app.use( middleware.getRegions() );
 app.use( middleware.consumeNewSignup() );
-app.use( middleware.rateLimit() )
+app.use( middleware.rateLimit() );
 
 app.use( middleware.setUserRegion() );
 

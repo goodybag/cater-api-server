@@ -38,7 +38,7 @@ module.exports = function( options ){
       var delta = (limit.reset * 1000) - Date.now() | 0;
       var after = limit.reset - (Date.now() / 1000) | 0;
       res.set('Retry-After', after);
-      res.send(429, 'Rate limit exceeded, retry in ', delta);
+      res.status(429).render('429');
 
     });
   }

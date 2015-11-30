@@ -49,6 +49,19 @@ define( function( require, exports, module ){
       })
 
     }
+
+  , 'delete-email': function($target, userId, userName, userInvoiceId) {
+      console.log("userInvoiceId", userInvoiceId);
+      api('users')('invoice-recipients')( userInvoiceId ).del( function(error, result) {
+        if(error) {
+          flash.info([
+            'Oops! Something went wrong!<br><small class="really-small">' + error + '</small>'
+          ]);
+        } else {
+          location.reload();
+        }
+      });
+    }
   };
 
   return function( $el ){

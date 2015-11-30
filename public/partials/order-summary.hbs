@@ -15,9 +15,8 @@
         {{#each order.orderItems}}
         <tr id="order-item-{{this.id}}" data-id="{{this.id}}">{{> order_item_summary}}</tr>
         {{/each}}
-
         {{#each order.restaurant.amenities}}
-        <tr data-amenity-id="{{id}}" class="{{#unless checked}}hide{{/unless}}" >
+        <tr data-amenity-id="{{id}}" class="{{#unless (contains (pluck ../order.amenities 'amenity_id') id)}}hide{{/unless}}">
           <td class="item-name">{{name}}
           {{#if description}}<ul class="comma-separated item-options"><li>{{description}}</li></ul>{{/if}}
           </td>

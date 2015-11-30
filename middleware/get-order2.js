@@ -189,6 +189,16 @@ module.exports = function( options ){
         }
       }
 
+      // Apply legacy `.checked` fields to restaurant amenities
+      if ( options.amenities && order.amenities.length ){
+        var ids = utils.pluck( order.amenities, 'id' );
+        for ( var i = order.restaurant.amenities.length - 1; i >= 0; i-- ){
+          order.restaurant.amenities[ i ].checked = ids.indexOf(
+            order.restaurant.amenities[ i ].id
+          ) > -1;
+        }
+      }
+
       req.order = order;
       res.locals.order = order;
       req.logger.options.data.order = { id: order.id };

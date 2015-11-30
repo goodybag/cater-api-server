@@ -64,6 +64,26 @@ route.delete('/users/:id'
 , m.remove( db.users )
 );
 
+// req body: { name: User Name, email: example@email.com }
+route.post('/users/:user_id/invoice-recipients'
+, m.restrict(['admin'])
+, m.queryToBody('user_id')
+, m.insert( db.user_invoice_recipients )
+);
+
+// req body: { email: example@email.com }
+route.put('/users/invoice-recipients/:id'
+, m.restrict(['admin'])
+, m.param('id')
+, m.update( db.user_invoice_recipients )
+);
+
+route.delete('/users/invoice-recipients/:id'
+, m.restrict(['admin'])
+, m.param('id')
+, m.remove( db.user_invoice_recipients )
+);
+
 /**
  * Delivery Services
  */

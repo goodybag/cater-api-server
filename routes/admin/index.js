@@ -344,7 +344,8 @@ route.get('/users/:id/invoice-recipients', m.param('id'), m.viewPlugin('mainNav'
 }), m.queryOptions({
   many: [{
     table: 'user_invoice_recipients',
-    alias: 'invoice_recipients'
+    alias: 'invoice_recipients',
+    order: { id: 'desc' }
   }]
 }), m.view('admin/user/invoice-recipients', db.users, {
   layout: 'admin/layout-single-object',

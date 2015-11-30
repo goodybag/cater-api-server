@@ -22,44 +22,6 @@ route.post('/users/:uid/rewards'
 , controllers.users.rewards.redeem
 );
 
-/**
- * Delivery Services
- */
-
-route.get('/delivery-services'
-, m.restrict(['admin'])
-, m.sort('-id')
-, m.param('region_id')
-, m.queryOptions({
-    many: [{ table: 'delivery_service_zips', alias: 'zips' }]
-  , one:  [{ table: 'regions', alias: 'region' }]
-  })
-, m.find( db.delivery_services )
-);
-
-route.post('/delivery-services'
-, m.restrict(['admin'])
-, m.insert( db.delivery_services )
-);
-
-route.get('/delivery-services/:id'
-, m.restrict(['admin'])
-, m.param('id')
-, m.findOne( db.delivery_services )
-);
-
-route.put('/delivery-services/:id'
-, m.restrict(['admin'])
-, m.param('id')
-, m.update( db.delivery_services )
-);
-
-route.delete('/delivery-services/:id'
-, m.restrict(['admin'])
-, m.param('id')
-, m.remove( db.delivery_services )
-);
-
 route.get('/users'
 , m.restrict(['admin'])
 , m.sort('-id')
@@ -100,6 +62,44 @@ route.delete('/users/:id'
 , m.restrict(['admin'])
 , m.param('id')
 , m.remove( db.users )
+);
+
+/**
+ * Delivery Services
+ */
+
+route.get('/delivery-services'
+, m.restrict(['admin'])
+, m.sort('-id')
+, m.param('region_id')
+, m.queryOptions({
+    many: [{ table: 'delivery_service_zips', alias: 'zips' }]
+  , one:  [{ table: 'regions', alias: 'region' }]
+  })
+, m.find( db.delivery_services )
+);
+
+route.post('/delivery-services'
+, m.restrict(['admin'])
+, m.insert( db.delivery_services )
+);
+
+route.get('/delivery-services/:id'
+, m.restrict(['admin'])
+, m.param('id')
+, m.findOne( db.delivery_services )
+);
+
+route.put('/delivery-services/:id'
+, m.restrict(['admin'])
+, m.param('id')
+, m.update( db.delivery_services )
+);
+
+route.delete('/delivery-services/:id'
+, m.restrict(['admin'])
+, m.param('id')
+, m.remove( db.delivery_services )
 );
 
 /**

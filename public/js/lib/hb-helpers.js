@@ -628,6 +628,15 @@ define(function(require, exports, module) {
         .reduce( function( result, part ){
           return isArray ? result.concat( part ) : ( result + part );
         }, isArray ? [] : '' );
+    },
+
+    makeAnchor: function( str ){
+      // Eschew proper regex for a hacky solution
+      if ( typeof str === 'string' && str.substring( 0, 4 ) === 'http' ){
+        return '<a href=":url" target="_blank">:url</a>'.replace( /:url/g, str );
+      }
+
+      return str;
     }
   };
 

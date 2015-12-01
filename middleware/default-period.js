@@ -1,5 +1,11 @@
 var moment = require('moment-timezone');
-var zeroIndexed = [ 'month', 'hour', 'minute', 'second', 'millisecond' ];
+
+var rules = {
+  // Increment month by one to match moment's indexing
+  month: function( value ){
+    return Math.max( 0, Math.min( 12, ++value ) );
+  }
+};
 
 module.exports = function(intervals) {
   if ( !Array.isArray(intervals) )
@@ -9,11 +15,13 @@ module.exports = function(intervals) {
     intervals.forEach(function(interval) {
       if ( req.query[interval] ) return;
 
-      if ( zeroIndexed.indexOf(interval) >= 0 )
-        req.query[interval] = moment().add(1, interval)[interval]();
-      else
-        req.query[interval] = moment()[interval]();
+      req.query[interval] = moment()[interval]();
+
+      if ( interval in rules ){
+        req.query[ interval ] = rules[ interval ]( req.query[ interval ] );
+      }
     });
+
     next();
   };
 };

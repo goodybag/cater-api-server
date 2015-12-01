@@ -83,7 +83,7 @@
             <div class="form-inline clearfix">
               <div class="form-group col-sm-8">
                 <label class="control-label" for="order-notes">Special instructions for this order?</label>
-                <textarea id="order-notes" class="form-control order-notes" rows="3"{{#unless order.editable}} disabled="disabled"{{/unless}}>{{order.notes}}</textarea>
+                <textarea id="order-notes" class="form-control order-notes" rows="3"{{#unless order.editable}} disabled="disabled"{{/unless}} placeholder="e.g. Please bring double the napkins">{{order.notes}}</textarea>
               </div>
             </div>
             {{#if order.restaurant.accepts_tips}}

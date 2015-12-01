@@ -67,48 +67,6 @@ define( function( require, exports, module ){
 
   }
 
-  , 'send-emails': function( $target, $el, invoiceId ) {
-      var $items = $('.list-item.selected');
-      var $emails = $('.selected-email .email-text');
-
-      var done = function( error ) {
-        if(error) {
-          console.error( error );
-          return alert('An error occurred. CMD+Shift+J for details');
-        }
-      }
-
-      var sendEmails = function(item, next) {
-        var $item = $(item);
-        var id = +$item.data('invoiceId');
-
-        var sendEmail = function(email, next) {
-          var email = $(email).html();
-
-          api.invoices( id )('emails')( email ).post( function( error, result ){
-            if( error ){
-              console.error( error );
-              return alert('Error sending invoice. CMD+SHIFT+J for details');
-            }
-
-            // Change label to 'Emailed'
-            $el.find('.label-status')
-              .removeClass('pending error paid')
-              .addClass('emailed')
-              .text('Emailed');
-
-            alert("Email has been sent!");
-            location.reload();
-
-          });
-        }
-
-        utils.async.each( $emails, sendEmail, done);
-      }
-
-      utils.async.each( $items, sendEmails, done);
-    }
-
   , 'set-status': function( $target, $el, invoiceId){
       var status = $target.data('status');
       var $items = $('.list-item.selected');

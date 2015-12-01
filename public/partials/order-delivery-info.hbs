@@ -15,7 +15,7 @@
     </div>
     <div class="order-address edit{{#if order.isAddressComplete}} hide{{/if}}">
       {{#with orderAddress}}
-        {{> edit_address}}
+        {{> edit_address hideInstructions=true}}
       {{/with}}
       {{#if order.isAddressComplete}}
       <div class="btn-toolbar">
@@ -23,6 +23,12 @@
         <button type="button" class="btn btn-primary save-address">Save Address</button>
       </div>
       {{/if}}
+    </div>
+    <div class="row">
+      <div class="form-group col-lg-8">
+        <label for="delivery-instructions">Delivery Instructions</label>
+        <textarea id="delivery-instructions" name="delivery_instructions" class="form-control address-delivery-instructions" placeholder="Notes such as gate codes or access instructions">{{address.delivery_instructions}}</textarea>
+      </div>
     </div>
   </div>
 </div>

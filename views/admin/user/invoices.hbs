@@ -89,7 +89,9 @@
         <div class="more-actions-and-info bottom">
           <button
             class="action btn-default"
-            data-invoice-id="{{this.id}}"
+            data-invoice-id={{this.id}}
+            data-invoice-recipients=
+              "{{#each this.user.invoice_recipients}}{{this.email}};{{/each}}"
             data-action="send-email">
               {{~#is this.status 'pending' 'error'}}Send Email{{else}}Re-Send Email{{/is~}}
           </button>

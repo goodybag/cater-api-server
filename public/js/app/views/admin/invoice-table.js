@@ -131,35 +131,7 @@ define( function( require, exports, module ){
         $el.closest('.open').removeClass('open');
       });
     }
-
-  , 'save-emails': function( $target, $el, invoiceId, userId, userName ){
-      var emailStr = $target.context.previousElementSibling.value;
-      if(emailStr) {
-        if(validateEmail(emailStr)) {
-          api.invoices('recipients').post({
-            user_id: userId,
-            name: userName,
-            email: emailStr
-          }, function(error, result) {
-            if(error) {
-              console.error("There was an error." +  error);
-            } else {
-              alert(emailStr + " has been successfully added!");
-              location.reload();
-            }
-          });
-        } else {
-          return alert('\'' + emailStr + '\' is not a valid email address.\
-                       \nThis address was not saved.');
-        }
-      }
-    }
   };
-
-  var validateEmail = function(email) {
-    var re = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i;
-    return re.test(email);
-  }
 
   return function( $el ){
     $el.find('[data-action]').click( function( e ){

@@ -25,47 +25,31 @@ define( function( require, exports, module ){
       });
     }
 
-  , 'send-email': function( $target, $el, invoiceId ){
-      api.invoices( invoiceId )('emails').post( function( error, result ){
-        if ( error ){
-          console.error( error );
-          return alert('Error sending invoice. CMD+Shift+J for details');
-        }
+  , 'send-email': function( $target, $el, invoiceId, recipients ){
+      var invoiceRecipientEmails = recipients.split(";");
 
-        // Change label to 'Emailed'
-        $el.find('.label-status')
-          .removeClass('pending error paid')
-          .addClass('emailed')
-          .text('Emailed');
+      utils.async.each( invoiceRecipientEmails, function(email, next) {
+        if(email) {
+          api.invoices( invoiceId )('emails')( email ).post(function( error, result ){
+            if ( error ){
+              console.error( error );
+              return alert('Error sending invoice to ' + email + '. CMD+Shift+J for details');
+            }
+
+            // Change label to 'Emailed'
+            $el.find('.label-status')
+              .removeClass('pending error paid')
+              .addClass('emailed')
+              .text('Emailed');
+          });
+        }
+      }, function( error ) {
+        if(error) {
+          console.error( error );
+          return alert("Error sending invoice. CMD+SHIFT+J for details");
+        }
       });
     }
-
-  , 'send-to-all': function($target, $el, invoiceId, userId, userName, inRec ) {
-    var emails = inRec.split(";");
-
-    utils.async.each( emails, function(email, next) {
-      if(email) {
-        api.invoices( invoiceId )('emails')( email ).post(function( error, result ){
-          if ( error ){
-            console.error( error );
-            return alert('Error sending invoice to ' + email + '. CMD+Shift+J for details');
-          }
-
-          // Change label to 'Emailed'
-          $el.find('.label-status')
-            .removeClass('pending error paid')
-            .addClass('emailed')
-            .text('Emailed');
-        });
-      }
-    }, function( error ) {
-      if(error) {
-        console.error( error );
-        return alert("Error sending invoice. CMD+SHIFT+J for details");
-      }
-    });
-
-  }
 
   , 'set-status': function( $target, $el, invoiceId){
       var status = $target.data('status');
@@ -97,12 +81,10 @@ define( function( require, exports, module ){
 
       var $this       = $(this);
       var invoiceId   = +$this.data('invoice-id');
-      var userId      = $this.data('user-id');
-      var userName    = $this.data('user-name');
+      var recipients  = $this.data('invoice-recipients');
       var action      = $this.data('action');
-      var inRec       = $this.data('invoice-recipients');
 
-      actions[ action ]( $this, $('.list-item[data-invoice-id="' + invoiceId + '"]'), invoiceId, userId, userName, inRec );
+      actions[ action ]( $this, $('.list-item[data-invoice-id="' + invoiceId + '"]'), invoiceId, recipients );
     })
   };
 });

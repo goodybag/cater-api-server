@@ -236,6 +236,7 @@ define(function(require) {
     , notNull: true
     , default: 0
     }
+  , courier_tracking_id: { type: types.text }
   };
 
   definition.indices = {};

@@ -15,19 +15,9 @@ define(function(require){
   };
 
   var page = {
-    successFunnies: [
-      'You are very handsome.'
-    , 'Have a great day!'
-    , 'You. Are. The. Best.'
-    , 'I like what you\'ve done with your hair'
-    , 'Remember the old days?'
-    , 'Please click softer next time :('
-    , 'You rock!'
-    , 'Bet, let, get, pet, Boba Fet'
-    , 'You win... This time.'
+    fieldsThatRefreshThePageWhenChanged: [
+      'user_id', 'restaurant_id'
     ]
-
-  , state: new utils.Model()
 
   , init: function( options ){
       if ( !options.order ){
@@ -35,9 +25,10 @@ define(function(require){
       }
 
       page.order = options.order;
+      page.state = new utils.Model();
 
-      page.state.set( 'order_type', options.order.get('type') );
-      page.state.set( 'restaurant_location_id', options.order.get('restaurant_location_id') );
+      // page.state.set( 'type', options.order.get('type') );
+      // page.state.set( 'restaurant_location_id', options.order.get('restaurant_location_id') );
 
       page.state.on( 'change', page.onStateChange );
 
@@ -77,8 +68,8 @@ define(function(require){
           new Views.PdfPreview({ el: this });
         });
 
-        $('[name="order_type"]').change( function( e ){
-          page.state.set( 'order_type', $(this).val() );
+        $('[name="type"]').change( function( e ){
+          page.state.set( 'type', $(this).val() );
         });
 
         $('[name="delivery_service_id"]').change( function( e ){
@@ -88,7 +79,7 @@ define(function(require){
             ]);
           }
 
-          page.state.set( 'order_courier', +$(this).val() );
+          page.state.set( 'delivery_service_id', +$(this).val() );
         });
 
         $('[name="restaurant_location_id"]').change( function( e ){
@@ -102,13 +93,20 @@ define(function(require){
 
         $('[name="payment_status"]').change(function (e) {
           var status = e.target.value || null;
-          if (status === null) alert('Changing payment status to unprocessed will attempt to recharge the credit card!');
-          page.updateOrder({ payment_status: status }, flash.successOrError.bind( flash ));
+          if (status === null) {
+            flash.info([
+              'Warning!<br><small class="really-small">'
+            , 'Changing payment status to unprocessed will attempt '
+            , 'to recharge the credit card!</small>'
+            ].join(''));
+          }
+
+          page.state.set({ payment_status: status });
         });
 
         $('[name="payment_method_id"]').change( function( e ){
           var pmid = isNaN(e.target.value) ? null : e.target.value;
-          page.updateOrder({ payment_method_id: pmid }, flash.successOrError.bind( flash ));
+          page.state.set({ payment_method_id: pmid });
         });
 
         $('[role="save"]').click( function( e ){
@@ -119,47 +117,46 @@ define(function(require){
 
         $('#restaurant-selector').delegate( '[data-id]', 'click', function( e ){
           e.preventDefault();
-
-          page.updateOrder( { restaurant_id: +$(this).data('id') }, function( error ){
-            flash.successOrError( error );
-
-            if ( !error ){
-              document.location.reload();
-            }
-          });
+          $('#restaurant-selector > [data-role="popover"]').data('gb.popover').close();
+          page.state.set({ restaurant_id: +$(this).data('id') });
         });
 
         $('#user-selector').delegate( '[data-id]', 'click', function( e ){
           e.preventDefault();
+          $('#user-selector > [data-role="popover"]').data('gb.popover').close();
+          page.state.set({ user_id: +$(this).data('id') });
+        });
 
-          page.updateOrder( { user_id: +$(this).data('id') }, function( error ){
-            flash.successOrError( error );
+        $('[name="courier_tracking_id"]').keyup( function( e ){
+          var v = $(this).val();
 
-            if ( !error ){
-              document.location.reload();
-            }
-          });
+          if ( v !== page.order.get('courier_tracking_id') ){
+            page.state.set( 'courier_tracking_id', v );
+          }
         });
       });
     }
 
   , saveOrder: function( callback ){
-      var props = {
-        type: page.state.get('order_type')
-      , restaurant_location_id: page.state.get('restaurant_location_id')
-      };
-
-      // Index of because of the whole `silent` thing
-      if ( props.type && props.type.indexOf('courier') > -1 ){
-        props.delivery_service_id = page.state.get('order_courier');
-      }
+      var props = page.state.toJSON();
 
       return page.updateOrder( props, function( error ){
         if ( error ) return callback( error );
 
         callback();
 
+        // Reset state
+        page.state.clear({ silent: true });
+
         page.onSave();
+
+        var shouldRefresh = utils.intersection(
+          Object.keys( props ), page.fieldsThatRefreshThePageWhenChanged
+        ).length > 0;
+
+        if ( shouldRefresh ){
+          document.location.reload();
+        }
       });
     }
 
@@ -257,9 +254,9 @@ define(function(require){
     }
 
   , updateCourierServiceSelector: function(){
-      $('.form-group-courier').toggleClass(
+      $('.form-group-courier, #courier-tracking-id-row').toggleClass(
         'hide'
-      , page.state.get('order_type').indexOf('courier') === -1
+      , page.state.get('type').indexOf('courier') === -1
       );
     }
 
@@ -280,7 +277,7 @@ define(function(require){
 
   , onStateChange: function( state ){
       var handlers = {
-        order_type: function(){
+        type: function(){
           page.updateCourierServiceSelector();
         }
       };

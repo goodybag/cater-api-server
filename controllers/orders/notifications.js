@@ -150,7 +150,24 @@ module.exports.JSON.sendNotification = function( req, res ){
     return notifications2
       .get( req.params.id )
       .create( +req.params.oid, req.user.attributes.id, req.query )
-      .send( onSend );
+      // NOTE:
+      // This send handler is duplicated in:
+      //    workers/scheduler/actions/notify-delivery-service.js
+      // If you change something here, be sure to check out that file
+      // TODO: Fix this situation
+      .send( function( error, result ){
+        if ( error ){
+          return onSend( error );
+        }
+
+        if ( req.params.id !== 'dropoff-order-submitted' ){
+          return onSend( null, result );
+        }
+
+        // Dropoff Order Submitted should also update the
+        // order's courier_tracking_id
+        db.orders.update( req.params.oid, { courier_tracking_id: result.data.url }, onSend );
+      });
   }
 
   var notification = notifier.defs[ req.params.id ];

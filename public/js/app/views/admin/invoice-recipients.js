@@ -33,6 +33,7 @@ define( function( require, exports, module ){
         });
       }
     }
+
   , 'edit-email': function($target, userId, userName, userInvoiceId) {
       var updatedEmail = $target.parent().prev().children('input').val();
 
@@ -46,8 +47,7 @@ define( function( require, exports, module ){
         } else {
           location.reload();
         }
-      })
-
+      });
     }
 
   , 'delete-email': function($target, userId, userName, userInvoiceId) {

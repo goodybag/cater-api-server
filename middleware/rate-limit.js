@@ -11,6 +11,13 @@ function getKey (req) {
   return req.connection.remoteAddress;
 }
 
+/**
+* options:
+*   max:      max # of requests
+*   duration: time limit interval
+*
+*  The default request/duration is 100 requests per minute.
+*/
 module.exports = function( options ){
 
   return function( req, res, next ){
@@ -18,8 +25,8 @@ module.exports = function( options ){
     options = Object.assign({}, {
       id: getKey(req)
     , db: redis.createClient( config.redis.port, config.redis.hostname, config.redis )
-    , max: 2500
-    , duration: 1000 * 60 * 60 // 1 hour
+    , max: 100
+    , duration: 1000 * 60 // 1 minute
     }, options);
 
     var limiter = new Limiter(options);

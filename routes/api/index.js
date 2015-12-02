@@ -129,15 +129,15 @@ route.get('/users/me'
 
  * @apiSuccess   {Object[]}   user.addresses                List of addresses available on user's account.
  * @apiSuccess   {Number}     user.addresses.id             Address id.
- * @apiSuccess   {Number}     user.addresses.user_id        Address' user id.
- * @apiSuccess   {String}     user.addresses.name           Address' name.
- * @apiSuccess   {String}     user.addresses.street         Address' street.
- * @apiSuccess   {String}     user.addresses.city           Address' city.
- * @apiSuccess   {String}     user.addresses.state          Address' state.
- * @apiSuccess   {String}     user.addresses.zip            Address' zipcode.
+ * @apiSuccess   {Number}     user.addresses.user_id        Address user id.
+ * @apiSuccess   {String}     user.addresses.name           Address name.
+ * @apiSuccess   {String}     user.addresses.street         Address street.
+ * @apiSuccess   {String}     user.addresses.city           Address city.
+ * @apiSuccess   {String}     user.addresses.state          Address state.
+ * @apiSuccess   {String}     user.addresses.zip            Address zipcode.
  * @apiSuccess   {Boolean}    user.addresses.is_default     "True" if address is the default address.
- * @apiSuccess   {String}     user.addresses.street2        Address' street, second line.
- * @apiSuccess   {String}     user.addresses.phone          Address' phone.
+ * @apiSuccess   {String}     user.addresses.street2        Address street, second line.
+ * @apiSuccess   {String}     user.addresses.phone          Address phone.
  * @apiSuccess   {String}     user.addresses.delivery_instructions    Delivery instructions for address.
  * @apiSuccess   {String}     user.addresses.lat_lng        Latitude/longitude of address.
 
@@ -265,6 +265,29 @@ route.delete('/delivery-services/:id'
 /**
  * Maps
  */
+
+ /**
+  * @api {get} /maps/geocode/:address   Geocodes the address specified.
+  * @apiParam {String} address   Address to be geocoded.
+  * @apiParamExample
+      {
+        "address": "200%20Congress%20Ave,%20Austin,%20Tx%2078701"
+      }
+  * @apiName GetGeocodedAddress
+  * @apiGroup Maps
+  * @apiPermission none
+
+  * @apiSuccess   {Object}    geocoded_address                       Returned geocoded address.
+  * @apiSuccess   {Boolean}   geocoded_address.valid                 "True" if geocode is valid.
+  * @apiSuccess   {Object}    geocoded_address.address               Geocoded address in object form.
+  * @apiSuccess   {String}    geocoded_address.address.street        Address street.
+  * @apiSuccess   {String}    geocoded_address.address.city          Address city.
+  * @apiSuccess   {String}    geocoded_address.address.state         Address state.
+  * @apiSuccess   {String}    geocoded_address.address.zip           Address zip.
+  * @apiSuccess   {Object}    geocoded_address.address.lat_lng       Latitude/longitude of address.
+  * @apiSuccess   {String}    geocoded_address.address.lat_lng.x     X coordinate.
+  * @apiSuccess   {String}    geocoded_address.address.lat_lng.y     Y coordinate.
+  **/
 
 route.get('/maps/geocode/:address'
 , controllers.api.maps.geocode

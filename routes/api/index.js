@@ -23,14 +23,14 @@ route.post('/users/:uid/rewards'
 );
 
 /**
- * @api {get} /users/me Returns your user profile.
+ * @api {get} /users/me   Returns your user account.
  * @apiName GetUsersMe
  * @apiGroup Users
  * @apiPermission none
 
  * @apiSuccess   {Object}     user                  Your user account.
  * @apiSuccess   {Number}     user.id               Your user id.
- * @apiSuccess   {String}     user.created_at       Timestamp when your profile was created.
+ * @apiSuccess   {String}     user.created_at       Timestamp when your account was created.
  * @apiSuccess   {String}     user.email            Your email.
  * @apiSuccess   {String}     user.organization     Your organization.
  * @apiSuccess   {String}     user.name             Your name.
@@ -99,6 +99,52 @@ route.get('/users/me'
   }
 );
 
+/**
+ * @api {get} /users/:id   Returns the user account specified.
+ * @apiParam {Number} id   User's unique id.
+ * @apiName GetUser
+ * @apiGroup Users
+ * @apiPermission admin
+
+ @apiSuccess   {Object[]}   user                       User's account.
+ @apiSuccess   {Number}     user.id                    User's unique id.
+ @apiSuccess   {String}     user.created_at            Timestamp when user account was created.
+ @apiSuccess   {String}     user.email                 User's email.
+ @apiSuccess   {String}     user.password              User's password.
+ @apiSuccess   {String}     user.organization          User's organization.
+ @apiSuccess   {String}     user.name                  User's name.
+ @apiSuccess   {String}     user.balanced_customer_uri     User's balanced_customer_uri.
+ @apiSuccess   {Boolean}    user.is_invoiced           "True" if account is invoiced.
+ @apiSuccess   {Number}     user.points                Total points on user's account.
+ @apiSuccess   {Number}     user.region_id             Id of user's default region.
+ @apiSuccess   {String}     user.default_zip           User's default zipcode.
+ @apiSuccess   {String}     user.ordrin_email          *Obsolete crap*
+ @apiSuccess   {String}     user.ordrin_password       *Obsolete crap*
+ @apiSuccess   {Boolean}    user.is_tax_exempt         "True" if account is tax exempt.
+ @apiSuccess   {String}     user.user_agent            User's user agent information.
+ @apiSuccess   {String}     user.organization_type     User's organization_type.
+ @apiSuccess   {String}     user.stripe_id             User's stripe id.
+ @apiSuccess   {Boolean}    user.is_deleted            "True" if user's account is deactived.
+ @apiSuccess   {Number}     user.priority_account_price_hike_percentage     Percentage on menu items for a priority account.
+
+ @apiSuccess   {Object[]}   user.addresses                List of addresses available on user's account.
+ @apiSuccess   {Number}     user.addresses.id             Address id.
+ @apiSuccess   {Number}     user.addresses.user_id        Address' user id.
+ @apiSuccess   {String}     user.addresses.name           Address' name.
+ @apiSuccess   {String}     user.addresses.street         Address' street.
+ @apiSuccess   {String}     user.addresses.city           Address' city.
+ @apiSuccess   {String}     user.addresses.state          Address' state.
+ @apiSuccess   {String}     user.addresses.zip            Address' zipcode.
+ @apiSuccess   {Boolean}    user.addresses.is_default     "True" if address is the default address.
+ @apiSuccess   {String}     user.addresses.street2        Address' street, second line.
+ @apiSuccess   {String}     user.addresses.phone          Address' phone.
+ @apiSuccess   {String}     user.addresses.delivery_instructions    Delivery instructions for address.
+ @apiSuccess   {String}     user.addresses.lat_lng        Latitude/longitude of address.
+
+ @apiSuccess   {Object[]}   user.groups             List of groups user belongs to.
+ @apiSuccess   {Number}     user.groups.user_id     Group's user id.
+ @apiSuccess   {String}     user.groups.group       Group's group name.
+ **/
 route.get('/users/:id'
 , m.restrict(['admin'])
 , m.param('id')
@@ -130,7 +176,7 @@ route.delete('/users/:id'
  */
 
 /**
- * @api {get} /delivery_services Returns a list of all delivery services.
+ * @api {get} /delivery_services   Returns a list of all delivery services.
  * @apiName GetDeliveryServices
  * @apiGroup Delivery Services
  * @apiPermission admin

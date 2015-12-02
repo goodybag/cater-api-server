@@ -22,6 +22,48 @@ route.post('/users/:uid/rewards'
 , controllers.users.rewards.redeem
 );
 
+route.get('/users'
+, m.restrict(['admin'])
+, m.sort('-id')
+, m.queryOptions({
+    many: [{ table: 'addresses' }, { table: 'orders' }]
+  })
+, m.find( db.users )
+);
+
+route.get('/users/me'
+, function( req, res ){
+    delete req.user.attributes.password;
+    res.json( req.user );
+  }
+);
+
+route.get('/users/:id'
+, m.restrict(['admin'])
+, m.param('id')
+, m.sort('-id')
+, m.queryOptions({
+    many: [
+      { table: 'addresses' }
+    , { table: 'users_groups', alias: 'groups' }
+    ]
+  })
+, m.find( db.users )
+);
+
+route.put('/users/:id'
+, m.restrict(['admin'])
+, m.param('id')
+, m.updateStripeCustomer({ required: 'user', pick: ['name'] })
+, m.update( db.users )
+);
+
+route.delete('/users/:id'
+, m.restrict(['admin'])
+, m.param('id')
+, m.remove( db.users )
+);
+
 /**
  * Delivery Services
  */
@@ -94,48 +136,6 @@ route.delete('/delivery-services/:id'
 , m.restrict(['admin'])
 , m.param('id')
 , m.remove( db.delivery_services )
-);
-
-route.get('/users'
-, m.restrict(['admin'])
-, m.sort('-id')
-, m.queryOptions({
-    many: [{ table: 'addresses' }, { table: 'orders' }]
-  })
-, m.find( db.users )
-);
-
-route.get('/users/me'
-, function( req, res ){
-    delete req.user.attributes.password;
-    res.json( req.user );
-  }
-);
-
-route.get('/users/:id'
-, m.restrict(['admin'])
-, m.param('id')
-, m.sort('-id')
-, m.queryOptions({
-    many: [
-      { table: 'addresses' }
-    , { table: 'users_groups', alias: 'groups' }
-    ]
-  })
-, m.find( db.users )
-);
-
-route.put('/users/:id'
-, m.restrict(['admin'])
-, m.param('id')
-, m.updateStripeCustomer({ required: 'user', pick: ['name'] })
-, m.update( db.users )
-);
-
-route.delete('/users/:id'
-, m.restrict(['admin'])
-, m.param('id')
-, m.remove( db.users )
 );
 
 /**

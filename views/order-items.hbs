@@ -56,10 +56,10 @@
         <thead>
           <tr>
             <th class="line-item-name">Item</th>
+            <th class="line-item-feeds">Feeds</th>
             <th class="line-item-quantity">Quantity</th>
             <th class="line-item-notes">Notes</th>
             <th class="line-item-recipient"><abbr title="Specify a recipient per item (optional)">Recipient</abbr></th>
-            <th class="line-item-feeds">Feeds</th>
             <th class="line-item-price">Price</th>
           </tr>
         </thead>
@@ -82,6 +82,9 @@
                 {{/each}}
               </ul>
               {{#if ../order.editable}}<a class="item-remove remove-order-item-btn" href="#">Remove</a>{{/if}}
+            </td>
+            <td class="line-item-feeds" data-title="Feeds">
+              <span>{{range this.feeds_min this.feeds_max}}</span>
             </td>
             <td class="line-item-quantity" data-title="Quantity">
               {{#if ../order.editable}}
@@ -106,9 +109,6 @@
               {{else}}
                 <span name="recipient" class="item-recipient-span order-item-field order-item-recipient">{{#if this.recipient}}{{this.recipient}}{{else}}&nbsp;{{/if}}</span>
               {{/if}}
-            </td>
-            <td class="line-item-feeds" data-title="Feeds">
-              <span>{{range this.feeds_min this.feeds_max}}</span>
             </td>
             <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
           </tr>

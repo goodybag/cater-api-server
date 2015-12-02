@@ -184,10 +184,10 @@
         <thead>
           <tr>
             <th class="line-item-name">Item</th>
+            <th class="line-item-feeds">Feeds</th>
             <th class="line-item-quantity">Quantity</th>
             <th class="line-item-notes">Notes</th>
             <th class="line-item-recipient">Recipient</th>
-            <th class="line-item-feeds">Feeds</th>
             <th class="line-item-price">Price</th>
           </tr>
         </thead>
@@ -211,6 +211,9 @@
               </ul>
               {{#if ../isAdmin}}<a class="item-remove remove-order-item-btn" href="#">Remove</a>{{/if}}
             </td>
+            <td class="line-item-feeds" data-title="Feeds">
+              {{range feeds_min feeds_max}}
+            </td>
             <td class="line-item-quantity" data-title="Quantity">
               {{#if ../isAdmin}}
               <span class="icon-x">x</span>
@@ -232,9 +235,6 @@
               {{else}}
                 <span name="recipient" class="item-recipient-span order-item-field order-item-recipient">{{#if this.recipient}}{{this.recipient}}{{else}}&nbsp;{{/if}}</span>
               {{/if}}
-            </td>
-            <td class="line-item-feeds" data-title="Feeds">
-              {{range feeds_min feeds_max}}
             </td>
             <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
           </tr>

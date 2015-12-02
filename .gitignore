@@ -21,6 +21,7 @@ results
 npm-debug.log
 node_modules
 apidoc/
+doc/
 balanced-config.json
 public/receipts/*.pdf
 public/components

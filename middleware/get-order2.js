@@ -70,6 +70,14 @@ module.exports = function( options ){
       }
     }
 
+    if ( options.amenities ){
+      $options.many.push({
+        table: 'order_amenities'
+      , alias: 'amenities'
+      , mixin: [{ table: 'amenities'}]
+      });
+    }
+
     if ( options.restaurant ){
       var restaurantOne = [ { table: 'regions', alias: 'region' } ];
       var restaurantMany = [
@@ -80,25 +88,13 @@ module.exports = function( options ){
       ];
 
       if ( options.amenities ){
-        // I am sorry for this.
-        // I wanted to look at all of the available amenities as well as if there's
-        // a order_amenity record. It's aliased as "amenity.checked", so that I know which
-        // have been added to an order.
         restaurantMany.push({
           table: 'amenities'
         , alias: 'amenities'
-        , columns:  [ '*'
-                    , {
-                        type: 'exists'
-                      , expression: {
-                          type: 'select'
-                        , columns: [ { expression: 1 } ]
-                        , table: 'order_amenities'
-                        , where: { order_id: '$orders.id$', amenity_id: '$amenities.id$' }
-                        }
-                      , alias: 'checked'
-                      }
-                    ]
+        // , mixin:  [ { table: 'order_amenities'
+        //             , where: { 'order_amenities.amenitiy_id': 'amenities.id' }
+        //             }
+        //           ]
         });
       }
 
@@ -190,6 +186,16 @@ module.exports = function( options ){
             level: 'error'
           , message: 'Cannot send courier notifications without a location set'
           });
+        }
+      }
+
+      // Apply legacy `.checked` fields to restaurant amenities
+      if ( options.amenities && order.amenities.length ){
+        var ids = utils.pluck( order.amenities, 'id' );
+        for ( var i = order.restaurant.amenities.length - 1; i >= 0; i-- ){
+          order.restaurant.amenities[ i ].checked = ids.indexOf(
+            order.restaurant.amenities[ i ].id
+          ) > -1;
         }
       }
 

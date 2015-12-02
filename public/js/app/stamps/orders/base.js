@@ -164,6 +164,18 @@ define( function( require, exports, module ){
       Order.applyPriceHikeToItem( item, phike );
     });
 
+    var hikeAmenity = function( amenity ){
+      amenity.price += Math.round( phike * amenity.price )
+    };
+
+    if ( Array.isArray( order.restaurant.amenities ) ){
+      order.restaurant.amenities.forEach( hikeAmenity );
+    }
+
+    if ( Array.isArray( order.amenities ) ){
+      order.amenities.forEach( hikeAmenity );
+    }
+
     return order;
   };
 

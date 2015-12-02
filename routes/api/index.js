@@ -30,6 +30,7 @@ route.post('/users/:uid/rewards'
  * @api {get} /delivery_services Returns a list of all delivery services.
  * @apiName GetDeliveryServices
  * @apiGroup Delivery Services
+ * @apiPermission admin
 
  * @apiSuccess   {Object[]}   delivery_service                 List of delivery services.
  * @apiSuccess   {Number}     delivery_service.id              Delivery service id.

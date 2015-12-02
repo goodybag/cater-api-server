@@ -1,5 +1,9 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/css/checkout.css' pkg)}}">
+{{#unless config.isDev}}
+  <link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/css/checkout.css' pkg)}}">
+{{else}}
+  <link rel="stylesheet" href="/css/checkout.css">
+{{/unless}}
 {{/extend}}
 
 {{#extend "title"}} - Checkout{{/extend}}

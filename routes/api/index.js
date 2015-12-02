@@ -24,7 +24,7 @@ route.post('/users/:uid/rewards'
 
 /**
  * @api {get} /users/me   Returns your user account.
- * @apiName GetUsersMe
+ * @apiName GetUserMe
  * @apiGroup Users
  * @apiPermission none
 
@@ -176,7 +176,7 @@ route.delete('/users/:id'
  */
 
 /**
- * @api {get} /delivery_services   Returns a list of all delivery services.
+ * @api {get} /delivery-services   Returns a list of all delivery services.
  * @apiName GetDeliveryServices
  * @apiGroup Delivery Services
  * @apiPermission admin
@@ -227,6 +227,23 @@ route.post('/delivery-services'
 , m.insert( db.delivery_services )
 );
 
+/**
+ * @api {get} /delivery_services/:id   Returns the delivery service specified.
+ * @apiParam {Number} id   Delivery service's unique id.
+ * @apiName GetDeliveryService
+ * @apiGroup Delivery Services
+ * @apiPermission admin
+
+ * @apiSuccess   {Object}   delivery_service                 Returned delivery service.
+ * @apiSuccess   {Number}   delivery_service.id              Id of delivery service.
+ * @apiSuccess   {String}   delivery_service.name            Name of delivery service.
+ * @apiSuccess   {Number}   delivery_service.rate            Rating of delivery service.
+ * @apiSuccess   {String}   delivery_service.created_at      Timestamp when delivery service was created.
+ * @apiSuccess   {String}   delivery_service.order_email     Order email of delivery service.
+ * @apiSuccess   {String}   delivery_service.order_phone     Order phone of delivery service.
+ * @apiSuccess   {Number}   delivery_service.region_order_distribution           Region order distribution of delivery service.
+ * @apiSuccess   {String}   delivery_service.order_submitted_notification_id     Order submitted notification id of delivery service.
+ **/
 route.get('/delivery-services/:id'
 , m.restrict(['admin'])
 , m.param('id')

@@ -22,15 +22,6 @@ route.post('/users/:uid/rewards'
 , controllers.users.rewards.redeem
 );
 
-route.get('/users'
-, m.restrict(['admin'])
-, m.sort('-id')
-, m.queryOptions({
-    many: [{ table: 'addresses' }, { table: 'orders' }]
-  })
-, m.find( db.users )
-);
-
 route.get('/users/me'
 , function( req, res ){
     delete req.user.attributes.password;

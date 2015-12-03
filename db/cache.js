@@ -36,13 +36,14 @@ module.exports.setupBasicStructure = function( db ){
   db.cache = {};
 
   db.cache.restaurants = {};
+  db.cache.restaurants.regions = {};
 
   db.cache.restaurants.byRegion = function( region ){
-    if ( !(region in db.cache.restaurants) ){
+    if ( !(region in db.cache.restaurants.regions) ){
       throw new Error('Invalid cache key');
     }
 
-    var fVal = db.cache.restaurants[ region ];
+    var fVal = db.cache.restaurants.regions[ region ];
     var result = fVal.valueOf();
 
     if ( fVal.error ) result.error = fVal.error;
@@ -52,8 +53,8 @@ module.exports.setupBasicStructure = function( db ){
 
   db.cache.restaurants.byId = function( id ){
     var restaurants;
-    for ( var regionId in db.cache.restaurants ){
-      restaurants = db.cache.restaurants[ regionId ].valueOf();
+    for ( var regionId in db.cache.restaurants.regions ){
+      restaurants = db.cache.restaurants.regions[ regionId ].valueOf();
 
       for ( var i = 0; i < restaurants.length; i++ ){
         if ( restaurants[ i ].id === id ){
@@ -64,13 +65,14 @@ module.exports.setupBasicStructure = function( db ){
   };
 
   db.cache.delivery_services = {};
+  db.cache.delivery_services.regions = {};
 
   db.cache.delivery_services.byRegion = function( region ){
-    if ( !(region in db.cache.delivery_services) ){
+    if ( !(region in db.cache.delivery_services.regions) ){
       throw new Error('Invalid cache key');
     }
 
-    var fVal = db.cache.delivery_services[ region ];
+    var fVal = db.cache.delivery_services.regions[ region ];
     var result = fVal.valueOf();
 
     if ( fVal.error ) result.error = fVal.error;
@@ -84,7 +86,7 @@ module.exports.autoFetchFromRedis = function( db ){
     if ( error ) throw error;
 
     regions.forEach( function( region ){
-      db.cache.restaurants[ region.id ] = fetchVal({
+      db.cache.restaurants.regions[ region.id ] = fetchVal({
         period: 1000 * 60 * 6
 
       , fetch: function( callback ){
@@ -116,7 +118,7 @@ module.exports.autoFetchFromRedis = function( db ){
         }
       });
 
-      db.cache.delivery_services[ region.id ] = fetchVal({
+      db.cache.delivery_services.regions[ region.id ] = fetchVal({
         period: 1000 * 60 * 6
 
       , fetch: function( callback ){
@@ -148,7 +150,7 @@ module.exports.autoFetchFromDb = function( db ){
     if ( error ) throw error;
 
     regions.forEach( function( region ){
-      db.cache.restaurants[ region.id ] = fetchVal({
+      db.cache.restaurants.regions[ region.id ] = fetchVal({
         period: 1000 * 60 * 2
 
       , fetch: function( callback ){

@@ -223,8 +223,8 @@ route.get('/search', function(req, res, next) {
 }), m.find(db.orders));
 
 /**
- * @api {get} /orders/:id     Returns the order specified.
- * @apiParam {Number} id      Order id.
+ * @api {get} /orders/:oid     Returns the order specified.
+ * @apiParam {Number} oid      Order id.
  * @apiName GetOrder
  * @apiGroup Restaurant Orders
  * @apiPermission admin
@@ -572,8 +572,8 @@ route.put('/:id', m.restrict(['admin']), m.param('id'), m.queryOptions({
 route.delete('/:id', m.restrict(['admin']), m.param('id'), m.remove(db.orders));
 
 /**
- * @api {get} /orders/:id/delivery-fee     Returns the delivery fee for the order specified.
- * @apiParam {Number} id                   Order id.
+ * @api {get} /orders/:oid/delivery-fee     Returns the delivery fee for the order specified.
+ * @apiParam {Number} oid                   Order id.
  * @apiName GetOrderDeliveryFee
  * @apiGroup Restaurant Orders
  * @apiPermission none
@@ -601,8 +601,8 @@ route.get('/:id/delivery-fee', m.getOrder2({
 }), controllers.orders.getDeliveryFee);
 
 /**
- * @api {get} /orders/:id/items     Returns all order items for the specified order.
- * @apiParam {Number} id            Order id.
+ * @api {get} /orders/:oid/items     Returns all order items for the specified order.
+ * @apiParam {Number} oid            Order id.
  * @apiName GetOrderItems
  * @apiGroup Restaurant Orders
  * @apiPermission admin order-owner order-editor
@@ -645,8 +645,8 @@ route.post('/:order_id/generate_edit_token', m.getOrder2({
 route.post('/:oid/rebuild-pdf/:type', m.restrict(['admin']), controllers.orders.rebuildPdf);
 
 /**
- * @api {get} /orders/:id/notifications     Returns all notifications available on the specified order.
- * @apiParam {Number} id                    Order id.
+ * @api {get} /orders/:oid/notifications     Returns all notifications available on the specified order.
+ * @apiParam {Number} oid                    Order id.
  * @apiName GetOrderAvailableNotifications
  * @apiGroup Restaurant Orders
  * @apiPermission admin
@@ -671,8 +671,8 @@ route.get('/:oid/notifications', m.restrict(['admin']), controllers.orders.notif
 route.post('/:oid/notifications/:id', m.restrict(['admin']), controllers.orders.notifications.JSON.sendNotification);
 
 /**
- * @api {get} /orders/:id/notifications-history     Returns the notifications history for a specified order.
- * @apiParam {Number} id                            Order id.
+ * @api {get} /orders/:oid/notifications-history     Returns the notifications history for a specified order.
+ * @apiParam {Number} oid                            Order id.
  * @apiName GetOrderNotificationsHistory
  * @apiGroup Restaurant Orders
  * @apiPermission admin
@@ -700,6 +700,33 @@ route.post('/:oid/notifications/:id', m.restrict(['admin']), controllers.orders.
  **/
 route.get('/:oid/notifications-history', m.restrict(['admin']), controllers.orders.notifications.JSON.history);
 
+/**
+ * @api {get} /orders/:oid/notifications-history/:id     Returns the specified notification from the notifications history for a specified order.
+ * @apiParam {Number} oid                                Order id.
+ * @apiParam {Number} id                                 Notification unique id.
+ * @apiName GetOrderNotificationsHistoryNotification
+ * @apiGroup Restaurant Orders
+ * @apiPermission admin
+
+ * @apiSuccess   {Object}     notification                   Returned notification.
+ * @apiSuccess   {Number}     notification.id                Notification uniqe id.
+ * @apiSuccess   {String}     notification.nid               Notification id.
+ * @apiSuccess   {String}     notification.order_id          Notification order id.
+ * @apiSuccess   {String}     notification.send_date         Notification send date.
+ * @apiSuccess   {String}     notification.created_at        Timestamp when notification was created.
+ * @apiSuccess   {String}     notification.user_id           Notification user id.
+ * @apiSuccess   {String}     notification.type              Notification type.
+ * @apiSuccess   {String}     notification.name              Notification name.
+ * @apiSuccess   {String}     notification.description       Notification description.
+ * @apiSuccess   {Boolean}    notification.disablePriceHike  "True" if price hike is disabled.
+ * @apiSuccess   {Number}     notification.cid               Notification cid.
+ * @apiSuccess   {String}     notification.format            Notification format.
+
+ * @apiSuccess   {Object}     notifications.data          Data for notification.
+ * @apiSuccess   {String[]}   notifications.data.to       To field.
+ * @apiSuccess   {String}     notifications.data.from     From field.
+ * @apiSuccess   {String}     notifications.data.subject  Subject field.
+ **/
 route.get('/:oid/notifications-history/:id', m.restrict(['admin']), controllers.orders.notifications.JSON.historyItem);
 
 route.post('/:order_id/internal-notes', m.restrict(['admin']), function(req, res, next) {

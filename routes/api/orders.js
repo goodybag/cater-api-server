@@ -648,7 +648,7 @@ route.post('/:oid/rebuild-pdf/:type', m.restrict(['admin']), controllers.orders.
  * @api {get} /orders/:oid/notifications     Returns all notifications available on the specified order.
  * @apiParam {Number} oid                    Order id.
  * @apiName GetOrderAvailableNotifications
- * @apiGroup Restaurant Orders
+ * @apiGroup Order Notifications
  * @apiPermission admin
 
  * @apiSuccess   {Object[]}   notifications                 List of all notifications available on the specified order.
@@ -674,7 +674,7 @@ route.post('/:oid/notifications/:id', m.restrict(['admin']), controllers.orders.
  * @api {get} /orders/:oid/notifications-history     Returns the notifications history for a specified order.
  * @apiParam {Number} oid                            Order id.
  * @apiName GetOrderNotificationsHistory
- * @apiGroup Restaurant Orders
+ * @apiGroup Order Notifications
  * @apiPermission admin
 
  * @apiSuccess   {Object[]}   notifications                   List of notifications sent for the specified order.
@@ -705,7 +705,7 @@ route.get('/:oid/notifications-history', m.restrict(['admin']), controllers.orde
  * @apiParam {Number} oid                                Order id.
  * @apiParam {Number} id                                 Notification unique id.
  * @apiName GetOrderNotificationsHistoryNotification
- * @apiGroup Restaurant Orders
+ * @apiGroup Order Notifications
  * @apiPermission admin
 
  * @apiSuccess   {Object}     notification                   Returned notification.
@@ -756,7 +756,19 @@ route.post('/:order_id/amenities', m.getOrder2({
   param: 'order_id'
 }), m.restrict(['order-owner', 'admin']), m.insert(db.order_amenities));
 
-// list amenities per order
+/**
+ * @api {get} /orders/:oid/amenities     Returns all amenities for a specified order.
+ * @apiParam {Number} oid                Order id.
+ * @apiName GetOrderAmenities
+ * @apiGroup Order Amenities
+ * @apiPermission admin
+
+ * @apiSuccess   {Object[]}   amenities               List of amenities on the specified order.
+ * @apiSuccess   {Number}     amenities.id            Amenity unique id.
+ * @apiSuccess   {String}     amenities.created_at    Timestamp when amentiy was created.
+ * @apiSuccess   {Number}     amenities.order_id      Amenity order id.
+ * @apiSuccess   {Number}     amenities.amenity_id    Amenity id.
+ **/
 route.get('/:order_id/amenities', m.getOrder2({
   param: 'order_id'
 }), m.restrict(['order-owner', 'admin']), m.param('order_id'), m.find(db.order_amenities));

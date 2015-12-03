@@ -11,6 +11,21 @@ var route = module.exports = express.Router();
  * User Invoices
  */
 
+ /**
+  * @api {get} /invoices   Returns all user invoices.
+  * @apiName GetInvoices
+  * @apiGroup User Invoices
+  * @apiPermission admin
+
+  * @apiSuccess   {Object[]}   invoices                        List of all user invoices.
+  * @apiSuccess   {Object}     invoices.id                     Invoice id.
+  * @apiSuccess   {Object}     invoices.user_id                Invoice user id.
+  * @apiSuccess   {Object}     invoices.billing_period_start   Invoice start of billing period.
+  * @apiSuccess   {Object}     invoices.billing_period_end     Invoice end of billing period.
+  * @apiSuccess   {Object}     invoices.status                 Invoice status.
+  * @apiSuccess   {Object}     invoices.email_sent_date        Invoice data of email sent.
+  * @apiSuccess   {Object}     invoices.created_at             Timestamp when invoice was created.
+  **/
 route.get('/', m.restrict(['admin']), m.sort('-id'), m.pagination({
   allowLimit: true
 }), m.param('user_id'), m.param('from', function(value, $where, $options) {

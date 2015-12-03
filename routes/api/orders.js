@@ -787,7 +787,6 @@ route.get('/:order_id/amenities', m.getOrder2({
  * @apiSuccess   {Number}     amenities.order_id      Amenity order id.
  * @apiSuccess   {Number}     amenities.amenity_id    Amenity id.
  **/
-// list specific order amenity
 route.get('/:order_id/amenities/:amenity_id', m.getOrder2({
   param: 'order_id'
 }), m.restrict(['order-owner', 'admin']), m.param('order_id'), m.param(

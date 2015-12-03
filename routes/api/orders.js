@@ -600,6 +600,31 @@ route.get('/:id/delivery-fee', m.getOrder2({
   deliveryService: true
 }), controllers.orders.getDeliveryFee);
 
+/**
+ * @api {get} /orders/:id/items     Returns all order items for the specified order.
+ * @apiParam {Number} id            Order id.
+ * @apiName GetOrderItems
+ * @apiGroup Restaurant Orders
+ * @apiPermission admin order-owner order-editor
+
+ * @apiSuccess   {Object[]}   order_items                   List of items on specified order.
+ * @apiSuccess   {Number}     order_items.quantity          Order item quantity.
+ * @apiSuccess   {Number}     order_items.price             Order item price.
+ * @apiSuccess   {String[]}   order_items.options_sets      List of option sets on item.
+ * @apiSuccess   {Number}     order_items.priority_account_price_hike_percentage     Percentage on menu items for a priority account.
+ * @apiSuccess   {Number}     order_items.id                Order item id.
+ * @apiSuccess   {String}     order_items.created_at        Timestamp when order item was created.
+ * @apiSuccess   {Number}     order_items.item_id           Order item id.
+ * @apiSuccess   {Number}     order_items.order_id          Order id.
+ * @apiSuccess   {String}     order_items.name              Order item name.
+ * @apiSuccess   {String}     order_items.description       Order item description.
+ * @apiSuccess   {Number}     order_items.feeds_min         Order item feed minimum.
+ * @apiSuccess   {Number}     order_items.feeds_max         Order item feed maximum.
+ * @apiSuccess   {String}     order_items.notes             Order item notes.
+ * @apiSuccess   {String}     order_items.recipient         Order item recipient.
+ * @apiSuccess   {Number}     order_items.sub_total         Order item subtotal.
+ * @apiSuccess   {Number}     order_items.min_qty           Order item minimum quantity.
+ **/
 route.get('/:oid/items', m.getOrder2({
     param: 'oid',
     items: true,

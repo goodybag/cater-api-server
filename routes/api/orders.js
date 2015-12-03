@@ -645,13 +645,13 @@ route.post('/:order_id/generate_edit_token', m.getOrder2({
 route.post('/:oid/rebuild-pdf/:type', m.restrict(['admin']), controllers.orders.rebuildPdf);
 
 /**
- * @api {get} /orders/:id/notifications     Returns all notifications on the specified order.
+ * @api {get} /orders/:id/notifications     Returns all notifications available on the specified order.
  * @apiParam {Number} id                    Order id.
- * @apiName GetOrderNotifications
+ * @apiName GetOrderAvailableNotifications
  * @apiGroup Restaurant Orders
  * @apiPermission admin
 
- * @apiSuccess   {Object[]}   notifications                 List of all notifications on the specified order.
+ * @apiSuccess   {Object[]}   notifications                 List of all notifications available on the specified order.
  * @apiSuccess   {String}     notifications.type            Notification type.
  * @apiSuccess   {String}     notifications.id              Notification id.
  * @apiSuccess   {String}     notifications.name            Notification name.
@@ -670,6 +670,34 @@ route.get('/:oid/notifications', m.restrict(['admin']), controllers.orders.notif
 
 route.post('/:oid/notifications/:id', m.restrict(['admin']), controllers.orders.notifications.JSON.sendNotification);
 
+/**
+ * @api {get} /orders/:id/notifications-history     Returns the notifications history for a specified order.
+ * @apiParam {Number} id                            Order id.
+ * @apiName GetOrderNotificationsHistory
+ * @apiGroup Restaurant Orders
+ * @apiPermission admin
+
+ * @apiSuccess   {Object[]}   notifications                   List of notifications sent for the specified order.
+ * @apiSuccess   {Number}     notifications.id                Notification uniqe id.
+ * @apiSuccess   {String}     notifications.nid               Notification id.
+ * @apiSuccess   {String}     notifications.order_id          Notification order id.
+ * @apiSuccess   {String}     notifications.send_date         Notification send date.
+ * @apiSuccess   {String}     notifications.created_at        Timestamp when notification was created.
+ * @apiSuccess   {String}     notifications.user_id           Notification user id.
+ * @apiSuccess   {String}     notifications.data_html         Notification data html.
+ * @apiSuccess   {String}     notifications.type              Notification type.
+ * @apiSuccess   {String}     notifications.name              Notification name.
+ * @apiSuccess   {String}     notifications.description       Notification description.
+ * @apiSuccess   {Boolean}    notifications.disablePriceHike  "True" if price hike is disabled.
+ * @apiSuccess   {Number}     notifications.cid               Notification cid.
+ * @apiSuccess   {String}     notifications.format            Notification format.
+
+ * @apiSuccess   {Object}     notifications.data          Data for notification.
+ * @apiSuccess   {String[]}   notifications.data.to       To field.
+ * @apiSuccess   {String}     notifications.data.from     From field.
+ * @apiSuccess   {String}     notifications.data.subject  Subject field.
+ * @apiSuccess   {String}     notifications.data.url      Data url.
+ **/
 route.get('/:oid/notifications-history', m.restrict(['admin']), controllers.orders.notifications.JSON.history);
 
 route.get('/:oid/notifications-history/:id', m.restrict(['admin']), controllers.orders.notifications.JSON.historyItem);

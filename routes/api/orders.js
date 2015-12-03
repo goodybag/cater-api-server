@@ -773,6 +773,20 @@ route.get('/:order_id/amenities', m.getOrder2({
   param: 'order_id'
 }), m.restrict(['order-owner', 'admin']), m.param('order_id'), m.find(db.order_amenities));
 
+/**
+ * @api {get} /orders/:oid/amenities/:id    Returns the order amenity specified.
+ * @apiParam {Number} oid                   Order id.
+ * @apiParam {Number} id                    Amenity id.
+ * @apiName GetOrderAmenity
+ * @apiGroup Order Amenities
+ * @apiPermission admin order-owner
+
+ * @apiSuccess   {Object[]}   amenities               List of amenities on the specified order.
+ * @apiSuccess   {Number}     amenities.id            Amenity unique id.
+ * @apiSuccess   {String}     amenities.created_at    Timestamp when amentiy was created.
+ * @apiSuccess   {Number}     amenities.order_id      Amenity order id.
+ * @apiSuccess   {Number}     amenities.amenity_id    Amenity id.
+ **/
 // list specific order amenity
 route.get('/:order_id/amenities/:amenity_id', m.getOrder2({
   param: 'order_id'

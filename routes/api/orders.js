@@ -229,7 +229,7 @@ route.get('/search', function(req, res, next) {
  * @apiGroup Restaurant Orders
  * @apiPermission admin
 
- * @apiSuccess   {Object}     order                                 List of all restaurant orders.
+ * @apiSuccess   {Object}     order                                 Returned order.
  * @apiSuccess   {Number}     order.id                              Order id.
  * @apiSuccess   {String}     order.created_at                      Timestamp when order was created.
  * @apiSuccess   {Number}     order.user_id                         Order user id.
@@ -347,7 +347,7 @@ route.get('/search', function(req, res, next) {
  * @apiSuccess   {String}     order.user.payment_methods.type           Payment method type.
  * @apiSuccess   {String}     order.user.payment_methods.uri            Payment method uri.
  * @apiSuccess   {String}     order.user.payment_methods.stripe_id      Payment method stripe id.
- * @apiSuccess   {String}     order.user.payment_methods.name
+ * @apiSuccess   {String}     order.user.payment_methods.name           Payment method name.
 
  * @apiSuccess   {Object}     order.user.payment_methods.data                       Data on payment method.
  * @apiSuccess   {String}     order.user.payment_methods.data.id                    Payment id.
@@ -571,6 +571,24 @@ route.put('/:id', m.restrict(['admin']), m.param('id'), m.queryOptions({
 
 route.delete('/:id', m.restrict(['admin']), m.param('id'), m.remove(db.orders));
 
+/**
+ * @api {get} /orders/:id/delivery-fee     Returns the delivery fee for the order specified.
+ * @apiParam {Number} id                   Order id.
+ * @apiName GetOrderDeliveryFee
+ * @apiGroup Restaurant Orders
+ * @apiPermission none
+
+ * @apiSuccess   {Object}     delivery_fee                    Returned delivery fee.
+ * @apiSuccess   {Object}     delivery_fee.distance           Delivery distance.
+ * @apiSuccess   {String}     delivery_fee.distance.text      Delivery distance in text form.
+ * @apiSuccess   {Number}     delivery_fee.distance.value     Delivery distance in value form.
+ * @apiSuccess   {Object}     delivery_fee.duration           Delivery duration.
+ * @apiSuccess   {String}     delivery_fee.duration.text      Delivery duration in text form.
+ * @apiSuccess   {Number}     delivery_fee.duration.value     Delivery duration in value form.
+ * @apiSuccess   {Number}     delivery_fee.pricePerMile       Delivery price per mile.
+ * @apiSuccess   {Number}     delivery_fee.basePrice          Delivery base price.
+ * @apiSuccess   {Number}     delivery_fee.price              Delivery price.
+ **/
 route.get('/:id/delivery-fee', m.getOrder2({
   param: 'id',
   items: true,

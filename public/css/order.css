@@ -157,6 +157,10 @@
   border-bottom: solid #CCCCC0 1px;
 }
 
+.order-line-item-table tbody .form-control {
+  margin-top: -7px;
+}
+
 .order-line-item-table thead > tr > th {
   padding: 0;
   border-bottom: solid #CCCCC0 1px;

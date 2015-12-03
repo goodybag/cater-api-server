@@ -288,11 +288,81 @@ route.delete('/delivery-services/:id'
   * @apiSuccess   {String}    geocoded_address.address.lat_lng.x     X coordinate.
   * @apiSuccess   {String}    geocoded_address.address.lat_lng.y     Y coordinate.
   **/
-
 route.get('/maps/geocode/:address'
 , controllers.api.maps.geocode
 );
 
+/**
+ * @api {get} /stripe-events/:id   Returns the specified stripe event.
+ * @apiParam {Number} id   Id of stripe event.
+ * @apiName GetStripeEvent
+ * @apiGroup Payments
+ * @apiPermission admin
+
+ * @apiSuccess   {Object}    stripe_event                Returned stripe event.
+ * @apiSuccess   {Number}    stripe_event.id             Stripe event id.
+ * @apiSuccess   {String}    stripe_event.created_at     Timestamp when stripe event was created.
+
+ * @apiSuccess   {Object}    stripe_event.data                 Stripe event data.
+ * @apiSuccess   {String}    stripe_event.data.id              Data id.
+ * @apiSuccess   {String}    stripe_event.data.object          Data object type.
+ * @apiSuccess   {String}    stripe_event.data.api_version     Data api version.
+ * @apiSuccess   {Number}    stripe_event.data.created         Timestamp when data was created.
+
+ * @apiSuccess   {Object}    stripe_event.data.data      Payment data.
+
+ * @apiSuccess   {Object}    stripe_event.data.data.object                         Payment data in object form.
+ * @apiSuccess   {String}    stripe_event.data.data.object.id                      Payment data id.
+ * @apiSuccess   {String}    stripe_event.data.data.object.object                  Payment data object type.
+ * @apiSuccess   {Number}    stripe_event.data.data.object.amount                  Payment amount.
+ * @apiSuccess   {Number}    stripe_event.data.data.object.amount_reversed         Payment amount reversed.
+ * @apiSuccess   {String}    stripe_event.data.data.object.application_fee         Payment application fee.
+ * @apiSuccess   {String}    stripe_event.data.data.object.balance_transaction     Payment balance transaction.
+
+ * @apiSuccess   {Object}    stripe_event.data.data.object.bank_account                    Payment bank account object.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.id                 Bank account id.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.object             Bank account object type.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.bank_name          Bank account bank name.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.country            Bank account country.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.currency           Bank account currency.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.fingerprint        Bank account fingerprint token.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.last4              Bank account last four SSN.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.name               Bank account name.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.routing_number     Bank account routing number.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.status             Bank account status.
+
+ * @apiSuccess   {Number}    stripe_event.data.data.object.created_at          Timestamp when payment object was created.
+ * @apiSuccess   {String}    stripe_event.data.data.object.currency            Payment currency.
+ * @apiSuccess   {Number}    stripe_event.data.data.object.date                Timestamp of payment date.
+ * @apiSuccess   {String}    stripe_event.data.data.object.description         Payment description.
+ * @apiSuccess   {String}    stripe_event.data.data.object.destination         Payment destination token.
+ * @apiSuccess   {String}    stripe_event.data.data.object.failure_code        Payment failure code.
+ * @apiSuccess   {String}    stripe_event.data.data.object.failure_message     Payment failure message.
+ * @apiSuccess   {Boolean}   stripe_event.data.data.object.livemode            "True" if payment object is in livemode.
+ * @apiSuccess   {Object}    stripe_event.data.data.object.metadata            Payment metadata object.
+ * @apiSuccess   {String}    stripe_event.data.data.object.recipient           Payment recipient.
+
+ * @apiSuccess   {Object}    stripe_event.data.data.object.reversals                 Payment reversals object.
+ * @apiSuccess   {String}    stripe_event.data.data.object.reversals.object          Payment reversals object type.
+ * @apiSuccess   {Object[]}  stripe_event.data.data.object.reversals.data            List of payment reversals data.
+ * @apiSuccess   {Boolean}   stripe_event.data.data.object.reversals.has_more        "True" if payment reversals has more?
+ * @apiSuccess   {Number}    stripe_event.data.data.object.reversals.total_count     Total count of payment reversals.
+ * @apiSuccess   {String}    stripe_event.data.data.object.reversals.url             Url of payment reversals.
+
+ * @apiSuccess   {Boolean}   stripe_event.data.data.object.reversed                  "True" if payment reversed.
+ * @apiSuccess   {String}    stripe_event.data.data.object.source_transaction        Payment source transaction.
+ * @apiSuccess   {String}    stripe_event.data.data.object.statement_descriptor      Payment statement descriptor.
+ * @apiSuccess   {String}    stripe_event.data.data.object.status                    Payment status.
+ * @apiSuccess   {String}    stripe_event.data.data.object.type                      Payment type.
+
+ * @apiSuccess   {Object}    stripe_event.data.data.previous_attributes        Payment data previous attributes.
+
+ * @apiSuccess   {Boolean}   stripe_event.data.livemode             "True" if data is in livemode.
+ * @apiSuccess   {Number}    stripe_event.data.pending_webhooks     Number of pending webhooks.
+ * @apiSuccess   {String}    stripe_event.data.request              Data request.
+ * @apiSuccess   {String}    stripe_event.data.type                 Data type.
+ * @apiSuccess   {String}    stripe_event.data.user_id              Data user id.
+ **/
 route.get('/stripe-events/:id'
 , m.restrict(['admin'])
 , m.stripe.getStripeEvent()

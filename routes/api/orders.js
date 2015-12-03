@@ -189,7 +189,19 @@ route.get('/', m.restrict(['admin']), m.pagination(), m.param('status'), functio
 
 route.post('/', m.restrict(['admin']), m.insert(db.orders));
 
+/**
+ * @api {get} /orders/search?q=:text   Returns all restaurant orders that match search criteria.
+ * @apiParam {String} text             Search query string.
+ * @apiParamExample
+    {
+      "text": "dos%20batos%20tacos"
+    }
+ * @apiName GetOrdersFromSearch
+ * @apiGroup Restaurant Orders
+ * @apiPermission none
+ **/
 route.get('/search', function(req, res, next) {
+  console.log("req.query", req.query);
   var query = req.query.q;
   if (!query) return next();
   req.queryObj.search_vector = {

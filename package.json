@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.370",
+  "version": "1.1.378",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -12,8 +12,7 @@
     "start": "node master",
     "test": "grunt namedModules && ./node_modules/mocha/bin/mocha --recursive -R spec test/unit",
     "test-react": "./node_modules/ecstatic/lib/ecstatic.js --cache 0 -p 8000 public",
-    "postinstall": "./node_modules/.bin/bower install && npm run install-dropoff",
-    "install-dropoff": "./bin/install-dropoff",
+    "postinstall": "./node_modules/.bin/bower install",
     "test-notifications": "./node_modules/.bin/mocha -R spec test/unit/notifications"
   },
   "namedModules": {
@@ -28,6 +27,9 @@
     "order-delivery-service-checker": "./public/js/lib/order-delivery-service-checker.js"
   },
   "dependencies": {
+    "@goodybag/cater-web": "^0.0.2",
+    "@goodybag/dropoff-client": "^5.0.0",
+    "@goodybag/scheduler-app": "^0.0.7",
     "Faker": "0.5.x",
     "amanda": "~0.4.7",
     "analytics-node": "~0.6.0",
@@ -35,7 +37,7 @@
     "backbone": "^1.1.2",
     "balanced-official": "goodybag/balanced-node",
     "basic-auth-connect": "^1.0.0",
-    "bcrypt": "^0.7.8",
+    "bcrypt": "^0.8.5",
     "bitly": "1.2.x",
     "bluebird": "^2.9.24",
     "body-parser": "^1.10.0",
@@ -48,7 +50,7 @@
     "deep-extend": "~0.2.8",
     "dirac": "^0.4.15",
     "dirac-middleware": "~0.1.9",
-    "express": "^4.10.6",
+    "express": "^4.13.3",
     "express-session": "^1.9.3",
     "forky": "^0.3.0",
     "gb-handlebars-helpers": "0.0.4",
@@ -71,7 +73,6 @@
     "grunt-shell": "^1.1.1",
     "handlebars": "^3.0.0",
     "hbs": "^2.8.0",
-    "hiredis": "^0.3.0",
     "iron_mq": "0.2.x",
     "jade": "0.34.x",
     "json2csv": "~2.2.1",
@@ -86,7 +87,6 @@
     "mailgun": "shz/node-mailgun",
     "mandrill-api": "^1.0.40",
     "method-override": "^2.3.0",
-    "microtime": "0.4.x",
     "moment": "~2.3.1",
     "moment-timezone": "~0.3.0",
     "mongo-sql": "^2.7.0",
@@ -110,16 +110,15 @@
     "request": "2.25.x",
     "resource.js": "^1.0.2",
     "rollbar": "0.2.x",
-    "scheduler-app": "goodybag/scheduler-app",
     "selenium-webdriver": "~2.40.0",
     "semver": "~2.1.0",
     "serve-favicon": "^2.2.0",
     "stampit": "^1.1.0",
     "stdm": "0.0.4",
-    "stripe": "^3.5.2",
+    "stripe": "^4.0.0",
     "sugar": "~1.4.1",
     "superagent": "^1.3.0",
-    "time": "^0.10.0",
+    "time": "^0.11.4",
     "toposort-class": "^0.3.1",
     "twilio": "1.1.x",
     "udp-client": "0.1.x",
@@ -138,6 +137,6 @@
     "omf": "~0.5.0"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": "4.2.2"
   }
 }

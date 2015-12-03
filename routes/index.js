@@ -26,7 +26,7 @@ module.exports.register = function(app) {
     }, utils.noop );
 
     app.get('/test-timeout', function(){
-      
+
     });
 
     app.get('/throw-error', function(){
@@ -34,6 +34,10 @@ module.exports.register = function(app) {
         throw new Error('Deliberate error');
       });
     });
+  }
+
+  if (config.enableCaterWeb) {
+      app.use(require('@goodybag/cater-web').app);
   }
 
   app.use(require('./public'));

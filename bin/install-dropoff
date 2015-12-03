@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-if [ "$GITHUB_DROPOFF_TOKEN" == "" ] ; then
-  echo "Error! You need to set GITHUB_DROPOFF_TOKEN environment variable!"
-  exit 1
-fi
-
-npm install "git+https://${GITHUB_DROPOFF_TOKEN}:x-oauth-basic@github.com/dropoff-co/com.dropoff.service.brawndo.client"

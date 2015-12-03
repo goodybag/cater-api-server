@@ -128,6 +128,7 @@ config.defaults = {
 , rewardHolidays: [
     { start: '2015-09-08 00:00:00', end: '2015-09-09 00:00:00', rate: '2.0', description: 'Post-Labor Day' }
   , { start: '2015-05-26 00:00:00', end: '2015-05-27 00:00:00', rate: '2.0', description: 'Post-Memorial Day' }
+  , { start: '2015-11-24 00:00:00', end: '2015-11-26 00:00:00', rate: '2.0', description: 'Thanksgiving week' }
   ]
 
 , welcome: {
@@ -282,6 +283,7 @@ config.defaults = {
 , defaultMonoLogo: 'https://www.filepicker.io/api/file/mbhVfKiSRO0W7SMV7Ygv'
 
 , enums: ['tags', 'meal_types', 'meal_styles', 'cuisines']
+, enableCaterWeb: local.enableCaterWeb || false
 };
 
 config.dev = {
@@ -338,7 +340,6 @@ config.dev = {
 , receipt: _.extend( {}, config.defaults.receipt,
     { bucket: 'dev-receipts.goodybag.com' }
   )
-
 };
 
 config.staging = {
@@ -396,6 +397,7 @@ config.staging = {
     { bucket: 'staging-receipts.goodybag.com' }
   )
 
+, enableCaterWeb: true
 };
 
 config.production = {

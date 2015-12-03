@@ -19,9 +19,11 @@ define(function(require, exports, module) {
   require('jquery.collapsible');
   require('jquery.appear');
   require('jquery.filter-list');
+  var autoSelect = require('./auto-select');
 
   $(function(){
     $('input, textarea').placeholder();
+    autoSelect.init( $ );
   });
 
   return module.exports = $;

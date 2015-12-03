@@ -73,7 +73,7 @@ if (config.isProduction || config.isStaging) {
 }
 
 app.use( require('dirac-middleware')({ envelope: false }) );
-// app.use( m.queryInspector() );
+// app.use( require('./middleware/query-inspector')() );
 
 app.use( function( req, res, next ){
   res.locals.reqQuery = req.query;
@@ -157,7 +157,7 @@ app.use( function devErrors( error, req, res, next ){
   }
 });
 
-app.use(require('scheduler-app')(config.postgresConnStr))
+app.use(require('@goodybag/scheduler-app')(config.postgresConnStr))
 
 app.set('view engine', 'hbs');
 app.set('port', config.http.port || 3000);

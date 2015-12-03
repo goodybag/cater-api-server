@@ -27,7 +27,7 @@
         </select>
       </div>
       <div class="form-group form-group-inline form-group-type">
-        <select name="order_type" id="order-type" class="form-control">
+        <select name="type" id="order-type" class="form-control">
           <option value="pickup"{{#eq order.type 'pickup'}} selected="true"{{/eq}}>Type: Pickup</option>
           <option value="delivery"{{#eq order.type 'delivery'}} selected="true"{{/eq}}>Type: Delivery</option>
           <option value="courier"{{#eq order.type 'courier'}} selected="true"{{/eq}}>Type: Courier Service</option>
@@ -192,6 +192,16 @@
               <option value="{{id}}" {{#eq ../../order.payment_method_id id~}} selected="true"{{~/eq}}>{{capitalize data.brand}} - {{name}} **** **** **** {{data.last4}} - Exp {{data.exp_month}}/{{data.exp_year}}</option>
               {{/each}}
             </select>
+          </dd>
+        </div>
+        <div class="row{{#dneq order.type 'courier'}} hide{{/dneq}}" id="courier-tracking-id-row">
+          <dt>Courier Tracking</dt>
+          <dd>
+            <input
+              data-autoselect
+              type="text"
+              name="courier_tracking_id"
+              value="{{order.courier_tracking_id}}">
           </dd>
         </div>
       </dl>

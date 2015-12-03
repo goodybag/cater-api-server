@@ -115,6 +115,7 @@ route.get('/:oid', m.getOrder2({
     userAddresses: true,
     userPaymentMethods: true,
     restaurant: true,
+    restaurantRegionDeliveryServices: true,
     deliveryService: true,
     submittedDate: true,
     amenities: true,

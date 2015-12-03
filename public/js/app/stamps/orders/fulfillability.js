@@ -35,6 +35,12 @@ define( function( require, exports, module ){
           , this.timezone
           );
         }
+      } else if ( this.datetime ){
+        this.datetime = moment.tz(
+          this.datetime
+        , [ this.dateFormat, this.timeFormat ].join(' ')
+        , this.timezone
+        );
       }
     })
     .methods({
@@ -132,7 +138,7 @@ define( function( require, exports, module ){
 
           var leadTimes = this.getAllSupportedLeadTimes();
 
-          if ( leadTimes.length === 0 ) return true;
+          if ( leadTimes.length === 0 ) return false;
 
           var minutes = moment.duration(
             this.datetime - moment.tz( this.timezone )

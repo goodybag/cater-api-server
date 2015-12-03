@@ -288,6 +288,8 @@ define(function(require, exports, module) {
       // Unhide these errors
       if (selector) this.$el.find( selector ).removeClass('hide');
 
+      $('html,body').animate({ scrollTop: 0 });
+
       return this;
     },
 

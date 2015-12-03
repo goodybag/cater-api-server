@@ -79,12 +79,16 @@ module.exports = function( options ){
     }
 
     if ( options.restaurant ){
-      var restaurantOne = [ { table: 'regions', alias: 'region' } ];
+      var restaurantRegion = { table: 'regions', alias: 'region', one: [], many: [] };
+      var restaurantOne = [ restaurantRegion ];
       var restaurantMany = [
         { table: 'restaurant_delivery_times', alias: 'delivery_times' }
       , { table: 'restaurant_delivery_zips', alias: 'delivery_zips' }
       , { table: 'restaurant_lead_times', alias: 'lead_times' }
+      , { table: 'restaurant_pickup_lead_times', alias: 'pickup_lead_times' }
       , { table: 'restaurant_locations', alias: 'locations' }
+      , { table: 'restaurant_delivery_times', alias: 'delivery_hours' }
+      , { table: 'restaurant_hours', alias: 'hours' }
       ];
 
       if ( options.amenities ){
@@ -211,6 +215,14 @@ module.exports = function( options ){
         Order.applyPriceHike( req.order );
       }
 
+      // Looking up many delivery services and many delivery zips
+      // is too expensive. Use cache
+      if ( options.restaurantRegionDeliveryServices ){
+        req.order.restaurant.region.delivery_services = db.cache.delivery_services.byRegion(
+          req.order.restaurant.region_id
+        );
+      }
+
       utils.async.series([
         !options.restaurantDbModelFind ? utils.async.noop : function( done ){
           var orderParams = { id: order.id };
@@ -228,6 +240,7 @@ module.exports = function( options ){
 
             req.order.restaurant = restaurant;
             res.locals.order.restaurant = restaurant;
+
             return done();
           });
         }

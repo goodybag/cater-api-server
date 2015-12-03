@@ -157,6 +157,10 @@
   border-bottom: solid #CCCCC0 1px;
 }
 
+.order-line-item-table tbody .form-control {
+  margin-top: -7px;
+}
+
 .order-line-item-table thead > tr > th {
   padding: 0;
   border-bottom: solid #CCCCC0 1px;
@@ -188,7 +192,7 @@
 }
 
 .order-line-item-table th.line-item-quantity {
-  padding-left: 37px;
+  padding-left: 20px;
 }
 
 .order-line-item-table th.line-item-notes,

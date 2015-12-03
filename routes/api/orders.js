@@ -644,6 +644,28 @@ route.post('/:order_id/generate_edit_token', m.getOrder2({
 
 route.post('/:oid/rebuild-pdf/:type', m.restrict(['admin']), controllers.orders.rebuildPdf);
 
+/**
+ * @api {get} /orders/:id/notifications     Returns all notifications on the specified order.
+ * @apiParam {Number} id                    Order id.
+ * @apiName GetOrderNotifications
+ * @apiGroup Restaurant Orders
+ * @apiPermission admin
+
+ * @apiSuccess   {Object[]}   notifications                 List of all notifications on the specified order.
+ * @apiSuccess   {String}     notifications.type            Notification type.
+ * @apiSuccess   {String}     notifications.id              Notification id.
+ * @apiSuccess   {String}     notifications.name            Notification name.
+ * @apiSuccess   {String}     notifications.description     Notification description.
+ * @apiSuccess   {Number}     notifications.cid             Notification cid.
+ * @apiSuccess   {String}     notifications.format          Notification format.
+
+ * @apiSuccess   {Object}     notifications.email           Notification email.
+ * @apiSuccess   {String}     notifications.email.to        Email to field.
+ * @apiSuccess   {String}     notifications.email.from      Email from field.
+ * @apiSuccess   {String}     notifications.email.subject   Email subject field.
+ * @apiSuccess   {String}     notifications.email.html      Email html string.
+ * @apiSuccess   {String}     notifications.email.url       Email url.
+ **/
 route.get('/:oid/notifications', m.restrict(['admin']), controllers.orders.notifications.JSON.list);
 
 route.post('/:oid/notifications/:id', m.restrict(['admin']), controllers.orders.notifications.JSON.sendNotification);

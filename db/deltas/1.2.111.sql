@@ -1,18 +1,23 @@
--- Delta for creating "requested_restaurants" table
+-- Delta to update "user_invoice_recipients" table
 
 DO $$
-  declare version       text := '1.2.111';
+  declare version       text := '1.2.110';
+  declare u             users;
+
 begin
   raise notice '## Running Delta v% ##', version;
 
   -- Update version
   execute 'insert into deltas (version, date) values ($1, $2)' using version, now();
 
-  create table if not exists "requested_restaurants" (
-    id            SERIAL PRIMARY KEY
-  , created_at    timestamp NOT NULL DEFAULT now()
-  , user_id       int references users(id) ON DELETE SET NULL
-  , restaurant    text NOT NULL
-  );
+  -- Drop NOT NULL constraint from user_invoice_recipients.name
+  alter table user_invoice_recipients alter name drop not null;
+
+  -- Init copy user (id, name, email) to user_invoice_recipients
+  for u in ( select * from users )
+  loop
+    insert into user_invoice_recipients
+      ( user_id, name, email ) values ( u.id, u.name, u.email );
+  end loop;
 
 end$$;

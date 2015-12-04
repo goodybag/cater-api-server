@@ -1,7 +1,7 @@
 -- Delta for creating "requested_restaurants" table
 
 DO $$
-  declare version       text := '1.2.99';
+  declare version       text := '1.2.102';
 begin
   raise notice '## Running Delta v% ##', version;
 

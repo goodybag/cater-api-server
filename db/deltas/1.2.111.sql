@@ -1,7 +1,7 @@
 -- Delta to update "user_invoice_recipients" table
 
 DO $$
-  declare version       text := '1.2.110';
+  declare version       text := '1.2.111';
   declare u             users;
 
 begin

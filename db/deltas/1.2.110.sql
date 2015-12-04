@@ -1,5 +1,4 @@
 -- Delta
-
 DO $$
   declare version       text := '1.2.110';
 begin

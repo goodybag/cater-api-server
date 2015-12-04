@@ -37,7 +37,7 @@ define( function( require, exports, module ){
   , 'edit-email': function($target, userId, userName, userInvoiceId) {
       var updatedEmail = $target.parent().prev().children('input').val();
 
-      api('users')('invoice-recipients')( userInvoiceId ).put({
+      api('users')( userId )('invoice-recipients')( userInvoiceId ).put({
         email: updatedEmail
       }, function(error, results) {
         if(error) {
@@ -52,7 +52,7 @@ define( function( require, exports, module ){
 
   , 'delete-email': function($target, userId, userName, userInvoiceId) {
       console.log("userInvoiceId", userInvoiceId);
-      api('users')('invoice-recipients')( userInvoiceId ).del( function(error, result) {
+      api('users')( userId )('invoice-recipients')( userInvoiceId ).del( function(error, result) {
         if(error) {
           flash.info([
             'Oops! Something went wrong!<br><small class="really-small">' + error + '</small>'

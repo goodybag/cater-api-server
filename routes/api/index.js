@@ -72,13 +72,13 @@ route.post('/users/:user_id/invoice-recipients'
 );
 
 // req body: { email: example@email.com }
-route.put('/users/invoice-recipients/:id'
+route.put('/users/:user_id/invoice-recipients/:id'
 , m.restrict(['admin'])
 , m.param('id')
 , m.update( db.user_invoice_recipients )
 );
 
-route.delete('/users/invoice-recipients/:id'
+route.delete('/users/:user_id/invoice-recipients/:id'
 , m.restrict(['admin'])
 , m.param('id')
 , m.remove( db.user_invoice_recipients )

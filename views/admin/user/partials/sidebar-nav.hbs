@@ -6,5 +6,10 @@
     <li{{#eq sidebarNav.active "invoices"}} class="active"{{/eq}}>
       <a href="{{sidebarNav.baseUrl}}/invoices">Invoices</a>
     </li>
+    <ul class="nav nav-vertical ap-nav-vertical{{#if sidebarNav.isNew}} disabled{{/if}}">
+      <li{{#eq sidebarNav.active "invoice-recipients"}} class="active"{{/eq}}>
+        <a href="{{sidebarNav.baseUrl}}/invoice-recipients">Invoice Recipients</a>
+      </li>
+    </ul>
   </ul>
 </nav>

@@ -25,70 +25,15 @@ define( function( require, exports, module ){
       });
     }
 
-  , 'send-email': function( $target, $el, invoiceId ){
-      api.invoices( invoiceId )('emails').post( function( error, result ){
-        if ( error ){
-          console.error( error );
-          return alert('Error sending invoice. CMD+Shift+J for details');
-        }
+  , 'send-email': function( $target, $el, invoiceId, recipients ){
+      var invoiceRecipientEmails = recipients.split(";");
 
-        // Change label to 'Emailed'
-        $el.find('.label-status')
-          .removeClass('pending error paid')
-          .addClass('emailed')
-          .text('Emailed');
-      });
-    }
-
-  , 'send-to-all': function($target, $el, invoiceId, userId, userName, inRec ) {
-    var emails = inRec.split(";");
-
-    utils.async.each( emails, function(email, next) {
-      if(email) {
-        api.invoices( invoiceId )('emails')( email ).post(function( error, result ){
-          if ( error ){
-            console.error( error );
-            return alert('Error sending invoice to ' + email + '. CMD+Shift+J for details');
-          }
-
-          // Change label to 'Emailed'
-          $el.find('.label-status')
-            .removeClass('pending error paid')
-            .addClass('emailed')
-            .text('Emailed');
-        });
-      }
-    }, function( error ) {
-      if(error) {
-        console.error( error );
-        return alert("Error sending invoice. CMD+SHIFT+J for details");
-      }
-    });
-
-  }
-
-  , 'send-emails': function( $target, $el, invoiceId ) {
-      var $items = $('.list-item.selected');
-      var $emails = $('.selected-email .email-text');
-
-      var done = function( error ) {
-        if(error) {
-          console.error( error );
-          return alert('An error occurred. CMD+Shift+J for details');
-        }
-      }
-
-      var sendEmails = function(item, next) {
-        var $item = $(item);
-        var id = +$item.data('invoiceId');
-
-        var sendEmail = function(email, next) {
-          var email = $(email).html();
-
-          api.invoices( id )('emails')( email ).post( function( error, result ){
-            if( error ){
+      utils.async.each( invoiceRecipientEmails, function(email, next) {
+        if(email) {
+          api.invoices( invoiceId )('emails')( email ).post(function( error, result ){
+            if ( error ){
               console.error( error );
-              return alert('Error sending invoice. CMD+SHIFT+J for details');
+              return alert('Error sending invoice to ' + email + '. CMD+Shift+J for details');
             }
 
             // Change label to 'Emailed'
@@ -96,17 +41,14 @@ define( function( require, exports, module ){
               .removeClass('pending error paid')
               .addClass('emailed')
               .text('Emailed');
-
-            alert("Email has been sent!");
-            location.reload();
-
           });
         }
-
-        utils.async.each( $emails, sendEmail, done);
-      }
-
-      utils.async.each( $items, sendEmails, done);
+      }, function( error ) {
+        if(error) {
+          console.error( error );
+          return alert("Error sending invoice. CMD+SHIFT+J for details");
+        }
+      });
     }
 
   , 'set-status': function( $target, $el, invoiceId){
@@ -131,35 +73,7 @@ define( function( require, exports, module ){
         $el.closest('.open').removeClass('open');
       });
     }
-
-  , 'save-emails': function( $target, $el, invoiceId, userId, userName ){
-      var emailStr = $target.context.previousElementSibling.value;
-      if(emailStr) {
-        if(validateEmail(emailStr)) {
-          api.invoices('recipients').post({
-            user_id: userId,
-            name: userName,
-            email: emailStr
-          }, function(error, result) {
-            if(error) {
-              console.error("There was an error." +  error);
-            } else {
-              alert(emailStr + " has been successfully added!");
-              location.reload();
-            }
-          });
-        } else {
-          return alert('\'' + emailStr + '\' is not a valid email address.\
-                       \nThis address was not saved.');
-        }
-      }
-    }
   };
-
-  var validateEmail = function(email) {
-    var re = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i;
-    return re.test(email);
-  }
 
   return function( $el ){
     $el.find('[data-action]').click( function( e ){
@@ -167,12 +81,10 @@ define( function( require, exports, module ){
 
       var $this       = $(this);
       var invoiceId   = +$this.data('invoice-id');
-      var userId      = $this.data('user-id');
-      var userName    = $this.data('user-name');
+      var recipients  = $this.data('invoice-recipients');
       var action      = $this.data('action');
-      var inRec       = $this.data('invoice-recipients');
 
-      actions[ action ]( $this, $('.list-item[data-invoice-id="' + invoiceId + '"]'), invoiceId, userId, userName, inRec );
+      actions[ action ]( $this, $('.list-item[data-invoice-id="' + invoiceId + '"]'), invoiceId, recipients );
     })
   };
 });

@@ -51,7 +51,6 @@ define( function( require, exports, module ){
     }
 
   , 'delete-email': function($target, userId, userName, userInvoiceId) {
-      console.log("userInvoiceId", userInvoiceId);
       api('users')( userId )('invoice-recipients')( userInvoiceId ).del( function(error, result) {
         if(error) {
           flash.info([

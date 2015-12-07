@@ -29,6 +29,7 @@
   "dependencies": {
     "@goodybag/cater-web": "^0.0.2",
     "@goodybag/dropoff-client": "^5.0.0",
+    "@goodybag/order-status-worker": "^0.0.2",
     "@goodybag/scheduler-app": "^0.0.7",
     "Faker": "0.5.x",
     "amanda": "~0.4.7",

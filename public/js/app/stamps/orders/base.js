@@ -195,6 +195,29 @@ define( function( require, exports, module ){
     return item;
   };
 
+  Order.applyRestaurantTotals = function( order, options ){
+    if ( order.type !== 'courier' ){
+      return;
+    }
+
+    options = options || {};
+
+    var _order = options.useCachedSubTotal ? CachedOrder.create( order ) : Order.create( order );
+
+    if ( Array.isArray( _order.orderItems ) ){
+      _order.items = _order.orderItems;
+    }
+
+    order.delivery_fee  = _order.delivery_fee = 0;
+    order.tip           = _order.tip          = 0;
+console.log('Order', _order.items);
+console.log('Total', _order.getTotal());
+    // Re-calculate totals using $0 for deliveryfee/tip
+    order.total         = _order.getTotal();
+    order.sub_total     = _order.getPriorityAccountSubTotal();
+    order.sales_tax     = _order.getTax();
+  };
+
   var CachedOrder = require('stampit')()
     .compose( Order )
     .state({

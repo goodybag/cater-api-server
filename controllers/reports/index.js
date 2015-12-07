@@ -69,7 +69,7 @@ var reports = {
       query: req.query
     });
 
-    var status = req.query.status || 'accepted';
+    var status = req.query.status;
 
     var start = parseDatetime({
       date: req.query.startDate || '2012-01-01'
@@ -128,7 +128,7 @@ var reports = {
     , 'Region'
     ]);
 
-    var where = { status: status, restaurant_id: { $notNull: true } };
+    var where = { status: status || {}, restaurant_id: { $notNull: true } };
     var options = { limit: 'all' };
 
     if ( restaurantId ) where.restaurant_id = restaurantId;

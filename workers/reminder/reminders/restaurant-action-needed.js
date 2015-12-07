@@ -12,6 +12,7 @@ var db              = require('../../../db');
 var utils           = require('../../../utils');
 var notifier        = require('../../../lib/order-notifier');
 var config          = require('../../../config');
+var moment          = require('moment-timezone');
 
 var getQuery = function( storage ){
   // 1. Filter submitted orders over an hour
@@ -49,6 +50,33 @@ var getOptions = function( storage ){
   return options;
 };
 
+var withinBusinessHours = function (order) {
+  // check whether or not the current time is
+  // within business hours, based on orders timezone
+  var now = moment().tz(order.timezone)
+  , start = moment().tz(order.timezone)
+  , end = moment().tz(order.timezone)
+  , timeframe = config.reminders.actionNeeded.timeframe;
+
+  start.set('hour', +timeframe.start.split(':')[0])
+  start.set('minute', +timeframe.start.split(':')[1])
+
+  end.set('hour', +timeframe.end.split(':')[0])
+  end.set('minute', +timeframe.end.split(':')[1])
+
+  return now.isBetween(start, end);
+};
+
+var getOrders = function ( storage, callback ) {
+  db.orders.find( getQuery( storage ), getOptions( storage ), function( error, results ){
+    if ( error ) return callback( error );
+
+    results = results.filter( withinBusinessHours );
+
+    return callback( null, results );
+  });
+};
+
 var notifyOrderFn = function( order ) {
   return function( done ) {
     notifier.send( 'order-submitted-needs-action-sms', order.id, function(error) {
@@ -62,7 +90,7 @@ module.exports.schema = {
 };
 
 module.exports.check = function( storage, callback ){
-  db.orders.find( getQuery( storage ), getOptions( storage ), function( error, results ){
+  getOrders( storage,  function ( error, results ) {
     if ( error ) return callback( error );
     return callback( null, results.length > 0 );
   });
@@ -75,7 +103,7 @@ module.exports.work = function( storage, callback ){
   , errors: { text: 'Errors', value: 0 }
   };
 
-  db.orders.find( getQuery( storage ), getOptions( storage ), function( error, orders ){
+  getOrders( storage, function( error, orders ){
     if ( error ) return callback( error );
     stats.orders.value = orders.length;
     utils.async.parallelNoBail(orders.map(notifyOrderFn), function done(errors, results) {

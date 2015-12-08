@@ -210,6 +210,10 @@ module.exports = function( options ){
       // Apply user/groups to current user in context of order
       orderAuth( req, res, function(){});
 
+      if ( req.user.attributes.groups.indexOf('order-restaurant') > -1 ){
+        Order.applyRestaurantTotals( req.order );
+      }
+
       if ( options.applyPriceHike )
       if ( req.user.attributes.groups.indexOf('order-restaurant') === -1 ){
         Order.applyPriceHike( req.order );

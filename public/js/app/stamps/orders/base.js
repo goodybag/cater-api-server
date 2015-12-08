@@ -208,12 +208,15 @@ define( function( require, exports, module ){
       _order.items = _order.orderItems;
     }
 
+    // Zero out price hike
+    _order.priority_account_price_hike_percentage = 0;
+
     order.delivery_fee  = _order.delivery_fee = 0;
     order.tip           = _order.tip          = 0;
 
     // Re-calculate totals using $0 for deliveryfee/tip
     order.total         = _order.getTotal();
-    order.sub_total     = _order.getPriorityAccountSubTotal();
+    order.sub_total     = _order.getSubTotal();
     order.sales_tax     = _order.getTax();
   };
 

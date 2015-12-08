@@ -150,7 +150,7 @@
     <dd>${{dollars order.delivery_fee}}</dd>
     {{/eq}}
     <dt>Tax:</dt>
-    <dd>${{dollars order.restaurant_sales_tax}}</dd>
+    <dd>${{dollars order.sales_tax}}</dd>
     {{#is order.type 'delivery' 'pickup'}}
     <dt>Tip:</dt>
     <dd>${{dollars order.tip}}</dd>
@@ -163,7 +163,7 @@
     </dd>
     {{/if}}
     <dt>Total:</dt>
-    <dd>${{dollars order.restaurant_total}}</dd>
+    <dd>${{dollars order.total}}</dd>
   </dl>
 
   {{#eq order.type 'delivery'}}

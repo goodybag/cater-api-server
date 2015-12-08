@@ -210,8 +210,7 @@ define( function( require, exports, module ){
 
     order.delivery_fee  = _order.delivery_fee = 0;
     order.tip           = _order.tip          = 0;
-console.log('Order', _order.items);
-console.log('Total', _order.getTotal());
+
     // Re-calculate totals using $0 for deliveryfee/tip
     order.total         = _order.getTotal();
     order.sub_total     = _order.getPriorityAccountSubTotal();

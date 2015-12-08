@@ -52,8 +52,6 @@ module.exports.auth = function(req, res, next) {
     req.order.isRestaurantManager = true;
     req.user.attributes.groups.push('restaurant');
     req.user.attributes.groups.push('order-restaurant');
-
-    Order.applyRestaurantTotals( req.order );
   }
 
   if ( req.user && req.user.attributes && req.user.attributes.id === req.order.user_id ){

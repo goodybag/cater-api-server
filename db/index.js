@@ -31,6 +31,8 @@ exports.builder = builder;
 pgQuery.connectionParameters = config.postgresConnStr;
 exports.query = pgQuery;
 
+exports.queryStream = require('./query-stream');
+
 // setInterval(
 //   function(){
 //     logger.info( 'Pools', { pools: pg.pools.all } );

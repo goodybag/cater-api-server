@@ -71,7 +71,7 @@ create trigger order_total_change
 
 drop trigger if exists on_order_type_change on orders;
 create trigger on_order_type_change
-    after update of type
+    after insert or update of type
     on orders
     for each row
     execute procedure on_order_type_change();

@@ -591,7 +591,7 @@ dirac.DAL = dirac.DAL.extend({
 
         var result = mosql.sql( query );
         var queryStream = new QueryStream( result.sql, result.values );
-        var stream = client.query(query);
+        var stream = client.query(queryStream);
         stream.on('end', done);
 
         return callback(null, stream);

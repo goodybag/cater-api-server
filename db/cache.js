@@ -86,6 +86,30 @@ module.exports.autoFetchFromRedis = function( db ){
     if ( error ) throw error;
 
     regions.forEach( function( region ){
+      db.cache.delivery_services.regions[ region.id ] = fetchVal({
+        period: 1000 * 60 * 6
+
+      , fetch: function( callback ){
+          var client = redis.createClient( config.redis.port, config.redis.hostname, config.redis );
+
+          client.get( 'delivery_services-' + region.id, function( error, results ){
+            client.quit();
+
+            if ( error ){
+              return callback( error );
+            }
+
+            try {
+              results = JSON.parse( results );
+            } catch( e ){
+              return callback( e );
+            }
+
+            callback( null, results );
+          });
+        }
+      });
+      
       db.cache.restaurants.regions[ region.id ] = fetchVal({
         period: 1000 * 60 * 6
 
@@ -112,30 +136,6 @@ module.exports.autoFetchFromRedis = function( db ){
             results.forEach( function( restaurant ){
               restaurant.region.delivery_services = db.cache.delivery_services.byRegion( region.id );
             });
-
-            callback( null, results );
-          });
-        }
-      });
-
-      db.cache.delivery_services.regions[ region.id ] = fetchVal({
-        period: 1000 * 60 * 6
-
-      , fetch: function( callback ){
-          var client = redis.createClient( config.redis.port, config.redis.hostname, config.redis );
-
-          client.get( 'delivery_services-' + region.id, function( error, results ){
-            client.quit();
-
-            if ( error ){
-              return callback( error );
-            }
-
-            try {
-              results = JSON.parse( results );
-            } catch( e ){
-              return callback( e );
-            }
 
             callback( null, results );
           });

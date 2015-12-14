@@ -48,7 +48,6 @@
     "cookie-parser": "^1.3.3",
     "cron": "^1.0.4",
     "csv-duplex-stream": "0.0.2",
-    "csv-readable-stream": "0.0.1",
     "deep-extend": "~0.2.8",
     "dirac": "^0.4.15",
     "dirac-middleware": "~0.1.9",

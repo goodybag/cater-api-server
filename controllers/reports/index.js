@@ -217,7 +217,7 @@ var reports = {
 
       stream
         .pipe(through.obj(function (chunk, enc, done) {
-          var order = Order( chunk );
+          var order = Orders( chunk );
 
           this.push(
             [

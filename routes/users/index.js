@@ -124,7 +124,9 @@ route.get('/:uid/orders', restrictOwner
       };
     }
     return next();
-  }, m.view('user-orders', db.orders)
+  }, m.view('user-orders', db.orders, {
+    layout: 'layout/default'
+  })
 );
 
 route.get('/:uid/orders/receipts', restrictOwner, m.param('uid', function(user_id, $query, options) {

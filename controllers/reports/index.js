@@ -13,7 +13,6 @@ var
 , config = require('../../config')
 , restaurantPlans = require('restaurant-plans')
 , Orders = require('stamps/orders')
-, CSVStream = require('csv-duplex-stream')
 , through = require('through2')
 ;
 
@@ -101,8 +100,7 @@ var reports = {
 
     res.csv.writeFilename(filename);
 
-    var csv = CSVStream();
-    csv.write([
+    res.csv.writeRow([
       'Order Number'
     , 'Order Type'
     , 'Date Submitted'
@@ -219,7 +217,7 @@ var reports = {
         .pipe(through.obj(function (chunk, enc, done) {
           var order = Orders( chunk );
 
-          this.push(
+          res.csv.writeRow(
             [
               order.id
             , hbHelpers.orderTypeAbbr(order)
@@ -268,7 +266,6 @@ var reports = {
 
           done();
         }))
-        .pipe ( csv )
         .pipe( res );
 
     });

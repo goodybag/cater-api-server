@@ -1,20 +1,26 @@
 <div class="list-group order-list-group">
-  {{#each orders}}
-  <a id="order-{{id}}" class="list-group-item" href="/orders/{{this.id}}{{#eq status "pending"}}/items{{/eq}}" data-status="{{status}}" data-id="{{id}}">
-    {{#if ../user.isAdmin}}
-    <span
-      class="order-type-indicator"
-      data-type="{{orderTypeAbbr this}}">
-      {{orderTypeAbbr this}}
-    </span>
-    {{/if}}
-    {{#include parent=..}}
-      {{> order_list_item}}
-    {{/include}}
-  </a>
-  {{else}}
-  <h2 class="text-center">No Orders</h2>
-  {{/each}}
+  <div class="table-list orders-table-list striped">
+    <div class="list-header">
+      <label class="component item-selector">
+        <input type="checkbox">
+      </label>
+
+      <div class="component list-info">
+        <div class="num-results">133 Orders</div>
+        <div class="sort-info">Sorted by Submitted Date Desc</div>
+      </div>
+
+      {{> order_list_filters}}
+    </div>
+
+    {{#each orders}}
+      <div class="list-items">
+        {{#include parent=..}}
+          {{> order_list_item}}
+        {{/include}}
+      </div>
+    {{/each}}
+  </div>
 </div>
 
 {{> copy_order_error_modal}}

@@ -1,84 +1,37 @@
-<div class="row">
-  <div class="col-sm-8">
-    <h4 class="list-group-item-heading"><span class="order-number">#{{this.id}}</span> {{this.restaurant.name}}</h4>
-    <dl class="dl-horizontal-inline order-details-list">
-      {{#if this.name}}
-      <div>
-        <dt>Order Name:</dt>
-        <dd>{{this.name}}</dd>
-      </div>
-      {{/if}}
-      {{#unless parent.hideUserDetails}}
-      <div>
-        <dt>User:</dt>
-        <dd>{{this.user.email}}</dd>
-      </div>
-      <div>
-        <dt>Organization:</dt>
-        <dd>{{this.user.organization}}</dd>
-      </div>
-      {{/unless}}
-      <div>
-        {{#if (or (eq this.status 'submitted') (eq this.status 'accepted'))}}
-        <dt>Date Submitted:</dt>
-        <dd class="date-created" data-date="{{this.submitted}}"></dd>
-        {{else}}
-        <dt>Date Created:</dt>
-        <dd class="date-created" data-date="{{this.created_at}}"></dd>
-        {{/if}}
-      </div>
-      {{#eq this.type "courier"}}
-      {{#if this.delivery_service.name}}
-      <div>
-        <dt>Delivery Service:</dt>
-        <dd>{{this.delivery_service.name}}</dd>
-      </div>
-      {{/if}}
-      {{/eq}}
-      <div>
-        <dt>Delivery Date:</dt>
-        <dd>{{datepart this.datetime}} {{timepart this.datetime}}</dd>
-      </div>
-      {{#if this.total}}
-      <div class="definition-group-total">
-        <dt>Total:</dt>
-        <dd class="total-detail">${{dollars this.total}}</dd>
-      </div>
-      {{/if}}
-    </dl>
+<div class="list-item" data-type="{{this.type}}" data-status="{{this.status}}">
+  <label class="component item-selector">
+    <input type="checkbox">
+  </label>
+  <div class="component order-type">
+    <div class="type-icon"
+      data-toggle="tooltip"
+      data-placement="auto"
+      data-container="body"
+      data-title="Delivery Order"></div>
   </div>
-  <div class="col-sm-4">
-    {{#eq parent.user.id 6}} {{! display for om }}
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="checkbox">
-          <label class="{{#if reviewed}}active{{/if}}">
-            <input class="reviewed-checkbox" type="checkbox" {{#if reviewed}}checked{{/if}}> Reviewed
-          </label>
-        </div>
-      </div>
+  <div class="component main">
+    <a class="item-title" href="#">#{{this.id}} - {{this.restaurant.name}}</a>
+    <span class="label-tag label-status small {{this.status}}">{{this.status}}</span>
+    <div class="user-details">
+      <a href="#">{{this.user.name}}</a> - {{this.user.organization}}
     </div>
-    {{/eq}}
-    <div class="row">
-      <div class="col-sm-12">
-        {{> status_label}}
+    <dl class="item-details dl-horizontal-auto">
+      <div>
+        <dt>Submitted:</dt>
+        <dd>{{datepart this.datetime}} - {{timepart this.datetime}}</dd>
       </div>
+      <div>
+        <dt>Total:</dt>
+        <dd>${{dollars this.total}}</dd>
+      </div>
+    </dl>
+    <div class="more-actions-and-info small top">
+      <div class="info order-type">{{this.type}}</div>
+      <div class="info order-status">{{this.status}}</div>
     </div>
-    <div class="row">
-      <div class="col-sm-12 actions">
-        {{#if this.restaurant}}
-          {{#unless parent.isRestaurantManager}}
-            {{#eq status "pending"}}
-              <button type="button" class="btn btn-default cancel-order-btn">Cancel Order</button>
-            {{else}}
-              {{#unless restaurant.is_hidden}}
-              <button type="button" class="btn btn-default copy-order-btn">Order Again?</button>
-              {{/unless}}
-            {{/eq}}
-          {{/unless}}
-        {{/if}}
-        <button data-href="/receipts/order-{{this.id}}.pdf" data-target="_blank" data-name="Order {{this.id}} Receipt" class="btn btn-default btn-receipt">Download Receipt</button>
-      </div>
+    <div class="more-actions-and-info bottom">
+      <button class="action btn-default" data-action="cancel">Cancel</button>
+      <button class="action btn-default" data-action="copy">Order Again?</button>
     </div>
   </div>
 </div>

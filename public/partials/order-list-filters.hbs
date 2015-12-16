@@ -1,0 +1,83 @@
+<ul class="component list-nav nav">
+  <li class="not-selected-only popover-wrapper gb-dropdown right">
+    <a data-role="popover" data-target="dropdown-popover" href="#">
+      Restaurant
+      <i class="gb-icon-caret-down"></i>
+    </a>
+    <div class="popover-modal dropdown-popover">
+      <div class="popover-header">Restaurants</div>
+      <div class="popover-filter"
+        data-role="filter-list"
+        data-input="> input"
+        data-target="+ .popover-body > .popover-item"
+        data-fields="name">
+
+        <input type="text" placeholder="Filter...">
+      </div>
+      <div class="popover-body">
+        {{#each ordersTableRestaurants}}
+        <a href="#" class="popover-item" data-name="{{this.name}}">
+          <span class="popover-item-icon">
+            {{!-- <span class="gb-icon-checkmark va-middle"></span> --}}
+          </span>
+          <span class="popover-item-label">{{this.name}}</span>
+        </a>
+        {{/each}}
+      </div>
+    </div>
+  </li>
+  <li class="not-selected-only popover-wrapper gb-dropdown right">
+    <a data-role="popover" data-target="dropdown-popover" href="#">
+      Region
+      <i class="gb-icon-caret-down"></i>
+    </a>
+    <div class="popover-modal dropdown-popover">
+      Test
+    </div>
+  </li>
+  <li class="not-selected-only popover-wrapper gb-dropdown right">
+    <a data-role="popover" data-target="dropdown-popover" href="#">
+      Type
+      <i class="gb-icon-caret-down"></i>
+    </a>
+    <div class="popover-modal dropdown-popover">
+      Test
+    </div>
+  </li>
+  <li class="not-selected-only popover-wrapper gb-dropdown right">
+    <a data-role="popover" data-target="dropdown-popover" href="#">
+      Status
+      <i class="gb-icon-caret-down"></i>
+    </a>
+    <div class="popover-modal dropdown-popover">
+      Test
+    </div>
+  </li>
+  <li class="not-selected-only popover-wrapper gb-dropdown right">
+    <a data-role="popover" data-target="dropdown-popover" href="#">
+      Sort
+      <i class="gb-icon-caret-down"></i>
+    </a>
+    <div class="popover-modal dropdown-popover">
+      Test
+    </div>
+  </li>
+  <li class="selected-only popover-wrapper gb-dropdown right">
+    <a data-role="popover" data-target="dropdown-popover" href="#">
+      Set Status
+      <i class="gb-icon-caret-down"></i>
+    </a>
+    <div class="popover-modal dropdown-popover">
+      Test
+    </div>
+  </li>
+  <li class="selected-only popover-wrapper gb-dropdown right">
+    <a data-role="popover" data-target="dropdown-popover" href="#">
+      Set Type
+      <i class="gb-icon-caret-down"></i>
+    </a>
+    <div class="popover-modal dropdown-popover">
+      Test
+    </div>
+  </li>
+</ul>

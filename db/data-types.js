@@ -26,6 +26,7 @@ module.exports = {
 , bool: 'boolean'
 , bytea: 'bytea'
 , varchar: arg('varchar')
+, citext: 'citext'
 , cidr: 'cidr'
 , circle: 'circle'
 , date: 'date'

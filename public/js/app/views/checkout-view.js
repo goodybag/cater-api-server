@@ -48,6 +48,7 @@ define(function(require, exports, module) {
       , organization_type: '.organization-type'
       , secondary_contact_phone: '.order-secondary-contact-phone'
       , promo_code: '.promo-code'
+      , delivery_instructions: '.delivery-instructions-external textarea'
     }),
 
     fieldGetters: _.extend({}, OrderView.prototype.fieldGetters, {

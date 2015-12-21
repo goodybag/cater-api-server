@@ -116,11 +116,14 @@ define(function(require, exports, module) {
         errors.push({addressErrors: this.address.validationError});
       }
 
+      var order = new Order( attrs );
+      order.restaurant.attributes._cached = this.restaurant.attributes._cached;
+
       // Add on the restaurant fulfillability errors
       errors = errors.concat(
-        this.restaurant.validateOrderFulfillability( this )
-      , this.validateRestaurantEvents()
-      , this.validateAfterHours()
+        order.restaurant.validateOrderFulfillability( order )
+      , order.validateRestaurantEvents()
+      , order.validateAfterHours()
       );
 
       return errors.length > 0 ? errors : null;

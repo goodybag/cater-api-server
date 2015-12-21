@@ -30,7 +30,7 @@ define(function(require, exports, module) {
         'click #change-status-accepted-no-notify': _.bind(this.changeStatus, this, 'accepted', false),
         'click #change-status-canceled-no-notify': _.bind(this.changeStatus, this, 'canceled', false),
         'click .edit-order-btn': 'toggleEdit',
-        'click .cancel-edit-btn': 'toggleEdit',
+        'click .cancel-edit-address-btn': 'toggleEdit',
         'click .save-btn': 'save',
         'click .btn-add-tip': 'showTipModal'
       });

@@ -68,9 +68,11 @@
 </div>
 {{/if}}
 
+{{#unless hideInstructions}}
 <div class="row">
   <div class="form-group col-lg-8">
     <label for="delivery-instructions">Delivery Instructions</label>
     <textarea id="delivery-instructions" name="delivery_instructions" class="form-control address-delivery-instructions" placeholder="Notes such as gate codes or access instructions">{{address.delivery_instructions}}</textarea>
   </div>
 </div>
+{{/unless}}

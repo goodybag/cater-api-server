@@ -45,6 +45,7 @@ module.exports = utils.extend(
   , param: require('./param')
   , queryParams: require('./query-params')
   , queryString: require('./query-string')
+  , rateLimit: require('./rate-limit')
   , restaurant: require('./restaurant')
   , restrict: require('./restrict')
   , searchTags: require('./search-tags')

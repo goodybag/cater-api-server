@@ -11,6 +11,7 @@ route.use('/orders', require('./orders'));
 route.use('/amenities', require('./amenities'));
 route.use('/invoices', require('./invoices'));
 route.use('/payments', require('./payments'));
+route.use('/features', require('./features'));
 
 /**
  * Users

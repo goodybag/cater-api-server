@@ -1,6 +1,6 @@
 {
   "name": "cater",
-  "version": "1.1.378",
+  "version": "1.1.379",
   "private": true,
   "author": "Goodybag Inc.",
   "repository": {
@@ -29,6 +29,7 @@
   "dependencies": {
     "@goodybag/cater-web": "^0.0.2",
     "@goodybag/dropoff-client": "^5.0.0",
+    "@goodybag/order-status-worker": "^0.0.2",
     "@goodybag/scheduler-app": "^0.0.7",
     "Faker": "0.5.x",
     "amanda": "~0.4.7",
@@ -106,6 +107,7 @@
     "pg-transaction": "^1.0.4",
     "plan.js": "^1.0.2",
     "pluralize": "0.0.9",
+    "ratelimiter": "^2.1.1",
     "react-tools": "^0.11.1",
     "redis": "^0.12.1",
     "request": "2.25.x",

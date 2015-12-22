@@ -57,7 +57,9 @@ define(function(require, exports, module) {
     },
 
     saveAddress: function(callback) {
-      var data = new FormView2({ el: this.$el }).getModelData();
+      var data = new FormView2({
+        el: this.$el.find('.order-address.edit')
+      }).getModelData();
 
       // Do not send blank values
       data = Object

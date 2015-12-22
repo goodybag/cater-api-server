@@ -26,7 +26,9 @@ define(function(require, exports, module) {
         'submit #select-address-form':                  'selectAddress',
         'keyup #order-guests':                          'updateGuests',
         'input input[data-stripe="number"]':            'onCardNumberChange',
-        'change input[name="organization_type"]':       'onOrganizationTypeChange'
+        'change input[name="organization_type"]':       'onOrganizationTypeChange',
+        'keyup .form-control': 'autoSave',
+        'change .form-control': 'autoSave'
       })
     },
 
@@ -208,6 +210,8 @@ define(function(require, exports, module) {
       this.$el.find('.has-error').removeClass('has-error');
       this.$el.find('.alert').addClass('hide');
     },
+
+    autoSave: OrderView.prototype.autoSave,
 
     submit: function(e) {
       if ( utils.contains(['accepted', 'submitted'], this.model.get('status')) ) {

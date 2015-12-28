@@ -73,6 +73,10 @@ config.defaults = {
     local.testEmail || 'test@goodybag.com'
   ]
 
+, demoRequestRecipients: [
+    local.testEmail || 'test@goodybag.com'
+  ]
+
 , deniedRecipients: [
     'jag@goodybag.com'
   , 'christymedlock@goodybag.com'
@@ -410,6 +414,11 @@ config.production = {
     'jag@goodybag.com'
   , 'alexlauzon@goodybag.com'
   , 'louiemata@goodybag.com'
+  ]
+
+, demoRequestRecipients: [
+    'jacobparker@goodybag.com',
+  , 'adampeacock@goodybag.com'
   ]
 
 , notableUserIds: [ 1944 ] // Send various notifications to Om based on user actions

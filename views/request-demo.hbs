@@ -1,0 +1,57 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="{{cdn "/css/request-demo.css"}}">
+{{/extend}}
+
+<div class="page page-request-demo container">
+  <div class="row">
+    <div class="col-md-4 col-md-offset-2">
+      <h1>Request a demo</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 col-md-offset-2">
+      <p>
+        Get a personal demo with your Goodybag Area Manager. This demo can be in
+        person or over the phone if that works better for you. You’ll be able to
+        find out all the ins and outs of the site and we can find out how your
+        company’s ordering works so we know how to best serve you. Complete a
+        demo and get a special treat on us with your first order!!
+      </p>
+    </div>
+
+    <div class="col-md-4">
+      <form action="/request-demo" method="post">
+        <div class="form-group">
+          <label for="contactName">Name</label>
+          <input type="text" class="form-control" placeholder="Enter Name">
+        </div>
+
+        <div class="form-group">
+          <label for="contactEmail">Email</label>
+          <input type="text" class="form-control" placeholder="Enter Email">
+        </div>
+
+        <div class="form-group">
+          <label for="contactEmail">Company</label>
+          <input type="text" class="form-control" placeholder="Enter Company">
+        </div>
+
+        <div class="form-group">
+          <label for="contactMessage">Phone</label>
+          <input type="tel" class="form-control" placeholder="Exa. 15126774224">
+          {{! TODO: Make this work with phone number formats }}
+        </div>
+
+        <div class="form-group">
+          <label for="contactEmail">Preferred date &amp; time</label>
+          <input type="datetime" class="form-control" placeholder="Enter date and time">
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary pull-right">Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

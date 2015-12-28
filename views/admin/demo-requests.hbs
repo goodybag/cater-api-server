@@ -1,0 +1,46 @@
+{{#extend "page"}}page-demo-requests{{/extend}}
+
+{{#extend "body"}}
+<div class="container" id="main-container">
+  <ul class="breadcrumbs main-breadcrumbs">
+    <li>
+      <a href="/admin">Admin Panel</a>
+    </li>
+    <li>Demo Requests</li>
+  </ul>
+
+  <h1 class="page-title">Demo Requests</h1>
+
+  <section class="panel-component" id="demo-requests-table">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Region</th>
+          <th>Preferred date &amp; time</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Company</th>
+          <th>Phone</th>
+        </tr>
+      </thead>
+      <tbody>
+      {{#each demo_requests}}
+        <tr>
+          <td>{{this.id}}</td>
+          <td>{{this.region.name}}</td>
+          <td>{{this.preferred_datetime}}</td>
+          <td>{{this.contact_name}}</td>
+          <td>{{this.contact_email}}</td>
+          <td>{{this.contact_company}}</td>
+          <td>{{this.contact_phone}}</td>
+          <td class="actions">
+            <button class="btn btn-small btn-default btn-delete" data-id="{{this.id}}">X</button>
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </section>
+</div>
+{{/extend}}

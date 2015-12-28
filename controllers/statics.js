@@ -11,6 +11,8 @@ var staticRender = function(view, req, res) {
 
 module.exports.contactUs = utils.partial(staticRender, 'contact-us');
 
+module.exports.requestDemo = utils.partial(staticRender, 'request-demo');
+
 module.exports.legal = utils.partial(staticRender, 'legal');
 
 module.exports.privacy = utils.partial(staticRender, 'privacy');

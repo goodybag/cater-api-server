@@ -203,6 +203,7 @@ var reports = {
 
     options.submittedDate = true;
     options.acceptedDate = true;
+    options.users = { receives_promos: true };
 
     rlogger.info('Filtering by %s', range, { start: start, end: end });
     db.orders.find(where, options, function(err, results) {

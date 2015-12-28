@@ -4,6 +4,8 @@ var logger = require('../../lib/logger').create('Worker-Points');
 var models = require('../../models');
 var utils = require('../../utils');
 
+var CONCURRENCY = 5;
+
 // Calculate points earned
 
 // Calculating points based on total amount spent
@@ -24,7 +26,7 @@ var task = function() {
   models.Order.findReadyForAwardingPoints(query, function (error, orders) {
     if (error) return logger.create('DB').error("failed to get orders", {error: error}), utils.rollbar.reportMessage(error);
     if (orders.length == 0) return done();
-    utils.async.each(orders, function(order, callback){
+    utils.async.eachLimit(orders, CONCURRENCY, function(order, callback){
       models.User.addPointsForOrder(order.attributes.id, function(error){
         if (error) {
           var message = "failed to add points to user: " +

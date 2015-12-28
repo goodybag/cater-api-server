@@ -914,6 +914,23 @@ route.get('/payment-summaries'
 );
 
 /*
+ * Demo Requests
+ */
+route.get('/demo-requests'
+, m.sort('-created_at')
+, m.queryOptions({
+    one: [{
+      table: 'regions',
+      alias: 'region'
+    }]
+  })
+, m.restrict(['admin'])
+, m.view( 'admin/demo-requests.hbs', db.demo_requests, {
+    layout: 'admin/layout2'
+  })
+);
+
+/*
 *  Job Scheduler
 */
 route.get('/scheduler'

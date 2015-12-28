@@ -138,6 +138,10 @@ module.exports.register = function(app) {
 
   app.post('/contact-us', controllers.contactUs.sendSupportEmail);
 
+  app.get('/request-demo', controllers.statics.requestDemo);
+
+  // app.post('/request-demo', controllers.requestDemo.makeRequest);
+
   app.get('/faqs', m.json({
     file: '/public/data/faqs.json',
     target: 'faqs'

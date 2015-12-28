@@ -63,6 +63,11 @@ define(function(require) {
     , nullable: false
     , default: 'false'
     }
+  , receives_promos: {
+      type: types.boolean
+    , nullable: false
+    , default: 'true'
+    }
   , points: {
       type: types.int
     , checks: [ '>= 0']

@@ -199,11 +199,18 @@ var reports = {
       , target: 'regions'
       , on: { id: '$restaurants.region_id$' }
       }
+
+    , {
+        type: 'left'
+      , target: 'users'
+      , on: { id: '$orders.user_id$' }
+      }
     ];
+
+    where['users.receives_promos'] = true;
 
     options.submittedDate = true;
     options.acceptedDate = true;
-    options.users = { receives_promos: true };
 
     rlogger.info('Filtering by %s', range, { start: start, end: end });
     db.orders.find(where, options, function(err, results) {

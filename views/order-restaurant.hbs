@@ -1,0 +1,29 @@
+{{#extend "page"}}page-order-restaurant{{/extend}}
+
+{{#extend "body"}}
+<div class="container manifest-container">
+  <iframe
+    src="/manifests/manifest-{{order.id}}.pdf?review_token={{order.review_token}}"
+    class="manifest-frame"
+  ></iframe>
+</div>
+
+<div class="accept-reject-bar">
+  <button class="btn-accept">Accept</button>
+  <button class="btn-reject">Reject</button>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require([
+      'app/pages/orders'
+    ]
+  , function(orders) {
+      orders.init({
+        queryParams: {{{json reqQuery}}}
+      });
+    }
+  );
+</script>
+{{/extend}}

@@ -107,6 +107,13 @@ module.exports.get = function(req, res) {
     }));
   }
 
+  if ( req.user.isRestaurant() ){
+    return res.render( 'order-restaurant', {
+      layout: 'layout/default'
+    , order: order
+    });
+  }
+
   utils.async.waterfall([
     // Can't yet rely on order.restaurant to have all of the right info
     // in the legacy formats

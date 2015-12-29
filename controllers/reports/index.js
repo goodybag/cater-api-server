@@ -199,15 +199,7 @@ var reports = {
       , target: 'regions'
       , on: { id: '$restaurants.region_id$' }
       }
-
-    , {
-        type: 'left'
-      , target: 'users'
-      , on: { id: '$orders.user_id$' }
-      }
     ];
-
-    where['users.receives_promos'] = true;
 
     options.submittedDate = true;
     options.acceptedDate = true;
@@ -294,7 +286,8 @@ var reports = {
 
     var query = {
       where: {
-        created_at: { $gte: start, $lte: end }
+        created_at: { $gte: start, $lte: end },
+        receives_promos: true
       }
     , limit: 'all'
     };

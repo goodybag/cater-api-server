@@ -1,5 +1,7 @@
 #gb { #accept-reject-bar {
-  .init(){
+  .init(
+    @breakpoint: 500px  
+  ){
     .accept-reject-bar {
       padding: 20px;
       background: #fff;
@@ -22,7 +24,18 @@
       }
 
       .btn-download {
-        float: right;
+        position: absolute;
+        right: 12px;
+
+      }
+
+      @media screen and ( max-width: @breakpoint ){
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        z-index: 100;
+
+        .btn-download { display: none; }
       }
     }
   }

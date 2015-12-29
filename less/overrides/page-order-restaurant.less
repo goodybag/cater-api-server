@@ -15,15 +15,28 @@
   .manifest-container,
   .manifest-frame {
     display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
     -ms-flex-direction: column;
+    -webkit-flex-direction: column;
     flex-direction: column;
     -ms-flex: 1 1 auto;
+    -webkit-flex: 1 1 auto;
     flex: 1 1 auto;
+    max-height: 100%;
   }
+
+  // .manifest-container {
+  //   -webkit-overflow-scrolling: touch;
+  //   overflow-y: scroll;
+  // }
 
   .manifest-frame {
     width: 100%;
     border: none;
+  }
+
+  @media screen and ( max-width: 500px ){
+    
   }
 }

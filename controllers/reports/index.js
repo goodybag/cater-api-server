@@ -286,11 +286,14 @@ var reports = {
 
     var query = {
       where: {
-        created_at: { $gte: start, $lte: end },
-        receives_promos: true
+        created_at: { $gte: start, $lte: end }
       }
     , limit: 'all'
     };
+
+    if (req.query.receives_promos) {
+      query.where.receives_promos: true;
+    }
 
     models.User.find(query, function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);

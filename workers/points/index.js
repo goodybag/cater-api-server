@@ -4,7 +4,7 @@ var logger = require('../../lib/logger').create('Worker-Points');
 var models = require('../../models');
 var utils = require('../../utils');
 
-var CONCURRENCY = 5;
+const CONCURRENCY = 5;
 
 // Calculate points earned
 

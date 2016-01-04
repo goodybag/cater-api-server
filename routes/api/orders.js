@@ -142,8 +142,19 @@ route.get('/:oid/items', m.getOrder2({
 );
 
 route.post('/:oid/items'
-, m.restrict(['admin', 'client'])
-, m.insert(db.order_items)
+, m.getOrder2({
+    param: 'oid',
+    items: true,
+    user: true,
+    userAddresses: true,
+    userPaymentMethods: true,
+    restaurant: true,
+    deliveryService: true
+  })
+  , m.editOrderAuth
+  , m.restrict(['admin', 'order-owner', 'order-editor'])
+  , controllers.orders.editability
+  , controllers.orders.orderItems.add
 );
 
 route.post('/:order_id/generate_edit_token', m.getOrder2({

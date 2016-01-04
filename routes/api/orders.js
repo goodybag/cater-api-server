@@ -141,6 +141,11 @@ route.get('/:oid/items', m.getOrder2({
   controllers.orders.orderItems.list
 );
 
+route.post('/:oid/items'
+, m.restrict(['admin', 'client'])
+, m.insert(db.order_items)
+);
+
 route.post('/:order_id/generate_edit_token', m.getOrder2({
   param: 'order_id'
 }), m.restrict(['order-owner', 'admin']), controllers.orders.generateEditToken);

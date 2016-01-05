@@ -72,6 +72,18 @@ utils.balanced = new Balanced({
 
 utils.stripe = require('stripe')(config.stripe.secret);
 
+utils.emailDomainsMatch = function( a, b ){
+  if ( typeof a !== 'string' ) return false;
+  if ( typeof b !== 'string' ) return false;
+  if ( a.indexOf('@') === -1 ) return false;
+  if ( b.indexOf('@') === -1 ) return false;
+
+  a = a.split('@')[1];
+  b = b.split('@')[1];
+
+  return a.toLowerCase() === b.toLowerCase();
+};
+
 utils.normalize = function( x, MIN, MAX ){
   return ( x - MIN ) / ( MAX - MIN );
 };

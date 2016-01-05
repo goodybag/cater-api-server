@@ -11,10 +11,12 @@ begin
   drop table if exists order_collaborators;
 
   create table order_collaborators(
-    id            text primary key default uuid_generate_v4()
-  , order_id      int references orders(id) on delete set null
-  , user_id       int references users(id) on delete set null
-  , created_at    timestamp not null default now()
+    id                text primary key default uuid_generate_v4()
+  , order_id          int references orders(id) on delete set null
+  , user_id           int references users(id) on delete set null
+  , error             json
+  , last_notified_at  timestamp
+  , created_at        timestamp not null default now()
   );
 
   if not exists (

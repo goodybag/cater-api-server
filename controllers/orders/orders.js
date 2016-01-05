@@ -545,3 +545,32 @@ module.exports.getDeliveryFee = function( req, res ){
       res.error( error );
     });
 };
+
+module.exports.addCollaborator = function( req, res ){
+  // For each email
+  //   Check for matching user record
+  //   if it exists, use that user_id
+  //   if not
+  //      Create a new user
+  //      if the email address domain matches order.user's
+  //        Add them to order.user's organization
+  //   Send an email
+
+  var onEmail = function( email, next ){
+    OrderCollaborator
+      .create({ email: email })
+      .save( next );
+  };
+
+  utils.async.each( req.body.emails, onEmail, function( error ){
+    if ( error ){
+      req.logger.warn('Error processing emails', {
+        error: error
+      });
+
+      return res.error( error );
+    }
+
+    res.status(204).send();
+  });
+};

@@ -212,3 +212,18 @@ route.put('/:order_id/feedback', m.getOrder2({
 }), m.restrict(['order-owner', 'admin']), m.queryOptions({
   returning: ['id']
 }), m.param('order_id'), m.update(db.order_feedback));
+
+/**
+ * Collaborators
+ */
+
+route.post('/:order_id/collaborators'
+, m.getOrder2({
+    param: 'order_id'
+  , user: true
+  })
+, controllers.orders.auth
+, m.restrict(['admin', 'order-owner'])
+, m.queryToBody('order_id')
+, controllers.orders.addCollaborator
+);

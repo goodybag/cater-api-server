@@ -16,4 +16,11 @@ begin
   , user_id       int references users(id) on delete set null
   , created_at    timestamp not null default now()
   );
+
+  if not exists (
+    select 1 where constraint_exists( 'order_collaborators_order_id_user_id_key'
+  ) is true ) then
+    alter table delivery_service_zips
+      add constraint order_collaborators_order_id_user_id_key unique( "order_id", "user_id" );
+  end if;
 end$$;

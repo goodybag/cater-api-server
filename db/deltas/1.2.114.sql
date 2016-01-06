@@ -19,10 +19,10 @@ begin
   , created_at        timestamp not null default now()
   );
 
-  if not exists (
-    select 1 where constraint_exists( 'order_collaborators_order_id_user_id_key'
-  ) is true ) then
-    alter table order_collaborators
-      add constraint order_collaborators_order_id_user_id_key unique( "order_id", "user_id" );
-  end if;
+  -- if not exists (
+  --   select 1 where constraint_exists( 'order_collaborators_order_id_user_id_key'
+  -- ) is true ) then
+  --   alter table order_collaborators
+  --     add constraint order_collaborators_order_id_user_id_key unique( "order_id", "user_id" );
+  -- end if;
 end$$;

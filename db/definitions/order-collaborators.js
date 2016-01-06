@@ -26,10 +26,10 @@ define(function(require) {
   };
 
   definition.indices = {
-    order_collaborators_order_id_user_id_key: {
-      type: 'UNIQUE'
-    , columns: ['order_id', 'user_id']
-    }
+    // order_collaborators_order_id_user_id_key: {
+    //   type: 'UNIQUE'
+    // , columns: ['order_id', 'user_id']
+    // }
   };
 
   return definition;

@@ -6,14 +6,8 @@ if ( typeof module === 'object' && module && typeof module.exports === 'object' 
 
 define( function( require, exports, module ){
   return module.exports = require('stampit')()
-    .enclose(function(){
-      if ( !this.subject ){
-        this.subject = this.defaultSubject();
-      }
-
-      if ( !this.message ){
-        this.message = this.defaultmessage();
-      }
+    .state({
+      collaborators: []
     })
     .methods({
       defaultSubject: function(){

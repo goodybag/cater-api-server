@@ -200,7 +200,7 @@ route.get('/:restaurant_id/categories',
 
 route.get('/:restaurant_id/orders',
   function(req, res, next) {
-    req.queryObj.user_id = req.user.attributes.id;
+    req.queryObj.user_id = req.query.user_id;
     next();
   },
   m.param('restaurant_id'),

@@ -9,6 +9,7 @@ var logger      = require('../lib/logger').create('DBHelpers');
 var config      = require('../config');
 var odsChecker  = require('../public/js/lib/order-delivery-service-checker');
 var Order       = require('stamps/orders/base');
+var QueryStream = require('pg-query-stream');
 
 var RewardsOrder = require('stamps/orders/rewards');
 
@@ -562,6 +563,41 @@ dirac.DAL = dirac.DAL.extend({
 
     $query = mosql.sql( $query );
 
+  }
+
+, findStream: function (where, options, callback) {
+    if (typeof options == 'function'){
+      callback = options;
+      options = {};
+    }
+
+    var query = {
+      type: 'select'
+    , table: this.table
+    , where: where
+    };
+
+    for (var key in options) query[key] = options[key];
+
+    this.runBeforeFilters( 'find', query, function( error ){
+      if ( error ){
+        return callback( error) ;
+      }
+
+      pg.connect( this.connString, function (error, client, done) {
+        if (error) {
+          return handler(error);
+        }
+
+        var result = mosql.sql( query );
+        var queryStream = new QueryStream( result.query, result.values );
+        var stream = client.query(queryStream);
+        stream.on('end', done);
+
+        return callback(null, stream);
+      });
+
+    }.bind( this ));
   }
 });
 

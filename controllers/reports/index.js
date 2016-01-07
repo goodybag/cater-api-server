@@ -13,6 +13,7 @@ var
 , config = require('../../config')
 , restaurantPlans = require('restaurant-plans')
 , Orders = require('stamps/orders')
+, through = require('through2')
 ;
 
 
@@ -98,6 +99,7 @@ var reports = {
     ].join('-') + '.csv';
 
     res.csv.writeFilename(filename);
+
     res.csv.writeRow([
       'Order Number'
     , 'Order Type'
@@ -205,65 +207,69 @@ var reports = {
     options.acceptedDate = true;
 
     rlogger.info('Filtering by %s', range, { start: start, end: end });
-    db.orders.find(where, options, function(err, results) {
+    db.orders.findStream(where, options, function(err, stream) {
       if (err) {
         rlogger.error('Unable to find orders', err);
         return res.end();
       }
-      results
-        .map( function(order) {
-          return Orders(order);
-        })
-        .forEach( function(order) {
 
-          res.csv.writeRow([
-            order.id
-          , hbHelpers.orderTypeAbbr(order)
+      stream
+        .pipe(through.obj(function (chunk, enc, done) {
+          var order = Orders( chunk );
 
-          // order.submitted is a timestamptz, it needs to be converted
-          , order.submitted ?
-              moment(order.submitted).tz(order.timezone).format(reports.dateFormat) :
-              'N/A'
+          res.csv.writeRow(
+            [
+              order.id
+            , hbHelpers.orderTypeAbbr(order)
 
-          , order.submitted ?
-              moment(order.submitted).tz(order.timezone).format(reports.timeFormat) :
-              'N/A'
+            // order.submitted is a timestamptz, it needs to be converted
+            , order.submitted ?
+                moment(order.submitted).tz(order.timezone).format(reports.dateFormat) :
+                'N/A'
 
-          , order.accepted ?
-              moment(order.accepted).tz(order.timezone).format(reports.dateFormat) :
-              'N/A'
+            , order.submitted ?
+                moment(order.submitted).tz(order.timezone).format(reports.timeFormat) :
+                'N/A'
 
-          , order.accepted ?
-              moment(order.accepted).tz(order.timezone).format(reports.timeFormat) :
-              'N/A'
+            , order.accepted ?
+                moment(order.accepted).tz(order.timezone).format(reports.dateFormat) :
+                'N/A'
 
-          // order.datetime is a timestamp with separate order.timezone, needs to be parsed as such
-          , moment.tz(order.datetime, order.timezone).format(reports.dateFormat)
-          , moment.tz(order.datetime, order.timezone).format(reports.timeFormat)
-          , getAddress(order)
-          , order.type === 'courier' ? getAddress(order.location) : ''
-          , order.restaurant.zip
-          , order.zip
-          , order.user.name
-          , order.user.email
-          , order.user.organization
-          , order.phone
-          , dollars(order.getSubTotal())
-          , dollars(order.delivery_fee)
-          , dollars(order.getTax())
-          , dollars(order.tip)
-          , dollars(order.adjustment_amount)
-          , dollars(order.total)
-          , order.restaurant.plan ? order.restaurant.plan.name : 'N/A'
-          , dollars(orderCharge(order, 'getApplicationCut'))
-          , dollars(orderCharge(order, 'getRestaurantCut'))
-          , order.restaurant.name
-          , order.region.name
-          ]);
-        });
+            , order.accepted ?
+                moment(order.accepted).tz(order.timezone).format(reports.timeFormat) :
+                'N/A'
 
-      res.end();
+            // order.datetime is a timestamp with separate order.timezone, needs to be parsed as such
+            , moment.tz(order.datetime, order.timezone).format(reports.dateFormat)
+            , moment.tz(order.datetime, order.timezone).format(reports.timeFormat)
+            , getAddress(order)
+            , order.type === 'courier' ? getAddress(order.location) : ''
+            , order.restaurant.zip
+            , order.zip
+            , order.user.name
+            , order.user.email
+            , order.user.organization
+            , order.phone
+            , dollars(order.getSubTotal())
+            , dollars(order.delivery_fee)
+            , dollars(order.getTax())
+            , dollars(order.tip)
+            , dollars(order.adjustment_amount)
+            , dollars(order.total)
+            , order.restaurant.plan ? order.restaurant.plan.name : 'N/A'
+            , dollars(orderCharge(order, 'getApplicationCut'))
+            , dollars(orderCharge(order, 'getRestaurantCut'))
+            , order.restaurant.name
+            , order.region.name
+            ]
+          );
+
+          done();
+        }))
+        .pipe( res );
+
     });
+
   },
 
   usersCsv: function(req, res) {

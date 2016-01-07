@@ -24,7 +24,6 @@ define( function( require, exports, module ){
 
     , validate: function(){
         var errors;
-        console.log('validating', this);
 
         utils.validator.validate( this, OrderCollaboration.schema, { singleError: false }, function( _errors ){
           errors = _errors;

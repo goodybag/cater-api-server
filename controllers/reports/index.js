@@ -298,7 +298,7 @@ var reports = {
     };
 
     if (req.query.receives_promos) {
-      query.where.receives_promos: true;
+      query.where.receives_promos = true;
     }
 
     models.User.find(query, function(err, results) {

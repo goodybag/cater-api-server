@@ -13,6 +13,8 @@ module.exports = require('stampit')()
   })
   .methods({
     save: function( callback ){
+      this.logger.debug('Saving collaborator', this.email);
+
       var tx = db.dirac.tx.create();
 
       utils.async.waterfall([
@@ -40,7 +42,7 @@ module.exports = require('stampit')()
             mixin: [{ table: 'organizations' }]
           };
 
-          tx.organizations_users.find({ user_id: user.id }, ( error, results )=>{
+          tx.organizations_users.find({ user_id: user.id }, options, ( error, results )=>{
             if ( error ){
               return next( error );
             }
@@ -63,15 +65,22 @@ module.exports = require('stampit')()
             return next( null, user );
           }
 
+          var org_id = this.order.user.organizations[0].id;
+
+          // If the user is alraedy in the order user's org, continue
+          if ( user.organizations.some( org => org.id === org_id ) ){
+            return next( null, user );
+          }
+
           var doc = {
-            organization_id: this.order.user.organizations[0].id
+            organization_id: org_id
           , user_id: user.id
           };
 
           tx.organizations_users.insert( doc, ( error, results )=>{
             if ( error ) return next( error );
 
-            return next( null, results[0] );
+            return next( null, user );
           });
         }
 

@@ -29,19 +29,17 @@ module.exports = require('stampit')()
       var onEmail = ( email, done )=>{
         Collaborator
           .create({ email: email, order: this.order, logger: this.logger })
-          .save( function( error, collaborator ){
+          .save( ( error, collaborator )=>{
             if ( error ){
               return done( error );
             }
 
-            // todo: send email
-            // utils.sendMail2({
-            //   to: email
-            // , from: this.fromEmail
-            // , subject: this.subject || this.defaultSubject()
-            // , html: this.message || this.defaultMessage()
-            // }, next )
-            done();
+            utils.sendMail2({
+              to: email
+            , from: this.fromEmail
+            , subject: this.subject || this.defaultSubject()
+            , html: this.message || this.defaultMessage()
+            }, done );
           });
       };
 

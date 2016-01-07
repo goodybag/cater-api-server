@@ -5,7 +5,9 @@ if ( typeof module === 'object' && module && typeof module.exports === 'object' 
 }
 
 define( function( require, exports, module ){
-  return module.exports = require('stampit')()
+  var utils = require('utils');
+
+  var OrderCollaboration = require('stampit')()
     .state({
       collaborators: []
     })
@@ -19,5 +21,38 @@ define( function( require, exports, module ){
         return 'Please select what you want to eat from :restaurant'
           .replace( ':restaurant', this.order.restaurant.name );
       }
+
+    , validate: function(){
+        var errors;
+        console.log('validating', this);
+
+        utils.validator.validate( this, OrderCollaboration.schema, { singleError: false }, function( _errors ){
+          errors = _errors;
+        });
+
+        return errors;
+      }
     });
+
+  OrderCollaboration.schema = {
+    type: 'object'
+  , properties: {
+      collaborators: {
+        type: 'array'
+      , items: {
+          type: 'string'
+        }
+      }
+    , subject: {
+        type: 'string'
+      , required: false
+      }
+    , message: {
+        type: 'string'
+      , required: false
+      }
+    }
+  };
+
+  return module.exports = OrderCollaboration;
 });

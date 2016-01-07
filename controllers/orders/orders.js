@@ -59,6 +59,16 @@ module.exports.auth = function(req, res, next) {
     req.order.isOwner = true;
   }
 
+  if ( req.params.collab_token ){
+    var isCollaborator = req.order.collaborators.some(
+      collab => collab.id === req.params.collab_token
+    );
+
+    if ( isCollaborator ){
+      req.user.attributes.groups.push('order-collaborator');
+    }
+  }
+
   logger.info('checking guest status');
   if ( req.user.isGuest() ){
     if ( Array.isArray( req.session.guestOrders ) ){

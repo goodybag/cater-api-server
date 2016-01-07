@@ -16,6 +16,7 @@ var orderAuth       = require('../controllers/orders/orders').auth;
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
     param:        'oid'
+  , collaborators: true
   });
 
   return function( req, res, next ){
@@ -147,6 +148,14 @@ module.exports = function( options ){
       , alias:  'internal_notes'
       , order:  'created_at desc'
       , one:    [{ table: 'users', alias: 'user' }]
+      });
+    }
+
+    if ( options.collaborators ){
+      $options.many.push({
+        table: 'order_collaborators'
+      , alias: 'collaborators'
+      , mixin: [{ table: 'users' }]
       });
     }
 

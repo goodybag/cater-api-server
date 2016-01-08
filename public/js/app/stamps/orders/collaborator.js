@@ -65,22 +65,25 @@ module.exports = require('stampit')()
             return next( null, user );
           }
 
-          var org_id = this.order.user.organizations[0].id;
+          var org = this.order.user.organizations[0];
 
           // If the user is alraedy in the order user's org, continue
-          if ( user.organizations.some( org => org.id === org_id ) ){
+          if ( user.organizations.some( org => org.id === org.id ) ){
             return next( null, user );
           }
 
           var doc = {
-            organization_id: org_id
+            organization_id: org.id
           , user_id: user.id
           };
 
           tx.organizations_users.insert( doc, ( error, results )=>{
             if ( error ) return next( error );
 
-            return next( null, user );
+            tx.users.update( user.id, { organization: org.name }, ( error )=>{
+              next( null, user );
+            });
+
           });
         }
 

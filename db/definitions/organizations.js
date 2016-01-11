@@ -19,6 +19,7 @@ define(function(require) {
   definition.schema = {
     id:                   { type: types.serial, nullable: false, pk: true }
   , name:                 { type: types.text , nullable: false }
+  , domain_name:          { type: types.text }
   , created_at:           { type: types.timestamp, nullable: false, default: 'now()' }
   };
 

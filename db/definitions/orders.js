@@ -237,6 +237,7 @@ define(function(require) {
     , default: 0
     }
   , courier_tracking_id: { type: types.text }
+  , organization_id: { type: types.int, references: { table: 'organizations', column: 'id' } }
   };
 
   definition.indices = {};

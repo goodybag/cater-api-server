@@ -93,6 +93,11 @@ define(function(require) {
     , notNull: true
     , default: 0
     }
+
+  , default_organization_id: {
+      type: types.int
+    , references: { table: 'organizations', column: 'id', onDelete: 'set null' }
+    }
   };
 
   definition.indices = {};

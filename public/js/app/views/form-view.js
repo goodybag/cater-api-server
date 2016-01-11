@@ -124,16 +124,18 @@ define(function(require, exports, module) {
         patch: this.patch,
         wait: this.wait,
         singleError: false,
-        validate: typeof this.options.validate !== 'boolean' ? true : this.options.validate // bypass client validation
-      })
-      .success( function(res) {
-        view.$el.find(view.submitSelector).addClass('hide');
-        view.trigger('save:success', view.model, res, view);
-        callback.call(view, null, res);
-      })
-      .error( function(response) {
-        view.trigger('save:error', response, view);
-        callback.call(view, response);
+        validate: typeof this.options.validate !== 'boolean' ? true : this.options.validate, // bypass client validation
+
+        success: function(res) {
+          view.$el.find(view.submitSelector).addClass('hide');
+          view.trigger('save:success', view.model, res, view);
+          callback.call(view, null, res);
+        },
+
+        error: function(response) {
+          view.trigger('save:error', response, view);
+          callback.call(view, response);
+        }
       });
 
       if (!sent) {

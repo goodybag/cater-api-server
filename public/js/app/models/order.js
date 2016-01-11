@@ -117,7 +117,7 @@ define(function(require, exports, module) {
       }
 
       var order = new Order( attrs );
-      order.restaurant.attributes._cached = this.restaurant.attributes._cached;
+      order.restaurant = this.restaurant;
 
       // Add on the restaurant fulfillability errors
       errors = errors.concat(

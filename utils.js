@@ -72,6 +72,14 @@ utils.balanced = new Balanced({
 
 utils.stripe = require('stripe')(config.stripe.secret);
 
+utils.getDomainNameFromEmail = function( email ){
+  if ( typeof email !== 'string' ){
+    throw new Error('Invalid first argument. Type should be `string`. Got `' + typeof email + '`');
+  }
+
+  return email.substring( email.lastIndexOf( '@' ) + 1 );
+};
+
 utils.emailDomainsMatch = function( a, b ){
   if ( typeof a !== 'string' ) return false;
   if ( typeof b !== 'string' ) return false;

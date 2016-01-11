@@ -14,6 +14,12 @@ module.exports = require('stampit')()
   })
   .methods({
     save: function( callback ){
+      var errors = this.validate();
+
+      if ( errors.length ){
+        return callback( errors );
+      }
+
       if ( !this.order ){
         this.logger.debug('No order, fetching order #' + this.order_id);
 
@@ -117,6 +123,7 @@ module.exports.fetchOrder = function( id, callback ){
         ]
       }
     , { table: 'restaurants', alias: 'restaurant' }
+    , { table: 'organizations', alias: 'organization' }
     ]
   };
 

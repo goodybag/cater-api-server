@@ -57,7 +57,11 @@ module.exports = require('stampit')()
       , ( user, next )=>{
           this.logger.debug('See if we should associate user to org');
 
-          if ( !utils.emailDomainsMatch( this.order.user.email, this.email ) ){
+          if ( !this.order.organization ){
+            return next( null, user );
+          }
+
+          if ( utils.getDomainNameFromEmail( this.email ) === this.order.organization.domain ){
             return next( null, user );
           }
 
@@ -65,6 +69,13 @@ module.exports = require('stampit')()
             return next( null, user );
           }
 
+          // TODO:
+          // This assumes a single organization even though it is
+          // a many relationship. 
+          // What we could do is add `organization_id` to the order
+          // and add `domain_name` to the organization. When a collab
+          // is added, we check the email domain against the orders
+          // org domain on whether or not to associate
           var org = this.order.user.organizations[0];
 
           // If the user is alraedy in the order user's org, continue
@@ -83,7 +94,6 @@ module.exports = require('stampit')()
             tx.users.update( user.id, { organization: org.name }, ( error )=>{
               next( null, user );
             });
-
           });
         }
 

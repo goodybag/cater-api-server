@@ -39,7 +39,7 @@ define( function( require, exports, module ){
       collaborators: {
         type: 'array'
       , items: {
-          type: 'string'
+          type: 'email'
         }
       }
     , subject: {

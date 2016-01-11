@@ -24,6 +24,12 @@
     <div class="restaurant-toggle-list {{#if (dneq cookies.gb_display 'list') }} hide {{/if}}" data-state="list">
       {{> restaurant_list}}
     </div>
+    {{#lte restaurants.length config.resultsTooFewContactUsThreshold}}
+      <div class="results-too-few">
+        <h4 class="results-too-few-heading">Need more options?<br>We will help get your order placed today!</h4>
+        <p>Give us a call: {{phoneNumber config.phone.support}}</p>
+      </div>
+    {{/lte}}
   </div>
 </div>
 

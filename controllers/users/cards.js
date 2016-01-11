@@ -17,7 +17,19 @@ module.exports.create = function(req, res, next) {
     req.user.attributes.stripe_id
   , { source: req.body.token_id }
   , function(err, card) {
-      if (err) return logger.error('error adding card to stripe customer', err), res.error(errors.stripe.ERROR_ADDING_CARD);
+      if (err) {
+        logger.error('error adding card to stripe customer', err);
+
+        if ( err.code === 'card_declined' ){
+          return res.error( errors.stripe.CARD_DECLINED );
+        }
+
+        if ( err.code === 'expired_card' ){
+          return res.error( errors.stripe.CARD_EXPIRED );
+        }
+
+        return res.error(errors.stripe.ERROR_ADDING_CARD)
+      }
       var pmData = utils.extend( {}, req.body, { stripe_id: req.body.data.id } );
       models.User.createPaymentMethod( +req.param('uid'), pmData, function(err, card) {
         if (err) return logger.error('error adding payment method to user: ' + req.user.attributes.id, err), res.error(errors.internal.DB_FAILURE, err);

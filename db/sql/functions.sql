@@ -554,3 +554,10 @@ begin
   end if;
 end;
 $$ language plpgsql;
+
+create or replace function get_domain_from_email( email text )
+returns text as $$
+begin
+  return substring( email from position( '@' in email ) + 1 );
+end;
+$$ language plpgsql;

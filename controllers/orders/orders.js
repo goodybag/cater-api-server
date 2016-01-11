@@ -192,6 +192,10 @@ module.exports.create = function(req, res) {
     }, req.body)
   );
 
+  utils.defaults( order.attributes, {
+    organization_id: req.user.attributes.default_organization_id
+  });
+
   order.save(function(err) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
 

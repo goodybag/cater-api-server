@@ -31,7 +31,7 @@ module.exports = require('stampit')()
             return next( null, user );
           }
 
-          tx.users.insert( { email: this.email, password: 'alskdjfalskdj' }, next );
+          tx.partial_registrations.create( this.email, next );
         }
 
         // Lookup the user's organizations

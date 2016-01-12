@@ -20,6 +20,14 @@ begin
   , created_at        timestamp not null default now()
   );
 
+  create table partial_registrations(
+    id                serial primary key
+  , user_id           int references users(id) on delete cascade
+  , token             text not null default uuid_generate_v4()
+  , has_consumed      boolean not null default false
+  , created_at        timestamp not null default now()
+  );
+
   perform add_column( 'orders', 'organization_id', 'int references organizations(id) on delete set null' );
   perform add_column( 'users', 'default_organization_id', 'int references organizations(id) on delete set null' );
   perform add_column( 'organizations', 'domain_name', 'text' );

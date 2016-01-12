@@ -1,6 +1,7 @@
 var db      = require('../../db');
 var errors  = require('../../errors');
 var utils   = require('../../utils');
+var errors  = require('../../errors');
 var config  = require('../../config');
 var states  = require('../../public/js/lib/states')
 var models  = require('../../models');
@@ -20,6 +21,7 @@ var Address = require('stamps/addresses');
 var UserAddresses = require('stamps/addresses/user-addresses-db');
 var GeocodeRequest = require('stamps/requests/geocode');
 var Order = require('stamps/orders/base');
+var OrderCollaboration = require('stamps/orders/collaboration-server');
 
 var addressFields = [
   'street'
@@ -561,27 +563,15 @@ module.exports.getDeliveryFee = function( req, res ){
 };
 
 module.exports.addCollaborator = function( req, res ){
-  // For each email
-  //   Check for matching user record
-  //   if it exists, use that user_id
-  //   if not
-  //      Create a new user
-  //      if the email address domain matches order.user's
-  //        Add them to order.user's organization
-  //   Send an email
+  var collab = OrderCollaboration.create( req.body );
+  var validationErrors = collab.validate();
 
-  var onEmail = function( email, next ){
-    OrderCollaborator
-      .create({ email: email })
-      .save( next );
-  };
+  if ( validationErrors.length ){
+    return res.error( errors.input.VALIDATION_FAILED, validationErrors[0] );
+  }
 
-  utils.async.each( req.body.emails, onEmail, function( error ){
+  collab.save( function( error ){
     if ( error ){
-      req.logger.warn('Error processing emails', {
-        error: error
-      });
-
       return res.error( error );
     }
 

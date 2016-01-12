@@ -29,7 +29,7 @@ define( function( require, exports, module ){
           errors = _errors;
         });
 
-        return errors;
+        return errors ? Array.prototype.slice.call( errors ) : [];
       }
     });
 
@@ -39,7 +39,7 @@ define( function( require, exports, module ){
       collaborators: {
         type: 'array'
       , items: {
-          type: 'email'
+          type: 'string'
         }
       }
     , subject: {

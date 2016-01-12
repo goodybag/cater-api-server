@@ -221,5 +221,81 @@ define(function(require) {
     }.bind( this ));
   };
 
+  definition.register = function( data, callback ){
+    if ( !data.email ){
+      throw new Error('Cannot register user without an email');
+    }
+
+    if ( !data.password ){
+      throw new Error('Cannot register user without a password');
+    }
+
+    var tx;
+
+    utils.async.waterfall([
+      // Encrypt the password
+      ( next )=>{
+        utils.encryptPassword( data.password, next );
+      }
+
+      // Create the stripe Customer
+    , ( hash, salt, next )=>{
+        utils.stripe.customers.create({
+          email: data.email.toLowerCase()
+        }, ( error, customer )=>{
+          if ( error ) return next( error );
+          next( null, hash, customer.id );
+        });
+      }
+
+      // Begin the DB transaction
+    , ( hash, stripeId, next )=>{
+        tx = dirac.tx.create();
+
+        tx.begin(( error )=>{
+          if ( error ){
+            return next( error );
+          }
+
+          next( null, hash, stripeId );
+        });
+      }
+
+      // Insert the user
+    , ( hash, stripeId, next )=>{
+        data.password = hash;
+        data.stripe_id = stripeId;
+        tx.users.insert( data, next );
+      }
+
+      // Insert groups
+    , ( user, next )=>{
+        tx.users_groups.insert( { group: 'client', user_id: user.id }, ( error, results )=>{
+          next( error, user );
+        });
+      }
+
+      // Commit
+    , ( user, next )=>{
+        tx.commit(( error )=>{
+          return next( error, user );
+        });
+      }
+    ], ( error, user )=>{
+      if ( error ){
+        if ( this.client || !tx ){
+          return callback( error );
+        }
+
+        return tx.rollback( function(){
+          return callback( error );
+        });
+      }
+
+      callback( null, user );
+    });
+  };
+
   return definition;
 });
+

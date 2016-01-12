@@ -228,3 +228,9 @@ route.put('/:order_id/feedback', m.getOrder2({
 }), m.restrict(['order-owner', 'admin']), m.queryOptions({
   returning: ['id']
 }), m.param('order_id'), m.update(db.order_feedback));
+
+/**
+ * Duplicate order
+ */
+
+route.post('/:oid/duplicates', m.restrict(['client', 'admin']), controllers.orders.duplicate);

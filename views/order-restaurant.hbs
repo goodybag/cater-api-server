@@ -10,18 +10,47 @@
 
 <div class="accept-reject-bar">
   <button class="btn-accept">Accept</button>
-  <button class="btn-reject">Reject</button>
+  <button
+    class="btn-reject"
+    data-toggle="modal"
+    data-target="#reject-confirm-modal">Reject</button>
   <a
     href="/manifests/manifest-{{order.id}}.pdf?review_token={{order.review_token}}"
     class="btn-download"
     target="_blank">Download</a>
+</div>
+
+<div id="reject-confirm-modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Confirm Reject</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <p>Are you sure you want to reject this order?</p>
+          <textarea class="form-control reason-denied" placeholder="Please let us know why, so we can improve the ordering experience. Thanks!"></textarea>
+          <span class="help-block">This field is required</span>
+        </div>
+      </div>
+      <div class="row modal-footer">
+        <div class="col-lg-3 col-lg-offset-6">
+          <button type="button" class="btn btn-default" data-dismiss="modal">No, don't reject</button>
+        </div>
+        <div class="col-lg-3">
+          <button type="button" class="btn btn-danger btn-reject">Yes, reject</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {{/extend}}
 
 {{#extend "scripts"}}
 <script>
   require([
-      'app/pages/orders'
+      'app/pages/receipt'
     ]
   , function(orders) {
       orders.init({

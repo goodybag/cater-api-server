@@ -44,7 +44,7 @@ module.exports = require('stampit')()
               to: email
             , from: this.fromEmail
             , subject: this.subject || this.defaultSubject()
-            , html: this.message || this.defaultMessage()
+            , html: (this.message || this.defaultMessage()) + this.getOrderLinkHTML( collaborator )
             }, done );
           });
       };

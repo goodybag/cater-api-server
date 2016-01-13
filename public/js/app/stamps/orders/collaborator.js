@@ -1,5 +1,8 @@
 /**
  * Order Collaborator
+ * {
+ *   user_id, order_id, token
+ * }
  */
 
 var db = require('db');
@@ -109,14 +112,18 @@ module.exports = require('stampit')()
 
         // Commit everything
       , ( result, next )=>{
-          tx.commit( next );
+          tx.commit( ( error )=>{
+            return next( error, result[0] );
+          });
         }
-      ], ( error )=>{
+      ], ( error, result )=>{
         if ( error ){
           return tx.rollback( ()=> callback( error ) );
         }
 
-        callback();
+        utils.extend( this, result );
+
+        callback( null, this );
       });
     }
   });

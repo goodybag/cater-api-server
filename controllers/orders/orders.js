@@ -61,13 +61,15 @@ module.exports.auth = function(req, res, next) {
     req.order.isOwner = true;
   }
 
-  if ( req.params.collab_token ){
+  if ( req.query.edit_token ){
+    logger.info('collab_token', req.query.edit_token, req.order.collaborators );
+
     var isCollaborator = req.order.collaborators.some(
-      collab => collab.id === req.params.collab_token
+      collab => collab.id === req.query.edit_token
     );
 
     if ( isCollaborator ){
-      req.user.attributes.groups.push('order-collaborator');
+      req.user.attributes.groups.push('order-editor');
     }
   }
 
@@ -83,6 +85,7 @@ module.exports.auth = function(req, res, next) {
   }
 
   logger.info('user permissions [' + req.user.attributes.groups.join(', ') + ']');
+
   next();
 };
 

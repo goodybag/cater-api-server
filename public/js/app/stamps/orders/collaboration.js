@@ -6,6 +6,7 @@ if ( typeof module === 'object' && module && typeof module.exports === 'object' 
 
 define( function( require, exports, module ){
   var utils = require('utils');
+  var config = require('config');
 
   var OrderCollaboration = require('stampit')()
     .state({
@@ -20,6 +21,18 @@ define( function( require, exports, module ){
     , defaultMessage: function(){
         return 'Please select what you want to eat from :restaurant'
           .replace( ':restaurant', this.order.restaurant.name );
+      }
+
+    , getOrderLinkHTML: function( collaborator ){
+        return `
+          <div>
+            <a href="${this.getOrderURL( collaborator )}">Click here to place your orders</a>
+          </div>
+        `;
+      }
+
+    , getOrderURL: function( collaborator ){
+        return `${config.baseUrl}/orders/${this.order.id}/add-items?edit_token=${collaborator.id}`;
       }
 
     , validate: function(){

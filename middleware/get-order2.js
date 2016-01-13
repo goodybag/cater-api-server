@@ -155,7 +155,7 @@ module.exports = function( options ){
       $options.many.push({
         table: 'order_collaborators'
       , alias: 'collaborators'
-      , mixin: [{ table: 'users' }]
+      , one: [{ table: 'users', alias: 'user' }]
       });
     }
 

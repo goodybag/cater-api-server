@@ -34,7 +34,9 @@ define(function(require, exports, module) {
         'keyup .adjustment': 'autoSave',
         'keyup .order-tip': 'autoSave',
         'change .order-tip': 'autoSave',
-        'change .tip-percent': 'autoSave'
+        'change .tip-percent': 'autoSave',
+        'change [name="date"]': 'autoSave',
+        'change [name="time"]': 'autoSave'
       });
     },
 

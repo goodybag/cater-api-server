@@ -120,3 +120,12 @@ input[name="card_number"] {
   margin-top: 32px;
   padding-left: 15px;
 }
+
+.order-address.edit + .delivery-instructions-external {
+  display: none;
+  margin-top: 20px;
+}
+
+.order-address.edit.hide + .delivery-instructions-external {
+  display: block;
+}

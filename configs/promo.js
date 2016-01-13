@@ -20,7 +20,7 @@ var promo = {
   }
 , ramone: {
     email: 'ramonejohnson@goodybag.com'
-  , promo_code: ['seattlegb', 'seagoody']
+  , promo_code: ['seattlegb', 'seagoody', 'gbseafree']
   }
 , om: {
     email: 'om@goodybag.com'

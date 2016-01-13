@@ -48,6 +48,7 @@ define(function(require, exports, module) {
       , organization_type: '.organization-type'
       , secondary_contact_phone: '.order-secondary-contact-phone'
       , promo_code: '.promo-code'
+      , delivery_instructions: '.delivery-instructions-external textarea'
     }),
 
     fieldGetters: _.extend({}, OrderView.prototype.fieldGetters, {
@@ -655,7 +656,7 @@ define(function(require, exports, module) {
       var this_ = this;
       var error, $el, $parent;
       var template = Handlebars.partials.alert_error;
-      var selector = '[name="{property}"], [data-stripe="{property}"]';
+      var selector = '[name="{property}"], [data-stripe="{stripe_property}"]';
 
       if ( _.isObject( errors ) && !_.isArray( errors ) ){
         // Amanda errors object
@@ -701,7 +702,15 @@ define(function(require, exports, module) {
         $el.css( css );
 
         $parent = this.$el.find(
-          selector.replace( /{property}/g, (error.name || error.param || error.property).toLowerCase().replace(/-/g, '_') )
+          selector
+            .replace( '{property}', (
+                error.property || error.param || error.name
+              ).toLowerCase().replace(/-/g, '_')
+            )
+            .replace( '{stripe_property}', (
+                error.property || error.param || error.name
+              )
+            )
         ).parents('.form-group').eq(0);
 
         $parent.append( $el );

@@ -97,6 +97,8 @@ module.exports.get = function(req, res, next) {
         }
       }
 
+      context.order.restaurant._cached = db.cache.restaurants.byId( context.restaurant.id );
+
       return res.render('menu', context);
     });
   });

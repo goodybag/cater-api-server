@@ -88,7 +88,11 @@ define(function(require, exports, module) {
     validator: amanda('json'),
 
     validate: function(attrs, options) {
-      return this.validator.validate(attrs, _.result(this, 'schema'), options || {}, function(err) { return err; });
+      var schema = this.schema
+        ? _.result( this, 'schema' )
+        : _.result( this.constructor, 'schema' );
+
+      return this.validator.validate(attrs, schema, options || {}, function(err) { return err; });
     }
   });
 

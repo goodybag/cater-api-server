@@ -435,6 +435,10 @@ module.exports.changeStatus = function(req, res) {
 
   if (review) $update.token_used = 'now()';
 
+  if (req.body.status === 'denied') {
+    $update.reason_denied = req.body.reason_denied;
+  }
+
   req.order.status = req.body.status;
   logger.info('Saving order');
 

@@ -1,6 +1,24 @@
 {{#extend "page"}}page-order-restaurant{{/extend}}
 
 {{#extend "body"}}
+<div class="shelf right" id="accept-reject-shelf">
+  <div class="shelf-content accept-reject-shelf-content form-vertical">
+    <h2>Did you know</h2>
+    <p>Goodybag can provide you with a courier if you need help delivering. If you can take on the order, but cannot deliver the food yourself, please give us a call at <a href="tel:{{config.phone.support}}">{{phoneNumber config.phone.support}}</a></p>
+    <h2>Why are you rejecting this order?</h2>
+    <textarea
+      class="form-control reason-denied"
+      name="denied_reason"
+      placeholder="Please let us know why, so we can improve the ordering experience. Thanks!"></textarea>
+    <div class="form-group">
+      <button
+        class="btn btn-primary"
+        data-role="reject"
+      >Yes, reject this order</button>
+    </div>
+  </div>
+</div>
+
 <div class="container manifest-container">
   <iframe
     src="/manifests/manifest-{{order.id}}.pdf?review_token={{order.review_token}}"
@@ -8,55 +26,90 @@
   ></iframe>
 </div>
 
+{{#eq order.status 'submitted'}}
 <div class="accept-reject-bar">
   <button class="btn-accept">Accept</button>
   <button
-    class="btn-reject"
-    data-toggle="modal"
-    data-target="#reject-confirm-modal">Reject</button>
+    class="btn-reject">Reject</button>
   <a
     href="/manifests/manifest-{{order.id}}.pdf?review_token={{order.review_token}}"
     class="btn-download"
     target="_blank">Download</a>
 </div>
-
-<div id="reject-confirm-modal" class="modal fade">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Confirm Reject</h4>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <p>Are you sure you want to reject this order?</p>
-          <textarea class="form-control reason-denied" placeholder="Please let us know why, so we can improve the ordering experience. Thanks!"></textarea>
-          <span class="help-block">This field is required</span>
-        </div>
-      </div>
-      <div class="row modal-footer">
-        <div class="col-lg-3 col-lg-offset-6">
-          <button type="button" class="btn btn-default" data-dismiss="modal">No, don't reject</button>
-        </div>
-        <div class="col-lg-3">
-          <button type="button" class="btn btn-danger btn-reject">Yes, reject</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+{{/eq}}
 {{/extend}}
 
 {{#extend "scripts"}}
 <script>
-  require([
-      'app/pages/receipt'
+  define(
+    'pages/order-restaurant'
+  , [ 'jquery'
+    , 'app/views/shelf'
+    , 'app/views/order-rejection-view'
+    , 'app/models/order-rejection'
+    , 'spinner'
     ]
-  , function(orders) {
-      orders.init({
-        queryParams: {{{json reqQuery}}}
+  , function( $, ShelfView, OrderRejectionView, OrderRejection, spinner ){
+      return {
+        init: function( options ){
+          this.options = options;
+
+          $(function(){
+            var $rejectBtn = $('.btn-reject');
+
+            var rejection = this.rejection = new OrderRejection({
+              order_id: this.options.order.get('id')
+            , review_token: this.options.order.get('review_token')
+            });
+
+            var rejectionView = this.rejectionView = new OrderRejectionView({
+              el: '#accept-reject-shelf'
+            , model: rejection
+            });
+
+            var shelf = this.shelfView = new ShelfView({
+              el: '#accept-reject-shelf'
+            , exclusions: [ $rejectBtn[0] ]
+            });
+
+            shelf.startListening();
+
+            $rejectBtn.click(function(){
+              shelf.open();
+            });
+
+            rejection.on('loading', function(){
+              spinner.start();
+            });
+
+            rejection.on('save', function(){
+              spinner.stop();
+              shelf.close();
+              $('.accept-reject-bar').addClass('hide');
+            });
+
+            rejection.on('error', function( error ){
+              shelf.close();
+            });
+          }.bind( this ));
+        }
+      };
+    }
+  );
+
+  {{#eq order.status 'submitted'}}
+  require([
+      'pages/order-restaurant'
+    , 'app/models/order'
+    ]
+  , function( page, Order ) {
+      var order = new Order({{{json order}}});
+
+      page.init({
+        order: order
       });
     }
   );
+  {{/eq}}
 </script>
 {{/extend}}

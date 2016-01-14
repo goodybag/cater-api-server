@@ -364,6 +364,10 @@ module.exports = Model.extend({
     , 'payment_method_id'
     , 'delivery_service_id'
     , 'lat_lng'
+    , 'total'
+    , 'sub_total'
+    , 'sales_tax'
+    , 'delivery_fee'
     ];
     var self = this;
     var tasks = [

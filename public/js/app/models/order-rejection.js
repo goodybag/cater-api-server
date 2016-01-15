@@ -25,6 +25,8 @@ define(function(require, exports, module) {
     }
 
   , send: function( callback ){
+      delete this.error;
+
       if ( this.hasSent() || this.isSending() ){
         throw new Error('Cannot reject order twice');
       }
@@ -34,7 +36,8 @@ define(function(require, exports, module) {
       var errors = this.validate();
 
       if ( errors && errors.length ){
-        return callback( error );
+        this.error = errors;
+        return callback( errors );
       }
 
       this.state.isSending = true;
@@ -79,7 +82,7 @@ define(function(require, exports, module) {
       reason_denied: {
         type: ['string'],
         required: true,
-        minLength: 1
+        minLength: 5
       }
     }
   };

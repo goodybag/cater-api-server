@@ -88,11 +88,11 @@ define(function(require, exports, module) {
     validator: amanda('json'),
 
     validate: function(attrs, options) {
-      var schema = this.schema
-        ? _.result( this, 'schema' )
-        : _.result( this.constructor, 'schema' );
-
-      return this.validator.validate(attrs, schema, options || {}, function(err) { return err; });
+      var schema = this.constructor.schema
+        ? _.result( this.constructor, 'schema' )
+        : _.result( this, 'schema' );
+console.log('validating', attrs, schema);
+      return this.validator.validate(attrs || this.toJSON(), schema, options || {}, function(err) { return err; });
     }
   });
 

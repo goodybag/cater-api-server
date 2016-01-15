@@ -1,10 +1,15 @@
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var $ = require('jquery');
+  var AlertView = require('app/views/alert-view');
 
   var selectors = {
     REJECT_BTN: '[data-role="reject"]'
   , REASON_TEXTBOX: '[name="denied_reason"]'
+  };
+
+  var errorFieldMap = {
+    reason_denied: 'You must supply a reason'
   };
 
   var events = {};
@@ -19,6 +24,10 @@ define(function(require, exports, module) {
   , initialize: function( options ){
       this.options = options;
       this.isSaving = false;
+
+      this.alertView = new AlertView({
+        el: this.$el.find('.errors')
+      });
     }
 
   , saveRejection: function(){
@@ -36,6 +45,23 @@ define(function(require, exports, module) {
         selectors.REJECT_BTN
       , selectors.REASON_TEXTBOX
       ].join(', ');
+
+      // Check for validation errors
+      if ( this.model.error && this.model.error.length ){
+        this.alertView.show({
+          type: 'danger'
+        , message:  Array.prototype.slice.call( this.model.error )
+                      .map( function( error ){
+                        return errorFieldMap[ error.property ];
+                      })
+                      .filter( function( message ){
+                        return !!message;
+                      })
+                      .join('<br />')
+        });
+      } else {
+        this.alertView.dismiss();
+      }
 
       this.$el.find( selector ).attr(
         'disabled'

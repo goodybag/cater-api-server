@@ -25,10 +25,6 @@ define(function(require, exports, module) {
       this.model.set( 'reason_denied', this.$el.find( selectors.REASON_TEXTBOX ).val() );
 
       this.model.send( function( error ){
-        if ( error ){
-          return alert('There was an error processing your request. Please refresh and try agian');
-        }
-
         this.render();
       }.bind( this ));
 

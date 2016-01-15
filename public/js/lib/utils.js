@@ -96,6 +96,8 @@ define(function(require, exports, module) {
     }
   });
 
+  utils.noop = function(){};
+
   utils.startHistory = function(){
     utils.history = Backbone.history;
     utils.history.start();

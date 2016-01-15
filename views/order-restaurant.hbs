@@ -3,6 +3,7 @@
 {{#extend "body"}}
 <div class="shelf right" id="accept-reject-shelf">
   <div class="shelf-content accept-reject-shelf-content form-vertical">
+    <div data-role="close">&times;</div>
     <h2>Did you know</h2>
     <p>Goodybag can provide you with a courier if you need help delivering. If you can take on the order, but cannot deliver the food yourself, please give us a call at <a href="tel:{{config.phone.support}}">{{phoneNumber config.phone.support}}</a></p>
     <h2>Why are you rejecting this order?</h2>
@@ -47,19 +48,26 @@
     , 'app/views/shelf'
     , 'app/views/order-rejection-view'
     , 'app/models/order-rejection'
+    , 'app/models/order-acceptance'
     , 'spinner'
     ]
-  , function( $, ShelfView, OrderRejectionView, OrderRejection, spinner ){
+  , function( $, ShelfView, OrderRejectionView, OrderRejection, OrderAcceptance, spinner ){
       return {
         init: function( options ){
           this.options = options;
 
           $(function(){
+            var $acceptBtn = $('.btn-accept');
             var $rejectBtn = $('.btn-reject');
 
             var rejection = this.rejection = new OrderRejection({
               order_id: this.options.order.get('id')
             , review_token: this.options.order.get('review_token')
+            });
+
+            var acceptance = new OrderAcceptance({
+              order_id: options.order.get('id')
+            , review_token: options.order.get('review_token')
             });
 
             var rejectionView = this.rejectionView = new OrderRejectionView({
@@ -72,25 +80,37 @@
             , exclusions: [ $rejectBtn[0] ]
             });
 
+            // Listen to `clicked outside` events
             shelf.startListening();
 
             $rejectBtn.click(function(){
               shelf.open();
             });
 
-            rejection.on('loading', function(){
-              spinner.start();
-            });
-
-            rejection.on('save', function(){
-              spinner.stop();
+            var onSave = function(){
               shelf.close();
               $('.accept-reject-bar').addClass('hide');
+              spinner.stop();
+            };
+
+            var onError = function( error ){
+              alert('There was an error processing your request. Please refresh and try again');
+              console.error( error );
+              shelf.close();
+              spinner.stop();
+            };
+
+            $acceptBtn.click( function(){
+              acceptance.send();
             });
 
-            rejection.on('error', function( error ){
-              shelf.close();
-            });
+            rejection.on( 'loading', spinner.start );
+            rejection.on( 'save', onSave );
+            rejection.on( 'error', onError );
+
+            acceptance.on( 'loading', spinner.start );
+            acceptance.on( 'save', onSave );
+            acceptance.on( 'error', onError );
           }.bind( this ));
         }
       };

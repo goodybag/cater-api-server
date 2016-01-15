@@ -20,7 +20,6 @@
     </div>
   </div>
 </div>
-
 <div class="container manifest-container">
   <iframe
     src="/manifests/manifest-{{order.id}}.pdf?review_token={{order.review_token}}"
@@ -83,6 +82,15 @@
 
             // Listen to `clicked outside` events
             shelf.startListening();
+
+            // IE Weirdness always showing iframes on top
+            shelf.on('open', function(){
+              $('.manifest-frame').addClass('hide');
+            });
+
+            shelf.on('close', function(){
+              $('.manifest-frame').removeClass('hide');
+            });
 
             $rejectBtn.click(function(){
               shelf.open();

@@ -26,16 +26,18 @@
     max-height: 100%;
   }
 
-  // .manifest-container {
-  //   -webkit-overflow-scrolling: touch;
-  //   overflow-y: scroll;
-  // }
-
-  .manifest-frame {
-    width: 100%;
-    border: none;
+  .manifest-container {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll;
   }
 
+  .manifest-frame {
+    position: relative;
+    width: 100%;
+    border: none;
+    z-index: 1;
+  }
+  
   @media screen and ( max-width: 500px ){
     
   }

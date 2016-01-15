@@ -25,19 +25,24 @@ define(function(require, exports, module) {
     }
 
   , toggle: function(){
-      this.$el.toggleClass('in');
+      if ( this.isOpen() ){
+        this.close();
+      } else {
+        this.open();
+      }
+
       return this;
     }
 
   , open: function(){
-      console.log('open');
       this.$el.addClass('in');
+      this.trigger('open');
       return this;
     }
 
   , close: function(){
-      console.log('close');
       this.$el.removeClass('in');
+      this.trigger('close');
       return this;
     }
 

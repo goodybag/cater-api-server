@@ -20,11 +20,8 @@
     </div>
   </div>
 </div>
-<div class="container manifest-container">
-  <iframe
-    src="/manifests/manifest-{{order.id}}.pdf?review_token={{order.review_token}}"
-    class="manifest-frame"
-  ></iframe>
+<div class="manifest-container">
+  {{> order_manifest_main}}
 </div>
 
 {{#eq order.status 'submitted'}}
@@ -41,6 +38,7 @@
 {{/extend}}
 
 {{#extend "scripts"}}
+{{> order_manifest_scripts}}
 <script>
   define(
     'pages/order-restaurant'

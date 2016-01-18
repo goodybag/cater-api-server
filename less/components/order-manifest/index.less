@@ -1,0 +1,27 @@
+@import "./header.less";
+@import "./page.less";
+@import "./section-dl.less";
+@import "./table.less";
+
+#components { #order-manifest {
+  .init(){
+    #components > #order-manifest > #header > .init();
+    #components > #order-manifest > #page > .init();
+    #components > #order-manifest > #section-dl > .init();
+    #components > #order-manifest > #table > .init();
+
+    .order-manifest {
+      background-color:     #fff;
+      font-family:          'Din';
+      font-size:            14px;
+      font-weight:          500;
+      line-height:          16px;
+      color:                #333;
+
+      * {
+        position: relative;
+        .box-sizing( border-box );
+      }
+    }
+  }
+}}

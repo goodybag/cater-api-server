@@ -130,6 +130,7 @@ route.get('/:oid', m.getOrder2({
     submittedDate: true,
     amenities: true,
     orderFeedback: true,
+    manifest: true,
     applyPriceHike: true
   }), m.restrict(['admin', 'receipts', 'order-owner', 'order-restaurant']),
   controllers.orders.get);

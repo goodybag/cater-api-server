@@ -99,8 +99,8 @@ route.all('/:oid/voice', function(req, res, next) {
  */
 
 route.get('/:oid/manifest',
-  m.basicAuth(),
-  m.restrict(['admin', 'receipts']),
+  // m.basicAuth(),
+  // m.restrict(['admin', 'receipts']),
   // always view this resource as the order-restaurant
   function( req, res, next ){
     req.user.attributes.groups.push('order-restaurant');

@@ -18,7 +18,8 @@
       z-index: @z-index;
       overflow-y: scroll;
 
-      transition: opacity @easing, transform @easing;
+      -webkit-transition: transform @easing;
+      transition: transform @easing;
 
       &.top,
       &.bottom {

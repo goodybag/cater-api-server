@@ -6,11 +6,9 @@
     display: none;
   }
 
-  .manifest-frame {
-    position: relative;
-    width: 100%;
-    border: none;
-    z-index: 1;
+  .manifest-container {
+    max-width: 100%;
+    overflow: scroll;
   }
 
   .accept-reject-bar {
@@ -22,10 +20,6 @@
   .order-manifest {
     display: table;
     margin: 0 auto;
-  }
-  
-  @media screen and ( max-width: 500px ){
-    
   }
 
   .accept-reject-shelf-content {
@@ -43,10 +37,6 @@
   html, body {
     padding: 0;
     margin: 0;
-  }
-
-  .manifest-container {
-    // overflow-y: auto;
   }
 
   .navbar,

@@ -568,11 +568,13 @@ describe('Orders Stamps', function(){
     });
 
     it('.getTotal() throw error invalid scale', function() {
-      var amenity = orders.amenity({
-        guests: 12, price: 100, scale: 'derp', enabled: false
-      });
+      assert.throws( function(){
+        var amenity = orders.amenity({
+          guests: 12, price: 100, scale: 'derp', enabled: true
+        });
 
-      assert.throws( amenity.getTotal() );
+        amenity.getTotal();
+      });
     });
   });
 

@@ -18,7 +18,7 @@
       z-index: @z-index;
       overflow-y: scroll;
 
-      -webkit-transition: transform @easing;
+      -webkit-transition: -webkit-transform @easing;
       transition: transform @easing;
 
       &.top,
@@ -91,5 +91,11 @@
 
   .translation( @x, @y ){
     .transform( translate3d( @x * 100%, @y * 100%, 0 ) );
+
+    // All shelves will be on the right/top
+    .no-csstransforms3d & {
+      right: @x * 100%;
+      bottom: @x * 100%;
+    }
   }
 }}

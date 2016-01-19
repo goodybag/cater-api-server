@@ -73,12 +73,12 @@ define( function( require, exports, module ){
               return dayHours.day === day;
             })
             .some( function( dayHours ){
-              var startTime = _.zipObject(
+              var startTime = _.object(
                 hms
               , dayHours.start_time.split(':')
               );
 
-              var endTime = _.zipObject(
+              var endTime = _.object(
                 hms
               , dayHours.end_time.split(':')
               );

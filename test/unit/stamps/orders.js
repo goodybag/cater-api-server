@@ -360,15 +360,19 @@ describe('Orders Stamps', function(){
     });
 
     it( '.isFulfillable() test day is fulfillable', function(){
+      // Order in 24 hours
+      var date = moment().add('days', 1);
+
       var result = fulfillability({
         timezone: 'America/Chicago'
-      , date: '2015-04-22'
+      , datetime: date.format('YYYY-MM-DD hh:mm:ss')
       , restaurant: restaurants()
-                      .open(3)
+                      .open( date.day() )
+                      .leadTime( 5, 60 )
                       .supports('delivery', 'courier')
-      }).isFulfillable();
+      });
 
-      assert( result );
+      assert( result.isFulfillable() );
     });
 
     it( '.isFulfillable() test day is not fulfillable', function(){

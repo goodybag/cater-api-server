@@ -61,11 +61,11 @@ define( function( require, exports, module ){
         // Restaurant is open on that day, but what about time?
       , function strategyOpenHours(){
           if ( !this.datetime ) return true;
-          if ( !this.time ) return true;
 
           var day = this.datetime.day();
 
           var format = [ this.dateFormat, this.availabilityTimeFormat ].join(' ');
+          var hms = ['hour', 'minute', 'second'];
 
           return this.restaurant.hours
             .concat( this.restaurant.delivery_hours )
@@ -73,17 +73,23 @@ define( function( require, exports, module ){
               return dayHours.day === day;
             })
             .some( function( dayHours ){
-              var startDate = moment.tz(
-                this.date + ' ' + dayHours.start_time
-              , format
-              , this.timezone
+              var startTime = _.zipObject(
+                hms
+              , dayHours.start_time.split(':')
               );
 
-              var endDate = moment.tz(
-                this.date + ' ' + dayHours.end_time
-              , format
-              , this.timezone
+              var endTime = _.zipObject(
+                hms
+              , dayHours.end_time.split(':')
               );
+
+              var startDate = this.datetime.clone();
+              var endDate = this.datetime.clone();
+
+              hms.forEach( function( component ){
+                startDate.set( component, startTime[ component ] );
+                endDate.set( component, endTime[ component ] );
+              });
 
               return [
                 startDate <= this.datetime

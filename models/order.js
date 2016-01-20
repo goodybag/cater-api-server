@@ -467,10 +467,7 @@ module.exports = Model.extend({
 
       function(client, done, newOrder, lostItems, cb) {
         var queryOptions = {
-          one: [{
-            table: 'regions',
-            alias: 'region'
-          }]
+          one: [ { table: 'regions', alias: 'region' } ]
         };
 
         db.restaurants.findOne(newOrder.attributes.restaurant_id, queryOptions, function(err, restaurant) {
@@ -484,13 +481,22 @@ module.exports = Model.extend({
       },
 
       function(client, done, newOrder, lostItems, cb) {
+        db.users.findOne(newOrder.attributes.user_id, function(err, user) {
+          if(err) {
+            return cb(err);
+          }
+
+          newOrder.attributes.priority_account_price_hike_percentage = user.priority_account_price_hike_percentage;
+          cb(null, client, done, newOrder, lostItems);
+        })
+      },
+
+      function(client, done, newOrder, lostItems, cb) {
         newOrder.attributes.items = newOrder.orderItems;
         var order = new Order(newOrder.attributes);
         newOrder.attributes.sub_total = order.getSubTotal();
         newOrder.attributes.sales_tax = order.getTax();
         newOrder.attributes.total = order.getTotal();
-
-        console.log(newOrder);
 
         cb(null, client, done, newOrder, lostItems);
       }

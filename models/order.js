@@ -365,10 +365,9 @@ module.exports = Model.extend({
     , 'payment_method_id'
     , 'delivery_service_id'
     , 'lat_lng'
-    // , 'total'
-    // , 'sub_total'
-    // , 'sales_tax'
-    // , 'delivery_fee'
+    , 'delivery_fee'
+    , 'adjustment_amount'
+    , 'user_adjustment_amount'
     ];
     var self = this;
     var tasks = [
@@ -479,14 +478,20 @@ module.exports = Model.extend({
             return cb(err);
           }
 
-          newOrder.restaurant = restaurant;
+          newOrder.attributes.restaurant = restaurant;
           cb(null, client, done, newOrder, lostItems);
         });
       },
 
       function(client, done, newOrder, lostItems, cb) {
-        var order = new Order(newOrder);
-        
+        newOrder.attributes.items = newOrder.orderItems;
+        var order = new Order(newOrder.attributes);
+        newOrder.attributes.sub_total = order.getSubTotal();
+        newOrder.attributes.sales_tax = order.getTax();
+        newOrder.attributes.total = order.getTotal();
+
+        console.log(newOrder);
+
         cb(null, client, done, newOrder, lostItems);
       }
     ];

@@ -243,3 +243,9 @@ route.post('/:order_id/collaborators'
 , m.queryToBody('order_id')
 , controllers.orders.addCollaborator
 );
+
+/**
+ * Duplicate order
+ */
+
+route.post('/:oid/duplicates', m.restrict(['client', 'admin']), controllers.orders.duplicate);

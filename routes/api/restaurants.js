@@ -167,6 +167,12 @@ route.get('/:restaurant_id/items',
     req.queryObj.is_hidden = false;
     next();
   },
+  m.queryOptions({
+    many: [{
+      table: 'item_tags',
+      alias: 'tags'
+    }]
+  }),
   m.find(db.items));
 
 route.get('/:restaurant_id/menu',

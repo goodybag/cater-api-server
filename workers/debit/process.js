@@ -1,6 +1,6 @@
 var domain = require('domain');
 var utils = require('../../utils');
-var logger = require('./logger').create('Process');
+var moduleLogger = require('./logger').create('Process');
 var models = require('../../models');
 var db = require('../../db');
 var config = require('../../config');
@@ -15,13 +15,18 @@ var setPaymentUnprocessed = function( order, callback ){
 };
 
 var setPaymentError = function( order, error, callback ){
+  moduleLogger.info('Received payment error', {
+    order: { id: order.id }
+  , error: error
+  });
+
   return ( new models.Order( order ) ).setPaymentError( error, function(){
     return callback( error );
   });
 };
 
 var checkForExistingDebit = function (order, callback) {
-  var logger = logger.create('checkForExistingDebit', {
+  var logger = moduleLogger.create('checkForExistingDebit', {
     data: { order: order }
   });
 
@@ -54,7 +59,7 @@ var checkForExistingDebit = function (order, callback) {
 };
 
 var debitCustomer = function (order, callback) {
-  var logger = logger.create('debitCustomer', {
+  var logger = moduleLogger.create('debitCustomer', {
     data: { order: order }
   });
 
@@ -64,18 +69,18 @@ var debitCustomer = function (order, callback) {
   var pmId = order.payment_method_id;
   models.PaymentMethod.findOne(pmId, function(error, paymentMethod) {
     if ( error ){
-      return setPaymentError( error, callback );
+      return setPaymentError( order,  error, callback );
     }
 
     if ( !paymentMethod ){
-      return setPaymentError({
+      return setPaymentError( order, {
         message: 'Payment method could not be found'
       , payment_method_id: pmId
       }, callback );
     }
 
     db.users.findOne(order.user_id, function(err, user) {
-      if ( err ) return setPaymentError( err, callback );
+      if ( err ) return setPaymentError( order,  err, callback );
 
       var customer = user.stripe_id;
       var source = paymentMethod.attributes.stripe_id;
@@ -108,7 +113,7 @@ var debitCustomer = function (order, callback) {
 
       utils.stripe.charges.create(data, function (error, charge) {
         if (error) {
-          return setPaymentError( error, callback );
+          return setPaymentError( order,  error, callback );
         }
 
         return (new models.Order(order)).setPaymentPaid('debit', charge, callback);
@@ -120,7 +125,7 @@ var debitCustomer = function (order, callback) {
 var task = function (message, callback) {
   var d = process.domain;
   if (!message) return callback();
-  var logger = process.domain.logger.create('task', {
+  var logger = moduleLogger.create('task', {
     data: { message: message }
   });
 
@@ -206,8 +211,8 @@ var task = function (message, callback) {
 var worker = function (message, callback) {
   var d = domain.create();
   d.uuid = utils.uuid.v4();
-  d.on('error', function (error) {
-    logger.error('Domain error', { error: error });
+  d.once('error', function (error) {
+    console.error('Domain error', { error: error });
     callback(error);
   });
   d.run(function () {
@@ -217,7 +222,7 @@ var worker = function (message, callback) {
 
 var done = function (error) {
   if (!error) return;
-  logger.error('task error', { error: error });
+  moduleLogger.error('task error', { error: error });
   utils.rollbar.reportMessage(error);
 };
 
@@ -230,7 +235,7 @@ setInterval(function () {
     n: 25 // pull 25 items off the queue
   , timeout: 300 // allow up to 5 minutes for processing before putting it back onto the queue
   }, function (error, messages) {
-    if (error) return logger.error({error: error}), utils.rollbar.reportMessage(error);
+    if (error) return moduleLogger.error({error: error}), utils.rollbar.reportMessage(error);
     _.each(messages, function (m) {
       q.push(m, done);
     });

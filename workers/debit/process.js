@@ -10,6 +10,16 @@ var restaurantPlans = require('../../public/js/lib/restaurant-plans');
 var OrderCharge = require('stamps/orders/charge');
 var moment = require('moment-timezone');
 
+var setPaymentUnprocessed = function( order, callback ){
+  db.orders.update( order.id, { payment_status: null }, callback );
+};
+
+var setPaymentError = function( order, error, callback ){
+  return ( new models.Order( order ) ).setPaymentError( error, function(){
+    return callback( error );
+  });
+};
+
 var checkForExistingDebit = function (order, callback) {
   var logger = process.domain.logger.create('checkForExistingDebit', {
     data: { order: order }
@@ -59,10 +69,19 @@ var debitCustomer = function (order, callback) {
 
   var pmId = order.payment_method_id;
   models.PaymentMethod.findOne(pmId, function(error, paymentMethod) {
-    if (error || !paymentMethod) return callback(new Error('invalid payment method: ' + pmId));
+    if ( error ){
+      return setPaymentError( error, callback );
+    }
+
+    if ( !paymentMethod ){
+      return setPaymentError({
+        message: 'Payment method could not be found'
+      , payment_method_id: pmId
+      }, callback );
+    }
 
     db.users.findOne(order.user_id, function(err, user) {
-      if ( err ) return callback({ error: err });
+      if ( err ) return setPaymentError( err, callback );
 
       var customer = user.stripe_id;
       var source = paymentMethod.attributes.stripe_id;
@@ -95,19 +114,9 @@ var debitCustomer = function (order, callback) {
 
       utils.stripe.charges.create(data, function (error, charge) {
         if (error) {
-          /* TODO Refactor failed user payment flow */
-          // enqueue declined cc notification on scheduler
-          return scheduler.enqueue('send-order-notification', new Date(), {
-            notification_id: 'user-order-payment-failed'
-          , order_id: order.id
-          }, function (err) {
-            if (err) {
-              logger.error({ error: err });
-            }
-            // construct a model to run the following transactions
-            return (new models.Order(order)).setPaymentError(error, callback);
-          });
+          return setPaymentError( error, callback );
         }
+
         return (new models.Order(order)).setPaymentPaid('debit', charge, callback);
       });
     });
@@ -186,8 +195,10 @@ var task = function (message, callback) {
       } else {
         debitCustomer(order, function (error) {
           utils.queues.debit.del(message.id, utils.noop);
-          if (error) logger.error({error: error});
-          return callback(error);
+          if (error) {
+            logger.error({error: error});
+          }
+          return callback();
         });
       }
     });

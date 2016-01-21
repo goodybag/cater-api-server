@@ -94,7 +94,7 @@ define(function(require, exports, module) {
         }
       }
       return JSON.stringify(context, true, '  ');
-    }
+    },
 
     or: function(value1, value2) {
       return value1 || value2;

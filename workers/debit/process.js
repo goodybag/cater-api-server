@@ -21,7 +21,7 @@ var setPaymentError = function( order, error, callback ){
 };
 
 var checkForExistingDebit = function (order, callback) {
-  var logger = process.domain.logger.create('checkForExistingDebit', {
+  var logger = logger.create('checkForExistingDebit', {
     data: { order: order }
   });
 
@@ -45,13 +45,7 @@ var checkForExistingDebit = function (order, callback) {
 
     if (charges && charges.data) {
       var debits = charges.data.filter(matchesUuid).filter(failedCharge);
-
-      if ( debits && debits.length > 1 ) {
-        logger.error('Multiple debits for a single order');
-        return callback(new Error('multiple debits for a single order: ' + order.id));
-      }
-
-      if ( debits && debits.length === 1) return callback(null, debits[0]);
+      return callback(null, debits[0]);
     }
 
     logger.debug('Clear for charging');
@@ -60,7 +54,7 @@ var checkForExistingDebit = function (order, callback) {
 };
 
 var debitCustomer = function (order, callback) {
-  var logger = process.domain.logger.create('debitCustomer', {
+  var logger = logger.create('debitCustomer', {
     data: { order: order }
   });
 
@@ -167,15 +161,19 @@ var task = function (message, callback) {
       // attempt to process this from the queue again later
       if (error) {
         logger.error('checkForExistingDebit - attempt to process this from the queue again later', { error: error });
-        return callback(error);
+        callback( error );
       }
 
       if (debit) {
-        logger.info('found existing debit for order: ' + order.id, { order: order });
+        logger.warn('found existing debit for order: ' + order.id);
         return (new models.Order(order)).setPaymentPaid('debit', debit, function (error) {
-          if (error) return logger.create('DB').error({error: error}), callback(error);
-          utils.queues.debit.del(message.id, utils.noop);
-          callback();
+          if (error) {
+            logger.create('DB').error('Error changing status to paid', { error: error });
+            return callback(error);
+          }
+          utils.queues.debit.del(message.id, function(){
+            callback()
+          });
         });
       }
 
@@ -198,7 +196,7 @@ var task = function (message, callback) {
           if (error) {
             logger.error({error: error});
           }
-          return callback();
+          return callback(error);
         });
       }
     });
@@ -208,7 +206,6 @@ var task = function (message, callback) {
 var worker = function (message, callback) {
   var d = domain.create();
   d.uuid = utils.uuid.v4();
-  d.logger = logger.create({ data: { uuid: d.uuid } });
   d.on('error', function (error) {
     logger.error('Domain error', { error: error });
     callback(error);
@@ -220,7 +217,7 @@ var worker = function (message, callback) {
 
 var done = function (error) {
   if (!error) return;
-  logger.error({ error: error });
+  logger.error('task error', { error: error });
   utils.rollbar.reportMessage(error);
 };
 

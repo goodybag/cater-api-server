@@ -121,7 +121,7 @@ module.exports.remove = function(req, res, next) {
 
   db.query(sql.query, sql.values, function(error, rows, result) {
     if(error) return res.error(errors.internal.DB_FAILURE, error);
-    res.send(200);
+    res.send(200, rows);
 
     venter.emit( 'order:change', req.params.oid );
   });

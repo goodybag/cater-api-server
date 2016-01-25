@@ -2,7 +2,7 @@ var utils = require('../utils');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
-    tokenPath: 'headers.Order-Collaboration-Token'
+    tokenHeader: 'Order-Collaboration-Token'
   });
 
   return function( req, res, next ){
@@ -14,10 +14,12 @@ module.exports = function( options ){
       return next();
     }
 
-    var token = utils.result( req, options.tokenPath );
+    var token = req.headers[ options.tokenHeader ];
 
-    if ( collaborators.some( collab => collab.id === token ) ){
-      req.user.attributes.groups.push('order-editor');
+    if ( token !== undefined ){
+      if ( collaborators.some( collab => collab.id === token ) ){
+        req.user.attributes.groups.push('order-editor');
+      }
     }
 
     return next();

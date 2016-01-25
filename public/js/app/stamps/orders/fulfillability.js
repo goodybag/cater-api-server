@@ -48,7 +48,7 @@ define( function( require, exports, module ){
       // put the computationally least complex strategies first
       fulfillmentRequirements: [
         // Is the restaurant even open on that day?
-        function strategyOpenDay(){
+        { name: 'OpenDay', fn: function strategyOpenDay(){
           if ( !this.datetime ) return true;
 
           var hours = this.restaurant.hours.concat( this.restaurant.delivery_hours );
@@ -56,10 +56,10 @@ define( function( require, exports, module ){
           return !!_.findWhere( hours, {
             day: this.datetime.day()
           });
-        }
+        }}
 
         // Restaurant is open on that day, but what about time?
-      , function strategyOpenHours(){
+      , { name: 'OpenHours', fn: function strategyOpenHours(){
           if ( !this.datetime ) return true;
 
           var day = this.datetime.day();
@@ -96,9 +96,9 @@ define( function( require, exports, module ){
               , this.datetime < endDate
               ].every( _.identity );
             }.bind( this ));
-        }
+        }}
 
-      , function strategyClosedEvents(){
+      , { name: 'ClosedEvents', fn: function strategyClosedEvents(){
           var datetime = this.datetime;
 
           if ( !this.datetime ) datetime = moment.tz( this.timezone );
@@ -127,19 +127,19 @@ define( function( require, exports, module ){
                 compare( datetime, end, false, evt.during.end.inclusive )
               );
             }.bind( this ));
-        }
+        }}
 
         // Simply check if the zip is supported by delivery
-      , function strategyZip(){
+      , { name: 'Zip', fn: function strategyZip(){
           if ( !this.zip ) return true;
 
           var zips = this.getAllSupportedDeliveryZips();
 
           return !!_.findWhere( zips, { zip: this.zip } );
-        }
+        }}
 
         // Is there a lead time that satisfies?
-      , function strategyLeadTimes(){
+      , { name: 'LeadTimes', fn: function strategyLeadTimes(){
           if ( !this.datetime ) return true;
 
           var leadTimes = this.getAllSupportedLeadTimes();
@@ -157,22 +157,22 @@ define( function( require, exports, module ){
               , !this.guests ? true : this.guests <= time.max_guests
               ].every( _.identity );
             }.bind( this ));
-        }
+        }}
       ]
 
     , isFulfillable: function(){
         return this.fulfillmentRequirements.every( function( strategy ){
-          return strategy.call( this );
+          return strategy.fn.call( this );
         }.bind( this ));
       }
 
     , why: function(){
         return this.fulfillmentRequirements
           .filter( function( strategy ){
-            return !strategy.call( this );
+            return !strategy.fn.call( this );
           }.bind( this ))
           .map( function( strategy ){
-            return strategy.name.replace('strategy', '');
+            return strategy.name;
           }.bind( this ));
       }
 

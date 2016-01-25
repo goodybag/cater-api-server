@@ -43,7 +43,8 @@ var del = function(table, where) {
   return {
     type: 'delete',
     where: where,
-    table: table
+    table: table,
+    returning: ['*']
   }
 }
 

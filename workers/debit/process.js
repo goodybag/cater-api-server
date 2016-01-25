@@ -1,6 +1,6 @@
 var domain = require('domain');
 var utils = require('../../utils');
-var logger = require('./logger').create('Process');
+var moduleLogger = require('./logger').create('Process');
 var models = require('../../models');
 var db = require('../../db');
 var config = require('../../config');
@@ -10,8 +10,23 @@ var restaurantPlans = require('../../public/js/lib/restaurant-plans');
 var OrderCharge = require('stamps/orders/charge');
 var moment = require('moment-timezone');
 
+var setPaymentUnprocessed = function( order, callback ){
+  db.orders.update( order.id, { payment_status: null }, callback );
+};
+
+var setPaymentError = function( order, error, callback ){
+  moduleLogger.info('Received payment error', {
+    order: { id: order.id }
+  , error: error
+  });
+
+  return ( new models.Order( order ) ).setPaymentError( error, function(){
+    return callback( error );
+  });
+};
+
 var checkForExistingDebit = function (order, callback) {
-  var logger = process.domain.logger.create('checkForExistingDebit', {
+  var logger = moduleLogger.create('checkForExistingDebit', {
     data: { order: order }
   });
 
@@ -35,13 +50,7 @@ var checkForExistingDebit = function (order, callback) {
 
     if (charges && charges.data) {
       var debits = charges.data.filter(matchesUuid).filter(failedCharge);
-
-      if ( debits && debits.length > 1 ) {
-        logger.error('Multiple debits for a single order');
-        return callback(new Error('multiple debits for a single order: ' + order.id));
-      }
-
-      if ( debits && debits.length === 1) return callback(null, debits[0]);
+      return callback(null, debits[0]);
     }
 
     logger.debug('Clear for charging');
@@ -50,7 +59,7 @@ var checkForExistingDebit = function (order, callback) {
 };
 
 var debitCustomer = function (order, callback) {
-  var logger = process.domain.logger.create('debitCustomer', {
+  var logger = moduleLogger.create('debitCustomer', {
     data: { order: order }
   });
 
@@ -59,10 +68,19 @@ var debitCustomer = function (order, callback) {
 
   var pmId = order.payment_method_id;
   models.PaymentMethod.findOne(pmId, function(error, paymentMethod) {
-    if (error || !paymentMethod) return callback(new Error('invalid payment method: ' + pmId));
+    if ( error ){
+      return setPaymentError( order,  error, callback );
+    }
+
+    if ( !paymentMethod ){
+      return setPaymentError( order, {
+        message: 'Payment method could not be found'
+      , payment_method_id: pmId
+      }, callback );
+    }
 
     db.users.findOne(order.user_id, function(err, user) {
-      if ( err ) return callback({ error: err });
+      if ( err ) return setPaymentError( order,  err, callback );
 
       var customer = user.stripe_id;
       var source = paymentMethod.attributes.stripe_id;
@@ -95,19 +113,9 @@ var debitCustomer = function (order, callback) {
 
       utils.stripe.charges.create(data, function (error, charge) {
         if (error) {
-          /* TODO Refactor failed user payment flow */
-          // enqueue declined cc notification on scheduler
-          return scheduler.enqueue('send-order-notification', new Date(), {
-            notification_id: 'user-order-payment-failed'
-          , order_id: order.id
-          }, function (err) {
-            if (err) {
-              logger.error({ error: err });
-            }
-            // construct a model to run the following transactions
-            return (new models.Order(order)).setPaymentError(error, callback);
-          });
+          return setPaymentError( order,  error, callback );
         }
+
         return (new models.Order(order)).setPaymentPaid('debit', charge, callback);
       });
     });
@@ -117,7 +125,7 @@ var debitCustomer = function (order, callback) {
 var task = function (message, callback) {
   var d = process.domain;
   if (!message) return callback();
-  var logger = process.domain.logger.create('task', {
+  var logger = moduleLogger.create('task', {
     data: { message: message }
   });
 
@@ -158,15 +166,19 @@ var task = function (message, callback) {
       // attempt to process this from the queue again later
       if (error) {
         logger.error('checkForExistingDebit - attempt to process this from the queue again later', { error: error });
-        return callback(error);
+        callback( error );
       }
 
       if (debit) {
-        logger.info('found existing debit for order: ' + order.id, { order: order });
+        logger.warn('found existing debit for order: ' + order.id);
         return (new models.Order(order)).setPaymentPaid('debit', debit, function (error) {
-          if (error) return logger.create('DB').error({error: error}), callback(error);
-          utils.queues.debit.del(message.id, utils.noop);
-          callback();
+          if (error) {
+            logger.create('DB').error('Error changing status to paid', { error: error });
+            return callback(error);
+          }
+          utils.queues.debit.del(message.id, function(){
+            callback()
+          });
         });
       }
 
@@ -186,7 +198,9 @@ var task = function (message, callback) {
       } else {
         debitCustomer(order, function (error) {
           utils.queues.debit.del(message.id, utils.noop);
-          if (error) logger.error({error: error});
+          if (error) {
+            logger.error({error: error});
+          }
           return callback(error);
         });
       }
@@ -197,9 +211,8 @@ var task = function (message, callback) {
 var worker = function (message, callback) {
   var d = domain.create();
   d.uuid = utils.uuid.v4();
-  d.logger = logger.create({ data: { uuid: d.uuid } });
-  d.on('error', function (error) {
-    logger.error('Domain error', { error: error });
+  d.once('error', function (error) {
+    console.error('Domain error', { error: error });
     callback(error);
   });
   d.run(function () {
@@ -209,7 +222,7 @@ var worker = function (message, callback) {
 
 var done = function (error) {
   if (!error) return;
-  logger.error({ error: error });
+  moduleLogger.error('task error', { error: error });
   utils.rollbar.reportMessage(error);
 };
 
@@ -222,7 +235,7 @@ setInterval(function () {
     n: 25 // pull 25 items off the queue
   , timeout: 300 // allow up to 5 minutes for processing before putting it back onto the queue
   }, function (error, messages) {
-    if (error) return logger.error({error: error}), utils.rollbar.reportMessage(error);
+    if (error) return moduleLogger.error({error: error}), utils.rollbar.reportMessage(error);
     _.each(messages, function (m) {
       q.push(m, done);
     });

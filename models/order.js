@@ -1083,7 +1083,7 @@ module.exports = Model.extend({
       where: {
         status: {$or: ['accepted', 'delivered']}
       , points_awarded: false
-      , $custom: ['now() > (("orders"."datetime" AT TIME ZONE "orders"."timezone") + interval \'3 days\')']
+      , payment_status: 'paid'
       }
     };
 

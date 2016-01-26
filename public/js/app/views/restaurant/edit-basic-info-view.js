@@ -23,6 +23,7 @@ define(function(require, exports, module) {
     , is_fee_on_total:                          '[name="is_fee_on_total"]'
     , is_direct_deposit:                        '[name="is_direct_deposit"]'
     , list_photo_url:                           '[name="list_photo_url"]'
+    , cover_photo_url:                          '[name="cover_photo_url"]'
     , supported_order_types:                    '[name="supported_order_types"]'
     , accepts_tips:                             '[name="accepts_tips"]'
     },

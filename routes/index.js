@@ -38,7 +38,8 @@ module.exports.register = function(app) {
 
   if (config.enableCaterWeb) {
     app.use(require('@goodybag/cater-web').makeHandler({
-      env: process.env.NODE_ENV
+      env: process.env.NODE_ENV,
+      serverRendering: config.caterWebServerRendering
     }));
   }
 

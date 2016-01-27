@@ -58,9 +58,6 @@ define( function( require, exports, module ){
 
     , getItems: function(){
         return (this.items || []).map( function( item ){
-          if(item.attributes) {
-            item = item.attributes;
-          }
 
           item = items( item );
 

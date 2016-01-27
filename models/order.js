@@ -492,7 +492,7 @@ module.exports = Model.extend({
       },
 
       function(client, done, newOrder, lostItems, cb) {
-        newOrder.attributes.items = newOrder.orderItems;
+        newOrder.attributes.items = newOrder.orderItems.map(item => item.attributes);
         var order = new Order(newOrder.attributes);
         newOrder.attributes.sub_total = order.getSubTotal();
         newOrder.attributes.sales_tax = order.getTax();

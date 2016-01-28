@@ -60,7 +60,7 @@ module.exports = function( options ){
     if ( options.items ){
       $options.many.push({
         table: 'items'
-      , many: [{ table: 'item_tags', order: { tag: 'asc' } }]
+      , many: [{ table: 'item_tags', alias: 'tags', order: { tag: 'asc' } }]
       });
     }
 

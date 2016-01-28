@@ -26,6 +26,10 @@ var promo = {
     email: 'Debbiegarcia@goodybag.com'
   , promo_code: ['gbnash75']
   }
+, virginia: {
+    email: 'virginiasims@goodybag.com'
+  , promo_code: ['gbhou75']
+  }
 , ramone: {
     email: 'ramonejohnson@goodybag.com'
   , promo_code: ['seattlegb', 'seagoody', 'gbseafree', 'gbsea75']

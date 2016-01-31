@@ -15,7 +15,7 @@ var promo = {
   , promo_code: [
       'goodybag315', 'gb415', 'gbaustin15', 'gbstar15', 'gbamaz15'
     , 'gbfree0715', 'gbgift0815', 'gbfreesea', 'gbatx75', 'gbhou75'
-    , 'gbausfree', 'gbjan25'
+    , 'gbausfree'
     ]
   }
 , christy: {

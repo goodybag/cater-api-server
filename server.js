@@ -38,7 +38,7 @@ server.listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
-cluster.worker.once( 'disconnect', function(){
+cluster.once( 'disconnect', function(){
   // Timeout until we forcefully exit the process
   var exitTimeout = setTimeout( process.exit.bind( process ), 10000 );
 

@@ -154,7 +154,6 @@ var reports = {
       $gte: start
     , $lt: end
     };
-
     if ( regionId ) {
       where['restaurants.region_id'] = regionId;
     }
@@ -167,34 +166,11 @@ var reports = {
       where['payment_method_id'] = { $null: paymentMethod === "invoiced" }
     }
 
-    options.with = [
-      { name: 'cached_order_items'
-      , type: 'select'
-      , table: 'order_items'
-      , columns: ['order_items.*']
-      , joins: [
-          { type: 'left', target: 'orders', on: { 'id': '$order_items.order_id$' } }
-        ]
-      }
-    , { name: 'cached_order_amenities'
-      , type: 'select'
-      , table: 'order_amenities'
-      , columns: ['order_amenities.*']
-      , joins: [
-          { type: 'left', target: 'orders', on: { 'id': '$order_amenities.order_id$' } }
-        ]
-      }
-    ];
-
-    var cachedWhere = options.with[0].where = options.with[1].where = {};
-    cachedWhere[ range ] = where[ range ];
-
     options.order = {};
     options.order[range] = sort;
     options.distinct = [ 'orders.id', range ];
     options.one = [
       { table: 'users', alias: 'user' }
-    , { table: 'regions', alias: 'region' }
     , { table: 'restaurants'
       , alias: 'restaurant'
       , one: [
@@ -205,13 +181,14 @@ var reports = {
     , { table: 'restaurant_locations', alias: 'location' }
     ];
 
+    options.columns = [
+      '*'
+    , { type: 'row_to_json', expression: 'regions', as: 'region' }
+    ];
+
     options.many = [
-      { table: 'cached_order_items', alias: 'items'
-      , where: { 'cached_order_items.order_id': '$orders.id$' }
-      }
-    , { table: 'cached_order_amenities', alias: 'amenities'
-      , where: { 'cached_order_amenities.order_id': '$orders.id$' }
-      }
+      { table: 'order_items', alias: 'items' }
+    , { table: 'order_amenities', alias: 'amenities' }
     ];
 
     options.joins = [
@@ -290,7 +267,9 @@ var reports = {
           done();
         }))
         .pipe( res );
+
     });
+
   },
 
   usersCsv: function(req, res) {

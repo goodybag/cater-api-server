@@ -118,6 +118,15 @@
             acceptance.on( 'loading', spinner.start );
             acceptance.on( 'save', onSave );
             acceptance.on( 'error', onError );
+
+            // Parse URL Action
+            var action = window.location.hash.split('#action/')[1];
+
+            if ( action === 'accept' ){
+              $acceptBtn.click();
+            } else if ( action === 'reject' ){
+              $rejectBtn.click();
+            }
           }.bind( this ));
         }
       };

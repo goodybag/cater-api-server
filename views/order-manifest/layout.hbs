@@ -6,11 +6,6 @@
 
     <script src="{{cdn "/components/jquery/jquery.js"}}"></script>
 
-    {{#unless config.isDev}}
-      <script src="{{cdn (format 'dist/<%= version %>/pdf/utils.js' pkg)}}"></script>
-    {{else}}
-      <script src="{{cdn "/js/pdf/utils.js"}}"></script>
-    {{/unless}}
     {{{block "scripts"}}}
   </head>
   <body>

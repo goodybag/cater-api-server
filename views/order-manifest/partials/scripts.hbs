@@ -1,0 +1,78 @@
+{{#unless config.isDev}}
+  <script src="{{cdn (format 'dist/<%= version %>/pdf/utils.js' pkg)}}"></script>
+{{else}}
+  <script src="{{cdn "/js/pdf/utils.js"}}"></script>
+{{/unless}}
+<script>
+(function(factory){
+  if ( typeof define === 'function' && define.amd ){
+    // AMD. Register as an anonymous module.
+    require( ['jquery'], factory );
+  } else {
+    // Browser globals
+    factory(jQuery);
+  }
+}(function( $ ){
+  var fillerTmpl = function( options ){
+    return [
+      '<tr class="filler">'
+    , '  ' + new Array(7).join('.').split('.').map( function(){
+        return '  <td style="height: ' + options.height + 'px"></td>'
+      }).join('\n')
+    , '</tr>'
+    ].join('\n');
+  };
+
+  var fillRemaining = function( $page, height ){
+    console.print('Filling table with: ', height);
+    $page.find('tbody').append( fillerTmpl({ height: height }) );
+  };
+
+  var fixPageNumbers = function(){
+    var $numbers = $('.page-number');
+    $numbers.find('.total').text( $numbers.length );
+    $numbers.each( function( i ){
+      $(this).find('.current').text( i + 1 );
+    });
+  };
+
+  $(function(){
+    var options = {
+      itemSelector: 'table tbody > tr'
+
+    , pageHeight: 930
+
+    , getPageHeight: function( $page ){
+        return $page.find('.inner').outerHeight();
+      }
+
+    , onPageAdjustment: function( $page ){
+        var height = options.pageHeight - options.getPageHeight( $page );
+        height -= $page.find('.page-number').outerHeight();
+        fillRemaining( $page, height );
+      }
+    };
+
+    adjustPage( $('.table-page'), options, function(){
+      fixPageNumbers();
+
+      // Adjust the info page
+      var $page = $('.manifest-page:last-child');
+      var $filler = $('<div />');
+      $filler.css( 'height', [
+          930
+        , -$page.find('.inner').outerHeight()
+        , -$page.find('.page-number').outerHeight(true)
+        , 'px'
+        ].reduce(function( result, item ){
+          return result + item;
+        }, 0 )
+      );
+      $page.find('.page-number').before( $filler );
+
+      window.__page.ready();
+
+    });
+  });
+}));
+</script>

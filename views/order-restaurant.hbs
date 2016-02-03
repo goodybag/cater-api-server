@@ -1,0 +1,142 @@
+{{#extend "page"}}page-order-restaurant{{/extend}}
+
+{{#extend "body"}}
+<div class="shelf right" id="accept-reject-shelf">
+  <div class="shelf-content accept-reject-shelf-content form-vertical">
+    <div data-role="close">&times;</div>
+    <h2>Did you know</h2>
+    <p>Goodybag can provide you with a courier if you need help delivering. If you can take on the order, but cannot deliver the food yourself, please give us a call at <a href="tel:{{config.phone.support}}">{{phoneNumber config.phone.support}}</a></p>
+    <h2>Why are you rejecting this order?</h2>
+    <div class="errors"></div>
+    <textarea
+      class="form-control reason-denied"
+      name="denied_reason"
+      placeholder="Please let us know why, so we can improve the ordering experience. Thanks!"></textarea>
+    <div class="form-group">
+      <button
+        class="btn btn-primary"
+        data-role="reject"
+      >Yes, reject this order</button>
+    </div>
+  </div>
+</div>
+<div class="manifest-container">
+  {{> order_manifest_main}}
+</div>
+
+{{#eq order.status 'submitted'}}
+<div class="accept-reject-bar">
+  <button class="btn-accept">Accept</button>
+  <button
+    class="btn-reject">Reject</button>
+  <a
+    href="/manifests/manifest-{{order.id}}.pdf?review_token={{order.review_token}}"
+    class="btn-download"
+    target="_blank">Download</a>
+</div>
+{{/eq}}
+{{/extend}}
+
+{{#extend "scripts"}}
+{{> order_manifest_scripts}}
+<script>
+  define(
+    'pages/order-restaurant'
+  , [ 'jquery'
+    , 'app/views/shelf'
+    , 'app/views/order-rejection-view'
+    , 'app/models/order-rejection'
+    , 'app/models/order-acceptance'
+    , 'spinner'
+    ]
+  , function( $, ShelfView, OrderRejectionView, OrderRejection, OrderAcceptance, spinner ){
+      return {
+        init: function( options ){
+          this.options = options;
+
+          $(function(){
+            var $acceptBtn = $('.btn-accept');
+            var $rejectBtn = $('.btn-reject');
+
+            var rejection = this.rejection = new OrderRejection({
+              order_id: this.options.order.get('id')
+            , review_token: this.options.order.get('review_token')
+            });
+
+            var acceptance = new OrderAcceptance({
+              order_id: options.order.get('id')
+            , review_token: options.order.get('review_token')
+            });
+
+            var rejectionView = this.rejectionView = new OrderRejectionView({
+              el: '#accept-reject-shelf'
+            , model: rejection
+            });
+
+            var shelf = this.shelfView = new ShelfView({
+              el: '#accept-reject-shelf'
+            , exclusions: [ $rejectBtn[0] ]
+            });
+
+            // Listen to `clicked outside` events
+            shelf.startListening();
+
+            // IE Weirdness always showing iframes on top
+            shelf.on('open', function(){
+              $('.manifest-frame').addClass('hide');
+            });
+
+            shelf.on('close', function(){
+              $('.manifest-frame').removeClass('hide');
+            });
+
+            $rejectBtn.click(function(){
+              shelf.open();
+            });
+
+            var onSave = function(){
+              shelf.close();
+              $('.accept-reject-bar').addClass('hide');
+              spinner.stop();
+            };
+
+            var onError = function( error ){
+              alert('There was an error processing your request. Please refresh and try again');
+              console.error( error );
+              shelf.close();
+              spinner.stop();
+            };
+
+            $acceptBtn.click( function(){
+              acceptance.send();
+            });
+
+            rejection.on( 'loading', spinner.start );
+            rejection.on( 'save', onSave );
+            rejection.on( 'error', onError );
+
+            acceptance.on( 'loading', spinner.start );
+            acceptance.on( 'save', onSave );
+            acceptance.on( 'error', onError );
+          }.bind( this ));
+        }
+      };
+    }
+  );
+
+  {{#eq order.status 'submitted'}}
+  require([
+      'pages/order-restaurant'
+    , 'app/models/order'
+    ]
+  , function( page, Order ) {
+      var order = new Order({{{json order}}});
+
+      page.init({
+        order: order
+      });
+    }
+  );
+  {{/eq}}
+</script>
+{{/extend}}

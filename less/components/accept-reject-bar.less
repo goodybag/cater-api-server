@@ -1,0 +1,42 @@
+#gb { #accept-reject-bar {
+  .init(
+    @breakpoint: 500px  
+  ){
+    .accept-reject-bar {
+      padding: 20px;
+      background: #fff;
+      text-align: center;
+      box-shadow: 0 -4px 15px rgba( 0, 0, 0, 0.4 );
+      z-index: 2;
+
+      .btn-accept {
+        &:extend(.btn);
+        &:extend(.btn-green-3);
+      }
+
+      .btn-reject {
+        &:extend(.btn);
+        &:extend(.btn-default);
+      }
+
+      .btn-download {
+        &:extend(.btn);
+        &:extend(.btn-default);
+      }
+
+      .btn-download {
+        position: absolute;
+        right: 12px;
+      }
+
+      @media screen and ( max-width: @breakpoint ){
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        z-index: 100;
+
+        .btn-download { display: none; }
+      }
+    }
+  }
+}}

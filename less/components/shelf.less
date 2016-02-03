@@ -1,0 +1,101 @@
+@import "../../public/components/less-elements/elements.less";
+
+#components { #shelf {
+  .init(
+    @width: 50%
+  , @background: #fff
+  , @border-color: rgba( 0, 0, 0, 0.2 )
+  , @easing: cubic-bezier(0, 0.87, 0, 1) 0.8s
+  , @breakpoint: 500px
+  , @z-index: 10000
+  ){
+    .shelf {
+      position: fixed;
+      width: @width;
+      box-shadow: 0 0 15px rgba( 0, 0, 0, 0.3 );
+      border: solid 1px @border-color;
+      background: @background;
+      z-index: @z-index;
+      overflow-y: scroll;
+
+      -webkit-transition: -webkit-transform @easing;
+      transition: transform @easing;
+
+      &.top,
+      &.bottom {
+        left: 0;
+        width: 100%;
+        border-left: none;
+        border-right: none;
+      }
+
+      &.left,
+      &.right {
+        top: 0;
+        height: 100%;
+        border-top: none;
+        border-bottom: none;
+      }
+
+      &.top {
+        #components > #shelf > .translation( 0, -1 );
+        top: 0;
+        border-top: none;
+      }
+
+      &.right {
+        #components > #shelf > .translation( 1, 0 );
+        right: 0;
+        border-right: none;
+      }
+
+      &.bottom {
+        #components > #shelf > .translation( 0, 1 );
+        bottom: 0;
+        border-bottom: none;
+      }
+
+      &.left {
+        #components > #shelf > .translation( -1, 0 );
+        left: 0;
+        border-left: none;
+      }
+
+      &.in {
+        #components > #shelf > .translation( 0, 0 );
+      }
+
+      [data-role="close"] {
+        float: right;
+        font-size: 32px;
+        font-weight: 100;
+        padding: 12px;
+        margin-top: -12px;
+        margin-right: -12px;
+        cursor: pointer;
+        opacity: 0.7;
+        &:hover {
+          opacity: 1;
+        }
+      }
+
+      @media screen and ( max-width: @breakpoint ){
+        width: 100%;
+      }
+    }
+
+    .shelf-content {
+      padding: 25px;
+    }
+  }
+
+  .translation( @x, @y ){
+    .transform( translate3d( @x * 100%, @y * 100%, 0 ) );
+
+    // All shelves will be on the right/top
+    .no-csstransforms3d & {
+      right: @x * 100%;
+      bottom: @x * 100%;
+    }
+  }
+}}

@@ -14,32 +14,11 @@
 @import "typography-order-manifest.less";
 
 // Components
-@import "components/manifest-page.less";
-@import "components/manifest-header.less";
-@import "components/manifest-table.less";
-@import "components/manifest-section-dl.less";
+@import "components/order-manifest/index.less";
 
 html, body {
-  background-color:     #fff;
-  font-family:          'Din';
-  font-size:            14px;
-  font-weight:          500;
-  line-height:          16px;
-  color:                #333;
-  padding:              0;
-  margin:               0;
+  padding: 0;
+  margin: 0;
 }
 
-* {
-  position: relative;
-  .box-sizing( border-box );
-}
-
-@media print {
-  // @page {
-  //   margin-top:     @manifest-page-margin-top;
-  //   margin-bottom:  @manifest-page-margin-bottom;
-  //   margin-left:    @manifest-page-margin-left;
-  //   margin-right:   @manifest-page-margin-right;
-  // }
-}
+#components > #order-manifest > .init();

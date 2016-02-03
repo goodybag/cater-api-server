@@ -107,6 +107,13 @@ module.exports.get = function(req, res) {
     }));
   }
 
+  if ( req.user.isRestaurant() ){
+    return res.render( 'order-restaurant', {
+      layout: 'layout/default'
+    , order: order
+    });
+  }
+
   utils.async.waterfall([
     // Can't yet rely on order.restaurant to have all of the right info
     // in the legacy formats
@@ -427,6 +434,10 @@ module.exports.changeStatus = function(req, res) {
   };
 
   if (review) $update.token_used = 'now()';
+
+  if (req.body.status === 'denied') {
+    $update.reason_denied = req.body.reason_denied;
+  }
 
   req.order.status = req.body.status;
   logger.info('Saving order');

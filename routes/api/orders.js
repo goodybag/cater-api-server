@@ -25,7 +25,7 @@ route.get('/', m.restrict(['admin']), m.pagination(), m.param('status'), functio
   }]
 }), m.find(db.orders));
 
-route.post('/', m.restrict(['admin']), m.insert(db.orders));
+route.post('/', m.geocodeBody(), controllers.orders.create);
 
 route.get('/search', function(req, res, next) {
   var query = req.query.q;

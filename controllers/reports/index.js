@@ -194,7 +194,6 @@ var reports = {
     options.distinct = [ 'orders.id', range ];
     options.one = [
       { table: 'users', alias: 'user' }
-    , { table: 'regions', alias: 'region' }
     , { table: 'restaurants'
       , alias: 'restaurant'
       , one: [
@@ -283,7 +282,7 @@ var reports = {
             , dollars(orderCharge(order, 'getApplicationCut'))
             , dollars(orderCharge(order, 'getRestaurantCut'))
             , order.restaurant.name
-            , order.region.name
+            , order.restaurant.region.name
             ]
           );
 

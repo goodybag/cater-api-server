@@ -32,6 +32,10 @@ var promo = {
     email: 'virginiasims@goodybag.com'
   , promo_code: ['gbhou75', 'gbhou15', 'gbhou25', 'gbhou50', 'gbrefhou']
   }
+, jay: {
+    email: 'jay@goodybag.com'
+  , promo_code: ['gbjay']
+  }
 };
 
 module.exports = ({

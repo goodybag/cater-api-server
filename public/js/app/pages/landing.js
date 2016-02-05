@@ -12,7 +12,9 @@ define(function(require){
   var page = {
     init: function(){
       $(function(){
-        $('.navbar').navbar();
+        $('.navbar').navbar({
+          toggleText: ''
+        });
 
         $('.register-form').fieldMatcher({
           fields: ['password', 'password2']

@@ -493,4 +493,13 @@
       });
     });
 </script>
+
+
+{{#if config.isProduction}}
+{{#eq order.status 'accepted'}}
+{{#eq order.user_id user.id}}
+  {{> adwords_order_conversion}}
+{{/eq}}
+{{/eq}}
+{{/if}}
 {{/extend}}

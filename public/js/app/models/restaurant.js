@@ -12,9 +12,20 @@ define(function(require, exports, module) {
   var states = require('states');
   var utils = require('utils');
   var moment = require('moment-timezone');
+  var Fulfillability = require('stamps/orders/fulfillability');
 
   var regex = {
     url: /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)/
+  };
+
+  var fulfillabilityErrorToLegacyErrorMap = {
+    LeadTimes:    'is_bad_lead_time'
+  , Guests:       'is_bad_guests'
+  , Zip:          'is_bad_zip'
+  , ClosedEvents: 'restaurant_closed'
+  , OpenDay:      'restaurant_closed'
+  , OpenHours:    'restaurant_closed'
+  , AfterHours:   'after_hours'
   };
 
   return module.exports = Backbone.Model.extend({
@@ -373,6 +384,15 @@ define(function(require, exports, module) {
 
     validateOrderFulfillability: function( order ){
       var errors = [];
+
+      if ( order.restaurant.get('_cached') ){
+        order = order.toJSON();
+        order.restaurant = order.restaurant._cached;
+        order = Fulfillability.create( order );
+        return order.why().map( function( reason ){
+          return fulfillabilityErrorToLegacyErrorMap[ reason ];
+        });
+      }
 
       if ( !this.isValidZip( order ) ){
         errors.push( 'is_bad_zip' );

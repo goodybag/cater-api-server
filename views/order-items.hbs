@@ -56,10 +56,10 @@
         <thead>
           <tr>
             <th class="line-item-name">Item</th>
+            <th class="line-item-feeds">Feeds</th>
             <th class="line-item-quantity">Quantity</th>
             <th class="line-item-notes">Notes</th>
             <th class="line-item-recipient"><abbr title="Specify a recipient per item (optional)">Recipient</abbr></th>
-            <th class="line-item-feeds">Feeds</th>
             <th class="line-item-price">Price</th>
           </tr>
         </thead>
@@ -83,10 +83,12 @@
               </ul>
               {{#if ../order.editable}}<a class="item-remove remove-order-item-btn" href="#">Remove</a>{{/if}}
             </td>
+            <td class="line-item-feeds" data-title="Feeds">
+              <span>{{range this.feeds_min this.feeds_max}}</span>
+            </td>
             <td class="line-item-quantity" data-title="Quantity">
               {{#if ../order.editable}}
-                <div class="form-group">
-                  <span class="icon-x">x</span>
+                <div>
                   <input type="number" min="1" class="item-quantity-input form-control  order-item-field order-item-quantity" value="{{this.quantity}}" />
                 </div>
               {{else}}
@@ -106,9 +108,6 @@
               {{else}}
                 <span name="recipient" class="item-recipient-span order-item-field order-item-recipient">{{#if this.recipient}}{{this.recipient}}{{else}}&nbsp;{{/if}}</span>
               {{/if}}
-            </td>
-            <td class="line-item-feeds" data-title="Feeds">
-              <span>{{range this.feeds_min this.feeds_max}}</span>
             </td>
             <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
           </tr>

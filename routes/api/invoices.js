@@ -164,5 +164,3 @@ route.post('/:user_invoice_id/orders/:order_id', m.restrict(['admin']), m.queryT
 
 route.delete('/:user_invoice_id/orders/:order_id', m.restrict(['admin']), m.param(
   'user_invoice_id'), m.param('order_id'), m.remove(db.user_invoice_orders));
-
-route.post('/recipients', m.restrict(['admin']), m.insert(db.user_invoice_recipients));

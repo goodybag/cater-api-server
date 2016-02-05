@@ -6,6 +6,7 @@
     <div class="form-group">
       <label>Status</label>
       <select name="status">
+        <option value="">All</option>
         <option value="pending">Pending</option>
         <option value="submitted">Submitted</option>
         <option value="canceled">Canceled</option>
@@ -79,6 +80,10 @@
 
   <form method="GET" action="/reports/users">
     <legend>List users by register date</legend>
+    <div class="form-group">
+      <label>Only show users that receive promotional emails</label>
+      <input type="checkbox" name="receives_promos" checked="checked">
+    </div>
     <label>Start</label>
     <input class="datepicker" name="start">
     <label>End</label>

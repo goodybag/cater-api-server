@@ -1,0 +1,90 @@
+{{#extend "page"}}page-users{{/extend}}
+
+{{#extend "page-head"}}
+{{> admin_user_page_head}}
+{{/extend}}
+
+{{#extend "nav-col"}}
+{{> admin_user_sidebar_nav}}
+{{/extend}}
+
+{{#extend "body"}}
+<div class="invoice-recipients-container">
+  <h1>User Invoice Recipients</h1>
+
+  <div class="form-group invoice-recipients-form-group">
+    <label>Add Another Email for {{user.name}}</label>
+    <div class="input-group">
+      <span
+        class="input-addon"
+        data-user-id="{{user.id}}"
+        data-user-name="{{user.name}}"
+        data-action="add-email">
+        +
+      </span>
+      <input type="email" class="form-control">
+    </div>
+  </div>
+
+  <table class="table table-striped invoice-recipients-table">
+    <tbody>
+      {{#each user.invoice_recipients}}
+        <tr>
+          <td>
+            <span data-icon="gb-icon-email">
+              <span class="view-email">{{email}}</span>
+              <input class="input-edit-email" type="text" value="{{email}}">
+            </span>
+            <span class="edit-buttons">
+              <button
+                class="btn btn-red edit-button-save"
+                data-user-id="{{../user.id}}"
+                data-user-invoice-id="{{id}}"
+                data-action="edit-email">
+                  Save
+              </button>
+              <button class="btn btn-white edit-button-cancel">Cancel</button>
+            </span>
+            <span class="edit-group">
+              <i class="gb-icon-pencil"></i>
+              <i
+                class="gb-icon-x-mark"
+                data-user-id="{{../user.id}}"
+                data-user-invoice-id="{{id}}"
+                data-action="delete-email"></i>
+            </span>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+require(['jquery-loaded', 'app/views/admin/invoice-recipients']
+, function( $, invoiceRecipientsActions ) {
+
+  $(function(){
+    var $invoiceRecipientsView = $('.invoice-recipients-container');
+    var $editPencil = $('.gb-icon-pencil');
+    var $cancelButton = $('.edit-button-cancel');
+
+    invoiceRecipientsActions( $invoiceRecipientsView );
+
+    // Event handler to switch to edit view
+    $editPencil.on("click", function() {
+      $(this).closest("td").addClass("edit-view");
+    });
+
+    // Event handler to switch back from edit view
+    $cancelButton.on("click", function() {
+      $(this).closest("td").removeClass("edit-view");
+    })
+  });
+});
+</script>
+
+{{/extend}}

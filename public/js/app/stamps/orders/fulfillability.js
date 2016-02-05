@@ -35,6 +35,12 @@ define( function( require, exports, module ){
           , this.timezone
           );
         }
+      } else if ( this.datetime ){
+        this.datetime = moment.tz(
+          this.datetime
+        , [ this.dateFormat, this.timeFormat ].join(' ')
+        , this.timezone
+        );
       }
     })
     .methods({
@@ -42,7 +48,7 @@ define( function( require, exports, module ){
       // put the computationally least complex strategies first
       fulfillmentRequirements: [
         // Is the restaurant even open on that day?
-        function strategyOpenDay(){
+        { name: 'OpenDay', fn: function strategyOpenDay(){
           if ( !this.datetime ) return true;
 
           var hours = this.restaurant.hours.concat( this.restaurant.delivery_hours );
@@ -50,16 +56,16 @@ define( function( require, exports, module ){
           return !!_.findWhere( hours, {
             day: this.datetime.day()
           });
-        }
+        }}
 
         // Restaurant is open on that day, but what about time?
-      , function strategyOpenHours(){
+      , { name: 'OpenHours', fn: function strategyOpenHours(){
           if ( !this.datetime ) return true;
-          if ( !this.time ) return true;
 
           var day = this.datetime.day();
 
           var format = [ this.dateFormat, this.availabilityTimeFormat ].join(' ');
+          var hms = ['hour', 'minute', 'second'];
 
           return this.restaurant.hours
             .concat( this.restaurant.delivery_hours )
@@ -67,26 +73,32 @@ define( function( require, exports, module ){
               return dayHours.day === day;
             })
             .some( function( dayHours ){
-              var startDate = moment.tz(
-                this.date + ' ' + dayHours.start_time
-              , format
-              , this.timezone
+              var startTime = _.object(
+                hms
+              , dayHours.start_time.split(':')
               );
 
-              var endDate = moment.tz(
-                this.date + ' ' + dayHours.end_time
-              , format
-              , this.timezone
+              var endTime = _.object(
+                hms
+              , dayHours.end_time.split(':')
               );
+
+              var startDate = this.datetime.clone();
+              var endDate = this.datetime.clone();
+
+              hms.forEach( function( component ){
+                startDate.set( component, startTime[ component ] );
+                endDate.set( component, endTime[ component ] );
+              });
 
               return [
                 startDate <= this.datetime
               , this.datetime < endDate
               ].every( _.identity );
             }.bind( this ));
-        }
+        }}
 
-      , function strategyClosedEvents(){
+      , { name: 'ClosedEvents', fn: function strategyClosedEvents(){
           var datetime = this.datetime;
 
           if ( !this.datetime ) datetime = moment.tz( this.timezone );
@@ -115,24 +127,24 @@ define( function( require, exports, module ){
                 compare( datetime, end, false, evt.during.end.inclusive )
               );
             }.bind( this ));
-        }
+        }}
 
         // Simply check if the zip is supported by delivery
-      , function strategyZip(){
+      , { name: 'Zip', fn: function strategyZip(){
           if ( !this.zip ) return true;
 
           var zips = this.getAllSupportedDeliveryZips();
 
           return !!_.findWhere( zips, { zip: this.zip } );
-        }
+        }}
 
         // Is there a lead time that satisfies?
-      , function strategyLeadTimes(){
+      , { name: 'LeadTimes', fn: function strategyLeadTimes(){
           if ( !this.datetime ) return true;
 
           var leadTimes = this.getAllSupportedLeadTimes();
 
-          if ( leadTimes.length === 0 ) return true;
+          if ( leadTimes.length === 0 ) return false;
 
           var minutes = moment.duration(
             this.datetime - moment.tz( this.timezone )
@@ -145,22 +157,22 @@ define( function( require, exports, module ){
               , !this.guests ? true : this.guests <= time.max_guests
               ].every( _.identity );
             }.bind( this ));
-        }
+        }}
       ]
 
     , isFulfillable: function(){
         return this.fulfillmentRequirements.every( function( strategy ){
-          return strategy.call( this );
+          return strategy.fn.call( this );
         }.bind( this ));
       }
 
     , why: function(){
         return this.fulfillmentRequirements
           .filter( function( strategy ){
-            return !strategy.call( this );
+            return !strategy.fn.call( this );
           }.bind( this ))
           .map( function( strategy ){
-            return strategy.name.replace('strategy', '');
+            return strategy.name;
           }.bind( this ));
       }
 

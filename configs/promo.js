@@ -12,40 +12,29 @@ var promo = {
   }
 , jacob: {
     email: 'jacobparker@goodybag.com'
-  , promo_code: ['goodybag315', 'gb415', 'gbaustin15', 'gbstar15', 'gbamaz15', 'gbfree0715', 'gbgift0815', 'gbfreesea']
+  , promo_code: [
+      'gbaustin15', 'gbatx75', 'gbausfree'
+    ]
   }
-, christy: {
-    email: 'christymedlock@goodybag.com'
-  , promo_code: ['gbfree0715']
+, debbie: {
+    email: 'Debbiegarcia@goodybag.com'
+  , promo_code: ['gbnash75', 'rbrefnash']
+  }
+, virginia: {
+    email: 'virginiasims@goodybag.com'
+  , promo_code: ['gbhou75']
   }
 , ramone: {
     email: 'ramonejohnson@goodybag.com'
-  , promo_code: ['seattlegb', 'seagoody']
+  , promo_code: ['gbseafree', 'gbsea75', 'gbsea15', 'gbrefsea', 'gbfreesea', 'seattlegb' ]
   }
-, om: {
-    email: 'om@goodybag.com'
-  , promo_code: [ 'bv250' ]
+, virginia: {
+    email: 'virginiasims@goodybag.com'
+  , promo_code: ['gbhou75', 'gbhou15', 'gbhou25', 'gbhou50', 'gbrefhou']
   }
-, starkebab: {
-    email: [
-      'om@goodybag.com'
-    , 'patrickmugavin@goodybag.com'
-    , 'tobyshields@goodybag.com'
-    , 'christymedlock@goodybag.com'
-    ]
-  , promo_code: [ 'starkebab' ]
-  }
-, dropoff: {
-    email: [
-        'jacobparker@goodybag.com'
-      , 'patrickmugavin@goodybag.com'
-      , 'christymedlock@goodybag.com'
-    ]
-  , promo_code: [
-      'dropoff1', 'dropoff2', 'dropoff3'
-    , 'dropoff4', 'dropoff5', 'dropoff6'
-    , 'dropoff7', 'dropoff8', 'dropoff9'
-    ]
+, jay: {
+    email: 'jay@goodybag.com'
+  , promo_code: ['gbjay']
   }
 };
 

@@ -86,6 +86,16 @@ define(function(require, exports, module) {
       return JSON.stringify(context);
     },
 
+    jsonPretty: function(context, key) {
+      if ( typeof key === 'string' ){
+        key = key.split('.');
+        for ( var i = 0, l = key.length; i <l; i++ ){
+          context = context[ key[i] ];
+        }
+      }
+      return JSON.stringify(context, true, '  ');
+    },
+
     or: function(value1, value2) {
       return value1 || value2;
     },

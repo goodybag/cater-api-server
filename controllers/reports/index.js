@@ -13,6 +13,7 @@ var
 , config = require('../../config')
 , restaurantPlans = require('restaurant-plans')
 , Orders = require('stamps/orders')
+, through = require('through2')
 ;
 
 
@@ -69,7 +70,7 @@ var reports = {
       query: req.query
     });
 
-    var status = req.query.status || 'accepted';
+    var status = req.query.status;
 
     var start = parseDatetime({
       date: req.query.startDate || '2012-01-01'
@@ -98,6 +99,7 @@ var reports = {
     ].join('-') + '.csv';
 
     res.csv.writeFilename(filename);
+
     res.csv.writeRow([
       'Order Number'
     , 'Order Type'
@@ -128,7 +130,7 @@ var reports = {
     , 'Region'
     ]);
 
-    var where = { status: status, restaurant_id: { $notNull: true } };
+    var where = { status: status || {}, restaurant_id: { $notNull: true } };
     var options = { limit: 'all' };
 
     if ( restaurantId ) where.restaurant_id = restaurantId;
@@ -152,6 +154,7 @@ var reports = {
       $gte: start
     , $lt: end
     };
+
     if ( regionId ) {
       where['restaurants.region_id'] = regionId;
     }
@@ -164,11 +167,34 @@ var reports = {
       where['payment_method_id'] = { $null: paymentMethod === "invoiced" }
     }
 
+    options.with = [
+      { name: 'cached_order_items'
+      , type: 'select'
+      , table: 'order_items'
+      , columns: ['order_items.*']
+      , joins: [
+          { type: 'left', target: 'orders', on: { 'id': '$order_items.order_id$' } }
+        ]
+      }
+    , { name: 'cached_order_amenities'
+      , type: 'select'
+      , table: 'order_amenities'
+      , columns: ['order_amenities.*']
+      , joins: [
+          { type: 'left', target: 'orders', on: { 'id': '$order_amenities.order_id$' } }
+        ]
+      }
+    ];
+
+    var cachedWhere = options.with[0].where = options.with[1].where = {};
+    cachedWhere[ range ] = where[ range ];
+
     options.order = {};
     options.order[range] = sort;
     options.distinct = [ 'orders.id', range ];
     options.one = [
       { table: 'users', alias: 'user' }
+    , { table: 'regions', alias: 'region' }
     , { table: 'restaurants'
       , alias: 'restaurant'
       , one: [
@@ -179,14 +205,13 @@ var reports = {
     , { table: 'restaurant_locations', alias: 'location' }
     ];
 
-    options.columns = [
-      '*'
-    , { type: 'row_to_json', expression: 'regions', as: 'region' }
-    ];
-
     options.many = [
-      { table: 'order_items', alias: 'items' }
-    , { table: 'order_amenities', alias: 'amenities' }
+      { table: 'cached_order_items', alias: 'items'
+      , where: { 'cached_order_items.order_id': '$orders.id$' }
+      }
+    , { table: 'cached_order_amenities', alias: 'amenities'
+      , where: { 'cached_order_amenities.order_id': '$orders.id$' }
+      }
     ];
 
     options.joins = [
@@ -205,64 +230,66 @@ var reports = {
     options.acceptedDate = true;
 
     rlogger.info('Filtering by %s', range, { start: start, end: end });
-    db.orders.find(where, options, function(err, results) {
+    db.orders.findStream(where, options, function(err, stream) {
       if (err) {
         rlogger.error('Unable to find orders', err);
         return res.end();
       }
-      results
-        .map( function(order) {
-          return Orders(order);
-        })
-        .forEach( function(order) {
 
-          res.csv.writeRow([
-            order.id
-          , hbHelpers.orderTypeAbbr(order)
+      stream
+        .pipe(through.obj(function (chunk, enc, done) {
+          var order = Orders( chunk );
 
-          // order.submitted is a timestamptz, it needs to be converted
-          , order.submitted ?
-              moment(order.submitted).tz(order.timezone).format(reports.dateFormat) :
-              'N/A'
+          res.csv.writeRow(
+            [
+              order.id
+            , hbHelpers.orderTypeAbbr(order)
 
-          , order.submitted ?
-              moment(order.submitted).tz(order.timezone).format(reports.timeFormat) :
-              'N/A'
+            // order.submitted is a timestamptz, it needs to be converted
+            , order.submitted ?
+                moment(order.submitted).tz(order.timezone).format(reports.dateFormat) :
+                'N/A'
 
-          , order.accepted ?
-              moment(order.accepted).tz(order.timezone).format(reports.dateFormat) :
-              'N/A'
+            , order.submitted ?
+                moment(order.submitted).tz(order.timezone).format(reports.timeFormat) :
+                'N/A'
 
-          , order.accepted ?
-              moment(order.accepted).tz(order.timezone).format(reports.timeFormat) :
-              'N/A'
+            , order.accepted ?
+                moment(order.accepted).tz(order.timezone).format(reports.dateFormat) :
+                'N/A'
 
-          // order.datetime is a timestamp with separate order.timezone, needs to be parsed as such
-          , moment.tz(order.datetime, order.timezone).format(reports.dateFormat)
-          , moment.tz(order.datetime, order.timezone).format(reports.timeFormat)
-          , getAddress(order)
-          , order.type === 'courier' ? getAddress(order.location) : ''
-          , order.restaurant.zip
-          , order.zip
-          , order.user.name
-          , order.user.email
-          , order.user.organization
-          , order.phone
-          , dollars(order.getSubTotal())
-          , dollars(order.delivery_fee)
-          , dollars(order.getTax())
-          , dollars(order.tip)
-          , dollars(order.adjustment_amount)
-          , dollars(order.total)
-          , order.restaurant.plan ? order.restaurant.plan.name : 'N/A'
-          , dollars(orderCharge(order, 'getApplicationCut'))
-          , dollars(orderCharge(order, 'getRestaurantCut'))
-          , order.restaurant.name
-          , order.region.name
-          ]);
-        });
+            , order.accepted ?
+                moment(order.accepted).tz(order.timezone).format(reports.timeFormat) :
+                'N/A'
 
-      res.end();
+            // order.datetime is a timestamp with separate order.timezone, needs to be parsed as such
+            , moment.tz(order.datetime, order.timezone).format(reports.dateFormat)
+            , moment.tz(order.datetime, order.timezone).format(reports.timeFormat)
+            , getAddress(order)
+            , order.type === 'courier' ? getAddress(order.location) : ''
+            , order.restaurant.zip
+            , order.zip
+            , order.user.name
+            , order.user.email
+            , order.user.organization
+            , order.phone
+            , dollars(order.getSubTotal())
+            , dollars(order.delivery_fee)
+            , dollars(order.getTax())
+            , dollars(order.tip)
+            , dollars(order.adjustment_amount)
+            , dollars(order.total)
+            , order.restaurant.plan ? order.restaurant.plan.name : 'N/A'
+            , dollars(orderCharge(order, 'getApplicationCut'))
+            , dollars(orderCharge(order, 'getRestaurantCut'))
+            , order.restaurant.name
+            , order.region.name
+            ]
+          );
+
+          done();
+        }))
+        .pipe( res );
     });
   },
 
@@ -290,6 +317,10 @@ var reports = {
       }
     , limit: 'all'
     };
+
+    if (req.query.receives_promos) {
+      query.where.receives_promos = true;
+    }
 
     models.User.find(query, function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);

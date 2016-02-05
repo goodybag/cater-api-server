@@ -6,6 +6,8 @@
 
   <link rel="shortcut icon" href="{{cdn "favicon.ico"}}">
 
+  <script src="{{cdn 'dist/modernizr.js'}}"></script>
+
   <!-- Keep this up here! -->
   <!--[if lt IE 9]>
   <script src="{{cdn "/components/html5shiv/dist/html5shiv.js"}}"></script>
@@ -70,5 +72,9 @@
   {{{block "views"}}}
   {{{block "bootstrap"}}}
   {{{block "scripts"}}}
+
+  {{#if config.isProduction}}
+    {{> layout_google_adwords}}
+  {{/if}}
 </body>
 </html>

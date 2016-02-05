@@ -1,0 +1,53 @@
+///////////////////
+// Manifest Page //
+///////////////////
+
+#components { #order-manifest { #page {
+  .init(
+    @page-width:          800px
+  , @page-height:         930px
+  , @page-margin-top:     0.2in
+  , @page-margin-bottom:  0.25in
+  , @page-margin-left:    0.25in
+  , @page-margin-right:   0.25in
+  ){
+    .manifest-page {
+      width: @page-width;
+      height: @page-height;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      page-break-after: always;
+      overflow: hidden;
+      box-sizing: content-box;
+
+      padding-top:     @page-margin-top;
+      padding-bottom:  @page-margin-bottom;
+      padding-left:    @page-margin-left;
+      padding-right:   @page-margin-right;
+
+      .section-title {
+        background: #000;
+        color: #fff;
+        margin: 0;
+        margin-bottom: 8px;
+        font-size: 18px;
+        line-height: 18px;
+        padding: 5px 20px 0;
+        text-transform: uppercase;
+      }
+
+      .page-number {
+        font-size: 12px;
+        margin-top: 20px;
+        text-align: center;
+      }
+    }
+
+    @media print {
+      @page {
+        padding: 0;
+        margin: 0;
+      }
+    }
+  }
+}}}

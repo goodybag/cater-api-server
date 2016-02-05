@@ -24,7 +24,7 @@ define(function(require, exports, module) {
         }
       }
 
-      return _.size(diff) > 0 ? diff : null;
+      return diff;
     },
 
     // Wait for response on save
@@ -103,17 +103,17 @@ define(function(require, exports, module) {
       this.clearErrors();
       var diff = this.getDiff();
 
-      if (!diff && !this.model.isNew()) {
-        this.trigger('save:noop');
-        return callback.call(this);
-      }
-      var view = this;
-
       if ( Array.isArray( this.alwaysSave ) && this.alwaysSave.length > 0 ){
         this.alwaysSave.forEach( function( field ){
           diff[ field ] = this.model.get( field );
         }.bind( this ));
       }
+
+      if (!Object.keys(diff).length && !this.model.isNew()) {
+        this.trigger('save:noop');
+        return callback.call(this);
+      }
+      var view = this;
 
       if ( this.setThenSave ){
         this.model.set( diff );
@@ -124,16 +124,18 @@ define(function(require, exports, module) {
         patch: this.patch,
         wait: this.wait,
         singleError: false,
-        validate: typeof this.options.validate !== 'boolean' ? true : this.options.validate // bypass client validation
-      })
-      .success( function(res) {
-        view.$el.find(view.submitSelector).addClass('hide');
-        view.trigger('save:success', view.model, res, view);
-        callback.call(view, null, res);
-      })
-      .error( function(response) {
-        view.trigger('save:error', response, view);
-        callback.call(view, response);
+        validate: typeof this.options.validate !== 'boolean' ? true : this.options.validate, // bypass client validation
+
+        success: function(res) {
+          view.$el.find(view.submitSelector).addClass('hide');
+          view.trigger('save:success', view.model, res, view);
+          callback.call(view, null, res);
+        },
+
+        error: function(response) {
+          view.trigger('save:error', response, view);
+          callback.call(view, response);
+        }
       });
 
       if (!sent) {

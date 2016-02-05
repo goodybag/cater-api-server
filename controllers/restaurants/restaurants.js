@@ -165,6 +165,13 @@ module.exports.get = function(req, res) {
       searchParams:     req.session.searchParams
     }
 
+    // Use the same data model we use for fulfillability during search
+    // so we can inform menu whether or not supplied order params
+    // are fulfillable. The original data passed in is too different
+    // than what the fulfillability model is expecting, so just pull
+    // the cached version so the models have the option to use it
+    context.restaurant._cached = db.cache.restaurants.byId( context.restaurant.id );
+
     context.restaurant.delivery_fee = context.order.restaurant.delivery_fee;
 
     // Copy fields that don't exist from the restaurant result to order.restaurant

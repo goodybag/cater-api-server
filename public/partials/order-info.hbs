@@ -1,4 +1,4 @@
-<fieldset class="col-xs-6 delivery-info-date">
+<div class="col-xs-6 delivery-info-date">
   {{#unless edit}}
 
   {{#if order.name}}<p><strong>{{order.name}}</strong></p>{{/if}}
@@ -62,9 +62,9 @@
   </div>
 
   {{/unless}}
-</fieldset>
+</div>
 
-<fieldset class="col-xs-6 delivery-info-address">
+<div class="col-xs-6 delivery-info-address">
   {{#if order.user.name}}
   <div><strong>{{order.user.name}}</strong></div>
   {{/if}}
@@ -81,8 +81,8 @@
   {{> edit_address}}
   {{/with}}
   <div class="btn-toolbar pull-right">
-    <button type="button" class="btn btn-default cancel-edit-btn">Cancel</button>
+    <button type="button" class="btn btn-default cancel-edit-address-btn">Cancel</button>
     <button type="button" class="btn btn-success save-btn">Save</button>
   </div>
   {{/unless}}
-</fieldset>
+</div>

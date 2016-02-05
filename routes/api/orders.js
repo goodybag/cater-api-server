@@ -638,6 +638,22 @@ route.get('/:oid/items', m.getOrder2({
   controllers.orders.orderItems.list
 );
 
+route.post('/:oid/items'
+, m.getOrder2({
+    param: 'oid',
+    items: true,
+    user: true,
+    userAddresses: true,
+    userPaymentMethods: true,
+    restaurant: true,
+    deliveryService: true
+  })
+  , m.editOrderAuth
+  , m.restrict(['admin', 'order-owner', 'order-editor'])
+  , controllers.orders.editability
+  , controllers.orders.orderItems.add
+);
+
 route.post('/:order_id/generate_edit_token', m.getOrder2({
   param: 'order_id'
 }), m.restrict(['order-owner', 'admin']), controllers.orders.generateEditToken);
@@ -811,3 +827,9 @@ route.put('/:order_id/feedback', m.getOrder2({
 }), m.restrict(['order-owner', 'admin']), m.queryOptions({
   returning: ['id']
 }), m.param('order_id'), m.update(db.order_feedback));
+
+/**
+ * Duplicate order
+ */
+
+route.post('/:oid/duplicates', m.restrict(['client', 'admin']), controllers.orders.duplicate);

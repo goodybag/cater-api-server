@@ -1,0 +1,51 @@
+.page-order-restaurant {
+  // Hide olark, and some other stuff
+  #habla_beta_container_do_not_rely_on_div_classes_or_names,
+  .main-push,
+  .footer {
+    display: none;
+  }
+
+  .manifest-container {
+    max-width: 100%;
+
+    // Fix android device scrolling/fixed element issue
+    [data-useragent*="Android"] & {
+      overflow: scroll;
+    }
+  }
+
+  .accept-reject-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+
+  .order-manifest {
+    display: table;
+    margin: 0 auto;
+  }
+
+  .accept-reject-shelf-content {
+    .errors > .alert {
+      margin-bottom: 20px;
+    }
+
+    .reason-denied {
+      height: 200px;
+    }
+  }
+}
+
+@media print {
+  html, body {
+    padding: 0;
+    margin: 0;
+  }
+
+  .navbar,
+  .accept-reject-bar,
+  #accept-reject-shelf {
+    display: none;
+  }
+}

@@ -15,7 +15,7 @@ route.get('/', record, m.getRegions({where: {is_hidden: false}}), controllers.au
 
 route.get('/login', record, m.view('landing/login', {layout: 'layout/default'}));
 
-route.post('/login', record, controllers.auth.login);
+route.post('/login', m.rateLimit(), record, controllers.auth.login);
 
 route.get('/join', record, m.getRegions({where: {is_hidden: false}}), controllers.auth.registerView);
 route.post('/join', record, m.getRegions({where: {is_hidden: false}}), controllers.auth.register);

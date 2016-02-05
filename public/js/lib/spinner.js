@@ -60,6 +60,7 @@ define(function(require, exports, module) {
     , height: '100%'
     , background: "rgba(0, 0, 0, 0.1)"
     , display: 'none'
+    , zIndex: 2e8
     });
 
     // Something stupid is happening somewhere

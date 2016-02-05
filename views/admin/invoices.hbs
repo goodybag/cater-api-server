@@ -89,11 +89,9 @@
             <button
               class="action btn-default"
               data-invoice-id="{{this.id}}"
-              data-user-id="{{user.id}}"
-              data-user-name="{{user.name}}"
               data-invoice-recipients=
-                "{{user.email}};{{#each user.invoice_recipients}}{{this.email}};{{/each}}"
-              data-action="send-to-all">
+                "{{#each user.invoice_recipients}}{{this.email}};{{/each}}"
+              data-action="send-email">
                 {{~#is this.status 'pending' 'error'}}Send Email{{else}}Re-Send Email{{/is~}}
             </button>
             <button

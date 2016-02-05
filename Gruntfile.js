@@ -18,6 +18,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-named-modules');
   grunt.loadNpmTasks('grunt-s3');
   grunt.loadNpmTasks('grunt-babel');
+  grunt.loadNpmTasks('grunt-modernizr');
 
   var gruntConfig = {
     localbranch: grunt.option('branch') || 'master'
@@ -267,6 +268,23 @@ module.exports = function(grunt) {
       , upload: []
       }
     }
+
+  , modernizr: {
+      dist: {
+        "crawl": false,
+        "customTests": [],
+        "dest": "public/dist/modernizr.js",
+        "tests": [
+          "csstransforms",
+          "csstransitions",
+          "csstransforms3d"
+        ],
+        "options": [
+          "setClasses"
+        ],
+        "uglify": true
+      }
+    }
   };
 
   var landing   = gruntConfig.requirejs.landing.options = utils.clone( gruntConfig.requirejs.app.options );
@@ -353,8 +371,8 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask( 'analyze',      ['complexity'] );
-  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'copy:legacy', 'concat', 'shell:handlebars', 'babel', 'uglify', 'requirejs'] );
-  grunt.registerTask( 'default',      ['less', 'namedModules', 'shell:handlebars', 'shell:cacheRedis', 'copy:legacy', 'loglog', 'watch'] );
+  grunt.registerTask( 'build',        ['less', 'copy:manifest', 'copy:legacy', 'concat', 'modernizr:dist', 'shell:handlebars', 'babel', 'uglify', 'requirejs'] );
+  grunt.registerTask( 'default',      ['less', 'namedModules', 'shell:handlebars', 'shell:cacheRedis', 'modernizr:dist', 'copy:legacy', 'loglog', 'watch'] );
   grunt.registerTask( 'versionPatch', ['shell:versionPatch', 'reloadPkg'] );
 
   grunt.registerTask( 'deploy', [

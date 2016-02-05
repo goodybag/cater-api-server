@@ -28,7 +28,6 @@ define(function(require) {
     }
   , name: {
       type: types.text
-    , nullable: false
     }
   , email: {
       type: types.text

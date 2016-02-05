@@ -397,7 +397,7 @@ config.staging = {
     { bucket: 'staging-receipts.goodybag.com' }
   )
 
-, enableCaterWeb: true
+, enableCaterWeb: process.env['ENABLE_CATER_WEB'] === 'true'
 };
 
 config.production = {
@@ -457,7 +457,6 @@ config.production = {
     support: 'support@goodybag.com'
   , tech: [
       'john@goodybag.com'
-    , 'preston@goodybag.com'
     , 'om@goodybag.com' // temp for failed cc payments
     ]
   , orders: 'orders@goodybag.com'
@@ -469,6 +468,7 @@ config.production = {
       'jacobparker@goodybag.com'
     , 'jag@goodybag.com'
     , 'om@goodybag.com'
+    , 'adam.peacock@goodybag.com'
     , 'redemptions@goodybag.com'
     ]
   , dsOrders: [

@@ -115,7 +115,7 @@ module.exports.update = function(req, res) {
         var data = utils.omit(req.body, 'groups');
         var groups = req.body.groups;
         tx.users.update(req.params.uid, data, { returning: ['*'] }, function(err, users) {
-          callback(err, users[0], groups);
+          callback(err, Array.isArray( users ) ? users[0] : null, groups);
         });
       },
 
@@ -150,7 +150,7 @@ module.exports.update = function(req, res) {
     utils.async.waterfall(tasks, function(err, user) {
       if ( err ) {
         logger.error('Transaction Error');
-        tx.rollback();
+        tx.rollback(utils.noop);
         return res.error(parseInt(err.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, err);
       }
 

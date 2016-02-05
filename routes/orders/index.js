@@ -98,15 +98,25 @@ route.all('/:oid/voice', function(req, res, next) {
  *  Order resource.  An individual order.
  */
 
-route.get('/:oid/manifest', m.basicAuth(), m.restrict(['admin', 'receipts']), m.getOrder2({
-  items: true,
-  manifest: true,
-  user: true,
-  restaurant: true,
-  amenities: true
-}), m.view('order-manifest/manifest-1', {
-  layout: 'order-manifest/layout'
-}));
+route.get('/:oid/manifest',
+  m.basicAuth(),
+  m.restrict(['admin', 'receipts']),
+  // always view this resource as the order-restaurant
+  function( req, res, next ){
+    req.user.attributes.groups.push('order-restaurant');
+    return next();
+  },
+  m.getOrder2({
+    items: true,
+    manifest: true,
+    user: true,
+    restaurant: true,
+    amenities: true
+  }),
+  m.view('order-manifest/manifest-1', {
+    layout: 'order-manifest/layout'
+  })
+);
 
 route.get('/:oid', m.getOrder2({
     param: 'oid',
@@ -115,10 +125,12 @@ route.get('/:oid', m.getOrder2({
     userAddresses: true,
     userPaymentMethods: true,
     restaurant: true,
+    restaurantRegionDeliveryServices: true,
     deliveryService: true,
     submittedDate: true,
     amenities: true,
     orderFeedback: true,
+    manifest: true,
     applyPriceHike: true
   }), m.restrict(['admin', 'receipts', 'order-owner', 'order-restaurant']),
   controllers.orders.get);

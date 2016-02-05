@@ -1,5 +1,9 @@
 {{#extend "css"}}
-<link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/css/checkout.css' pkg)}}">
+{{#unless config.isDev}}
+  <link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/css/checkout.css' pkg)}}">
+{{else}}
+  <link rel="stylesheet" href="/css/checkout.css">
+{{/unless}}
 {{/extend}}
 
 {{#extend "title"}} - Checkout{{/extend}}
@@ -83,7 +87,7 @@
             <div class="form-inline clearfix">
               <div class="form-group col-sm-8">
                 <label class="control-label" for="order-notes">Special instructions for this order?</label>
-                <textarea id="order-notes" class="form-control order-notes" rows="3"{{#unless order.editable}} disabled="disabled"{{/unless}}>{{order.notes}}</textarea>
+                <textarea id="order-notes" class="form-control order-notes" rows="3"{{#unless order.editable}} disabled="disabled"{{/unless}} placeholder="e.g. Please bring double the napkins">{{order.notes}}</textarea>
               </div>
             </div>
             {{#if order.restaurant.accepts_tips}}
@@ -276,7 +280,6 @@
 {{/extend}}
 
 {{#extend "scripts"}}
-<script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
 
 <script>
 require([

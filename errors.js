@@ -185,6 +185,28 @@ errors.stripe.ERROR_ADDING_CARD = {
 
 errors[errors.stripe.ERROR_ADDING_CARD.code] = errors.stripe.ERROR_ADDING_CARD;
 
+errors.stripe.CARD_DECLINED = {
+  type: "input"
+, code: "0402"
+, httpCode: "402"
+, name: "CARD_DECLINED"
+, message: "Your card was declined"
+, property: "number"
+};
+
+errors[errors.stripe.CARD_DECLINED.code] = errors.stripe.CARD_DECLINED;
+
+errors.stripe.CARD_EXPIRED = {
+  type: "input"
+, code: "0402"
+, httpCode: "402"
+, name: "CARD_EXPIRED"
+, message: "Your card is expired"
+, property: "exp-year"
+};
+
+errors[errors.stripe.CARD_EXPIRED.code] = errors.stripe.CARD_EXPIRED;
+
 /**
  * Yelp Errors
  */

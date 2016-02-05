@@ -72,5 +72,9 @@
   {{{block "views"}}}
   {{{block "bootstrap"}}}
   {{{block "scripts"}}}
+
+  {{#if config.isProduction}}
+    {{> layout_google_adwords}}
+  {{/if}}
 </body>
 </html>

@@ -19,6 +19,11 @@ define( function( require, exports, module ){
     , timeFormat: 'HH:mm a'
     , availabilityTimeFormat: 'HH:mm:ss'
     , restaurant: {}
+      // Whether or not we should ignore the time
+      // When we initialize with just `date`, we may not have a time
+      // and the consumer may wish to ignore strategies which concern
+      // themselves with `time`
+    , ignoreTime: false
     })
     .enclose( function(){
       if ( this.date ){
@@ -61,6 +66,7 @@ define( function( require, exports, module ){
         // Restaurant is open on that day, but what about time?
       , { name: 'OpenHours', fn: function strategyOpenHours(){
           if ( !this.datetime ) return true;
+          if ( this.ignoreTime ) return true;
 
           var day = this.datetime.day();
 

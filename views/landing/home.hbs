@@ -8,7 +8,7 @@
       <img src="{{cdn "/img/logo.png"}}" alt="Goodybag.com" class="navbar-logo">
     </a>
 
-    <button class="navbar-toggle btn btn-small btn-default">Sign In</button>
+    <button class="navbar-toggle btn btn-small btn-default" data-icon="gb-icon-hamburger"></button>
     <form class="login-form form-small" method="POST" action="/login{{queryParams query}}">
       <div class="form-group">
         <label for="login-email">Email</label>
@@ -27,6 +27,7 @@
 
       <div class="form-group form-group-submit">
         <button class="btn btn-default" tabindex="4">Sign In</button>
+        <a class="btn btn-primary" href="/join" tabindex="5">Sign Up</a>
       </div>
     </form>
   </div>

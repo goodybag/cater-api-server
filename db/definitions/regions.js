@@ -25,6 +25,7 @@ define(function(require) {
   , sales_tax:          { type: types.numeric( 5, 5 ), nullable: false, default: 0 }
   , lead_time_modifier: { type: types.interval, nullable: false, default: '\'0 minutes\'::interval' }
   , is_hidden:          { type: types.boolean, default: false }
+  , support_phone:      { type: types.text }
   };
 
   definition.indices = {};

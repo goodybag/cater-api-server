@@ -60,7 +60,13 @@ module.exports = function( options ){
       }
 
       res.locals.session = req.session;
-      res.locals.user = utils.omit(req.user.toJSON(), options.omissions);
+
+      Object.defineProperty( res.locals, 'user', {
+        enumerable: true
+      , get: function(){
+          return utils.omit(req.user.toJSON(), options.omissions);
+        }
+      });
 
       if ( !req.user.isGuest() ){
         req.logger.options.data.req.user = req.logger.options.data.req.user || {};

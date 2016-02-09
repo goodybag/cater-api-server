@@ -178,7 +178,7 @@
       <h2 class="section-title">Goodybag</h2>
       <dl class="manifest-section-dl">
         <dt>Phone:</dt>
-        <dd>{{phoneNumber config.phone.support "xxx.xxx.xxxx"}}</dd>
+        <dd>{{phoneNumber  (or order.restaurant.region.support_phone config.phone.support) "xxx.xxx.xxxx"}}</dd>
         <dt>Email:</dt>
         <dd>{{config.emails.support}}</dd>
         <dt>Website:</dt>

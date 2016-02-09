@@ -98,7 +98,7 @@
             </a>
             <div class="contact-info">
               <span class="help-text">Let us help you with your order!</span>
-              <span class="phone-number">{{phoneNumber config.phone.support}}</span>
+              <span class="phone-number">{{phoneNumber (or user.region.support_phone config.phone.support)}}</span>
             </div>
           </div>
 

@@ -25,7 +25,7 @@
         <img class="restaurant-header-logo" src="{{#if restaurant.logo_url}}{{filepicker restaurant.logo_url}}{{else}}{{filepicker config.defaultLogo}}{{/if}}" alt="{{restaurant.name}}">
         <div class="restaurant-header-body">
           <div class="restaurant-header-name">{{restaurant.name}}</div>
-          <div class="restaurant-header-description">Call us to place your order or to get help placing it online! {{phoneNumber config.phone.support}}</div>
+          <div class="restaurant-header-description">Call us to place your order or to get help placing it online! {{phoneNumber (or user.region.support_phone config.phone.support)}}</div>
         </div>
       </div>
       <ul class="nav nav-tabs menu-info-tabs">

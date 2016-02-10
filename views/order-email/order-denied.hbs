@@ -28,7 +28,7 @@
       <td style="width: 100%; padding-top: 2px; padding-bottom: 22px">
         <h1 style="line-height: 22px; margin-top: 0; margin-right: 0; margin-bottom: 20px; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: center; color: #D9534F">"{{order.reason_denied}}"</h1>
         <h1 style="line-height: 22px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 18px; font-family: Helvetica, arial, sans-serif; text-align: center; color: #695a42">Need a new order ASAP?<br />Give us a call and we'll help you out!</h1>
-        <h1 style="line-height: 22px; margin-top: 12px; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 22px; font-family: Helvetica, arial, sans-serif; text-align: center; color: #695a42">{{phoneNumber config.phone.support}}</h1>
+        <h1 style="line-height: 22px; margin-top: 12px; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-weight: 300; font-size: 22px; font-family: Helvetica, arial, sans-serif; text-align: center; color: #695a42">{{phoneNumber (or user.region.support_phone config.phone.support)}}</h1>
       </td>
     </tr>
   </table>

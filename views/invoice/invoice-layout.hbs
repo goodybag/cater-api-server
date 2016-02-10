@@ -53,7 +53,7 @@
               <dd>{{phoneNumber config.phone.orders "xxx.xxx.xxxx"}}</dd>
               <br>
               <dt>support:</dt>
-              <dd>{{phoneNumber config.phone.support "xxx.xxx.xxxx"}}</dd>
+              <dd>{{phoneNumber (or order.restaurant.region.support_phone config.phone.support) "xxx.xxx.xxxx"}}</dd>
             </dl>
 
             <dl class="info-item-urls info-item dl-inline">

@@ -27,7 +27,7 @@
     {{#lte restaurants.length config.resultsTooFewContactUsThreshold}}
       <div class="results-too-few">
         <h4 class="results-too-few-heading">Need more options?<br>We will help get your order placed today!</h4>
-        <p>Give us a call: {{phoneNumber config.phone.support}}</p>
+        <p>Give us a call: {{phoneNumber (or user.region.support_phone config.phone.support)}}</p>
       </div>
     {{/lte}}
   </div>

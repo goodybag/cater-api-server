@@ -34,7 +34,7 @@
               <td width="138" style="width: 138px; padding-right: 12px" valign="middle">
                 <img border="0" src="{{cdn "/img/logo.png"}}" alt="Goodybag">
               </td>
-              <td valign="middle"><span><strong>Let us help you with your order!</strong> {{phoneNumber config.phone.support}}</span></td>
+              <td valign="middle"><span><strong>Let us help you with your order!</strong> {{phoneNumber (or order.restaurant.region.support_phone config.phone.support)}}</span></td>
             </tr>
           </table>
         </td>
@@ -64,7 +64,7 @@
                 <table cellpadding="0" cellspacing="0" style="width: 100%;">
                   <tr>
                     <td style="width: 100%; padding-top: 28px; padding-bottom: 2px; padding-left: 10px; padding-right: 10px; line-height: 22px; font-weight: 300; font-family: Helvetica, arial, sans-serif; color: #695A42; font-size: 13px; text-align: left;">
-                      If you have any questions, please contact us at {{phoneNumber config.phone.support}} or <a style="color: #1155cc" href="mailto:{{config.emails.support}}">{{config.emails.support}}</a>
+                      If you have any questions, please contact us at {{phoneNumber (or order.restaurant.region.support_phone config.phone.support)}} or <a style="color: #1155cc" href="mailto:{{config.emails.support}}">{{config.emails.support}}</a>
                     </td>
                   </tr>
                   <tr>

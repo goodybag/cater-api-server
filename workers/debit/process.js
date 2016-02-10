@@ -1,3 +1,5 @@
+'use strict';
+
 var domain = require('domain');
 var utils = require('../../utils');
 var moduleLogger = require('./logger').create('Process');
@@ -155,8 +157,20 @@ var task = function (message, callback) {
           ]
   };
   db.orders.findOne( body.order.id, $options, d.bind(function(error, order) {
-    if ( error ) return logger.create('DB').error({error: error}), callback(error);
-    if ( !order ) return utils.queues.debit.del(message.id, utils.noop), callback();
+    if ( error ){
+      logger.error('Error looking up order', {
+        error: error
+      , order: { id: body.order.id }
+      });
+      return setPaymentError( body.order, error, callback );
+    }
+
+    if ( !order ){
+      utils.queues.debit.del(message.id, utils.noop);
+      let error = { message: 'Could not find order', id: body.order.id };
+      return setPaymentError( body.order, error, callback );
+    }
+
     if (_.contains(['invoiced', 'paid', 'ignore'], order.payment_status)) return utils.queues.debit.del(message.id, utils.noop), callback();
 
     // check to see if a debit was already successfuly processed for this order
@@ -165,16 +179,19 @@ var task = function (message, callback) {
     checkForExistingDebit(order, function (error, debit) {
       // attempt to process this from the queue again later
       if (error) {
-        logger.error('checkForExistingDebit - attempt to process this from the queue again later', { error: error });
-        callback( error );
+        logger.error('checkForExistingDebit returned an error', {
+          error: error
+        , order: { id: order.id }
+        });
+        return setPaymentError( order, error, callback );
       }
 
       if (debit) {
         logger.warn('found existing debit for order: ' + order.id);
         return (new models.Order(order)).setPaymentPaid('debit', debit, function (error) {
           if (error) {
-            logger.create('DB').error('Error changing status to paid', { error: error });
-            return callback(error);
+            logger.error('Error changing status to paid', { error: error });
+            return setPaymentError( order, error, callback );
           }
           utils.queues.debit.del(message.id, function(){
             callback()
@@ -188,10 +205,19 @@ var task = function (message, callback) {
       if (order.payment_status != 'processing') {
         var $update = { payment_status: 'processing' };
         db.orders.update( order.id, $update, d.bind(function(error) {
-          if (error) return logger.create('DB').error({error: error}), callback(error);
+          if (error){
+            logger.error( 'Error updating order to processing', {
+              error: error
+            , order: { id: order.id }
+            });
+            return setPaymentError( order, error, callback );
+          }
           debitCustomer(order, function (error) {
             utils.queues.debit.del(message.id, utils.noop);
-            if (error) logger.create('DB').error({error: error});
+            if (error) logger.error('Error debiting customer', {
+              error: error
+            , order: { id: order.id }
+            });
             return callback(error);
           });
         }));
@@ -235,7 +261,7 @@ setInterval(function () {
     n: 25 // pull 25 items off the queue
   , timeout: 300 // allow up to 5 minutes for processing before putting it back onto the queue
   }, function (error, messages) {
-    if (error) return moduleLogger.error({error: error}), utils.rollbar.reportMessage(error);
+    if (error) return moduleLogger.error('Error fetching from queue', {error: error});
     _.each(messages, function (m) {
       q.push(m, done);
     });

@@ -55,12 +55,6 @@ route.post('/:id/auto-update', m.restrict(['admin']), m.getRestaurant({
 }), controllers.api.restaurants.autoPopulate);
 
 route.get('/:restaurant_id/orders/current',
-  function(req, res, next) {
-    req.restaurant = {
-      id: req.params.restaurant_id
-    };
-    next();
-  },
   controllers.restaurants.orders.current,
   function(req, res, next) {
     if (req.order) {
@@ -197,7 +191,7 @@ route.get('/:restaurant_id/menu',
   m.find(db.categories));
 
 route.get('/:restaurant_id/categories',
-  m.param('restaurant_id'),
+  m.restaurantIdParam( 'restaurant_id', { joinFrom: 'categories' }),
   function(req, res, next) {
     req.queryObj.is_hidden = false;
     next();

@@ -2,6 +2,7 @@ var db = require('../../db');
 var errors = require('../../errors');
 var utils = require('../../utils');
 var models = require('../../models');
+var m = require('../../middleware');
 var Order = require('stamps/orders/base');
 
 module.exports.listJSON = function(req, res) {
@@ -20,7 +21,7 @@ module.exports.current = function(req, res, next) {
   var logger = req.logger.create('Current Order');
 
   logger.info('Lookup existing pending order');
-  var where = {restaurant_id: req.restaurant.id, 'orders.status': 'pending'};
+  var where = {'orders.status': 'pending'};
 
   var options = {
     many: [{ table: 'order_items', alias: 'orderItems' }]
@@ -29,7 +30,18 @@ module.exports.current = function(req, res, next) {
             }
           , { table: 'users', alias: 'user' }
           ]
+  , joins: []
   };
+
+  if ( req.restaurant ){
+    where.restaurant_id = req.restaurant.id;
+  } else {
+    m.restaurantIdParam.applyValueToWhereClause(
+      req.params.restaurant_id || req.params.id
+    , where
+    );
+    options.joins.push( m.restaurantIdParam.getJoinFrom('orders') );
+  }
 
   var edit_token = req.query.edit_token || req.params.edit_token || req.body.edit_token;
   if ( edit_token ){

@@ -6,6 +6,7 @@
 var utils       = require('../utils');
 var errors      = require('../errors');
 var db          = require('../db');
+var idParam     = require('./restaurant-id-param');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
@@ -32,10 +33,8 @@ module.exports = function( options ){
     // parseInt('888-mini-cafe') === 888
     if ( options.getByUuid ) {
       $where.uuid = param;
-    } else if ( isNaN( +param ) ){
-      $where.text_id = param;
     } else {
-      $where.id = param;
+      idParam.applyValueToWhereClause( param, $where );
     }
 
     var $options = {

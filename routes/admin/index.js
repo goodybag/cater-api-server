@@ -262,7 +262,7 @@ route.get('/users/new'
 , m.db.delivery_services.find({})
 , m.view('admin/user/create', {
     layout: 'admin/layout2',
-    user: {}
+    edit_user: {}
   })
 );
 
@@ -302,7 +302,8 @@ route.get('/users/:id/basic-info'
   })
 , m.view('admin/user/edit', db.users, {
     layout: 'admin/layout-single-object',
-    method: 'findOne'
+    method: 'findOne',
+    localsAlias: 'edit_user'
   })
 );
 
@@ -331,7 +332,8 @@ route.get('/users/:id/invoices', m.param('id'), m.viewPlugin('mainNav', {
   active: 'users'
 }), m.view('admin/user/invoices', db.users, {
   layout: 'admin/layout-single-object',
-  method: 'findOne'
+  method: 'findOne',
+  localsAlias: 'edit_user'
 }));
 
 route.get('/users/:id/invoice-recipients', m.param('id'), m.viewPlugin('mainNav', {
@@ -349,7 +351,8 @@ route.get('/users/:id/invoice-recipients', m.param('id'), m.viewPlugin('mainNav'
   }]
 }), m.view('admin/user/invoice-recipients', db.users, {
   layout: 'admin/layout-single-object',
-  method: 'findOne'
+  method: 'findOne',
+  localsAlias: 'edit_user'
 }));
 
 /**

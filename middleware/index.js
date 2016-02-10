@@ -73,5 +73,6 @@ module.exports = utils.extend(
   , timeout: require('./timeout')
   , userViewedEvent: require('./user-viewed-event')
   , updateStripeCustomer: require('./update-stripe-customer')
+  , view: require('./view')
   }
 );

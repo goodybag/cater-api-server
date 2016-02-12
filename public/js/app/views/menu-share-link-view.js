@@ -28,6 +28,8 @@ define(function(require, exports, module) {
     initialize: function() {
       this.popover();
       this.subscribeEvents();
+      // When the order is created, re-render to get the token
+      this.model.once('change:id', this.render.bind(this));
     },
 
     popover: function() {
@@ -51,18 +53,6 @@ define(function(require, exports, module) {
 
     highlightLink: function(e) {
       $(e.target).select().focus();
-    },
-
-    generateToken: function(e) {
-      var this_ = this;
-      e.preventDefault();
-      if ( this.model.id ) {
-        this.model.generateEditToken(function(err) {
-          if (err)
-            return notify.error(err);
-          this_.render();
-        });
-      }
     },
 
     showLinkView: function(token) {

@@ -14,6 +14,7 @@ define( function( require, exports, module ){
   var moment = require('moment-timezone');
 
   var REWARDS_RATE = 0.01;
+  var PRIORITY_RATE = 2;
 
   return module.exports = require('stampit')()
     .compose( require('./base') )
@@ -42,13 +43,19 @@ define( function( require, exports, module ){
     , getPoints: function(){
         var result = this.getTotal();
 
+        result = Math.floor( result * REWARDS_RATE );
+
         if ( this.isEligibleForHolidayPromo() ){
           result *= this.getEligibleHoliday().rate;
         } else if ( this.isEligibleForMondayPromo() ){
           result *= this.mondayPromo.rate;
         }
 
-        return Math.floor( result * REWARDS_RATE );
+        if ( this.priority_account_price_hike_percentage ){
+          result *= PRIORITY_RATE;
+        }
+
+        return result;
       }
     });
 });

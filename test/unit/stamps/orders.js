@@ -965,8 +965,7 @@ describe('Orders Stamps', function(){
       , holidays: []
       , items: [{ price: 1000, quantity: 1 }]
       });
-
-      assert.equal( order.getPoints(), 21 );
+      assert.equal( order.getPoints(), 20 );
     });
 
     it('.getPoints() - holiday', function(){
@@ -984,7 +983,29 @@ describe('Orders Stamps', function(){
       , items: [{ price: 1000, quantity: 1 }]
       });
 
-      assert.equal( order.getPoints(), 21 );
+      assert.equal( order.getPoints(), 20 );
+    });
+
+    it('.getPoints() - priority account', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().day('Tuesday').format( TSFORMAT )
+      , holidays: []
+      , items: [{ price: 1000, quantity: 1 }]
+      , priority_account_price_hike_percentage: 0.1
+      });
+
+      assert.equal( order.getPoints(), 22 );
+    });
+
+    it('.getPoints() - monday and priority account', function(){
+      var order = DefaultOrderRewards({
+        submitted: moment().day('Monday').format( TSFORMAT )
+      , holidays: []
+      , items: [{ price: 1000, quantity: 1 }]
+      , priority_account_price_hike_percentage: 0.1
+      });
+
+      assert.equal( order.getPoints(), 44 );
     });
   });
 });

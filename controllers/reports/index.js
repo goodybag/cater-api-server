@@ -308,24 +308,25 @@ var reports = {
     , 'First Name'
     , 'Last Name'
     , 'Company Name'
+    , 'Region'
     ]);
 
-    var query = {
-      where: {
-        created_at: { $gte: start, $lte: end }
-      }
-    , limit: 'all'
+    var options = {
+      limit: 'all'
+    , one: [{ table: 'regions', alias: 'region' }]
+    };
+
+    var where = {
+      created_at: { $gte: start, $lte: end }
     };
 
     if (req.query.receives_promos) {
-      query.where.receives_promos = true;
+      where.receives_promos = true;
     }
 
-    models.User.find(query, function(err, results) {
+    db.users.find(where, options, function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       results.forEach( function(user) {
-        user = user.attributes;
-
         // break name apart if possible
         var idx = (user.name||'').indexOf(' ')
           , first = (idx >= 0) ? user.name.substring(0, idx) : user.name
@@ -336,6 +337,7 @@ var reports = {
         , first
         , last
         , user.organization
+        , user.region ? user.region.name : ''
         ]);
       });
 

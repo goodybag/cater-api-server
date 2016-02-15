@@ -1,0 +1,79 @@
+////////////////////
+// Manifest Table //
+////////////////////
+
+#components { #order-manifest { #table {
+  .init(
+    
+  ){
+    .manifest-table {
+      #box > .flex(1);
+      width: 100%;
+      border: solid #000 1px;
+      border-top: none;
+      font-size: 13px;
+
+      th {
+        background: #000;
+        color: #fff;
+        text-transform: uppercase;
+        font-size: 16px;
+        padding-top: 4px;
+        padding-bottom: 0;
+        padding-left: 3px;
+        padding-right: 3px;
+        line-height: 15px;
+      }
+
+      td {
+        border-left: solid #000 1px;
+        padding: 5px;
+      }
+
+      td:first-child {
+        border-left: none;
+      }
+
+      tbody > tr:nth-child(2n) td {
+        background: @manifest-gray-light;
+      }
+
+      tbody > tr.filler td {
+        background: #fff;
+      }
+
+      tbody {
+        font-family: 'Share Tech Mono';
+        letter-spacing: -1.5px;
+      }
+
+      td.checkbox   { width: 40px; }
+      td.quantity   { width: 60px; }
+      td.item       { width: 40%; }
+      td.recipient  { width: 150px; }
+
+      .item {
+        text-transform: uppercase;
+      }
+
+      .options {
+        text-transform: none;
+      }
+
+      .option-group-title {
+        margin-top: 4px;
+      }
+
+      .option-group {
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-left: 20px;
+        list-style: none;
+      }
+
+      .option-group li {
+
+      }
+    }
+  }
+}}}

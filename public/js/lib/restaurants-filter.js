@@ -81,6 +81,10 @@ define( function( require, exports, module ){
     if ( Object.keys( orderParams ).length > 0 ){
       var fulfillability = orderFulfillability( fulfillabilityOptions );
 
+      if ( !orderParams.time ){
+        fulfillability.ignoreTime = true;
+      }
+
       restaurants = restaurants.filter( function( result ){
         fulfillability.restaurant = result;
         return fulfillability.isFulfillable();

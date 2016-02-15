@@ -13,16 +13,16 @@
   <div class="page-actions">
     <a
       class="btn btn-default"
-      href="/users/{{user.id}}/session">
+      href="/users/{{edit_user.id}}/session">
       Login
     </a>
   </div>
   <ul class="dl-horizontal">
     <dt>Last seen using</dt>
-    <dd>{{user.user_agent_display}}</dd>
+    <dd>{{edit_user.user_agent_display}}</dd>
     <dt>Stripe ID</dt>
     <dd>
-      <a href="https://dashboard.stripe.com/customers/{{user.stripe_id}}">{{user.stripe_id}}</a>
+      <a href="https://dashboard.stripe.com/customers/{{edit_user.stripe_id}}">{{edit_user.stripe_id}}</a>
      </dd>
   </ul>
 
@@ -36,7 +36,7 @@ require([
   'app/models/user'
 , 'app/views/admin/edit-user-view'
 ], function( User, View ) {
-  var user = new User( {{{json user}}} );
+  var user = new User( {{{json edit_user}}} );
   var view = new View( {
     model: user
   , el: '#users-edit'

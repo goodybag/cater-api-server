@@ -10,6 +10,8 @@
 @import (less) "../public/components/pickadate/lib/themes/classic.date.css";
 @import (less) "../public/components/pickadate/lib/themes/classic.time.css";
 
+@import "../public/components/bootstrap/less/variables.less";
+
 @import "variables.less";
 @import "mixins.less";
 @import "animations.less";
@@ -22,6 +24,8 @@
 
 // Fonts
 @import "font-faces/avenir.less";
+@import "font-faces/din.less";
+@import "font-faces/share-tech-mono.less";
 
 // Components
 @import "components/alerts.less";
@@ -77,10 +81,15 @@
 @import "components/tooltip.less";
 @import "components/window-pane.less";
 @import "components/cupcake-alert.less";
+@import "components/accept-reject-bar.less";
 @import "components/results-too-few.less";
+@import "components/shelf.less";
+@import "components/order-manifest/index.less";
 
 // Bootstrap components
 @import "../public/components/bootstrap/less/dropdowns.less";
+
+#gb > #accept-reject-bar > .init();
 
 // Overrides
 @import "overrides/landing.less";
@@ -94,6 +103,8 @@
 @import "overrides/rewards.less";
 @import "overrides/testimonials.less";
 @import "overrides/datepicker.less";
+@import "overrides/page-order-restaurant.less";
+@import "ie-9.less";
 @import "ie-10.less";
 
 .page-error {
@@ -103,3 +114,5 @@
 }
 
 #components > #results-too-few > .init();
+#components > #shelf > .init();
+#components > #order-manifest > .init();

@@ -39,6 +39,6 @@
     </div>
   </div>
   <div class="subtext">
-    Not what you ordered? &nbsp;Something missing? &nbsp;No worries! &nbsp;We will help get it resolved. &nbsp;Contact us at: <span class="phone">{{phoneNumber config.phone.support "xxx.xxx.xxxx"}}</span>
+    Not what you ordered? &nbsp;Something missing? &nbsp;No worries! &nbsp;We will help get it resolved. &nbsp;Contact us at: <span class="phone">{{phoneNumber (or order.restaurant.region.support_phone config.phone.support) "xxx.xxx.xxxx"}}</span>
   </div>
 </header>

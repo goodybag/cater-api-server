@@ -397,7 +397,7 @@ config.staging = {
     { bucket: 'staging-receipts.goodybag.com' }
   )
 
-, enableCaterWeb: true
+, enableCaterWeb: process.env['ENABLE_CATER_WEB'] === 'true'
 };
 
 config.production = {

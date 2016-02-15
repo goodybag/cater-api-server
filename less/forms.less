@@ -120,7 +120,7 @@ input[disabled] {
     .typography('small');
   }
 
-  button {
+  .btn {
     &:extend(.btn-small);
   }
 }
@@ -224,7 +224,6 @@ fieldset {
   }
 }
 
-
 .form-control-combo {
   display: table;
   .panel;
@@ -242,4 +241,8 @@ fieldset {
     vertical-align: middle;
     width: 30px;
   }
+}
+
+[disabled] {
+  opacity: 0.6;
 }

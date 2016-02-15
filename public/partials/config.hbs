@@ -10,6 +10,6 @@
     config.emails.orders = '{{config.emails.orders}}';
     config.emails.info = '{{config.emails.info}}';
     config.phone = {};
-    config.phone.support = '{{config.phone.support}}';
+    config.phone.support = '{{or user.region.support_phone config.phone.support}}';
   });
 </script>

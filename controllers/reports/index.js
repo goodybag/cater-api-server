@@ -154,6 +154,7 @@ var reports = {
       $gte: start
     , $lt: end
     };
+
     if ( regionId ) {
       where['restaurants.region_id'] = regionId;
     }
@@ -165,6 +166,28 @@ var reports = {
     if ( paymentMethod ) {
       where['payment_method_id'] = { $null: paymentMethod === "invoiced" }
     }
+
+    options.with = [
+      { name: 'cached_order_items'
+      , type: 'select'
+      , table: 'order_items'
+      , columns: ['order_items.*']
+      , joins: [
+          { type: 'left', target: 'orders', on: { 'id': '$order_items.order_id$' } }
+        ]
+      }
+    , { name: 'cached_order_amenities'
+      , type: 'select'
+      , table: 'order_amenities'
+      , columns: ['order_amenities.*']
+      , joins: [
+          { type: 'left', target: 'orders', on: { 'id': '$order_amenities.order_id$' } }
+        ]
+      }
+    ];
+
+    var cachedWhere = options.with[0].where = options.with[1].where = {};
+    cachedWhere[ range ] = where[ range ];
 
     options.order = {};
     options.order[range] = sort;
@@ -181,14 +204,13 @@ var reports = {
     , { table: 'restaurant_locations', alias: 'location' }
     ];
 
-    options.columns = [
-      '*'
-    , { type: 'row_to_json', expression: 'regions', as: 'region' }
-    ];
-
     options.many = [
-      { table: 'order_items', alias: 'items' }
-    , { table: 'order_amenities', alias: 'amenities' }
+      { table: 'cached_order_items', alias: 'items'
+      , where: { 'cached_order_items.order_id': '$orders.id$' }
+      }
+    , { table: 'cached_order_amenities', alias: 'amenities'
+      , where: { 'cached_order_amenities.order_id': '$orders.id$' }
+      }
     ];
 
     options.joins = [
@@ -260,16 +282,14 @@ var reports = {
             , dollars(orderCharge(order, 'getApplicationCut'))
             , dollars(orderCharge(order, 'getRestaurantCut'))
             , order.restaurant.name
-            , order.region.name
+            , order.restaurant.region.name
             ]
           );
 
           done();
         }))
         .pipe( res );
-
     });
-
   },
 
   usersCsv: function(req, res) {
@@ -288,24 +308,25 @@ var reports = {
     , 'First Name'
     , 'Last Name'
     , 'Company Name'
+    , 'Region'
     ]);
 
-    var query = {
-      where: {
-        created_at: { $gte: start, $lte: end }
-      }
-    , limit: 'all'
+    var options = {
+      limit: 'all'
+    , one: [{ table: 'regions', alias: 'region' }]
+    };
+
+    var where = {
+      created_at: { $gte: start, $lte: end }
     };
 
     if (req.query.receives_promos) {
-      query.where.receives_promos = true;
+      where.receives_promos = true;
     }
 
-    models.User.find(query, function(err, results) {
+    db.users.find(where, options, function(err, results) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
       results.forEach( function(user) {
-        user = user.attributes;
-
         // break name apart if possible
         var idx = (user.name||'').indexOf(' ')
           , first = (idx >= 0) ? user.name.substring(0, idx) : user.name
@@ -316,6 +337,7 @@ var reports = {
         , first
         , last
         , user.organization
+        , user.region ? user.region.name : ''
         ]);
       });
 

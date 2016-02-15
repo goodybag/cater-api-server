@@ -13,12 +13,12 @@
   <h1>User Invoice Recipients</h1>
 
   <div class="form-group invoice-recipients-form-group">
-    <label>Add Another Email for {{user.name}}</label>
+    <label>Add Another Email for {{edit_user.name}}</label>
     <div class="input-group">
       <span
         class="input-addon"
-        data-user-id="{{user.id}}"
-        data-user-name="{{user.name}}"
+        data-user-id="{{edit_user.id}}"
+        data-user-name="{{edit_user.name}}"
         data-action="add-email">
         +
       </span>
@@ -28,7 +28,7 @@
 
   <table class="table table-striped invoice-recipients-table">
     <tbody>
-      {{#each user.invoice_recipients}}
+      {{#each edit_user.invoice_recipients}}
         <tr>
           <td>
             <span data-icon="gb-icon-email">
@@ -38,7 +38,7 @@
             <span class="edit-buttons">
               <button
                 class="btn btn-red edit-button-save"
-                data-user-id="{{../user.id}}"
+                data-user-id="{{../edit_user.id}}"
                 data-user-invoice-id="{{id}}"
                 data-action="edit-email">
                   Save
@@ -49,7 +49,7 @@
               <i class="gb-icon-pencil"></i>
               <i
                 class="gb-icon-x-mark"
-                data-user-id="{{../user.id}}"
+                data-user-id="{{../edit_user.id}}"
                 data-user-invoice-id="{{id}}"
                 data-action="delete-email"></i>
             </span>

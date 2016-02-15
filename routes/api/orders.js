@@ -25,7 +25,7 @@ route.get('/', m.restrict(['admin']), m.pagination(), m.param('status'), functio
   }]
 }), m.find(db.orders));
 
-route.post('/', m.restrict(['admin']), m.insert(db.orders));
+route.post('/', m.geocodeBody(), controllers.orders.create);
 
 route.get('/search', function(req, res, next) {
   var query = req.query.q;
@@ -157,7 +157,21 @@ route.post('/:oid/items'
   , controllers.orders.orderItems.add
 );
 
+/**
+ *  Order item resource.  A single order item.
+ */
+
+route.get('/:oid/items/:iid', m.restrict(['client', 'admin']), controllers.orders.orderItems.get); // not currently used
+
 route.put('/:oid/items/:iid', m.getOrder2({
+    param: 'oid',
+    items: true,
+    user: true
+  }), m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
+  controllers.orders.editability, controllers.orders.orderItems.update
+);
+
+route.patch('/:oid/items/:iid', m.getOrder2({
     param: 'oid',
     items: true,
     user: true
@@ -174,9 +188,10 @@ route.delete(
   controllers.orders.editability, controllers.orders.orderItems.remove
 );
 
-route.post('/:order_id/generate_edit_token', m.getOrder2({
-  param: 'order_id'
-}), m.restrict(['order-owner', 'admin']), controllers.orders.generateEditToken);
+route.all('/:oid/items/:iid', m.restrict(['client', 'admin']), function(req, res, next) {
+  res.set('Allow', 'GET, PUT, PATCH, DELETE');
+  res.send(405);
+});
 
 route.post('/:oid/rebuild-pdf/:type', m.restrict(['admin']), controllers.orders.rebuildPdf);
 

@@ -3,7 +3,7 @@
 </div>
 <div class="panel-body">
   <div class="without-items{{#if order.orderItems.length}} hide{{/if}}">
-    <p>Click a menu item to start building an order or call us at <strong>{{phoneNumber config.phone.support}}</strong> to place it for you!</p>
+    <p>Click a menu item to start building an order or call us at <strong>{{phoneNumber (or user.region.support_phone config.phone.support)}}</strong> to place it for you!</p>
     {{#if order.restaurant.minimum_order}}
     <p class="minimum-order">Minimum order: {{dollars order.restaurant.minimum_order}}</p>
     {{/if}}

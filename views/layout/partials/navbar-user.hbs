@@ -6,8 +6,8 @@
 
     {{#unless (contains user.groups 'admin')}}
     <div class="navbar-caption">
-      <span class="full"><strong>Let us help you with your order!</strong></span> <span class="full full-number">{{phoneNumber config.phone.support}}</span>
-      <span class="short">{{phoneNumber config.phone.support}}</span>
+      <span class="full"><strong>Let us help you with your order!</strong></span> <span class="full full-number">{{phoneNumber (or user.region.support_phone config.phone.support)}}</span>
+      <span class="short">{{phoneNumber (or user.region.support_phone config.phone.support)}}</span>
     </div>
     {{/unless}}
 

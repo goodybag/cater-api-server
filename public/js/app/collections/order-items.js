@@ -24,6 +24,10 @@ define(function(require, exports, module) {
     sync: function(method, model, options) {
       options.url = (method === 'read') ? '/api' + model.url() : model.url();
 
+      if ( this.options.edit_token ){
+        options.url += '?edit_token=' + this.options.edit_token;
+      }
+
       // break aggressive caching on IE
       // this request provides live updates so dont cache reads
       options.cache = (method !== 'read');

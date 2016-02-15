@@ -64,7 +64,7 @@ module.exports.list = function( req, res ){
   utils.async.parallel( tasks, function( error, results ){
     if ( error ) return res.error( error );
 
-    res.locals.user.pendingPoints = results.pendingPoints;
+    res.locals.pendingPoints      = results.pendingPoints;
     res.locals.pendingOrders      = results.pendingOrders;
     res.locals.orders             = results.orders;
     res.locals.cards              = results.cards;

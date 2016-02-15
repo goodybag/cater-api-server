@@ -1,6 +1,10 @@
 {{#each orders}}
 <tr class="table-row" data-order-type="{{type}}">
-  <td><a href="/orders/{{id}}">#{{id}}</td>
+  <td><a href="/orders/{{id}}">#{{id}}</a>
+    {{#if this.priority_account_price_hike_percentage}}
+      <span class="priority-label label-tag small orange">Priority</span>
+    {{/if}}
+  </td>
   <td>{{capitalize type}} {{#eq type 'courier'}}(<a href="/admin/delivery-services/{{deliveryService.id}}">{{deliveryService.name}}</a>){{/eq}}</td>
   <td><input type="checkbox" {{#if restaurant.plan_id}}checked="checked"{{/if}} disabled></td>
   <td>{{datepart datetime}} {{timepart datetime}}</td>

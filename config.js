@@ -564,4 +564,8 @@ module.exports.getEnv = function( env ){
   return _.defaults(config[env], config.defaults);
 };
 
+if ( local ){
+  _.extend( module.exports, local );
+}
+
 console.log('Loading ' + GB_ENV + ' config');

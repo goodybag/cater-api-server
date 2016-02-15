@@ -6,15 +6,8 @@ The "Share Link" panel can be in one of these states:
 --}}
 <div class="menu-share-link {{#unless order.id}}hide{{/unless}}">
   <div class="panel-title">Share order:</div>
-  <section class="generate-token-view {{#if order.edit_token}}hide{{/if}}">
-    <p class="description">Let others pick and choose their own items</p>
-    <a class="btn-generate-token" href="#">Share this order</a>
-  </section>
   <section class="share-link-view {{#unless order.edit_token}}hide{{/unless}}">
     <p class="description">
-    {{#datePassed order.edit_token_expires}}
-      <p class="expired-token text-danger">This link has expired!<a class="btn-regenerate" href="#">Generate a new link?</a></p>
-    {{/datePassed}}
     Send this link to others so they can add items too!</p>
     <div class="form-group">
       <input class="form-control share-link" type="text" value="{{config.baseUrl}}/restaurants/{{restaurant.id}}?edit_token={{order.edit_token}}#individual">

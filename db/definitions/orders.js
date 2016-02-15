@@ -109,10 +109,7 @@ define(function(require) {
   , edit_token: {
       type: types.text
     , nullable: true
-    }
-  , edit_token_expires: {
-      type: types.timestamp
-    , nullable: true
+    , default: 'uuid_generate_v4()'
     }
   , review_token: {
       type: types.text

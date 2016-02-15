@@ -312,28 +312,6 @@ module.exports.listStatus = function(req, res) {
   );
 }
 
-module.exports.generateEditToken = function(req, res) {
-  var query = {
-    updates: {
-      edit_token: utils.uuid.v4()
-    , edit_token_expires: moment().add('days', config.expires.shareLink).format('YYYY-MM-DD HH:mm:ss')
-    }
-  , where: {
-      id: req.params.order_id
-    }
-  , returning: [
-      '*'
-    , '("orders"."edit_token_expires"::text) as edit_token_expires'
-    ]
-  };
-
-  models.Order.update(query, function(err, order) {
-    if (err || !order.length)
-      return res.error(errors.internal.DB_FAILURE, err);
-    res.send(200, order[0]);
-  });
-};
-
 module.exports.changeStatus = function(req, res) {
   var logger = req.logger.create('Controller-OrderChangeStatus');
 

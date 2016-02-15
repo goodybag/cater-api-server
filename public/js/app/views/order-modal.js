@@ -133,6 +133,8 @@ define(function(require, exports, module) {
     submit: function(e) {
       e.preventDefault();
 
+      if ( this.isLoading ) return;
+
       this.clear();
 
       var blank = this.$el.find('form input:visible').filter(function(index) { return $(this).val() === ''; });
@@ -146,13 +148,23 @@ define(function(require, exports, module) {
 
       if ( this.showErrors() ) return;
 
+      this.isLoading = true;
+
       var self = this;
       this.model.save().success(function(){
         self.model.trigger('change:orderparams');
         if ( self.submitHandlers.success ){
           self.submitHandlers.success( self.model );
         }
-      }).error( self.submitHandlers.error );
+
+        self.isLoading = false;
+      }).error( function(){
+        if ( self.submitHandlers.error ){
+          self.submitHandlers.error.apply( self, arguments );
+        }
+
+        self.isLoading = false;
+      });
     },
 
     onDatePickerSet: function() {

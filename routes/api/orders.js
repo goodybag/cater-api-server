@@ -205,10 +205,6 @@ route.all('/:oid/items/:iid', m.restrict(['client', 'admin']), function(req, res
   res.send(405);
 });
 
-route.post('/:order_id/generate_edit_token', m.getOrder2({
-  param: 'order_id'
-}), m.restrict(['order-owner', 'admin']), controllers.orders.generateEditToken);
-
 route.post('/:oid/rebuild-pdf/:type', m.restrict(['admin']), controllers.orders.rebuildPdf);
 
 route.get('/:oid/notifications', m.restrict(['admin']), controllers.orders.notifications.JSON.list);

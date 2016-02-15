@@ -213,9 +213,21 @@ route.get('/:restaurant_id/orders',
   m.sort('-datetime'),
   m.queryOptions({
     many: [{
-      table: 'order_items',
-      alias: 'items'
+      table: 'order_items'
+    , alias: 'items'
     }]
+  , one:  [ { table: 'restaurants'
+            , alias: 'restaurant'
+            , one: [{ table: 'regions', alias: 'region' }]
+            , many: [ { table: 'restaurant_lead_times'
+                      , alias: 'lead_times'
+                      }
+                    , { table: 'restaurant_pickup_lead_times'
+                      , alias: 'pickup_lead_times'
+                      }
+                    ]
+            }
+          ]
   }),
   m.find(db.orders));
 

@@ -26,6 +26,13 @@ module.exports.current = function(req, res, next) {
     many: [{ table: 'order_items', alias: 'orderItems' }]
   , one:  [ { table: 'restaurants', alias: 'restaurant'
             , one: [{ table: 'regions', alias: 'region' }]
+            , many: [ { table: 'restaurant_lead_times'
+                      , alias: 'lead_times'
+                      }
+                    , { table: 'restaurant_pickup_lead_times'
+                      , alias: 'pickup_lead_times'
+                      }
+                    ]
             }
           , { table: 'users', alias: 'user' }
           ]

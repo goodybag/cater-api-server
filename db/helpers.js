@@ -3,6 +3,7 @@ var path        = require('path');
 var pg          = require('pg');
 var dirac       = require('dirac');
 var mosql       = require('mongo-sql');
+var moment      = require('moment-timezone');
 var mosqlUtils  = require('mongo-sql/lib/utils');
 var utils       = require('../utils');
 var logger      = require('../lib/logger').create('DBHelpers');
@@ -12,6 +13,8 @@ var Order       = require('stamps/orders/base');
 var QueryStream = require('pg-query-stream');
 
 var RewardsOrder = require('stamps/orders/rewards');
+var PublicRestaurant = require('../public/js/app/models/restaurant');
+var PublicOrder = require('../public/js/app/models/order');
 
 RewardsOrder = RewardsOrder.compose( require('stamps/orders/base').Cached );
 
@@ -780,6 +783,47 @@ dirac.use( function( dirac ){
         if ( this.type !== 'courier' ) return [];
 
         return odsChecker.why( this );
+      }
+    });
+
+    Object.defineProperty( order, 'deadline', {
+      enumerable: true
+    , get: function(){
+        if ( !this.restaurant ) return null;
+        if ( !this.restaurant.region ) return null;
+        if ( !this.type === 'delivery' && !this.restaurant.lead_times ) return null;
+        if ( !this.type !== 'delivery' && !this.restaurant.pickup_lead_times ) return null;
+
+        var datetime = moment.tz( this.datetime, this.timezone );
+
+        var leadTimeModifier = moment.duration( this.restaurant.region.lead_time_modifier );
+        var leadTimes = this.type === 'delivery'
+          ? this.restaurant.lead_times
+          : this.restaurant.pickup_lead_times
+              .map( function( leadTime ){
+                return utils.extend(
+                  {}, leadTime, {
+                    lead_time:  moment.duration( leadTime.lead_time, 'minutes' )
+                                      .add( leadTimeModifier )
+                                      .asMinutes()
+                  }
+                );
+              });
+
+        var minutes = moment.duration(
+          datetime - moment.tz( this.timezone )
+        ).asMinutes();
+
+        var leadTime = utils.find( leadTimes, function( time ){
+          return [
+            minutes >= time.lead_time
+          , !this.guests ? true : this.guests <= time.max_guests
+          ].every( utils.identity );
+        }.bind( this ));
+
+        if ( !leadTime ) return null;
+
+        return datetime.subtract( leadTime.lead_time, 'minutes' )
       }
     });
   };

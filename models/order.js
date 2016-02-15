@@ -16,6 +16,7 @@ var TransactionError = require('./transaction-error');
 var ordrInTrayBuilder = require('../lib/tray-builder');
 var moment = require('moment-timezone');
 var RewardsOrder = require('stamps/orders/rewards');
+var Order = require('stamps/orders');
 
 RewardsOrder = RewardsOrder.compose( require('stamps/orders/base').Cached );
 
@@ -364,6 +365,9 @@ module.exports = Model.extend({
     , 'payment_method_id'
     , 'delivery_service_id'
     , 'lat_lng'
+    , 'delivery_fee'
+    , 'adjustment_amount'
+    , 'user_adjustment_amount'
     ];
     var self = this;
     var tasks = [
@@ -459,6 +463,42 @@ module.exports = Model.extend({
           var lostItems = utils.filter(oldOrderItems, function(old) { return old.attributes.item_id === null; });
           return cb(null, client, done, newOrder, lostItems.length > 0 ? lostItems : null);
         }, client);
+      },
+
+      function(client, done, newOrder, lostItems, cb) {
+        var queryOptions = {
+          one: [ { table: 'regions', alias: 'region' } ]
+        };
+
+        db.restaurants.findOne(newOrder.attributes.restaurant_id, queryOptions, function(err, restaurant) {
+          if(err) {
+            return cb(err);
+          }
+
+          newOrder.attributes.restaurant = restaurant;
+          cb(null, client, done, newOrder, lostItems);
+        });
+      },
+
+      function(client, done, newOrder, lostItems, cb) {
+        db.users.findOne(newOrder.attributes.user_id, function(err, user) {
+          if(err) {
+            return cb(err);
+          }
+
+          newOrder.attributes.priority_account_price_hike_percentage = user.priority_account_price_hike_percentage;
+          cb(null, client, done, newOrder, lostItems);
+        })
+      },
+
+      function(client, done, newOrder, lostItems, cb) {
+        newOrder.attributes.items = newOrder.orderItems.map(item => item.attributes);
+        var order = new Order(newOrder.attributes);
+        newOrder.attributes.sub_total = order.getSubTotal();
+        newOrder.attributes.sales_tax = order.getTax();
+        newOrder.attributes.total = order.getTotal();
+
+        cb(null, client, done, newOrder, lostItems);
       }
     ];
 

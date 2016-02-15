@@ -58,6 +58,7 @@ define( function( require, exports, module ){
 
     , getItems: function(){
         return (this.items || []).map( function( item ){
+
           item = items( item );
 
           if ( this.priority_account_price_hike_percentage ){
@@ -185,7 +186,7 @@ define( function( require, exports, module ){
     item.price += Math.round( phike * item.price );
 
     if ( !Array.isArray( item.options_sets ) ) return;
-    
+
     item.options_sets.forEach( function( set ){
       set.options.forEach( function( option ){
         option.price += Math.round( phike * option.price );
@@ -232,6 +233,6 @@ define( function( require, exports, module ){
     });
 
   Order.Cached = CachedOrder;
-  
+
   return Order;
 });

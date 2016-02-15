@@ -211,6 +211,7 @@ route.get('/:restaurant_id/orders',
   },
   m.param('restaurant_id'),
   m.sort('-datetime'),
+  m.pagination({ limit: 20 }),
   m.queryOptions({
     many: [{
       table: 'order_items'

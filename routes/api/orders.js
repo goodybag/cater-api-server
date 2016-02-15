@@ -160,11 +160,7 @@ route.post('/:oid/items'
 route.put('/:oid/items/:iid', m.getOrder2({
     param: 'oid',
     items: true,
-    user: true,
-    userAddresses: true,
-    userPaymentMethods: true,
-    restaurant: true,
-    deliveryService: true
+    user: true
   }), m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
   controllers.orders.editability, controllers.orders.orderItems.update
 );
@@ -173,11 +169,7 @@ route.delete(
   '/:oid/items/:iid', m.getOrder2({
     param: 'oid',
     items: true,
-    user: true,
-    userAddresses: true,
-    userPaymentMethods: true,
-    restaurant: true,
-    deliveryService: true
+    user: true
   }), m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
   controllers.orders.editability, controllers.orders.orderItems.remove
 );

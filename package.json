@@ -16,7 +16,6 @@
     "test-notifications": "./node_modules/.bin/mocha -R spec test/unit/notifications"
   },
   "namedModules": {
-    "underscore": "./node_modules/lodash/lodash.js",
     "config": "./config.js",
     "errors": "./errors.js",
     "utils": "./utils.js",

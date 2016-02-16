@@ -26,7 +26,7 @@
     "order-delivery-service-checker": "./public/js/lib/order-delivery-service-checker.js"
   },
   "dependencies": {
-    "@goodybag/cater-web": "0.1.5",
+    "@goodybag/cater-web": "0.1.6",
     "@goodybag/dropoff-client": "^5.0.0",
     "@goodybag/order-status-worker": "^0.0.2",
     "@goodybag/scheduler-app": "^0.0.7",

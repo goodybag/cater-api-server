@@ -137,6 +137,10 @@ module.exports.autoFetchFromRedis = function( db ){
               return callback( e );
             }
 
+            db.cache.restaurants.byRegion( region.id ).forEach( function( restaurant ){
+              restaurant.region.delivery_services = results;
+            });
+
             callback( null, results );
           });
         }

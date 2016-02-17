@@ -265,11 +265,6 @@ module.exports.getEmail = function( req, res ){
       return res.error( error );
     }
 
-    for ( var key in result ){
-      if ( key === 'html' ) continue;
-      res.header( key, result[ key ] );
-    }
-
     res.send( result.html );
   }
 

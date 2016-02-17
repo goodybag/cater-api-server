@@ -338,10 +338,12 @@ var User = module.exports = Model.extend({
 , addPointsForOrder: function( orderId, callback, client ) {
     db.getClient(function (error, client, done) {
       var options = {
-        one:  [ { table: 'restaurants'
+        submittedDate: true
+      , one:  [ { table: 'restaurants'
                 , alias: 'restaurant'
                 , one: [{ table: 'regions', alias: 'region' }]
                 }
+              , { table: 'users', alias: 'user' }
               ]
       };
       

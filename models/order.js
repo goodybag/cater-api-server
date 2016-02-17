@@ -1078,12 +1078,18 @@ module.exports = Model.extend({
       options = {};
     }
 
-    // it is ready for awarding 3 days after the order has been delivered.
     var query = {
       where: {
         status: {$or: ['accepted', 'delivered']}
       , points_awarded: false
-      , payment_status: 'paid'
+      , $or: [
+          { payment_status: 'paid' }
+        , { payment_method_id: null
+          , $custom: [
+              "orders.datetime > now() at time zone orders.timezone - interval '3 hours'"
+            ]
+          }
+        ]
       }
     };
 

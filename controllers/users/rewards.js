@@ -25,6 +25,7 @@ module.exports.list = function( req, res ){
                                           , alias: 'restaurant'
                                           , one: [{ table: 'regions', alias: 'region' }]
                                           }
+                                        , { table: 'users', alias: 'user' }
                                         ]
                       , submittedDate:  true
                       })
@@ -34,10 +35,12 @@ module.exports.list = function( req, res ){
                       , points_awarded: true
                       , user_id: req.params.uid
                       }, {
-                        one:  [ { table: 'restaurants'
+                        submittedDate: true
+                      , one:  [ { table: 'restaurants'
                                 , alias: 'restaurant'
                                 , one: [{ table: 'regions', alias: 'region' }]
                                 }
+                              , { table: 'users', alias: 'user' }
                               ]
                       })
 

@@ -20,6 +20,7 @@ var Address = require('stamps/addresses');
 var UserAddresses = require('stamps/addresses/user-addresses-db');
 var GeocodeRequest = require('stamps/requests/geocode');
 var Order = require('stamps/orders/base');
+var OrderFulfillability = require('stamps/orders/fulfillability');
 
 var addressFields = [
   'street'
@@ -182,12 +183,36 @@ module.exports.get = function(req, res) {
   });
 };
 
-module.exports.create = function(req, res) {
+module.exports.create = function(req, res, next) {
   var order = new models.Order(
     utils.extend({
       user_id: req.user.attributes.user ? req.user.attributes.user.id : null
     }, req.body)
   );
+
+  if ( ! ){
+    return next( errors.input.INVALID_RESTAURANT );
+  }
+
+
+  if ( req.body.restaurant_id ){
+    var restaurant = db.cache.restaurants.byId( req.body.restaurant_id );
+
+    if ( restaurant ){
+      let result = OrderFulfillability
+        .create( utils.extend( {}, order.attributes, {
+          restaurant: restaurant
+        }))
+        .why();
+
+      if ( Array.isArray( result ) && result.length ){
+        let error = utils.clone( errors.input.FULFILLABILITY_FAILED );
+        error.details = result;
+        return next( error );
+      }
+    }
+
+  }
 
   order.save(function(err) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);

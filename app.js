@@ -150,8 +150,12 @@ app.use( function devErrors( error, req, res, next ){
     return next( error );
   }
 
+  res.status( error.httpCode || 500 );
+
   try {
-    res.json( JSON.stringify( error ) );
+    // Ensure we can stringify
+    JSON.stringify( error );
+    res.json( error );
   } catch( e ) {
     res.send( util.inspect( error ) );
   }

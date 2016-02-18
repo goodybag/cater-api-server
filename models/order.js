@@ -1086,7 +1086,7 @@ module.exports = Model.extend({
           { payment_status: 'paid' }
         , { payment_method_id: null
           , $custom: [
-              "orders.datetime > now() at time zone orders.timezone - interval '3 hours'"
+              "orders.datetime < now() at time zone orders.timezone - interval '3 hours'"
             ]
           }
         ]

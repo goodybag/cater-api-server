@@ -1,3 +1,5 @@
+'use strict';
+
 var db      = require('../../db');
 var errors  = require('../../errors');
 var utils   = require('../../utils');
@@ -190,11 +192,6 @@ module.exports.create = function(req, res, next) {
     }, req.body)
   );
 
-  if ( ! ){
-    return next( errors.input.INVALID_RESTAURANT );
-  }
-
-
   if ( req.body.restaurant_id ){
     var restaurant = db.cache.restaurants.byId( req.body.restaurant_id );
 
@@ -211,7 +208,6 @@ module.exports.create = function(req, res, next) {
         return next( error );
       }
     }
-
   }
 
   order.save(function(err) {
@@ -240,7 +236,11 @@ module.exports.create = function(req, res, next) {
   });
 }
 
-module.exports.update = function(req, res) {
+var fieldsRequiringFulfillabilityCheck = [
+  'zip', 'guests', 'datetime'
+];
+
+module.exports.update = function(req, res, next) {
   var logger = req.logger.create('Controller-Update');
 
   // get keys from order def schema that allow editable access
@@ -260,8 +260,28 @@ module.exports.update = function(req, res) {
   // Instantiate order model for save functionality
   var order = new models.Order(req.order);
 
+  if ( fieldsRequiringFulfillabilityCheck.some( key => key in req.body ) ){
+    var restaurant = db.cache.restaurants.byId( req.order.restaurant_id );
+
+    if ( restaurant ){
+      let result = OrderFulfillability
+        .create( utils.extend( {}, order.attributes, {
+          restaurant: restaurant
+        }))
+        .why();
+
+      if ( Array.isArray( result ) && result.length ){
+        let error = utils.clone( errors.input.FULFILLABILITY_FAILED );
+        error.details = result;
+        return next( error );
+      }
+    }
+  }
+
   var datetimeChanged = req.body.datetime && order.attributes.datetime !== req.body.datetime;
   var oldDatetime = order.attributes.datetime;
+  var oldType = order.attributes.type;
+  var oldPaymentStatus = order.attributes.payment_status;
 
   var isTipEditable = order.isTipEditable({
     isOwner: req.order.isOwner,
@@ -322,6 +342,14 @@ module.exports.update = function(req, res) {
 
     if ( datetimeChanged ){
       venter.emit( 'order:datetime:change', order, oldDatetime );
+    }
+
+    if ( oldType !== order.attributes.type ){
+      venter.emit( 'order:type:change', order.attributes.type, oldType, order.attributes, req.user );
+    }
+
+    if ( oldPaymentStatus !== order.attributes.payment_status ){
+      venter.emit('order:payment_status:change', order.attributes.payment_status, order.attributes.id);
     }
   });
 };

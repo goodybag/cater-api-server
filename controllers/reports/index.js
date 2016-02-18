@@ -268,9 +268,9 @@ var reports = {
             , order.type === 'courier' ? getAddress(order.location) : ''
             , order.restaurant.zip
             , order.zip
-            , order.user.name
-            , order.user.email
-            , order.user.organization
+            , order.user ? order.user.name : 'N/A'
+            , order.user ? order.user.email : 'N/A'
+            , order.user ? order.user.organization : 'N/A'
             , order.phone
             , dollars(order.getSubTotal())
             , dollars(order.delivery_fee)

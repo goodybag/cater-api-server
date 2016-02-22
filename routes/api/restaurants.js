@@ -4,6 +4,7 @@ var m = require('../../middleware');
 var db = require('../../db');
 var controllers = require('../../controllers');
 var venter = require('../../lib/venter');
+var Order = require('stamps/orders/base');
 
 var route = module.exports = express.Router();
 
@@ -29,6 +30,15 @@ route.get('/:id'
     param: 'id'
   , stripe: true
   })
+, function( req, res, next ){
+    if ( !res.locals.restaurant.items ) return next();
+
+    res.locals.restaurant.items.forEach( function( item ){
+      Order.applyPriceHikeToItem( item, req.user.attributes.priority_account_price_hike_percentage );
+    });
+
+    return next();
+  }
 , m.jsonLocals('restaurant')
 );
 

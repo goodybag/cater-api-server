@@ -26,6 +26,11 @@ define(function(require) {
   , lead_time_modifier: { type: types.interval, nullable: false, default: '\'0 minutes\'::interval' }
   , is_hidden:          { type: types.boolean, default: false }
   , support_phone:      { type: types.text }
+  , default_price_hike: {
+      type: types.numeric( 5, 5 )
+    , notNull: true
+    , default: 0
+    }
   };
 
   definition.indices = {};

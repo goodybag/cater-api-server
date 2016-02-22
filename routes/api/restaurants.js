@@ -203,11 +203,19 @@ route.get('/:restaurant_id/orders',
     req.queryObj.user_id = req.user.attributes.id;
     next();
   },
-  m.param('restaurant_id'),
+  m.param('restaurant_id', function( value, where ){
+    m.restaurantIdParam.applyValueToWhereClause(
+      value
+    , where
+    );
+  }),
   m.sort('-datetime'),
   m.pagination({ limit: 20 }),
   m.queryOptions({
-    many: [{
+    columns: ['orders.*']
+  , joins: [{ type: 'left', target: 'restaurants', on: { id: '$orders.restaurant_id$' } }]
+  , order: { id: 'desc' }
+  , many: [{
       table: 'order_items'
     , alias: 'items'
     }]

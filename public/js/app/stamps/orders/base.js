@@ -112,8 +112,8 @@ define( function( require, exports, module ){
           this.getSubTotal()
         , this.adjustment_amount
         , this.getTax()
-        , this.delivery_fee
-        , this.tip
+        , this.type === 'delivery' ? this.delivery_fee : 0
+        , this.type === 'delivery' ? this.tip : 0
         ].reduce( utils.add, 0 );
       }
 
@@ -196,10 +196,6 @@ define( function( require, exports, module ){
   };
 
   Order.applyRestaurantTotals = function( order, options ){
-    if ( order.type !== 'courier' ){
-      return;
-    }
-
     options = options || {};
 
     var _order = options.useCachedSubTotal ? CachedOrder.create( order ) : Order.create( order );
@@ -208,11 +204,14 @@ define( function( require, exports, module ){
       _order.items = _order.orderItems;
     }
 
-    // Zero out price hike
+    // Zero out price hike and other user-specific fields
     _order.priority_account_price_hike_percentage = 0;
+    _order.user_adjustment_amount = 0;
 
-    order.delivery_fee  = _order.delivery_fee = 0;
-    order.tip           = _order.tip          = 0;
+    if ( order.type === 'courier' || order.type === 'pickup' ){
+      order.delivery_fee  = _order.delivery_fee = 0;
+      order.tip           = _order.tip          = 0;
+    }
 
     // Re-calculate totals using $0 for deliveryfee/tip
     order.total         = _order.getTotal();

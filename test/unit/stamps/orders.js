@@ -576,6 +576,18 @@ describe('Orders Stamps', function(){
         amenity.getTotal();
       });
     });
+
+    it('.getPriorityAccountCost()', function(){
+      var amenity = orders.amenity({
+        guests: 12
+      , price: 100
+      , scale: 'multiply'
+      , enabled: true
+      , priority_account_price_hike_percentage: 0.27
+      });
+
+      assert.equal( amenity.getPriorityAccountCost(), 325 );
+    });
   });
 
   describe('Items', function(){

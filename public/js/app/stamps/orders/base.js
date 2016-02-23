@@ -24,6 +24,7 @@ define( function( require, exports, module ){
     , delivery_fee: 0
     , payment_method_id: null
     , service_fee: 0
+    , priority_account_price_hike_percentage: 0
     })
     .methods({
       getTax: function(){
@@ -132,7 +133,22 @@ define( function( require, exports, module ){
       }
 
     , getPriorityAccountCost: function(){
-        return Math.round( this.priority_account_price_hike_percentage * this.getSubTotal() );
+        var copyToAmenity = {
+          guests: this.guests
+        , priority_account_price_hike_percentage: this.priority_account_price_hike_percentage
+        };
+
+        return [
+          this.getItems().reduce( function( total, item ){
+            return total + (item.getPriorityAccountCost() * item.quantity);
+          }, 0 )
+
+        , this.amenities.reduce( function( total, amenity ){
+            return total + amenities(
+              utils.extend( {}, amenity, copyToAmenity )
+            ).getPriorityAccountCost();
+          }, 0 )
+        ].reduce( utils.add, 0 );
       }
 
     , getPriorityAccountSubTotal: function(){
@@ -165,7 +181,7 @@ define( function( require, exports, module ){
     });
 
     var hikeAmenity = function( amenity ){
-      amenity.price += Math.round( phike * amenity.price )
+      amenity.price += utils.nearestNickel( phike * amenity.price )
     };
 
     if ( Array.isArray( order.restaurant.amenities ) ){

@@ -75,7 +75,7 @@
       {{#each invoice.orders}}
       <tr>
         <td>
-          <div class="order-id">#{{this.id}}</div>
+          <div class="order-id">#{{this.id}}{{#if this.name}} - {{this.name}}{{/if}}</div>
           <div class="restaurant">{{this.restaurant.name}}</div>
           <div class="date">{{datepart this.datetime}}</div>
         </td>

@@ -182,17 +182,9 @@ define( function( require, exports, module ){
   Order.applyPriceHikeToItem = function( item, phike ){
     phike = phike || 0;
 
-    item.price += Math.round( phike * item.price );
-
-    if ( !Array.isArray( item.options_sets ) ) return;
-    
-    item.options_sets.forEach( function( set ){
-      set.options.forEach( function( option ){
-        option.price += Math.round( phike * option.price );
-      });
-    });
-
-    return item;
+    var cloned = items.create( utils.cloneDeep( item ) );
+    cloned.priority_account_price_hike_percentage = phike;
+    return utils.extend( item, cloned.toPriceHikedAttrs() );
   };
 
   Order.applyRestaurantTotals = function( order, options ){

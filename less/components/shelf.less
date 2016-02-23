@@ -1,4 +1,4 @@
-@import "../../public/components/less-elements/elements.less";
+@import "../lib/elements.less";
 
 #components { #shelf {
   .init(
@@ -93,6 +93,10 @@
     .transform( translate3d( @x * 100%, @y * 100%, 0 ) );
 
     // All shelves will be on the right/top
+    // Modernizr bugging on these browsers
+    // https://github.com/Modernizr/Modernizr/issues/897
+    [data-useragent*="Android 4.1"] &,
+    [data-useragent*="Android 4.2"] &,
     .no-csstransforms3d & {
       right: @x * 100%;
       bottom: @x * 100%;

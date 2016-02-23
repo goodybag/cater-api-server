@@ -89,6 +89,10 @@ define( function( require, exports, module ){
         return this.getPriorityAccountCost() * this.quantity;
       }
 
+      /**
+       * Create a cloned POJO of the item with price hike
+       * factored into properties
+       */
     , toPriceHikedAttrs(){
         var hike = this.priority_account_price_hike_percentage;
 
@@ -108,6 +112,8 @@ define( function( require, exports, module ){
                         })
         };
 
+        // Without priority cost because priority costs have
+        // already been added into `item`
         item.sub_total = Item( item ).getTotalWithoutPriorityAccountCost()
 
         return item;

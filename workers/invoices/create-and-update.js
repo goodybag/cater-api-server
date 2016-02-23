@@ -3,7 +3,9 @@ var db        = require('db');
 var utils     = require('utils');
 var invoices  = require('stamps/user-invoice');
 var logger    = require('../../lib/logger').create('Worker-Invoices');
-var now       = require('stamps/datetime')();
+var now       = require('stamps/datetime')({
+                  datetime: process.argv.length < 3 ? new Date() : process.argv[2]
+                });
 var pdfs      = require('../../lib/pdfs');
 var period    = now.getBillingPeriod();
 

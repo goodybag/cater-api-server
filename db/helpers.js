@@ -814,12 +814,11 @@ dirac.use( function( dirac ){
           datetime - moment.tz( this.timezone )
         ).asMinutes();
 
+        // Find the appropriate lead time based on guests
+        // If guests is falsey, choose the first lead_time
         var leadTime = utils.find( leadTimes, function( time ){
-          return [
-            minutes >= time.lead_time
-          , !this.guests ? true : this.guests <= time.max_guests
-          ].every( utils.identity );
-        }.bind( this ));
+          return ( this.guests || 0 ) <= time.max_guests;
+        }.bind( this ))
 
         if ( !leadTime ) return null;
 

@@ -33,6 +33,75 @@ route.get('/users'
 , m.find( db.users )
 );
 
+/**
+ * @api {get} /users/me   Returns your user account.
+ * @apiName GetUserMe
+ * @apiGroup Users
+ * @apiPermission none
+
+ * @apiSuccess   {Object}     user                  Your user account.
+ * @apiSuccess   {Number}     user.id               Your user id.
+ * @apiSuccess   {String}     user.created_at       Timestamp when your account was created.
+ * @apiSuccess   {String}     user.email            Your email.
+ * @apiSuccess   {String}     user.organization     Your organization.
+ * @apiSuccess   {String}     user.name             Your name.
+ * @apiSuccess   {String}     user.balanced_customer_uri     Your balanced customer uri.
+ * @apiSuccess   {Boolean}    user.is_invoiced      "True" if invoiced.
+ * @apiSuccess   {Number}     user.points           Your total reward points.
+ * @apiSuccess   {Number}     user.region_id        Your region id.
+ * @apiSuccess   {String}     user.default_zip      Your default zipcode.
+ * @apiSuccess   {String}     user.ordrin_email     *Obsolete crap*
+ * @apiSuccess   {String}     user.ordrin_password  *Obsolete crap*
+ * @apiSuccess   {Boolean}    user.is_tax_exempt    "True" if user is tax exempt.
+ * @apiSuccess   {String}     user.user_agent       Your user agent.
+ * @apiSuccess   {String}     user.organization_type        Your organization type.
+ * @apiSuccess   {String}     user.stripe_id        Your stripe id.
+ * @apiSuccess   {Boolean}    user.is_deleted       "True" if user's account is deactivated.
+ * @apiSuccess   {Number}     user.priority_account_price_hike_percentage     Percentage on menu items for a priority account.
+
+ * @apiSuccess   {Object}     user.region               Your region.
+ * @apiSuccess   {Number}     user.region.id            Region id.
+ * @apiSuccess   {String}     user.region.name          Region name.
+ * @apiSuccess   {String}     user.region.state         Region state.
+ * @apiSuccess   {String[]}   user.region.cities        List of region cities.
+ * @apiSuccess   {String}     user.region.timezone      Region timezone.
+ * @apiSuccess   {Number}     user.region.sales_tax     Region sales tax.
+ * @apiSuccess   {Object}     user.region.lead_time_modifier             Region lead time modifier.
+ * @apiSuccess   {Number}     user.region.lead_time_modifier.minutes     Region lead time modifier.
+ * @apiSuccess   {Boolean}    user.region.is_hidden     "True" if region is hidden.
+ * @apiSuccess   {Boolean}    user.region.sorts_by_no_contract           "True" if region is sorted by no contract.
+ * @apiSuccess   {String[]}   user.region.zips           List of region zipcodes.
+
+ * @apiSuccess   {Object}     user.defaultAddress              Your default address.
+ * @apiSuccess   {Number}     user.defaultAddress.id           Default address id.
+ * @apiSuccess   {Number}     user.defaultAddress.user_id      Default address user id.
+ * @apiSuccess   {String}     user.defaultAddress.name         Default address name.
+ * @apiSuccess   {String}     user.defaultAddress.street       Default address street.
+ * @apiSuccess   {String}     user.defaultAddress.city         Default address city.
+ * @apiSuccess   {String}     user.defaultAddress.state        Default address state.
+ * @apiSuccess   {String}     user.defaultAddress.zip          Default address zipcode.
+ * @apiSuccess   {Boolean}    user.defaultAddress.is_default   "True" if address is the default address.
+ * @apiSuccess   {String}     user.defaultAddress.street2      Default address street, second line.
+ * @apiSuccess   {String}     user.defaultAddress.phone        Default address phone.
+ * @apiSuccess   {String}     user.defaultAddress.delivery_instructions     Delivery instructions for default address.
+ * @apiSuccess   {String}     user.defaultAddress.lat_lng      Latitude/longitude of default address.
+
+ * @apiSuccess   {Object[]}   user.addresses                 List of your available addresses.
+ * @apiSuccess   {Number}     user.addresses.id              Address id.
+ * @apiSuccess   {Number}     user.addresses.user_id         Address user id.
+ * @apiSuccess   {String}     user.addresses.name            Address name.
+ * @apiSuccess   {String}     user.addresses.street          Address street.
+ * @apiSuccess   {String}     user.addresses.city            Address city.
+ * @apiSuccess   {String}     user.addresses.state           Address state.
+ * @apiSuccess   {String}     user.addresses.zip             Address zipcode.
+ * @apiSuccess   {Boolean}    user.addresses.is_default      "True" if address is the default address.
+ * @apiSuccess   {String}     user.addresses.street2         Address street, second line.
+ * @apiSuccess   {String}     user.addresses.phone           Address phone.
+ * @apiSuccess   {String}     user.addresses.delivery_instructions    Delivery instructions for address.
+ * @apiSuccess   {String}     user.addresses.lat_lng         Latitude/longitude of address.
+ * @apiSuccess   {String[]}   user.groups      List of permissions.
+ * @apiSuccess   {Boolean}    user.isAdmin     "True" if your account is an admin.
+ **/
 route.get('/users/me'
 , function( req, res ){
     delete req.user.attributes.password;
@@ -40,6 +109,52 @@ route.get('/users/me'
   }
 );
 
+/**
+ * @api {get} /users/:id   Returns the user account specified.
+ * @apiParam {Number} id   User's unique id.
+ * @apiName GetUser
+ * @apiGroup Users
+ * @apiPermission admin
+
+ * @apiSuccess   {Object[]}   user                       User's account.
+ * @apiSuccess   {Number}     user.id                    User's unique id.
+ * @apiSuccess   {String}     user.created_at            Timestamp when user account was created.
+ * @apiSuccess   {String}     user.email                 User's email.
+ * @apiSuccess   {String}     user.password              User's password.
+ * @apiSuccess   {String}     user.organization          User's organization.
+ * @apiSuccess   {String}     user.name                  User's name.
+ * @apiSuccess   {String}     user.balanced_customer_uri     User's balanced_customer_uri.
+ * @apiSuccess   {Boolean}    user.is_invoiced           "True" if account is invoiced.
+ * @apiSuccess   {Number}     user.points                Total points on user's account.
+ * @apiSuccess   {Number}     user.region_id             Id of user's default region.
+ * @apiSuccess   {String}     user.default_zip           User's default zipcode.
+ * @apiSuccess   {String}     user.ordrin_email          *Obsolete crap*
+ * @apiSuccess   {String}     user.ordrin_password       *Obsolete crap*
+ * @apiSuccess   {Boolean}    user.is_tax_exempt         "True" if account is tax exempt.
+ * @apiSuccess   {String}     user.user_agent            User's user agent information.
+ * @apiSuccess   {String}     user.organization_type     User's organization_type.
+ * @apiSuccess   {String}     user.stripe_id             User's stripe id.
+ * @apiSuccess   {Boolean}    user.is_deleted            "True" if user's account is deactived.
+ * @apiSuccess   {Number}     user.priority_account_price_hike_percentage     Percentage on menu items for a priority account.
+
+ * @apiSuccess   {Object[]}   user.addresses                List of addresses available on user's account.
+ * @apiSuccess   {Number}     user.addresses.id             Address id.
+ * @apiSuccess   {Number}     user.addresses.user_id        Address user id.
+ * @apiSuccess   {String}     user.addresses.name           Address name.
+ * @apiSuccess   {String}     user.addresses.street         Address street.
+ * @apiSuccess   {String}     user.addresses.city           Address city.
+ * @apiSuccess   {String}     user.addresses.state          Address state.
+ * @apiSuccess   {String}     user.addresses.zip            Address zipcode.
+ * @apiSuccess   {Boolean}    user.addresses.is_default     "True" if address is the default address.
+ * @apiSuccess   {String}     user.addresses.street2        Address street, second line.
+ * @apiSuccess   {String}     user.addresses.phone          Address phone.
+ * @apiSuccess   {String}     user.addresses.delivery_instructions    Delivery instructions for address.
+ * @apiSuccess   {String}     user.addresses.lat_lng        Latitude/longitude of address.
+
+ * @apiSuccess   {Object[]}   user.groups             List of groups user belongs to.
+ * @apiSuccess   {Number}     user.groups.user_id     Group's user id.
+ * @apiSuccess   {String}     user.groups.group       Group's group name.
+ **/
 route.get('/users/:id'
 , m.restrict(['admin'])
 , m.param('id')
@@ -125,13 +240,197 @@ route.delete('/delivery-services/:id'
 );
 
 /**
+ * Delivery Services
+ */
+
+/**
+ * @api {get} /delivery-services   Returns a list of all delivery services.
+ * @apiName GetDeliveryServices
+ * @apiGroup Delivery Services
+ * @apiPermission admin
+
+ * @apiSuccess   {Object[]}   delivery_service                 List of delivery services.
+ * @apiSuccess   {Number}     delivery_service.id              Delivery service id.
+ * @apiSuccess   {Number}     delivery_service.region_id       Delivery service region id.
+ * @apiSuccess   {String}     delivery_service.name            Delivery service name.
+ * @apiSuccess   {Number}     delivery_service.rate            Delivery service rating.
+ * @apiSuccess   {String}     delivery_service.created_at      Timestamp when delivery service was created.
+ * @apiSuccess   {String}     delivery_service.order_email     Delivery service order email.
+ * @apiSuccess   {String}     delivery_service.order_phone     Delivery service order phone.
+ * @apiSuccess   {Number}     delivery_service.region_order_distribution           Delivery service region order distribution.
+ * @apiSuccess   {String}     delivery_service.order_submitted_notification_id     Delivery serice order submitted notification id.
+
+ * @apiSuccess   {Object[]}   delivery_service.zips                List of available zipcodes on delivery service.
+ * @apiSuccess   {Number}     delivery_service.zips.id             Unique id for zipcode.
+ * @apiSuccess   {Number}     delivery_service.zips.delivery_service_id     Delivery service id for zipcode.
+ * @apiSuccess   {String}     delivery_service.zips.from           Used to calculate gb delivery fee.
+ * @apiSuccess   {String}     delivery_service.zips.to             Used to calculate gb delivery fee.
+ * @apiSuccess   {Number}     delivery_service.zips.price          Used to calculate gb delivery fee.
+ * @apiSuccess   {String}     delivery_service.zips.created_at     Timestamp when zip was added.
+
+ * @apiSuccess   {Object}     delivery_service.region               Region covered by delivery service.
+ * @apiSuccess   {Number}     delivery_service.region.id            Region id.
+ * @apiSuccess   {String}     delivery_service.region.name          Region name.
+ * @apiSuccess   {String}     delivery_service.region.state         Region state.
+ * @apiSuccess   {String[]}   delivery_service.region.cities        List of cities in region.
+ * @apiSuccess   {String}     delivery_service.region.timezone      Region timezone.
+ * @apiSuccess   {Number}     delivery_service.region.sales_tax     Region salex tax.
+ * @apiSuccess   {String}     delivery_service.region.lead_time_modifier     Region lead time modifier.
+ * @apiSuccess   {Boolean}    delivery_service.region.is_hidden     "True" if region is hidden.
+ * @apiSuccess   {Boolean}    delivery_service.region.sorts_by_no_contract     "True" if sorted by no contract.
+ **/
+route.get('/delivery-services'
+, m.restrict(['admin'])
+, m.sort('-id')
+, m.param('region_id')
+, m.queryOptions({
+    many: [{ table: 'delivery_service_zips', alias: 'zips' }]
+  , one:  [{ table: 'regions', alias: 'region' }]
+  })
+, m.find( db.delivery_services )
+);
+
+route.post('/delivery-services'
+, m.restrict(['admin'])
+, m.insert( db.delivery_services )
+);
+
+/**
+ * @api {get} /delivery_services/:id   Returns the delivery service specified.
+ * @apiParam {Number} id   Delivery service's unique id.
+ * @apiName GetDeliveryService
+ * @apiGroup Delivery Services
+ * @apiPermission admin
+
+ * @apiSuccess   {Object}   delivery_service                 Returned delivery service.
+ * @apiSuccess   {Number}   delivery_service.id              Id of delivery service.
+ * @apiSuccess   {String}   delivery_service.name            Name of delivery service.
+ * @apiSuccess   {Number}   delivery_service.rate            Rating of delivery service.
+ * @apiSuccess   {String}   delivery_service.created_at      Timestamp when delivery service was created.
+ * @apiSuccess   {String}   delivery_service.order_email     Order email of delivery service.
+ * @apiSuccess   {String}   delivery_service.order_phone     Order phone of delivery service.
+ * @apiSuccess   {Number}   delivery_service.region_order_distribution           Region order distribution of delivery service.
+ * @apiSuccess   {String}   delivery_service.order_submitted_notification_id     Order submitted notification id of delivery service.
+ **/
+route.get('/delivery-services/:id'
+, m.restrict(['admin'])
+, m.param('id')
+, m.findOne( db.delivery_services )
+);
+
+route.put('/delivery-services/:id'
+, m.restrict(['admin'])
+, m.param('id')
+, m.update( db.delivery_services )
+);
+
+route.delete('/delivery-services/:id'
+, m.restrict(['admin'])
+, m.param('id')
+, m.remove( db.delivery_services )
+);
+
+/**
  * Maps
  */
 
+ /**
+  * @api {get} /maps/geocode/:address   Geocodes the address specified.
+  * @apiParam {String} address   Address to be geocoded.
+  * @apiParamExample
+      {
+        "address": "200%20Congress%20Ave,%20Austin,%20Tx%2078701"
+      }
+  * @apiName GetGeocodedAddress
+  * @apiGroup Maps
+  * @apiPermission none
+
+  * @apiSuccess   {Object}    geocoded_address                       Returned geocoded address.
+  * @apiSuccess   {Boolean}   geocoded_address.valid                 "True" if geocode is valid.
+  * @apiSuccess   {Object}    geocoded_address.address               Geocoded address in object form.
+  * @apiSuccess   {String}    geocoded_address.address.street        Address street.
+  * @apiSuccess   {String}    geocoded_address.address.city          Address city.
+  * @apiSuccess   {String}    geocoded_address.address.state         Address state.
+  * @apiSuccess   {String}    geocoded_address.address.zip           Address zip.
+  * @apiSuccess   {Object}    geocoded_address.address.lat_lng       Latitude/longitude of address.
+  * @apiSuccess   {String}    geocoded_address.address.lat_lng.x     X coordinate.
+  * @apiSuccess   {String}    geocoded_address.address.lat_lng.y     Y coordinate.
+  **/
 route.get('/maps/geocode/:address'
 , controllers.api.maps.geocode
 );
 
+/**
+ * @api {get} /stripe-events/:id   Returns the specified stripe event.
+ * @apiParam {Number} id   Id of stripe event.
+ * @apiName GetStripeEvent
+ * @apiGroup Payments
+ * @apiPermission admin
+
+ * @apiSuccess   {Object}    stripe_event                Returned stripe event.
+ * @apiSuccess   {Number}    stripe_event.id             Stripe event id.
+ * @apiSuccess   {String}    stripe_event.created_at     Timestamp when stripe event was created.
+
+ * @apiSuccess   {Object}    stripe_event.data                 Stripe event data.
+ * @apiSuccess   {String}    stripe_event.data.id              Data id.
+ * @apiSuccess   {String}    stripe_event.data.object          Data object type.
+ * @apiSuccess   {String}    stripe_event.data.api_version     Data api version.
+ * @apiSuccess   {Number}    stripe_event.data.created         Timestamp when data was created.
+
+ * @apiSuccess   {Object}    stripe_event.data.data      Payment data.
+
+ * @apiSuccess   {Object}    stripe_event.data.data.object                         Payment data in object form.
+ * @apiSuccess   {String}    stripe_event.data.data.object.id                      Payment data id.
+ * @apiSuccess   {String}    stripe_event.data.data.object.object                  Payment data object type.
+ * @apiSuccess   {Number}    stripe_event.data.data.object.amount                  Payment amount.
+ * @apiSuccess   {Number}    stripe_event.data.data.object.amount_reversed         Payment amount reversed.
+ * @apiSuccess   {String}    stripe_event.data.data.object.application_fee         Payment application fee.
+ * @apiSuccess   {String}    stripe_event.data.data.object.balance_transaction     Payment balance transaction.
+
+ * @apiSuccess   {Object}    stripe_event.data.data.object.bank_account                    Payment bank account object.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.id                 Bank account id.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.object             Bank account object type.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.bank_name          Bank account bank name.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.country            Bank account country.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.currency           Bank account currency.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.fingerprint        Bank account fingerprint token.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.last4              Bank account last four SSN.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.name               Bank account name.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.routing_number     Bank account routing number.
+ * @apiSuccess   {String}    stripe_event.data.data.object.bank_account.status             Bank account status.
+
+ * @apiSuccess   {Number}    stripe_event.data.data.object.created_at          Timestamp when payment object was created.
+ * @apiSuccess   {String}    stripe_event.data.data.object.currency            Payment currency.
+ * @apiSuccess   {Number}    stripe_event.data.data.object.date                Timestamp of payment date.
+ * @apiSuccess   {String}    stripe_event.data.data.object.description         Payment description.
+ * @apiSuccess   {String}    stripe_event.data.data.object.destination         Payment destination token.
+ * @apiSuccess   {String}    stripe_event.data.data.object.failure_code        Payment failure code.
+ * @apiSuccess   {String}    stripe_event.data.data.object.failure_message     Payment failure message.
+ * @apiSuccess   {Boolean}   stripe_event.data.data.object.livemode            "True" if payment object is in livemode.
+ * @apiSuccess   {Object}    stripe_event.data.data.object.metadata            Payment metadata object.
+ * @apiSuccess   {String}    stripe_event.data.data.object.recipient           Payment recipient.
+
+ * @apiSuccess   {Object}    stripe_event.data.data.object.reversals                 Payment reversals object.
+ * @apiSuccess   {String}    stripe_event.data.data.object.reversals.object          Payment reversals object type.
+ * @apiSuccess   {Object[]}  stripe_event.data.data.object.reversals.data            List of payment reversals data.
+ * @apiSuccess   {Boolean}   stripe_event.data.data.object.reversals.has_more        "True" if payment reversals has more?
+ * @apiSuccess   {Number}    stripe_event.data.data.object.reversals.total_count     Total count of payment reversals.
+ * @apiSuccess   {String}    stripe_event.data.data.object.reversals.url             Url of payment reversals.
+
+ * @apiSuccess   {Boolean}   stripe_event.data.data.object.reversed                  "True" if payment reversed.
+ * @apiSuccess   {String}    stripe_event.data.data.object.source_transaction        Payment source transaction.
+ * @apiSuccess   {String}    stripe_event.data.data.object.statement_descriptor      Payment statement descriptor.
+ * @apiSuccess   {String}    stripe_event.data.data.object.status                    Payment status.
+ * @apiSuccess   {String}    stripe_event.data.data.object.type                      Payment type.
+
+ * @apiSuccess   {Object}    stripe_event.data.data.previous_attributes        Payment data previous attributes.
+
+ * @apiSuccess   {Boolean}   stripe_event.data.livemode             "True" if data is in livemode.
+ * @apiSuccess   {Number}    stripe_event.data.pending_webhooks     Number of pending webhooks.
+ * @apiSuccess   {String}    stripe_event.data.request              Data request.
+ * @apiSuccess   {String}    stripe_event.data.type                 Data type.
+ * @apiSuccess   {String}    stripe_event.data.user_id              Data user id.
+ **/
 route.get('/stripe-events/:id'
 , m.restrict(['admin'])
 , m.stripe.getStripeEvent()

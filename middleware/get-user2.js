@@ -44,7 +44,11 @@ module.exports = function( options ){
 
       if ( !req.session || !req.session.user || req.session.user.id == null ){
         req.user = new Models.User(
-          utils.extend( { groups: ['guest'], name: 'Guest' }, req.session.user )
+          utils.extend({
+            groups: ['guest']
+          , name: 'Guest'
+          , features: {}
+          }, req.session.user )
         );
 
         if ( !req.session.user ){

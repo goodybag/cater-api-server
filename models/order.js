@@ -303,40 +303,15 @@ module.exports = Model.extend({
    * @return {Boolean}           editability
    */
   isTipEditable: function(orderAuth) {
-    // Is the tip editable? This is the question. This is the criteria.
-    //
-    // 1. If the order has been canceled or rejected it is not editable.
-    //
-    // 2. If it is 3 days past the delivery date it is no editable.
-    //
-    // 3. The restaurant cannot edit it.
-    //
-    // 4. If it is before the delivery date then it is editable by the
-    // owner and the admin.
-    //
-    // 5. If it is past the delivery date it is editable by the client and admin.
-    //
-    // 6. If the order has been copied and thus datetime is undefined. Note:
-    // certain fields are not copied such as datetime, tip, tip_amount.
+    if (orderAuth.isAdmin) {
+      return true;
+    }
 
-    var now = moment();
-    var deliveryDateTime = moment.tz(this.attributes.datetime, this.attributes.timezone);
-    var cutOffDateTime = moment.tz(this.attributes.datetime, this.attributes.timezone).add(3, 'days');
+    if (this.attributes.payment_status !== null) {
+      return false;
+    }
 
-    if (utils.contains(['canceled', 'rejected'], this.attributes.status)) return false;
-    if (now > cutOffDateTime) return false;
-    if (orderAuth.isRestaurantManager) return false;
-
-    if (now < deliveryDateTime && (orderAuth.isAdmin || orderAuth.isOwner)) return true;
-    if (
-      (now > deliveryDateTime)
-      && (now < cutOffDateTime)
-      && (orderAuth.isAdmin || orderAuth.isOwner)
-    ) return true;
-
-    if (this.attributes.datetime === null) return true;
-
-    return false;
+    return true;
   },
 
   createCopy: function(callback) {

@@ -24,6 +24,7 @@ define( function( require, exports, module ){
     , delivery_fee: 0
     , payment_method_id: null
     , service_fee: 0
+    , priority_account_price_hike_percentage: 0
     })
     .methods({
       getTax: function(){
@@ -112,8 +113,8 @@ define( function( require, exports, module ){
           this.getSubTotal()
         , this.adjustment_amount
         , this.getTax()
-        , this.delivery_fee
-        , this.tip
+        , this.type === 'delivery' ? this.delivery_fee : 0
+        , this.type === 'delivery' ? this.tip : 0
         ].reduce( utils.add, 0 );
       }
 
@@ -132,7 +133,22 @@ define( function( require, exports, module ){
       }
 
     , getPriorityAccountCost: function(){
-        return Math.round( this.priority_account_price_hike_percentage * this.getSubTotal() );
+        var copyToAmenity = {
+          guests: this.guests
+        , priority_account_price_hike_percentage: this.priority_account_price_hike_percentage
+        };
+
+        return [
+          this.getItems().reduce( function( total, item ){
+            return total + (item.getPriorityAccountCost() * item.quantity);
+          }, 0 )
+
+        , this.amenities.reduce( function( total, amenity ){
+            return total + amenities(
+              utils.extend( {}, amenity, copyToAmenity )
+            ).getPriorityAccountCost();
+          }, 0 )
+        ].reduce( utils.add, 0 );
       }
 
     , getPriorityAccountSubTotal: function(){
@@ -165,7 +181,7 @@ define( function( require, exports, module ){
     });
 
     var hikeAmenity = function( amenity ){
-      amenity.price += Math.round( phike * amenity.price )
+      amenity.price += utils.nearestNickel( phike * amenity.price )
     };
 
     if ( Array.isArray( order.restaurant.amenities ) ){
@@ -182,24 +198,12 @@ define( function( require, exports, module ){
   Order.applyPriceHikeToItem = function( item, phike ){
     phike = phike || 0;
 
-    item.price += Math.round( phike * item.price );
-
-    if ( !Array.isArray( item.options_sets ) ) return;
-    
-    item.options_sets.forEach( function( set ){
-      set.options.forEach( function( option ){
-        option.price += Math.round( phike * option.price );
-      });
-    });
-
-    return item;
+    var cloned = items.create( utils.cloneDeep( item ) );
+    cloned.priority_account_price_hike_percentage = phike;
+    return utils.extend( item, cloned.toPriceHikedAttrs() );
   };
 
   Order.applyRestaurantTotals = function( order, options ){
-    if ( order.type !== 'courier' ){
-      return;
-    }
-
     options = options || {};
 
     var _order = options.useCachedSubTotal ? CachedOrder.create( order ) : Order.create( order );
@@ -208,11 +212,14 @@ define( function( require, exports, module ){
       _order.items = _order.orderItems;
     }
 
-    // Zero out price hike
+    // Zero out price hike and other user-specific fields
     _order.priority_account_price_hike_percentage = 0;
+    _order.user_adjustment_amount = 0;
 
-    order.delivery_fee  = _order.delivery_fee = 0;
-    order.tip           = _order.tip          = 0;
+    if ( order.type === 'courier' || order.type === 'pickup' ){
+      order.delivery_fee  = _order.delivery_fee = 0;
+      order.tip           = _order.tip          = 0;
+    }
 
     // Re-calculate totals using $0 for deliveryfee/tip
     order.total         = _order.getTotal();

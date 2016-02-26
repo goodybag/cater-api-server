@@ -576,6 +576,18 @@ describe('Orders Stamps', function(){
         amenity.getTotal();
       });
     });
+
+    it('.getPriorityAccountCost()', function(){
+      var amenity = orders.amenity({
+        guests: 12
+      , price: 100
+      , scale: 'multiply'
+      , enabled: true
+      , priority_account_price_hike_percentage: 0.27
+      });
+
+      assert.equal( amenity.getPriorityAccountCost(), 325 );
+    });
   });
 
   describe('Items', function(){
@@ -680,6 +692,44 @@ describe('Orders Stamps', function(){
       });
 
       assert.equal( item.getTotal(), 770 );
+    });
+
+    it('.getPriorityAccountCost() round to nearest nickel', function(){
+      var item = orders.item({
+        price: 222
+      , priority_account_price_hike_percentage: 0.1
+      , quantity: 2
+      , options_sets: [
+          { options:  [ { price: 50, state: true }
+                      , { price: 50, state: false }
+                      ]
+          }
+        , { options:  [ { price: 50, state: false }
+                      , { price: 100, state: true }
+                      ]
+          }
+        ]
+      });
+
+      assert.equal( item.getPriorityAccountCost(), 35 );
+
+      item = orders.item({
+        price: 232
+      , priority_account_price_hike_percentage: 0.1
+      , quantity: 2
+      , options_sets: [
+          { options:  [ { price: 50, state: true }
+                      , { price: 50, state: false }
+                      ]
+          }
+        , { options:  [ { price: 50, state: false }
+                      , { price: 100, state: true }
+                      ]
+          }
+        ]
+      });
+
+      assert.equal( item.getPriorityAccountCost(), 40 );
     });
   });
 

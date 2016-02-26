@@ -4,6 +4,7 @@ var m = require('../../middleware');
 var db = require('../../db');
 var controllers = require('../../controllers');
 var venter = require('../../lib/venter');
+var Order = require('stamps/orders/base');
 
 var route = module.exports = express.Router();
 
@@ -29,6 +30,15 @@ route.get('/:id'
     param: 'id'
   , stripe: true
   })
+, function( req, res, next ){
+    if ( !res.locals.restaurant.items ) return next();
+
+    res.locals.restaurant.items.forEach( function( item ){
+      Order.applyPriceHikeToItem( item, req.user.attributes.priority_account_price_hike_percentage );
+    });
+
+    return next();
+  }
 , m.jsonLocals('restaurant')
 );
 
@@ -203,11 +213,19 @@ route.get('/:restaurant_id/orders',
     req.queryObj.user_id = req.user.attributes.id;
     next();
   },
-  m.param('restaurant_id'),
+  m.param('restaurant_id', function( value, where ){
+    m.restaurantIdParam.applyValueToWhereClause(
+      value
+    , where
+    );
+  }),
   m.sort('-datetime'),
   m.pagination({ limit: 20 }),
   m.queryOptions({
-    many: [{
+    columns: ['orders.*']
+  , joins: [{ type: 'left', target: 'restaurants', on: { id: '$orders.restaurant_id$' } }]
+  , order: { id: 'desc' }
+  , many: [{
       table: 'order_items'
     , alias: 'items'
     }]

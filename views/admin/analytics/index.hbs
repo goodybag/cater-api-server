@@ -61,44 +61,38 @@ require(['jquery-loaded', '/components/Chart.js/Chart.js', 'handlebars', 'moment
     return stat.guests;
   });
 
-  // Graph defaults
-  var fillColor = 'rgba(220,220,220,0.2)';
-  var strokeColor = pointColor = pointHighlightStroke = 'rgba(220,220,220,1)';
-  var pointStrokeColor = pointHighlightFill = '#fff';
-  var datasetDefault = {
-    fillColor: fillColor
-  , strokeColor: strokeColor
-  , pointColor: strokeColor
-  , pointStrokeColor: pointStrokeColor
-  , pointHighlightFill: pointHighlightFill
-  , pointHighlightStroke: pointHighlightStroke
-  };
+  var volumeCtx = document.getElementById('chart-volume');
+  var guestsCtx = document.getElementById('chart-guests');
 
-  // Volume per month
-  var volumeCtx = document.getElementById('chart-volume').getContext('2d');
-  var volumeData = {
-    labels: labels,
-    datasets: [ _.defaults({ label: "Total volume per month", data: volumes }, datasetDefault ) ]
-  };
-  var volumeOpts = {
-    responsive: true
-  , scaleLabel: '$<%= parseInt(value).toLocaleString() %>'
-  , tooltipTemplate: "$<%= parseFloat(value).toLocaleString() %>",
-  };
-  var volumeChart = new Chart(volumeCtx).Line(volumeData, volumeOpts);
+  new Chart.Line(volumeCtx, {
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Order Volume',
+        data: volumes
+      }]
+    },
 
-  // Guests per month
-  var guestsCtx = document.getElementById('chart-guests').getContext('2d');
-  var guestsData = {
-    labels: labels,
-    datasets: [ _.defaults({ label: 'Guests fed per month', data: guests }, datasetDefault ) ]
-  };
-  var guestsOpts = {
-    responsive: true
-  , scaleLabel: '<%= parseInt(value).toLocaleString() %>'
-  , tooltipTemplate: "<%= parseInt(value).toLocaleString() %> guests",
-  };
-  var guestChart = new Chart(guestsCtx).Line(guestsData, guestsOpts);
+    options: {
+      responsive: true,
+      hoverMode: 'single'
+    }
+  });
+
+  new Chart.Line(guestsCtx, {
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Guests fed',
+        data: guests
+      }]
+    },
+
+    options: {
+      responsive: true,
+      hoverMode: 'single'
+    }
+  });
 });
 </script>
 {{/extend}}

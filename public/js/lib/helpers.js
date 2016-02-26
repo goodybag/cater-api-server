@@ -331,5 +331,10 @@ define(function(require, exports, module) {
     return ((a % n) + n) % n;
   }
 
+  helpers.nearestNickel = function( amt ){
+    var amtMod5 = amt % 5;
+    return amt - amtMod5 + (amtMod5 < 3 ? 0 : 5);
+  };
+
   return module.exports = helpers;
 });

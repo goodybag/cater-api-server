@@ -4,6 +4,17 @@
 -- Event Handlers --
 --------------------
 
+create or replace function on_user_create()
+returns trigger as $$
+begin
+  update users set priority_account_price_hike_percentage = (
+    select regions.default_price_hike from regions
+    where regions.id = users.region_id
+  ) where id = NEW.id;
+  return NEW;
+end;
+$$ language plpgsql;
+
 create or replace function on_order_user_change()
 returns trigger as $$
 begin

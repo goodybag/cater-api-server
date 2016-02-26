@@ -1,3 +1,10 @@
+drop trigger if exists on_user_create on users;
+create trigger on_user_create
+    after insert
+    on users
+    for each row
+    execute procedure on_user_create();
+
 drop trigger if exists on_order_user_change on orders;
 create trigger on_order_user_change
     after insert or update of user_id

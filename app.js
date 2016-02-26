@@ -27,6 +27,9 @@ var
 hbs.handlebars = require('handlebars');
 var app = module.exports = express();
 
+app.set('view engine', 'hbs');
+app.set('port', config.http.port || 3000);
+
 app.use( middleware.logger() );
 
 // Intercept status codes and render HTML if necessary
@@ -162,9 +165,6 @@ app.use( function devErrors( error, req, res, next ){
 });
 
 app.use(require('@goodybag/scheduler-app')(config.postgresConnStr))
-
-app.set('view engine', 'hbs');
-app.set('port', config.http.port || 3000);
 
 /**
  * Request & Response prototype updates

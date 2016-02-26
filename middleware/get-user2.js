@@ -19,14 +19,16 @@ module.exports = function( options ){
                         , where: { is_default: true }
                         }
                       ]
-            , many:   [ { table: 'addresses' } ]
+            , many:   [ { table: 'addresses' }
+                      , { table: 'features_users'
+                        , alias: 'features'
+                        , mixin: [{ table: 'features' }]
+                        }
+                      ]
             , pluck:  [ { table: 'users_groups', alias: 'groups', column: 'group' } ]
             }
           ]
   };
-
-  var uOne = queryOptions.one[0].one;
-  var uMany = queryOptions.one[0].many;
 
   var middleware = sessionAndUser({
     secret: config.session.secret
@@ -42,7 +44,11 @@ module.exports = function( options ){
 
       if ( !req.session || !req.session.user || req.session.user.id == null ){
         req.user = new Models.User(
-          utils.extend( { groups: ['guest'], name: 'Guest' }, req.session.user )
+          utils.extend({
+            groups: ['guest']
+          , name: 'Guest'
+          , features: {}
+          }, req.session.user )
         );
 
         if ( !req.session.user ){
@@ -71,6 +77,13 @@ module.exports = function( options ){
       if ( !req.user.isGuest() ){
         req.logger.options.data.req.user = req.logger.options.data.req.user || {};
         req.logger.options.data.req.user.id = req.user.attributes.id;
+      }
+
+      if ( Array.isArray( req.user.attributes.features ) ){
+        req.user.attributes.features = req.user.attributes.features.reduce( function( result, feature ){
+          result[ feature.id ] = feature;
+          return result;
+        }, {} );
       }
 
       next();

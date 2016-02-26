@@ -19,14 +19,16 @@ module.exports = function( options ){
                         , where: { is_default: true }
                         }
                       ]
-            , many:   [ { table: 'addresses' } ]
+            , many:   [ { table: 'addresses' }
+                      , { table: 'features_users'
+                        , alias: 'features'
+                        , mixin: [{ table: 'features' }]
+                        }
+                      ]
             , pluck:  [ { table: 'users_groups', alias: 'groups', column: 'group' } ]
             }
           ]
   };
-
-  var uOne = queryOptions.one[0].one;
-  var uMany = queryOptions.one[0].many;
 
   var middleware = sessionAndUser({
     secret: config.session.secret
@@ -71,6 +73,13 @@ module.exports = function( options ){
       if ( !req.user.isGuest() ){
         req.logger.options.data.req.user = req.logger.options.data.req.user || {};
         req.logger.options.data.req.user.id = req.user.attributes.id;
+      }
+
+      if ( Array.isArray( req.user.attributes.features ) ){
+        req.user.attributes.features = req.user.attributes.features.reduce( function( result, feature ){
+          result[ feature.id ] = feature;
+          return result;
+        }, {} );
       }
 
       next();

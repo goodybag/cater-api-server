@@ -1,5 +1,8 @@
+'use strict';
+
 var express = require('express');
 var gplaces = require('gplaces');
+var caterWeb = require('@goodybag/cater-web');
 var config = require('../config');
 var controllers = require('../controllers');
 var utils = require('../utils');
@@ -37,11 +40,20 @@ module.exports.register = function(app) {
   }
 
   if (config.enableCaterWeb) {
-    app.use(require('@goodybag/cater-web').makeHandler({
+    let caterWebMiddleware = caterWeb.makeHandler({
       env: process.env.NODE_ENV,
       serverRendering: config.caterWebServerRendering,
       baseUrl: config.baseUrl
-    }));
+    });
+
+    caterWeb.mountStatic(app);
+
+    app.use( function( req, res, next ){
+      // Always use legacy for share links
+      if ( req.query.edit_token ) return next();
+      if ( !req.user.attributes.features['cater-web'] ) return next();
+      caterWebMiddleware( req, res, next );
+    });
   }
 
   app.use(require('./public'));

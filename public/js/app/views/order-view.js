@@ -12,7 +12,7 @@ define(function(require, exports, module) {
   var Amenity = require('app/models/amenity');
   var TipView = require('./tip-view');
   var helpers = require('hb-helpers');
-
+  var spinner = require('spinner');
 
   var OrderView = FormView.extend({
 
@@ -291,6 +291,8 @@ define(function(require, exports, module) {
       if (selector) this.$el.find( selector ).removeClass('hide');
 
       $('html,body').animate({ scrollTop: 0 });
+
+      spinner.stop();
 
       return this;
     },

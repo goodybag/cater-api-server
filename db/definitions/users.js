@@ -93,6 +93,12 @@ define(function(require) {
     , notNull: true
     , default: 0
     }
+
+  , display_invoice_instead_of_order: {
+      type: types.boolean
+    , nullable: false
+    , default: 'false'
+    }
   };
 
   definition.indices = {};

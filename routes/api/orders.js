@@ -25,7 +25,7 @@ route.get('/', m.restrict(['admin']), m.pagination(), m.param('status'), functio
   }]
 }), m.find(db.orders));
 
-route.post('/', m.geocodeBody(), controllers.orders.create);
+route.post('/', m.geocodeBody(), controllers.orders.apiCreate);
 
 route.get('/search', function(req, res, next) {
   var query = req.query.q;
@@ -72,47 +72,21 @@ route.put('/silent/:id', m.restrict(['admin']), m.param('id'), m.queryOptions({
   }]
 }), m.audit.orderType(), m.update(db.orders));
 
-route.put('/:id', m.restrict(['admin']), m.param('id'), m.queryOptions({
-  returning: ['*', {
-    type: 'select',
-    table: 'orders',
-    columns: ['type'],
-    alias: 'old_type',
-    where: {
-      id: '$orders.id$'
-    }
-  }]
-}), m.audit.orderType(), m.after(function(req, res, next) {
-  if (res.statusCode >= 300 || res.statusCode < 200) {
-    return next();
-  }
-
-  var id = req.params.id || req.query.id || req.body.id;
-  var payment_status = req.params.payment_status || req.query.payment_status || req.body.payment_status;
-  venter.emit('order:change', id);
-  venter.emit('order:paymentStatus:change', payment_status, id);
-
-  next();
-})
-  // Update
-, function( req, res, next ){
-    m.db.orders.update( req.queryObj, req.body, req.queryOptions )( req, res, next )
-  }
-  // Handle event emitting and sending result
-, function( req, res ){
-    var orders = res.locals.orders;
-
-    res.json( orders[0] );
-
-    var orderTypeChanged = orders &&
-                            orders[0] &&
-                            orders[0].type !== orders[0].old_type;
-
-    if ( orderTypeChanged ){
-      var order = orders[0];
-      venter.emit( 'order:type:change', order.type, order.old_type, order, req.user );
-    }
-  }
+route.put('/:id'
+, m.getOrder2({
+    param: 'id'
+  , items: true
+  , user: true
+  , userAddresses: true
+  , userPaymentMethods: true
+  , restaurant: true
+  , deliveryService: true
+  , applyPriceHike: true
+  })
+, m.restrict(['order-owner', 'order-restaurant', 'admin'])
+, m.audit.orderType()
+, m.geocodeBody()
+, controllers.orders.apiUpdate
 );
 
 route.delete('/:id', m.restrict(['admin']), m.param('id'), m.remove(db.orders));

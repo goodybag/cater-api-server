@@ -169,6 +169,16 @@ errors.input.ADDRESS_EXISTS = {
 
 errors[errors.input.ADDRESS_EXISTS.code] = errors.input.ADDRESS_EXISTS;
 
+errors.input.FULFILLABILITY_FAILED = {
+  type: "input"
+, code: "0305"
+, httpCode: "400"
+, name: "FULFILLABILITY_FAILED"
+, message: "One or more fulfillability validators failed."
+};
+
+errors[errors.input.FULFILLABILITY_FAILED.code] = errors.input.FULFILLABILITY_FAILED;
+
 /**
  * Stripe Errors
  */

@@ -1,3 +1,5 @@
+'use strict';
+
 var db      = require('../../db');
 var errors  = require('../../errors');
 var utils   = require('../../utils');
@@ -20,6 +22,7 @@ var Address = require('stamps/addresses');
 var UserAddresses = require('stamps/addresses/user-addresses-db');
 var GeocodeRequest = require('stamps/requests/geocode');
 var Order = require('stamps/orders/base');
+var OrderFulfillability = require('stamps/orders/fulfillability');
 
 var addressFields = [
   'street'
@@ -182,7 +185,7 @@ module.exports.get = function(req, res) {
   });
 };
 
-module.exports.create = function(req, res) {
+module.exports.create = function(req, res, next) {
   var order = new models.Order(
     utils.extend({
       user_id: req.user.attributes.user ? req.user.attributes.user.id : null
@@ -213,9 +216,60 @@ module.exports.create = function(req, res) {
       });
     });
   });
-}
+};
 
-module.exports.update = function(req, res) {
+module.exports.apiCreate = function(req, res, next) {
+  var order = new models.Order(
+    utils.extend({
+      user_id: req.user.attributes.user ? req.user.attributes.user.id : null
+    }, req.body)
+  );
+
+  if ( req.body.restaurant_id ){
+    var restaurant = db.cache.restaurants.byId( req.body.restaurant_id );
+
+    if ( restaurant ){
+      let result = OrderFulfillability
+        .create( utils.extend( {}, order.attributes, {
+          restaurant: restaurant
+        }))
+        .why();
+
+      if ( Array.isArray( result ) && result.length ){
+        let error = utils.clone( errors.input.FULFILLABILITY_FAILED );
+        error.details = result;
+        return next( error );
+      }
+    }
+  }
+
+  order.save(function(err) {
+    if (err) return res.error(errors.internal.DB_FAILURE, err);
+
+    if ( req.user.isGuest() ){
+      if ( !req.session.guestOrders ){
+        req.session.guestOrders = [];
+      }
+
+      req.session.guestOrders.push( order.attributes.id );
+    }
+
+    db.order_types.insert({
+      order_id: order.attributes.id
+    , user_id:  order.attributes.user_id
+    , type:     order.attributes.type
+    },
+    function( err ){
+      if ( err ) return res.error(errors.internal.DB_FAILURE, err);
+
+      req.session.save( function(){
+        res.send(201, order.toJSON());
+      });
+    });
+  });
+};
+
+module.exports.update = function(req, res, next) {
   var logger = req.logger.create('Controller-Update');
 
   // get keys from order def schema that allow editable access
@@ -237,6 +291,8 @@ module.exports.update = function(req, res) {
 
   var datetimeChanged = req.body.datetime && order.attributes.datetime !== req.body.datetime;
   var oldDatetime = order.attributes.datetime;
+  var oldType = order.attributes.type;
+  var oldPaymentStatus = order.attributes.payment_status;
 
   var isTipEditable = order.isTipEditable({
     isOwner: req.order.isOwner,
@@ -297,6 +353,132 @@ module.exports.update = function(req, res) {
 
     if ( datetimeChanged ){
       venter.emit( 'order:datetime:change', order, oldDatetime );
+    }
+
+    if ( oldType !== order.attributes.type ){
+      venter.emit( 'order:type:change', order.attributes.type, oldType, order.attributes, req.user );
+    }
+
+    if ( oldPaymentStatus !== order.attributes.payment_status ){
+      venter.emit('order:payment_status:change', order.attributes.payment_status, order.attributes.id);
+    }
+  });
+};
+
+var fieldsRequiringFulfillabilityCheck = [
+  'zip', 'guests', 'datetime'
+];
+
+module.exports.apiUpdate = function(req, res, next) {
+  var logger = req.logger.create('Controller-Update');
+
+  // get keys from order def schema that allow editable access
+  var updateableFields = Object.keys( orderDefinitionSchema ).filter( function( key ){
+    return req.user.attributes.groups.some( function( group ){
+      if ( !Array.isArray( orderDefinitionSchema[ key ].editable ) ){
+        return true;
+      }
+
+      return utils.contains( orderDefinitionSchema[ key ].editable, group );
+    });
+  });
+
+  var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
+  if (req.order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
+
+  // Instantiate order model for save functionality
+  var order = new models.Order(req.order);
+
+  if ( fieldsRequiringFulfillabilityCheck.some( key => key in req.body ) ){
+    var restaurant = db.cache.restaurants.byId( req.order.restaurant_id );
+
+    if ( restaurant ){
+      let result = OrderFulfillability
+        .create( utils.extend( {}, order.attributes, {
+          restaurant: restaurant
+        }, req.body ))
+        .why();
+
+      if ( Array.isArray( result ) && result.length ){
+        let error = utils.clone( errors.input.FULFILLABILITY_FAILED );
+        error.details = result;
+        return next( error );
+      }
+    }
+  }
+
+  var datetimeChanged = req.body.datetime && order.attributes.datetime !== req.body.datetime;
+  var oldDatetime = order.attributes.datetime;
+  var oldType = order.attributes.type;
+  var oldPaymentStatus = order.attributes.payment_status;
+
+  var isTipEditable = order.isTipEditable({
+    isOwner: req.order.isOwner,
+    isRestaurantManager: req.order.isRestaurantManager,
+    isAdmin: req.order.isAdmin,
+  });
+
+  if (!isTipEditable) updateableFields = utils.without(updateableFields, 'tip', 'tip_percent');
+
+  utils.extend(order.attributes, utils.pick(req.body, updateableFields));
+
+  utils.async.series([
+    // Geocode the address on the order if necessary
+    function( next ){
+      var bodyAddress = Address( req.body );
+
+      // No address info, no need to geocode
+      if ( bodyAddress.fulfilledComponents().length === 0 ){
+        return next();
+      }
+
+      if ( !req.body.street ){
+        return next();
+      }
+
+      var orderAddress = Address( order.attributes );
+
+      if ( !orderAddress.hasMinimumComponents() ){
+        return next();
+      }
+
+      GeocodeRequest()
+        .address( orderAddress.toString({ street2: false }) )
+        .send( function( error, result ){
+          if ( error ){
+            return next( error );
+          }
+
+          if ( !result.isValidAddress() ){
+            return res.error( errors.input.INVALID_ADDRESS );
+          }
+
+          order.attributes.lat_lng = result.toAddress().lat_lng;
+
+          return next();
+        });
+    }
+
+  , order.save.bind( order )
+  ], function( error ){
+    if ( error ){
+      return res.error( errors.internal.UNKNOWN, error );
+    }
+
+    res.send( order.toJSON({ plain:true }) );
+
+    venter.emit( 'order:change', order.attributes.id );
+
+    if ( datetimeChanged ){
+      venter.emit( 'order:datetime:change', order, oldDatetime );
+    }
+
+    if ( oldType !== order.attributes.type ){
+      venter.emit( 'order:type:change', order.attributes.type, oldType, order.attributes, req.user );
+    }
+
+    if ( oldPaymentStatus !== order.attributes.payment_status ){
+      venter.emit('order:payment_status:change', order.attributes.payment_status, order.attributes.id);
     }
   });
 };

@@ -23,6 +23,7 @@ var UserAddresses = require('stamps/addresses/user-addresses-db');
 var GeocodeRequest = require('stamps/requests/geocode');
 var Order = require('stamps/orders/base');
 var OrderFulfillability = require('stamps/orders/fulfillability');
+var odsChecker = require('order-delivery-service-checker');
 
 var addressFields = [
   'street'
@@ -229,10 +230,20 @@ module.exports.apiCreate = function(req, res, next) {
     var restaurant = db.cache.restaurants.byId( req.body.restaurant_id );
 
     if ( restaurant ){
+      // We need a POJO version of the order that has the restaurant
+      // added to it so we can check things like fulfillability and
+      // the Order Delivery Service Criteria Checker
+      let orderWithRestaurant = utils.extend( {}, order.attributes, {
+        restaurant: restaurant
+      });
+
+      // Determine whether or not the order should
+      order.attributes.type = orderWithRestaurant.type = odsChecker.check(
+        orderWithRestaurant
+      ) ? 'courier' : 'delivery';
+
       let result = OrderFulfillability
-        .create( utils.extend( {}, order.attributes, {
-          restaurant: restaurant
-        }))
+        .create( orderWithRestaurant )
         .why();
 
       if ( Array.isArray( result ) && result.length ){

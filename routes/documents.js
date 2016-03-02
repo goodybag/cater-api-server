@@ -4,6 +4,7 @@ var m = require('../middleware');
 var db = require('../db');
 var controllers = require('../controllers');
 var config = require('../config');
+var errors = require('../errors');
 var PMS = require('stamps/payment-summaries/db');
 var Orders = require('stamps/orders');
 
@@ -102,12 +103,29 @@ route.get(
   })
 );
 
-route.get('/payment-summaries/ps-:psid.pdf', m.restrict(['admin']), m.s3({
-  path: '/payment-summary-:psid.pdf',
-  key: config.amazon.awsId,
-  secret: config.amazon.awsSecret,
-  bucket: config.paymentSummaries.bucket
-}));
+route.get('/payment-summaries/ps-:psid.pdf'
+, m.restrict(['admin'])
+, function( req, res, next ){
+    m.db.payment_summaries.findOne( req.params.psid, {
+      one: [{ table: 'restaurants', alias: 'restaurant' }]
+    })( req, res, next );
+  }
+, function( req, res, next ){
+    if ( !res.locals.payment_summary ){
+      return next( errors.internal.NOT_FOUND );
+    }
+    var restaurant = res.locals.payment_summary.restaurant;
+    var filename = `ps-${req.params.psid}-${restaurant.text_id}.pdf`;
+    res.header('Content-Disposition', `inline; filename="${filename}"`);
+    return next();
+  }
+, m.s3({
+    path: '/payment-summary-:psid.pdf'
+  , key: config.amazon.awsId
+  , secret: config.amazon.awsSecret
+  , bucket: config.paymentSummaries.bucket
+  })
+);
 
 route.get( config.paymentSummaries.route
 , m.basicAuth()

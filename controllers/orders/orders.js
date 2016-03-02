@@ -404,10 +404,22 @@ module.exports.apiUpdate = function(req, res, next) {
     var restaurant = db.cache.restaurants.byId( req.order.restaurant_id );
 
     if ( restaurant ){
+      // We need a POJO version of the order that has the restaurant
+      // added to it so we can check things like fulfillability and
+      // the Order Delivery Service Criteria Checker
+      let orderWithRestaurant = utils.extend( {}, order.attributes, req.body, {
+        restaurant: restaurant
+      });
+
+      // Determine whether or not the order should
+      order.attributes.type = orderWithRestaurant.type = odsChecker.check(
+        orderWithRestaurant
+      ) ? 'courier' : 'delivery';
+
+      console.log('courier', odsChecker.why( orderWithRestaurant ));
+
       let result = OrderFulfillability
-        .create( utils.extend( {}, order.attributes, {
-          restaurant: restaurant
-        }, req.body ))
+        .create( orderWithRestaurant )
         .why();
 
       if ( Array.isArray( result ) && result.length ){

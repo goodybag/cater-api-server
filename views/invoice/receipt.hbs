@@ -44,7 +44,13 @@
 </div>
 
 <div class="doc-id-info order-number-info">
-  <span class="doc-id-key order-number-key">Order:</span>
+  <span class="doc-id-key order-number-key">
+    {{#if order.user.display_invoice_instead_of_order}}
+      Invoice:
+    {{else}}
+      Order:
+    {{/if}}
+  </span>
   <span class="doc-id order-number">#{{order.id}}</span>
 </div>
 {{/extend}}

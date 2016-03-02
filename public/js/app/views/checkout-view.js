@@ -237,6 +237,8 @@ define(function(require, exports, module) {
         return this.addressView.saveAddress( function( error ){
           if ( !error ){
             this.submit(e);
+          } else {
+            spinner.stop();
           }
         }.bind( this ));
       }

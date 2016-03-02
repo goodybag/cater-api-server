@@ -3,7 +3,13 @@
 <link rel="stylesheet" href="{{cdn (format 'dist/<%= version %>/css/receipt.css' pkg)}}">
 {{/extend}}
 
-{{#extend "title"}} - Receipt{{/extend}}
+{{#extend "title"}} -
+  {{#if order.user.display_invoice_instead_of_order}}
+  Invoice
+  {{else}}
+  Receipt
+  {{/if}}
+{{/extend}}
 
 {{#if (contains user.groups 'admin')}}
   {{#extend "prefix-title"}}#{{order.id}} {{/extend}}
@@ -121,7 +127,7 @@
       <div class="panel-body">
         <div class="clearfix">
           <div class="delivery-header pull-left">
-            {{order.restaurant.name}} [Order #{{order.id}}]
+            {{order.restaurant.name}} [{{#if order.user.display_invoice_instead_of_order}}Invoice{{else}}Order{{/if}} #{{order.id}}]
             {{#unless order.restaurant.is_hidden}}{{#unless isRestaurantManager}}
             <a href="javascript:void(0);" class="copy-order-btn text-muted">Order Again?</a>
             {{/unless}}{{/unless}}

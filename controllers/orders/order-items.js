@@ -85,6 +85,8 @@ module.exports.add = function(req, res, next) {
       );
 
       res.send(201, result);
+
+      venter.emit('order:items:change', order, result);
     });
   });
 }
@@ -111,6 +113,7 @@ module.exports.update = function(req, res, next) {
       res.send( result );
 
       venter.emit( 'order:change', req.params.oid );
+      venter.emit('order:items:change', req.order, result);
     });
   });
 }
@@ -124,5 +127,6 @@ module.exports.remove = function(req, res, next) {
     res.send(200, rows[0]);
 
     venter.emit( 'order:change', req.params.oid );
+    venter.emit('order:items:change', req.order, result);
   });
 }

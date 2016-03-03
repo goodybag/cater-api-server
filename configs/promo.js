@@ -13,7 +13,7 @@ var promo = {
 , jacob: {
     email: 'jacobparker@goodybag.com'
   , promo_code: [
-      'gbaustin15', 'gbatx75', 'gbausfree', 'gbfeb25'
+      'gbaustin15', 'gbatx75', 'gbfeb25'
     ]
   }
 , debbie: {
@@ -26,7 +26,7 @@ var promo = {
   }
 , ramone: {
     email: 'ramonejohnson@goodybag.com'
-  , promo_code: ['gbseafree', 'gbsea75', 'gbsea15', 'gbrefsea', 'gbfreesea', 'seattlegb' ]
+  , promo_code: ['gbsea75', 'gbsea15', 'gbrefsea', 'gbfreesea', 'seattlegb' ]
   }
 , virginia: {
     email: 'virginiasims@goodybag.com'

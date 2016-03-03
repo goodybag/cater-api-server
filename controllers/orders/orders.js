@@ -382,6 +382,8 @@ var fieldsRequiringFulfillabilityCheck = [
 
 module.exports.apiUpdate = function(req, res, next) {
   var logger = req.logger.create('Controller-Update');
+  var order = req.order;
+  var $update = {};
 
   // get keys from order def schema that allow editable access
   var updateableFields = Object.keys( orderDefinitionSchema ).filter( function( key ){
@@ -395,28 +397,23 @@ module.exports.apiUpdate = function(req, res, next) {
   });
 
   var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
-  if (req.order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
-
-  // Instantiate order model for save functionality
-  var order = new models.Order(req.order);
+  if (order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
 
   if ( fieldsRequiringFulfillabilityCheck.some( key => key in req.body ) ){
-    var restaurant = db.cache.restaurants.byId( req.order.restaurant_id );
+    var restaurant = db.cache.restaurants.byId( order.restaurant_id );
 
     if ( restaurant ){
       // We need a POJO version of the order that has the restaurant
       // added to it so we can check things like fulfillability and
       // the Order Delivery Service Criteria Checker
-      let orderWithRestaurant = utils.extend( {}, order.attributes, req.body, {
+      let orderWithRestaurant = utils.extend( {}, order, req.body, {
         restaurant: restaurant
       });
 
       // Determine whether or not the order should
-      order.attributes.type = orderWithRestaurant.type = odsChecker.check(
+      $update.type = orderWithRestaurant.type = odsChecker.check(
         orderWithRestaurant
       ) ? 'courier' : 'delivery';
-
-      console.log('courier', odsChecker.why( orderWithRestaurant ));
 
       let result = OrderFulfillability
         .create( orderWithRestaurant )
@@ -430,22 +427,24 @@ module.exports.apiUpdate = function(req, res, next) {
     }
   }
 
-  var datetimeChanged = req.body.datetime && order.attributes.datetime !== req.body.datetime;
-  var oldDatetime = order.attributes.datetime;
-  var oldType = order.attributes.type;
-  var oldPaymentStatus = order.attributes.payment_status;
+  var datetimeChanged = req.body.datetime && order.datetime !== req.body.datetime;
+  var oldDatetime = order.datetime;
+  var oldType = order.type;
+  var oldPaymentStatus = order.payment_status;
 
-  var isTipEditable = order.isTipEditable({
-    isOwner: req.order.isOwner,
-    isRestaurantManager: req.order.isRestaurantManager,
-    isAdmin: req.order.isAdmin,
-  });
+  var isTipEditable = models.Order.prototype.isTipEditable.call(
+    { attributes: order },
+    { isOwner: req.order.isOwner,
+      isRestaurantManager: req.order.isRestaurantManager,
+      isAdmin: req.order.isAdmin,
+    }
+  );
 
   if (!isTipEditable) updateableFields = utils.without(updateableFields, 'tip', 'tip_percent');
 
-  utils.extend(order.attributes, utils.pick(req.body, updateableFields));
+  utils.extend($update, utils.pick(req.body, updateableFields));
 
-  utils.async.series([
+  utils.async.waterfall([
     // Geocode the address on the order if necessary
     function( next ){
       var bodyAddress = Address( req.body );
@@ -459,7 +458,7 @@ module.exports.apiUpdate = function(req, res, next) {
         return next();
       }
 
-      var orderAddress = Address( order.attributes );
+      var orderAddress = Address( order );
 
       if ( !orderAddress.hasMinimumComponents() ){
         return next();
@@ -476,32 +475,50 @@ module.exports.apiUpdate = function(req, res, next) {
             return res.error( errors.input.INVALID_ADDRESS );
           }
 
-          order.attributes.lat_lng = result.toAddress().lat_lng;
+          $update.lat_lng = result.toAddress().lat_lng;
 
           return next();
         });
     }
 
-  , order.save.bind( order )
+  , function( next ){
+      var options = { returning: ['*'] };
+
+      db.orders.update( order.id, $update, options, function( error, results ){
+        if ( error ){
+          req.logger.warn('Error updating order', {
+            error: error
+          });
+
+          return next( error );
+        }
+
+        return next( null, results[0] );
+      });
+    }
+
+  , function( orderResult, next ){
+      res.json( orderResult );
+
+      venter.emit( 'order:change', order.id );
+
+      if ( datetimeChanged ){
+        venter.emit( 'order:datetime:change', order, oldDatetime );
+      }
+
+      if ( oldType !== orderResult.type ){
+        venter.emit( 'order:type:change', orderResult.type, oldType, orderResult, req.user );
+      }
+
+      if ( oldPaymentStatus !== orderResult.payment_status ){
+        venter.emit('order:payment_status:change', orderResult.payment_status, orderResult.id);
+      }
+
+      return next();
+    }
   ], function( error ){
     if ( error ){
       return res.error( errors.internal.UNKNOWN, error );
-    }
-
-    res.send( order.toJSON({ plain:true }) );
-
-    venter.emit( 'order:change', order.attributes.id );
-
-    if ( datetimeChanged ){
-      venter.emit( 'order:datetime:change', order, oldDatetime );
-    }
-
-    if ( oldType !== order.attributes.type ){
-      venter.emit( 'order:type:change', order.attributes.type, oldType, order.attributes, req.user );
-    }
-
-    if ( oldPaymentStatus !== order.attributes.payment_status ){
-      venter.emit('order:payment_status:change', order.attributes.payment_status, order.attributes.id);
     }
   });
 };

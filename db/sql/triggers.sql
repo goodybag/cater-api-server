@@ -17,6 +17,7 @@ create trigger on_order_restaurant_change
     after update of restaurant_id
     on orders
     for each row
+    when ( OLD.restaurant_id != NEW.restaurant_id )
     execute procedure on_order_restaurant_change();
 
 drop trigger if exists order_order_items_change on order_items;

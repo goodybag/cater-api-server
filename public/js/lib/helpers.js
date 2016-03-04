@@ -114,11 +114,11 @@ define(function(require, exports, module) {
    */
   helpers.hasPropsDeep = function( obj, properties ){
     if ( !_.isObject( obj ) ){
-      throw new Error('Invalid first parameter');
+      return false;
     }
 
     if ( !_.isArray( properties ) ){
-      throw new Error('Invalid second parameter');
+      throw new Error('Invalid second parameter. Must be an array of property descriptors');
     }
 
     var prop, levels;

@@ -41,6 +41,25 @@ module.exports = function( options ){
 
   return function( req, res, next ){
     var logger = req.logger.create('Middleware-GeocodeBody');
+
+    if ( req.body.address ){
+      return GeocodeRequest()
+        .address( req.body.address )
+        .send( function( error, result ){
+          if ( error ){
+            return next( error );
+          }
+
+          if ( !result.isValidAddress() ){
+            return res.error( errors.input.INVALID_ADDRESS );
+          }
+
+          utils.extend( req.body, result.toAddress() );
+
+          return next();
+        });
+    }
+
     var bodyAddress = Address( req.body );
 
     if ( options.defaultsWith ){

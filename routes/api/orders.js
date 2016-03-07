@@ -25,7 +25,11 @@ route.get('/', m.restrict(['admin']), m.pagination(), m.param('status'), functio
   }]
 }), m.find(db.orders));
 
-route.post('/', m.geocodeBody(), controllers.orders.apiCreate);
+route.post('/'
+, m.geocodeBody()
+, m.copyMatchingAddress()
+, controllers.orders.apiCreate
+);
 
 route.get('/search', function(req, res, next) {
   var query = req.query.q;
@@ -86,6 +90,7 @@ route.put('/:id'
 , m.restrict(['order-owner', 'order-restaurant', 'admin'])
 , m.audit.orderType()
 , m.geocodeBody()
+, m.copyMatchingAddress()
 , controllers.orders.apiUpdate
 );
 

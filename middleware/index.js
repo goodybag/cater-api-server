@@ -10,6 +10,7 @@ module.exports = utils.extend(
   , audit: require('./audit')
   , basicAuth: require('./basic-session-auth')
   , consumeNewSignup: require('./consume-new-signup')
+  , copyMatchingAddress: require('./copy-matching-address')
   , cors: require('./cors')
   , csv: require('./csv')
   , defaultLocals: require('./default-locals')

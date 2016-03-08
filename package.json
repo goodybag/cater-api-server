@@ -33,7 +33,7 @@
     "Faker": "0.5.x",
     "amanda": "~0.4.7",
     "analytics-node": "~0.6.0",
-    "async": "0.2.x",
+    "async": "^1.5.2",
     "backbone": "^1.1.2",
     "balanced-official": "goodybag/balanced-node",
     "basic-auth-connect": "^1.0.0",

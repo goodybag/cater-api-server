@@ -25,6 +25,7 @@
           </p>
         {{/if}}
       </div>
+
       {{> landing_register_form_fields}}
 
       <p class="already-user">Already have an account? <a href="/login">Sign in</a></p>
@@ -44,6 +45,9 @@
         fields: ['password', 'password2']
       , onError: function(){
           $('.errors').html('<p class="error">Passwords must match</p>');
+          $('[name="password"], [name="password2"]')
+            .parent('.form-group')
+            .addClass('has-error');
         }
       });
       analytics.page('Registration')

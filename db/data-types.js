@@ -64,6 +64,7 @@ module.exports = {
 , uuid: 'uuid'
 , xml: 'xml'
 , json: 'json'
+, jsonb: 'jsonb'
 , array: array()
 
   // custom types

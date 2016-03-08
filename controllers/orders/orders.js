@@ -216,6 +216,15 @@ module.exports.create = function(req, res, next) {
         res.send(201, order.toJSON());
       });
     });
+
+    db.order_revisions.track( order.attributes.id, req.user.attributes.id, 'create', function( error ){
+      if ( error ){
+        req.logger.warn('Error tracking order revision', {
+          order: { id: order.attributes.id }
+        , error: error
+        });
+      }
+    });
   });
 };
 
@@ -276,6 +285,15 @@ module.exports.apiCreate = function(req, res, next) {
       req.session.save( function(){
         res.send(201, order.toJSON());
       });
+    });
+
+    db.order_revisions.track( order.attributes.id, req.user.attributes.id, 'create', function( error ){
+      if ( error ){
+        req.logger.warn('Error tracking order revision', {
+          order: { id: order.attributes.id }
+        , error: error
+        });
+      }
     });
   });
 };
@@ -373,6 +391,15 @@ module.exports.update = function(req, res, next) {
     if ( oldPaymentStatus !== order.attributes.payment_status ){
       venter.emit('order:payment_status:change', order.attributes.payment_status, order.attributes.id);
     }
+
+    db.order_revisions.track( order.attributes.id, req.user.attributes.id, 'update', function( error ){
+      if ( error ){
+        req.logger.warn('Error tracking order revision', {
+          order: { id: order.attributes.id }
+        , error: error
+        });
+      }
+    });
   });
 };
 
@@ -514,6 +541,15 @@ module.exports.apiUpdate = function(req, res, next) {
         venter.emit('order:payment_status:change', orderResult.payment_status, orderResult.id);
       }
 
+      db.order_revisions.track( order.id, req.user.attributes.id, 'update', function( error ){
+        if ( error ){
+          req.logger.warn('Error tracking order revision', {
+            order: { id: order.id }
+          , error: error
+          });
+        }
+      });
+
       return next();
     }
   ], function( error ){
@@ -645,6 +681,16 @@ module.exports.changeStatus = function(req, res) {
   db.orders.update( req.order.id, $update, function(err){
     logger.info('Saving order complete!', err ? { error: err } : null);
     if (err) return res.error(errors.internal.DB_FAILURE, err);
+
+    db.order_revisions.track( req.order.id, req.user.attributes.id, 'change-status', function( error ){
+      if ( error ){
+        req.logger.warn('Error tracking order revision', {
+          order: { id: req.order.id }
+        , error: error
+        });
+      }
+    });
+
     return done();
   });
 };
@@ -668,6 +714,15 @@ module.exports.duplicate = function(req, res, next) {
     var obj = newOrder.toJSON();
     obj.lostItems = lostItems;
     res.json(201, obj);
+
+    db.order_revisions.track( newOrder.attributes.id, req.user.attributes.id, 'duplication', function( error ){
+      if ( error ){
+        req.logger.warn('Error tracking order revision', {
+          order: { id: order.attributes.id }
+        , error: error
+        });
+      }
+    });
   });
 };
 

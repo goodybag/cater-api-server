@@ -283,7 +283,12 @@ module.exports.apiCreate = function(req, res, next) {
       if ( err ) return res.error(errors.internal.DB_FAILURE, err);
 
       req.session.save( function(){
-        res.send(201, order.toJSON());
+        var result = order.toJSON();
+        result.restaurant = db.cache.restaurants.byId( +result.restaurant_id );
+        result.deadline = Order.fixed.methods.getDeadline.call( result );
+        delete result.restaurant;
+
+        res.send(201, result);
       });
     });
 

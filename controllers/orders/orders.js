@@ -509,7 +509,17 @@ module.exports.apiUpdate = function(req, res, next) {
     }
 
   , function( next ){
-      var options = { returning: ['*'] };
+      var options = {
+        returning: ['*']
+      , one:  [ { table: 'restaurants', alias: 'restaurant'
+                , one:  [ { table: 'regions', alias: 'region' } ]
+                , many: [ ($update.type || order.type) === 'delivery'
+                            ? { table: 'restaurant_lead_times', alias: 'lead_times' }
+                            : { table: 'restaurant_pickup_lead_times', alias: 'pickup_lead_times' }
+                        ]
+                }
+              ]
+      };
 
       db.orders.update( order.id, $update, options, function( error, results ){
         if ( error ){

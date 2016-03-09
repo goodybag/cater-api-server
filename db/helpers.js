@@ -743,6 +743,52 @@ dirac.use( function( dirac ){
   statuses.forEach(registerMiddleware);
 });
 
+// Latest Order Revision
+// Using the `useLatestRevision: true` option, this plugin will automatically
+// add the `one` directive to the query and mixin the revision result into
+// the returned order
+dirac.use( function( dirac ){
+  var beforeFind = function( $query, schema, next ){
+    if ( !$query.useLatestRevision ){
+      return next();
+    }
+
+    if ( !Array.isArray( $query.one ) ){
+      $query.one = [];
+    }
+
+    $query.one.push({
+      table: 'order_revisions'
+    , alias: 'latest_revision'
+    , order: { id: 'desc' }
+    });
+
+    return next();
+  };
+
+  var afterFind = function( results, $query, schema, next ){
+    if ( !$query.useLatestRevision ){
+      return next();
+    }
+
+    results.forEach( function( order ){
+      var data = order.latest_revision.data;
+      delete order.latest_revision;
+
+      for ( var key in data ){
+        order[ key ] = data[ key ];
+      }
+    });
+
+    return next();
+  };
+
+  dirac.dals.orders.before( 'find', beforeFind );
+  dirac.dals.orders.before( 'findOne', beforeFind );
+  dirac.dals.orders.after( 'find', afterFind );
+  dirac.dals.orders.after( 'findOne', afterFind );
+});
+
 dirac.use( function( dirac ){
   var onOrder = function( order ){
     Object.defineProperty( order, 'points', {

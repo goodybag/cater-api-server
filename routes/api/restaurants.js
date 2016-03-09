@@ -25,7 +25,6 @@ route.get('/'
 route.post('/', m.restrict(['admin']), m.insert(db.restaurants));
 
 route.get('/:id'
-, m.restrict(['admin'])
 , m.getRestaurant({
     param: 'id'
   , stripe: true
@@ -39,8 +38,41 @@ route.get('/:id'
 
     return next();
   }
+, function( req, res, next){
+    if ( !req.user.isAdmin() ) {
+      clearRestrictedColumns( res.locals.restaurant );
+    }
+
+    next();
+  }
 , m.jsonLocals('restaurant')
 );
+
+function clearRestrictedColumns( restaurant ){
+  [
+    'balanced_customer_uri',
+    'payment_method_id',
+    'billing_email',
+    'billing_street',
+    'billing_street2',
+    'billing_city',
+    'billing_zip',
+    'gb_fee',
+    'is_direct_deposit',
+    'is_fee_on_total',
+    'pms_contact_id',
+    'has_contract',
+    'no_contract_fee',
+    'plan_id',
+    'disable_courier_notifications',
+    'stripe_id',
+    'collect_payments',
+    'stripe_account',
+    'bank_account'
+  ].forEach((columnName) => {
+    delete restaurant[columnName];
+  });
+}
 
 route.put('/:id', m.restrict(['admin']), m.param('id'), m.update(db.restaurants));
 

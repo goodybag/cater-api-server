@@ -789,40 +789,7 @@ dirac.use( function( dirac ){
     Object.defineProperty( order, 'deadline', {
       enumerable: true
     , get: function(){
-        if ( !this.restaurant ) return null;
-        if ( !this.restaurant.region ) return null;
-        if ( !this.type === 'delivery' && !this.restaurant.lead_times ) return null;
-        if ( !this.type !== 'delivery' && !this.restaurant.pickup_lead_times ) return null;
-
-        var datetime = moment.tz( this.datetime, this.timezone );
-
-        var leadTimeModifier = moment.duration( this.restaurant.region.lead_time_modifier );
-        var leadTimes = this.type === 'delivery'
-          ? this.restaurant.lead_times
-          : this.restaurant.pickup_lead_times
-              .map( function( leadTime ){
-                return utils.extend(
-                  {}, leadTime, {
-                    lead_time:  moment.duration( leadTime.lead_time, 'minutes' )
-                                      .add( leadTimeModifier )
-                                      .asMinutes()
-                  }
-                );
-              });
-
-        var minutes = moment.duration(
-          datetime - moment.tz( this.timezone )
-        ).asMinutes();
-
-        // Find the appropriate lead time based on guests
-        // If guests is falsey, choose the first lead_time
-        var leadTime = utils.find( leadTimes, function( time ){
-          return ( this.guests || 0 ) <= time.max_guests;
-        }.bind( this ))
-
-        if ( !leadTime ) return null;
-
-        return datetime.subtract( leadTime.lead_time, 'minutes' )
+        return Order.fixed.methods.getDeadline.call( this );
       }
     });
   };

@@ -281,30 +281,30 @@ putils.validator.validate( data, {
       }
     }
   }, function( error ){
-
     if ( error && error.length > 0 ){
-      var message;
+      error = error[0];
 
-      if ( error[0].property === 'email' ){
-        message = 'Invalid Email';
+      if ( error.property === 'email' ){
+        error.message = 'Invalid Email';
       } else {
-        message = 'Invalid Password';
+        error.message = 'Invalid Password';
       }
 
       return res.render( 'landing/register', {
         layout: 'layout/default'
-      , error: { message: message }
+      , error: error
       });
     }
 
     new Models.User( data ).create( function( error, user ){
       if ( error ){
         if ( error.routine === '_bt_check_unique' ){
-          error = errors.registration.EMAIL_TAKEN;
+          error = utils.clone( errors.registration.EMAIL_TAKEN );
+          error.property = 'email';
         }
 
         return res.render( 'landing/register', {
-          layout: 'landing/default'
+          layout: 'layout/default'
         , error: error
         });
       }

@@ -103,17 +103,8 @@ route.get('/:uid/orders', restrictOwner
     $query.where = $query.where || {};
     $query.where.user_id = user_id;
   }), m.param('status'), m.param('type'), m.sort('-id'), m.queryOptions({
-    applyPriceHike: {
-      useCachedSubTotal: true
-    },
-    one: [{
-      table: 'restaurants',
-      alias: 'restaurant',
-      one: [{ table: 'regions', alias: 'region' }]
-    }, {
-      table: 'users',
-      alias: 'user'
-    }],
+    useLatestRevision: true,
+    applyPriceHike: { useCachedSubTotal: false },
     submittedDate: true
   }),
   function(req, res, next) {
@@ -123,7 +114,7 @@ route.get('/:uid/orders', restrictOwner
         status: req.params.status
       };
     }
-    return next();
+    return next();  
   }, m.view('user-orders', db.orders)
 );
 
@@ -131,17 +122,8 @@ route.get('/:uid/orders/receipts', restrictOwner, m.param('uid', function(user_i
   $query.where = $query.where || {};
   $query.where.user_id = user_id;
 }), m.param('status', 'accepted'), m.sort('-datetime'), m.queryOptions({
-  applyPriceHike: {
-    useCachedSubTotal: true
-  },
-  one: [{
-    table: 'restaurants',
-    alias: 'restaurant',
-    one: [{ table: 'regions', alias: 'region' }]
-  }, {
-    table: 'users',
-    alias: 'user'
-  }]
+  useLatestRevision: true,
+  applyPriceHike: { useCachedSubTotal: false }
 }), m.view('user-receipts', db.orders, {
   layout: 'layout/default'
 }));

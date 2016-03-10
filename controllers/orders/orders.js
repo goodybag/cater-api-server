@@ -283,7 +283,12 @@ module.exports.apiCreate = function(req, res, next) {
       if ( err ) return res.error(errors.internal.DB_FAILURE, err);
 
       req.session.save( function(){
-        res.send(201, order.toJSON());
+        var result = order.toJSON();
+        result.restaurant = db.cache.restaurants.byId( +result.restaurant_id );
+        result.deadline = Order.fixed.methods.getDeadline.call( result );
+        delete result.restaurant;
+
+        res.send(201, result);
       });
     });
 
@@ -509,7 +514,17 @@ module.exports.apiUpdate = function(req, res, next) {
     }
 
   , function( next ){
-      var options = { returning: ['*'] };
+      var options = {
+        returning: ['*']
+      , one:  [ { table: 'restaurants', alias: 'restaurant'
+                , one:  [ { table: 'regions', alias: 'region' } ]
+                , many: [ ($update.type || order.type) === 'delivery'
+                            ? { table: 'restaurant_lead_times', alias: 'lead_times' }
+                            : { table: 'restaurant_pickup_lead_times', alias: 'pickup_lead_times' }
+                        ]
+                }
+              ]
+      };
 
       db.orders.update( order.id, $update, options, function( error, results ){
         if ( error ){

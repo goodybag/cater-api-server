@@ -159,7 +159,6 @@ define( function( require, exports, module ){
       }
 
     , getDeadline: function(){
-      console.log('calling getDeadline with', this);
         if ( !this.restaurant ) return null;
         if ( !this.restaurant.region ) return null;
         if ( !this.type === 'delivery' && !this.restaurant.lead_times ) return null;

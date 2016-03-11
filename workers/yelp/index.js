@@ -1,138 +1,64 @@
-/**
- * Yelp Worker
- */
+var _ = require('highland');
+var yelp = require('yelp');
+var db = require('../../db');
+var utils = require('../../utils');
+var config = require('../../config');
+var logger = require('../../lib/logger').create('Yelp-Worker');
 
-var util      = require('util');
-var yelp      = require('yelp');
-var utils     = require('../../utils');
-var Models    = require('../../models');
-var config    = require('../../config');
-var logger    = require('../../lib/logger').create('Worker-Yelp');
-
-yelp = yelp.createClient({
+var yelpClient = yelp.createClient({
   consumer_key:     config.yelp.consumerKey
 , consumer_secret:  config.yelp.consumerSecret
 , token:            config.yelp.token
 , token_secret:     config.yelp.tokenSecret
 });
 
-var errors = [];
-
-var stats = {
-  businessesAttempted:  { text: 'Businesses attempted', value: 0 }
-, completed:            { text: 'Businesses completed', value: 0 }
-, errors:               { text: 'Number of errors', value: 0 }
+var query = {
+  yelp_business_id: { $notNull: true, $ne: '' }
 };
 
-var tickOut = function( val ){
-  util.print( val ? 'x' : '.' );
+var options = {
+  limit: 'all'
 };
 
-var logStats = function(){
-  console.log("\n\n");
-  console.log("########################");
-  console.log("##### Lovely Stats #####");
-  console.log("########################");
-  console.log("\n");
-  for ( var key in stats ){
-    console.log("  *", stats[ key ].text + ": ", stats[ key ].value);
-  }
-  console.log("\n\n");
-};
+db.restaurants.findStream( query, options, function( error, stream ){
+  if ( error ) throw error;
 
-var onComplete = function(){
-  logStats();
-  logger.info( 'Complete', { stats: stats } );
-  process.exit(0);
-};
+  _( stream )
+    .flatMap( _.wrapCallback( function( restaurant, next ){
+      yelpClient.business( restaurant.yelp_business_id, function( error, result ){
+        if ( error ){
+          error.restaurant_id = restaurant.id;
+          return next( error );
+        }
 
-var onError = function( error ){
-  if ( error ){
-    console.log( error );
-    process.exit(1);
-  }
-};
+        restaurant.yelp_data = utils.pick( result, config.yelp.concernedFields );
 
-var getGbBusinesses = function( callback ){
-  var $query = {
-    where: {
-      yelp_business_id: { $notNull: true }
-    },
-    limit: 'all'
-  };
-
-  logger.info('Finding GB Businesses');
-  Models.Restaurant.find( $query, function( error, results ){
-    if ( error ) return callback( error );
-    return callback( null, results.map( function( r ){ return r.attributes; }) );
-  });
-};
-
-var saveBusinessYelpData = function( id, data, callback ){
-  // Filter out reviews that are under our threshold
-  if ( 'reviews' in data ){
-    data.reviews = data.reviews.filter( function( review ){
-      return review.rating >= config.yelp.reviewThreshold
-    });
-  }
-
-  var $query = {
-    where: { id: id }
-  , updates: {
-      yelp_data: JSON.stringify( utils.pick( data, config.yelp.concernedFields ) )
-    }
-  };
-
-  Models.Restaurant.update( $query, callback );
-};
-
-console.log("\n\n")
-console.log("##########################");
-console.log("# Running Yelp Collector #");
-console.log("##########################");
-
-getGbBusinesses( function( error, businesses ){
-  if ( error ) return onError( error );
-
-  stats.businessesAttempted.value = businesses.length;
-
-  var fns = businesses.map( function( business ){
-
-    return function( done ){
-      var blogger = logger.create( business.name, {
-        data: { business: business }
+        next( null, restaurant );
       });
-
-      var localOnError = function( error ){
-        if ( !error ) return
-
-        blogger.error({ error: error });
-        stats.errors.value++;
-        errors.push( error );
-        console.log( error.statusCode === 404 ? (business.yelp_business_id + ' not found') : error );
-        tickOut( 1 );
-        return done();
+    }))
+    .flatMap( _.wrapCallback( function( restaurant, next ){
+      var update = {
+        yelp_data: restaurant.yelp_data
       };
 
-      blogger.info('Getting Yelp business');
-      yelp.business( business.yelp_business_id, function( error, data ){
-        if ( error ) return localOnError( error );
+      db.restaurants.update( restaurant.id, update, function( error ){
+        if ( error ){
+          error.restaurant_id = restaurant.id;
+        }
 
-        blogger.info('saveBusinessYelpData');
-        saveBusinessYelpData( business.id, data, function( error ){
-          if ( error ) return localOnError( error );
-
-          stats.completed.value++;
-          tickOut();
-          done();
-        });
+        return next( error, restaurant );
       });
-    };
-  });
-
-  utils.async.series( fns, function( error ){
-    if ( error ) return onError( error );
-
-    onComplete();
-  });
+    }))
+    .errors( function( error ){
+      logger.warn('Error processing restaurant', {
+        error: error
+      });
+    })
+    .each( function( data ){
+      process.stdout.write('.');
+    })
+    .parallel(5)
+    .done( function(){
+      process.exit(0);
+    });
 });

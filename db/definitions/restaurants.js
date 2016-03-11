@@ -126,6 +126,10 @@ define(function(require) {
       type: types.text
     , editable: ['client', 'admin']
     }
+  , yelp_data: {
+      type: types.json
+    , default: "'{}'::json"
+    }
   , description: {
       type: types.text
     , editable: ['client', 'admin']

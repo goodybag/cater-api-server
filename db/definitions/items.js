@@ -78,6 +78,11 @@ define(function(require) {
       type: types.text
     , nullable: true
     }
+  , is_popular: {
+      type: types.boolean
+    , nullable: false
+    , default: false
+    }
   };
 
   definition.indices = {};

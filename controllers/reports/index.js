@@ -307,13 +307,18 @@ var reports = {
       'Email'
     , 'First Name'
     , 'Last Name'
+    , 'Phone Number'
     , 'Company Name'
     , 'Region'
     ]);
 
     var options = {
       limit: 'all'
-    , one: [{ table: 'regions', alias: 'region' }]
+    , one:  [ { table: 'regions', alias: 'region' }
+            , { table: 'addresses', alias: 'defaultAddress'
+              , where: { is_default: true }
+              }
+            ]
     };
 
     var where = {
@@ -336,8 +341,9 @@ var reports = {
           user.email
         , first
         , last
+        , user.defaultAddress ? hbHelpers.phoneNumber( user.defaultAddress.phone ) : ''
         , user.organization
-        , user.region ? user.region.name : ''
+        , user.region ? user.region.name.split(',')[0] : ''
         ]);
       });
 

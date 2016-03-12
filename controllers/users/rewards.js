@@ -36,6 +36,7 @@ module.exports.list = function( req, res ){
                       , user_id: req.params.uid
                       }, {
                         submittedDate: true
+                      , order: { datetime: 'desc' }
                       , one:  [ { table: 'restaurants'
                                 , alias: 'restaurant'
                                 , one: [{ table: 'regions', alias: 'region' }]

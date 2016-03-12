@@ -85,6 +85,17 @@ module.exports.add = function(req, res, next) {
       );
 
       res.send(201, result);
+
+      venter.emit('order:items:change', order, result);
+
+      db.order_revisions.track( result.order_id, req.user.attributes.id, 'add-item', function( error ){
+        if ( error ){
+          req.logger.warn('Error tracking order revision', {
+            order: { id: order.id }
+          , error: error
+          });
+        }
+      });
     });
   });
 }
@@ -111,6 +122,16 @@ module.exports.update = function(req, res, next) {
       res.send( result );
 
       venter.emit( 'order:change', req.params.oid );
+      venter.emit('order:items:change', req.order, result);
+
+      db.order_revisions.track( result.order_id, req.user.attributes.id, 'update-item', function( error ){
+        if ( error ){
+          req.logger.warn('Error tracking order revision', {
+            order: { id: order.id }
+          , error: error
+          });
+        }
+      });
     });
   });
 }
@@ -124,5 +145,15 @@ module.exports.remove = function(req, res, next) {
     res.send(200, rows[0]);
 
     venter.emit( 'order:change', req.params.oid );
+    venter.emit('order:items:change', req.order, result);
+
+    db.order_revisions.track( rows[0].order_id, req.user.attributes.id, 'remove-item', function( error ){
+      if ( error ){
+        req.logger.warn('Error tracking order revision', {
+          order: { id: order.id }
+        , error: error
+        });
+      }
+    });
   });
 }

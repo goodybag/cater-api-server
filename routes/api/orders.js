@@ -25,7 +25,11 @@ route.get('/', m.restrict(['admin']), m.pagination(), m.param('status'), functio
   }]
 }), m.find(db.orders));
 
-route.post('/', m.geocodeBody(), controllers.orders.apiCreate);
+route.post('/'
+, m.geocodeBody()
+, m.copyMatchingAddress()
+, controllers.orders.apiCreate
+);
 
 route.get('/search', function(req, res, next) {
   var query = req.query.q;
@@ -55,22 +59,34 @@ route.get('/:id', m.restrict(['admin']), m.getOrder2({
   userAddresses: true,
   userPaymentMethods: true,
   restaurant: true,
+  paymentMethod: true,
   deliveryService: true
 }), function(req, res) {
   res.json(req.order);
 });
 
-route.put('/silent/:id', m.restrict(['admin']), m.param('id'), m.queryOptions({
-  returning: ['*', {
-    type: 'select',
-    table: 'orders',
-    columns: ['type'],
-    alias: 'old_type',
-    where: {
-      id: '$orders.id$'
-    }
-  }]
-}), m.audit.orderType(), m.update(db.orders));
+route.put('/silent/:id'
+, m.restrict(['admin'])
+, m.param('id')
+, m.audit.orderType()
+, m.after( m.trackOrderRevision({
+    orderIdPath: 'res.locals.orders.0.id'
+  }))
+, function( req, res, next ){
+    m.db.orders.update( req.params.id, req.body, {
+      returning: ['*', {
+        type: 'select',
+        table: 'orders',
+        columns: ['type'],
+        alias: 'old_type',
+        where: {
+          id: '$orders.id$'
+        }
+      }]
+    })( req, res, next );
+  }
+, m.sendJson('res.locals.orders.0')
+);
 
 route.put('/:id'
 , m.getOrder2({
@@ -86,6 +102,7 @@ route.put('/:id'
 , m.restrict(['order-owner', 'order-restaurant', 'admin'])
 , m.audit.orderType()
 , m.geocodeBody()
+, m.copyMatchingAddress()
 , controllers.orders.apiUpdate
 );
 

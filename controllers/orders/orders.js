@@ -23,6 +23,7 @@ var UserAddresses = require('stamps/addresses/user-addresses-db');
 var GeocodeRequest = require('stamps/requests/geocode');
 var Order = require('stamps/orders/base');
 var OrderFulfillability = require('stamps/orders/fulfillability');
+var odsChecker = require('order-delivery-service-checker');
 
 var addressFields = [
   'street'
@@ -215,6 +216,15 @@ module.exports.create = function(req, res, next) {
         res.send(201, order.toJSON());
       });
     });
+
+    db.order_revisions.track( order.attributes.id, req.user.attributes.id, 'create', function( error ){
+      if ( error ){
+        req.logger.warn('Error tracking order revision', {
+          order: { id: order.attributes.id }
+        , error: error
+        });
+      }
+    });
   });
 };
 
@@ -229,10 +239,20 @@ module.exports.apiCreate = function(req, res, next) {
     var restaurant = db.cache.restaurants.byId( req.body.restaurant_id );
 
     if ( restaurant ){
+      // We need a POJO version of the order that has the restaurant
+      // added to it so we can check things like fulfillability and
+      // the Order Delivery Service Criteria Checker
+      let orderWithRestaurant = utils.extend( {}, order.attributes, {
+        restaurant: restaurant
+      });
+
+      // Determine whether or not the order should
+      order.attributes.type = orderWithRestaurant.type = odsChecker.check(
+        orderWithRestaurant
+      ) ? 'courier' : 'delivery';
+
       let result = OrderFulfillability
-        .create( utils.extend( {}, order.attributes, {
-          restaurant: restaurant
-        }))
+        .create( orderWithRestaurant )
         .why();
 
       if ( Array.isArray( result ) && result.length ){
@@ -263,8 +283,22 @@ module.exports.apiCreate = function(req, res, next) {
       if ( err ) return res.error(errors.internal.DB_FAILURE, err);
 
       req.session.save( function(){
-        res.send(201, order.toJSON());
+        var result = order.toJSON();
+        result.restaurant = db.cache.restaurants.byId( +result.restaurant_id );
+        result.deadline = Order.fixed.methods.getDeadline.call( result );
+        delete result.restaurant;
+
+        res.send(201, result);
       });
+    });
+
+    db.order_revisions.track( order.attributes.id, req.user.attributes.id, 'create', function( error ){
+      if ( error ){
+        req.logger.warn('Error tracking order revision', {
+          order: { id: order.attributes.id }
+        , error: error
+        });
+      }
     });
   });
 };
@@ -362,6 +396,15 @@ module.exports.update = function(req, res, next) {
     if ( oldPaymentStatus !== order.attributes.payment_status ){
       venter.emit('order:payment_status:change', order.attributes.payment_status, order.attributes.id);
     }
+
+    db.order_revisions.track( order.attributes.id, req.user.attributes.id, 'update', function( error ){
+      if ( error ){
+        req.logger.warn('Error tracking order revision', {
+          order: { id: order.attributes.id }
+        , error: error
+        });
+      }
+    });
   });
 };
 
@@ -371,6 +414,8 @@ var fieldsRequiringFulfillabilityCheck = [
 
 module.exports.apiUpdate = function(req, res, next) {
   var logger = req.logger.create('Controller-Update');
+  var order = req.order;
+  var $update = {};
 
   // get keys from order def schema that allow editable access
   var updateableFields = Object.keys( orderDefinitionSchema ).filter( function( key ){
@@ -384,19 +429,26 @@ module.exports.apiUpdate = function(req, res, next) {
   });
 
   var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
-  if (req.order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
-
-  // Instantiate order model for save functionality
-  var order = new models.Order(req.order);
+  if (order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
 
   if ( fieldsRequiringFulfillabilityCheck.some( key => key in req.body ) ){
-    var restaurant = db.cache.restaurants.byId( req.order.restaurant_id );
+    var restaurant = db.cache.restaurants.byId( order.restaurant_id );
 
     if ( restaurant ){
+      // We need a POJO version of the order that has the restaurant
+      // added to it so we can check things like fulfillability and
+      // the Order Delivery Service Criteria Checker
+      let orderWithRestaurant = utils.extend( {}, order, req.body, {
+        restaurant: restaurant
+      });
+
+      // Determine whether or not the order should
+      $update.type = orderWithRestaurant.type = odsChecker.check(
+        orderWithRestaurant
+      ) ? 'courier' : 'delivery';
+
       let result = OrderFulfillability
-        .create( utils.extend( {}, order.attributes, {
-          restaurant: restaurant
-        }, req.body ))
+        .create( orderWithRestaurant )
         .why();
 
       if ( Array.isArray( result ) && result.length ){
@@ -407,22 +459,24 @@ module.exports.apiUpdate = function(req, res, next) {
     }
   }
 
-  var datetimeChanged = req.body.datetime && order.attributes.datetime !== req.body.datetime;
-  var oldDatetime = order.attributes.datetime;
-  var oldType = order.attributes.type;
-  var oldPaymentStatus = order.attributes.payment_status;
+  var datetimeChanged = req.body.datetime && order.datetime !== req.body.datetime;
+  var oldDatetime = order.datetime;
+  var oldType = order.type;
+  var oldPaymentStatus = order.payment_status;
 
-  var isTipEditable = order.isTipEditable({
-    isOwner: req.order.isOwner,
-    isRestaurantManager: req.order.isRestaurantManager,
-    isAdmin: req.order.isAdmin,
-  });
+  var isTipEditable = models.Order.prototype.isTipEditable.call(
+    { attributes: order },
+    { isOwner: req.order.isOwner,
+      isRestaurantManager: req.order.isRestaurantManager,
+      isAdmin: req.order.isAdmin,
+    }
+  );
 
   if (!isTipEditable) updateableFields = utils.without(updateableFields, 'tip', 'tip_percent');
 
-  utils.extend(order.attributes, utils.pick(req.body, updateableFields));
+  utils.extend($update, utils.pick(req.body, updateableFields));
 
-  utils.async.series([
+  utils.async.waterfall([
     // Geocode the address on the order if necessary
     function( next ){
       var bodyAddress = Address( req.body );
@@ -436,7 +490,7 @@ module.exports.apiUpdate = function(req, res, next) {
         return next();
       }
 
-      var orderAddress = Address( order.attributes );
+      var orderAddress = Address( order );
 
       if ( !orderAddress.hasMinimumComponents() ){
         return next();
@@ -453,32 +507,69 @@ module.exports.apiUpdate = function(req, res, next) {
             return res.error( errors.input.INVALID_ADDRESS );
           }
 
-          order.attributes.lat_lng = result.toAddress().lat_lng;
+          $update.lat_lng = result.toAddress().lat_lng;
 
           return next();
         });
     }
 
-  , order.save.bind( order )
+  , function( next ){
+      var options = {
+        returning: ['*']
+      , one:  [ { table: 'restaurants', alias: 'restaurant'
+                , one:  [ { table: 'regions', alias: 'region' } ]
+                , many: [ ($update.type || order.type) === 'delivery'
+                            ? { table: 'restaurant_lead_times', alias: 'lead_times' }
+                            : { table: 'restaurant_pickup_lead_times', alias: 'pickup_lead_times' }
+                        ]
+                }
+              ]
+      };
+
+      db.orders.update( order.id, $update, options, function( error, results ){
+        if ( error ){
+          req.logger.warn('Error updating order', {
+            error: error
+          });
+
+          return next( error );
+        }
+
+        return next( null, results[0] );
+      });
+    }
+
+  , function( orderResult, next ){
+      res.json( orderResult );
+
+      venter.emit( 'order:change', order.id );
+
+      if ( datetimeChanged ){
+        venter.emit( 'order:datetime:change', order, oldDatetime );
+      }
+
+      if ( oldType !== orderResult.type ){
+        venter.emit( 'order:type:change', orderResult.type, oldType, orderResult, req.user );
+      }
+
+      if ( oldPaymentStatus !== orderResult.payment_status ){
+        venter.emit('order:payment_status:change', orderResult.payment_status, orderResult.id);
+      }
+
+      db.order_revisions.track( order.id, req.user.attributes.id, 'update', function( error ){
+        if ( error ){
+          req.logger.warn('Error tracking order revision', {
+            order: { id: order.id }
+          , error: error
+          });
+        }
+      });
+
+      return next();
+    }
   ], function( error ){
     if ( error ){
       return res.error( errors.internal.UNKNOWN, error );
-    }
-
-    res.send( order.toJSON({ plain:true }) );
-
-    venter.emit( 'order:change', order.attributes.id );
-
-    if ( datetimeChanged ){
-      venter.emit( 'order:datetime:change', order, oldDatetime );
-    }
-
-    if ( oldType !== order.attributes.type ){
-      venter.emit( 'order:type:change', order.attributes.type, oldType, order.attributes, req.user );
-    }
-
-    if ( oldPaymentStatus !== order.attributes.payment_status ){
-      venter.emit('order:payment_status:change', order.attributes.payment_status, order.attributes.id);
     }
   });
 };
@@ -605,6 +696,16 @@ module.exports.changeStatus = function(req, res) {
   db.orders.update( req.order.id, $update, function(err){
     logger.info('Saving order complete!', err ? { error: err } : null);
     if (err) return res.error(errors.internal.DB_FAILURE, err);
+
+    db.order_revisions.track( req.order.id, req.user.attributes.id, 'change-status', function( error ){
+      if ( error ){
+        req.logger.warn('Error tracking order revision', {
+          order: { id: req.order.id }
+        , error: error
+        });
+      }
+    });
+
     return done();
   });
 };
@@ -628,6 +729,15 @@ module.exports.duplicate = function(req, res, next) {
     var obj = newOrder.toJSON();
     obj.lostItems = lostItems;
     res.json(201, obj);
+
+    db.order_revisions.track( newOrder.attributes.id, req.user.attributes.id, 'duplication', function( error ){
+      if ( error ){
+        req.logger.warn('Error tracking order revision', {
+          order: { id: order.attributes.id }
+        , error: error
+        });
+      }
+    });
   });
 };
 

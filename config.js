@@ -77,7 +77,7 @@ config.defaults = {
     'jag@goodybag.com'
   , 'christymedlock@goodybag.com'
   , 'patrickmugavin@goodybag.com'
-  , 'ericmehrten@goodybag.com'
+  , 'roylazorwitz@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -87,7 +87,7 @@ config.defaults = {
     'jag@goodybag.com'
   , 'christymedlock@goodybag.com'
   , 'patrickmugavin@goodybag.com'
-  , 'ericmehrten@goodybag.com'
+  , 'roylazorwitz@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
   , 'jacob.parker@goodybag.com'
@@ -475,7 +475,7 @@ config.production = {
   , dsOrders: [
       'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
-    , 'ericmehrten@goodybag.com'
+    , 'roylazorwitz@goodybag.com'
 
     // temp
     , 'jacobparker@goodybag.com'
@@ -490,18 +490,18 @@ config.production = {
     , 'jacobparker@goodybag.com'
     , 'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
-    , 'ericmehrten@goodybag.com'
+    , 'roylazorwitz@goodybag.com'
     ]
   , orderNotificationChecks: [
       'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
-    , 'ericmehrten@goodybag.com'
+    , 'roylazorwitz@goodybag.com'
     , 'john@goodybag.com'
     ]
   , reminderPaymentStatusIgnore: [
       'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
-    , 'ericmehrten@goodybag.com'
+    , 'roylazorwitz@goodybag.com'
     ]
   }
 
@@ -510,7 +510,7 @@ config.production = {
   , supportPhones: [
       '2105779226' // Christy Medlock
     , '3153457641' // Patrick Mugavin
-    , '4083065272' // Eric Mehrten
+    , '9083771286' // Roy Lazorwitz
     ]
   }
 
@@ -567,6 +567,12 @@ module.exports.getEnv = function( env ){
 
 if ( local ){
   _.extend( module.exports, local );
+}
+
+if ( GB_ENV !== 'dev' ){
+  if ( module.exports.postgresConnStr.indexOf('?ssl=true') === -1 ){
+    module.exports.postgresConnStr += '?ssl=true';
+  }
 }
 
 console.log('Loading ' + GB_ENV + ' config');

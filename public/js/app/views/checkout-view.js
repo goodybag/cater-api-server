@@ -336,7 +336,7 @@ define(function(require, exports, module) {
           if (err) return notify.error(err); // TODO: error handling
 
           analytics.track('Order Submitted');
-          window.location.reload();
+          window.location.href = window.location.href + '?submitted=true';
         });
       });
     },

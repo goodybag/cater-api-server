@@ -502,10 +502,10 @@
 
 
 {{#if config.isProduction}}
-{{#eq order.status 'accepted'}}
+{{#if reqQuery.submitted}}
 {{#eq order.user_id user.id}}
-  {{> adwords_order_conversion}}
+  {{> adwords_order_conversion conversionAmount=(dollars order.total)}}
 {{/eq}}
-{{/eq}}
+{{/if}}
 {{/if}}
 {{/extend}}

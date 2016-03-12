@@ -74,6 +74,7 @@
     "grunt-shell": "^1.1.1",
     "handlebars": "^3.0.0",
     "hbs": "^2.8.0",
+    "highland": "^2.7.1",
     "iron_mq": "0.2.x",
     "jade": "0.34.x",
     "json2csv": "~2.2.1",

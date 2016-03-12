@@ -772,11 +772,13 @@ dirac.use( function( dirac ){
     }
 
     results.forEach( function( order ){
-      var data = order.latest_revision.data;
-      delete order.latest_revision;
+      if ( order.latest_revision ){
+        var data = order.latest_revision.data;
+        delete order.latest_revision;
 
-      for ( var key in data ){
-        order[ key ] = data[ key ];
+        for ( var key in data ){
+          order[ key ] = data[ key ];
+        }
       }
     });
 

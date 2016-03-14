@@ -124,7 +124,7 @@ module.exports.get = function(req, res) {
     orderModel.getRestaurant.bind( orderModel )
   ], function( error, restaurant ){
     if ( error ){
-      return res.error(errors.internal.DB_FAILURE, err);
+      return res.error(errors.internal.DB_FAILURE, error);
     }
 
     // order.restaurant is mutated by order.getRestaurant

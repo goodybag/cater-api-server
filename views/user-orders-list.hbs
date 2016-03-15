@@ -1,6 +1,5 @@
 {{#extend "css"}}
 <link rel="stylesheet" href="{{cdn "/css/user-orders.css"}}">
-<link rel="stylesheet" href="{{cdn "/components/fullcalendar/fullcalendar.css"}}">
 <link rel="stylesheet" href="{{cdn "/components/font-awesome/css/font-awesome.min.css"}}">
 {{/extend}}
 
@@ -12,18 +11,25 @@
   </div>
   <div class="row">
     <div class="col-lg-2">
-      {{> orders_filter }}
+      <div class="panel">
+        <div class="panel-heading panel-heading-small">
+          <h4 class="panel-title">Status</h4>
+        </div>
+        <div class="panel-body">
+          {{> order_status_buttons}}
+        </div>
+      </div>
     </div>
     <div class="col-md-10">
       <div class="nav-orders">
         <ul class="nav nav-tabs">
-          <li class="active">
-            <a href="#calendar-view" data-toggle="tab">
+          <li>
+            <a href="/users/me/orders/calendar">
               <i class="icon-calendar"></i> Calendar
             </a>
           </li>
-          <li>
-            <a href="#list-view" data-toggle="tab">
+          <li class="active">
+            <a href="/users/me/orders" class="">
               <i class="icon-list"></i> List
             </a>
           </li>
@@ -34,12 +40,9 @@
           </li>
         </ul>
         <div class="tab-content">
-          <div class="tab-pane fade in active" id="calendar-view">
-            {{> orders_calendar }}
-          </div>
-          <div class="tab-pane fade" id="list-view">
+          <div class="tab-pane fade in active" id="list-view">
             {{> orders_list }}
-            {{> order_list_paginator }}
+            {{> order_list_paginator baseUrl="/users/me/orders"}}
           </div>
         </div>
       </div>
@@ -70,15 +73,10 @@
         el: '.orders-list'
       });
 
-      var ordersCalendarView = new OrdersCalendarView({
-        el: '#main'
-      });
-
       var ordersFilterView = new OrdersFilterView({
         el:             '.orders-calendar-filters'
       , subviews: {
-          calendarView:   ordersCalendarView
-        , listView:       ordersListView
+          listView:       ordersListView
         }
       });
     }

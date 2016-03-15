@@ -1,6 +1,6 @@
 {{#extend "css"}}
 <link rel="stylesheet" href="{{cdn "/css/user-orders.css"}}">
-<link rel="stylesheet" href="{{cdn "/components/fullcalendar/fullcalendar.css"}}">
+<link rel="stylesheet" href="{{cdn "/components/fullcalendar/dist/fullcalendar.css"}}">
 <link rel="stylesheet" href="{{cdn "/components/font-awesome/css/font-awesome.min.css"}}">
 {{/extend}}
 
@@ -18,12 +18,12 @@
       <div class="nav-orders">
         <ul class="nav nav-tabs">
           <li class="active">
-            <a href="#calendar-view" data-toggle="tab">
+            <a href="/users/me/orders/calendar">
               <i class="icon-calendar"></i> Calendar
             </a>
           </li>
           <li>
-            <a href="#list-view" data-toggle="tab">
+            <a href="/users/me/orders">
               <i class="icon-list"></i> List
             </a>
           </li>
@@ -36,10 +36,6 @@
         <div class="tab-content">
           <div class="tab-pane fade in active" id="calendar-view">
             {{> orders_calendar }}
-          </div>
-          <div class="tab-pane fade" id="list-view">
-            {{> orders_list }}
-            {{> order_list_paginator }}
           </div>
         </div>
       </div>
@@ -66,19 +62,14 @@
   , function($, utils, user, OrdersListView, OrdersCalendarView, OrdersFilterView) {
       utils.extend( user, {{{json user}}} );
 
-      var ordersListView = new OrdersListView({
-        el: '.orders-list'
-      });
-
       var ordersCalendarView = new OrdersCalendarView({
         el: '#main'
       });
 
       var ordersFilterView = new OrdersFilterView({
-        el:             '.orders-calendar-filters'
+        el: '.orders-calendar-filters'
       , subviews: {
           calendarView:   ordersCalendarView
-        , listView:       ordersListView
         }
       });
     }

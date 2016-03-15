@@ -109,8 +109,9 @@
   width: 400px;
 }
 
-.fc-content {
-  background-color: #fff;
+.fc-title {
+  display: block;
+  text-overflow: ellipsis;
 }
 
 #calendar .fc-state-highlight {

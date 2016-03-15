@@ -1,5 +1,6 @@
 var express = require('express');
 
+var moment = require('moment-timezone');
 var m = require('../../middleware');
 var db = require('../../db');
 var controllers = require('../../controllers');
@@ -98,7 +99,7 @@ route.all('/:uid', restrictOwner, function(req, res, next) {
  */
 
 route.get('/:uid/orders', restrictOwner
-  // , m.pagination({ pageParam: 'p' }) // todo: paging set up for users orders
+  , m.pagination({ pageParam: 'p' })
   , m.param('uid', function(user_id, $query, options) {
     $query.where = $query.where || {};
     $query.where.user_id = user_id;
@@ -115,7 +116,38 @@ route.get('/:uid/orders', restrictOwner
       };
     }
     return next();  
-  }, m.view('user-orders', db.orders)
+  }, m.view('user-orders-list', db.orders)
+);
+
+route.get('/:uid/orders/calendar', restrictOwner
+  , function( req, res, next ){
+      var now = moment.tz( req.user.attributes.region.timezone );
+
+      // Start off on the current month
+      req.queryObj.datetime = {
+        $gte: now.startOf('month').format('YYYY-MM-DD')
+      , $lt: now.add(1, 'month').startOf('month').format('YYYY-MM-DD')
+      };
+
+      return next();
+    }
+  , m.param('uid', function(user_id, $query, options) {
+    $query.where = $query.where || {};
+    $query.where.user_id = user_id;
+  }), m.param('status'), m.param('type'), m.sort('-id'), m.queryOptions({
+    useLatestRevision: true,
+    applyPriceHike: { useCachedSubTotal: false },
+    submittedDate: true
+  }),
+  function(req, res, next) {
+    res.locals.status = req.params.status;
+    if (req.params.status == 'accepted') {
+      req.queryOptions.statusDateSort = {
+        status: req.params.status
+      };
+    }
+    return next();  
+  }, m.view('user-orders-calendar', db.orders)
 );
 
 route.get('/:uid/orders/receipts', restrictOwner, m.param('uid', function(user_id, $query, options) {

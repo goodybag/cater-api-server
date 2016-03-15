@@ -114,7 +114,7 @@ module.exports.update = function(req, res, next) {
     }
 
     GeocodeRequest()
-      .address( address.toString() )
+      .address( address.toString({ street2: false }) )
       .send( function( error, result ){
         if ( error ){
           logger.warn('Error geocoding address', {
@@ -128,7 +128,7 @@ module.exports.update = function(req, res, next) {
           return res.error( errors.input.INVALID_ADDRESS );
         }
 
-        address.lat_lng = result.toAddress().lat_lng;
+        utils.extend( address, result.toAddress() );
 
         address.save( function( error ){
           if ( error ){

@@ -53,13 +53,8 @@ route.get('/me/orders'
 }
 , m.sort('-id')
 , m.queryOptions({
-    one: [{
-      table: 'users',
-      alias: 'user'
-    }, {
-      table: 'restaurants',
-      alias: 'restaurant'
-    }]
+    useLatestRevision: true,
+    applyPriceHike: { useCachedSubTotal: false }
   })
 , m.find(db.orders)
 );

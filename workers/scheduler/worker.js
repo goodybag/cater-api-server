@@ -40,6 +40,12 @@ function startWorker () {
   var logStats = function( errors, stats ){
     // Filter actions that had some activity
     stats = utils.reduce(stats, reduceActions, {});
+
+    for ( var k in stats ){
+      stats[ k + ' Worker ' + cluster.worker.id ] = stats[ k ];
+      delete stats[ k ];
+    }
+
     if ( errors || !utils.isEmpty(stats) ) reporter.logResults( errors, stats );
   };
 

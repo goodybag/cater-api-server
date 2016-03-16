@@ -114,6 +114,17 @@
   text-overflow: ellipsis;
 }
 
+/* Make the event container thingies able to be clicked through */
+/* so we can show the popover on .fc-day click */
+.fc-content-skeleton {
+  pointer-events: none;
+}
+
+/* Event containers should still be clickable, though */
+.fc-event-container {
+  pointer-events: all;
+}
+
 #calendar .fc-state-highlight {
   background: #f7f7f7;
 }

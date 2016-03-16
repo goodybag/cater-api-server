@@ -71,6 +71,7 @@ define(function(require, exports, module) {
         viewRender:       this.viewRender.bind(this)
       , dayRender:        this.dayRender.bind(this)
       , eventRender:      this.eventRender.bind(this)
+      , events:           '/api/users/me/orders'
       , eventDataTransform: function( data ){
           return new Order( data ).getFullCalendarEvent();
         }
@@ -80,7 +81,6 @@ define(function(require, exports, module) {
         utils.extend( options, {
           editable:         true
         , disableDragging:  false
-        , events:           '/api/users/me/orders'
         , eventDrop:        function( e, delta, reverseFn ){
                               this.changeOrderDate( e.id, e._start, function( error ){
 

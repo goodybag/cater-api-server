@@ -22,27 +22,7 @@ route.get('/'
     return next();
   }
 , m.pagination()
-, function( req, res, next ){
-    var timezone = req.user.attributes.region.timezone;
-
-    if ( req.query.start || req.query.end ){
-      req.queryObj.datetime = {}
-    }
-
-    if ( req.query.start ){
-      req.queryObj.datetime.$gte = moment.tz(
-        req.query.start, timezone
-      ).format('YYYY-MM-DD');
-    }
-
-    if ( req.query.end ){
-      req.queryObj.datetime.$lt = moment.tz(
-        req.query.end, timezone
-      ).format('YYYY-MM-DD');
-    }
-
-    return next();
-  }
+, m.orderDateRange()
 , m.param('status')
 , function(req, res, next) {
   res.locals.status = req.params.status;

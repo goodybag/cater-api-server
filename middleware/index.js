@@ -39,6 +39,7 @@ module.exports = utils.extend(
   , methodOverride: require('./method-override')
   , noop: require('./noop')
   , orderAnalytics: require('./order-analytics')
+  , orderDateRange: require('./order-date-range')
   , orderEditable: require('./order-editable')
   , orderParams: require('./order-params')
   , organizationSubmissions: require('./organization-submissions')

@@ -820,7 +820,6 @@ dirac.use( function( dirac ){
     }
 
     results.forEach( function( order ){
-      console.log(order);
       if ( order.latest_revision && order.latest_revision.data ){
         var data = order.latest_revision.data;
         delete order.latest_revision;

@@ -1,7 +1,12 @@
-{{!-- TODO replace with better paginator --}}
 {{#gt p 1}}
-<a href="{{queryParams (set reqQuery "p" (add p -1))}}">Previous</a>
+<a
+  href="{{queryParams (set reqQuery "p" (add p -1))}}"
+  class="paginator-previous"
+>Previous</a>
 {{/gt}}
 {{#eq orders.length limit}}
-<a href="{{queryParams (set reqQuery "p" (add p 1))}}" class="pull-right">Next</a>
+<a
+  href="{{queryParams (set reqQuery "p" (add p 1))}}"
+  class="paginator-next pull-right"
+>Next</a>
 {{/eq}}

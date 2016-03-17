@@ -753,54 +753,63 @@ dirac.use( function( dirac ){
       return next();
     }
 
-    if ( !Array.isArray( $query.joins ) ){
-      $query.joins = [];
+    if ( !Array.isArray( $query.one ) ){
+      $query.one = [];
     }
 
-    if ( !Array.isArray( $query.columns ) ){
-      $query.columns = ['*'];
-    }
-
-    $query.joins.push({
-      type: 'left'
-    , alias: 'revisions'
-    , target: {
-        type: 'select'
-      , table: 'order_revisions'
-      , joins:  [{
-                  type: 'left'
-                , alias: 'o'
-                , target: 'orders'
-                , on: { 'o.id': '$order_revisions.order_id$'}
-                }]
-        // Copy in the original query's where condition for a
-        // performance boost to the sub-query
-      , where: Object.keys( $query.where ).reduce( function( where, k ){
-          if ( k.indexOf('orders.') > -1 ){
-            where[ k.replace('orders.', 'o.') ] = $query.where[ k ];
-          } else if ( k.indexOf('.') === -1 ){
-            where[ 'o.' + k ] = $query.where[ k ];
-          }
-
-          return where;
-        }, {})
-      , groupBy: 'order_revisions.id'
-      , order: 'order_revisions.id desc'
-      }
-    , on: { 'revisions.order_id': '$orders.id$' }
+    $query.one.push({
+      table: 'order_revisions'
+    , alias: 'latest_revision'
     });
 
-    $query.columns.push({
-      table:  'revisions'
-    , name:   'data->restaurant'
-    , alias:  'restaurant'
-    });
+    // if ( !Array.isArray( $query.joins ) ){
+    //   $query.joins = [];
+    // }
 
-    $query.columns.push({
-      table:  'revisions'
-    , name:   'data->items'
-    , alias:  'items'
-    });
+    // if ( !Array.isArray( $query.columns ) ){
+    //   $query.columns = ['*'];
+    // }
+
+    // $query.joins.push({
+    //   type: 'left'
+    // , alias: 'revisions'
+    // , target: {
+    //     type: 'select'
+    //   , table: 'order_revisions'
+    //   , joins:  [{
+    //               type: 'left'
+    //             , alias: 'o'
+    //             , target: 'orders'
+    //             , on: { 'o.id': '$order_revisions.order_id$'}
+    //             }]
+    //     // Copy in the original query's where condition for a
+    //     // performance boost to the sub-query
+    //   , where: Object.keys( $query.where ).reduce( function( where, k ){
+    //       if ( k.indexOf('orders.') > -1 ){
+    //         where[ k.replace('orders.', 'o.') ] = $query.where[ k ];
+    //       } else if ( k.indexOf('.') === -1 ){
+    //         where[ 'o.' + k ] = $query.where[ k ];
+    //       }
+
+    //       return where;
+    //     }, {})
+    //   , order: 'order_revisions.id desc'
+    //   , limit: 1
+    //   }
+    // , on: { 'revisions.order_id': '$orders.id$' }
+    // });
+
+    // $query.columns.push({
+    //   table:  'revisions'
+    // , name:   'data'
+    // , alias:  'restaurant'
+    // });
+
+    // $query.columns.push({
+    //   table:  'revisions'
+    // , name:   'data->items'
+    // , alias:  'items'
+    // });
 
     return next();
   };
@@ -811,8 +820,9 @@ dirac.use( function( dirac ){
     }
 
     results.forEach( function( order ){
-      if ( order.latest_revision ){
-        var data = order.latest_revision;
+      console.log(order);
+      if ( order.latest_revision && order.latest_revision.data ){
+        var data = order.latest_revision.data;
         delete order.latest_revision;
 
         for ( var key in data ){

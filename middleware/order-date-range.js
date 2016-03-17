@@ -16,6 +16,9 @@ module.exports = function( options ){
 
     if ( req.query.start || req.query.end ){
       req.queryObj.datetime = {}
+      // If using date range, we want to see all orders in the date range
+      // at least until we get pagination aware http clients
+      req.queryOptions.limit = 'all';
     }
 
     if ( req.query.start ){

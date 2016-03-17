@@ -824,9 +824,8 @@ dirac.use( function( dirac ){
         var data = order.latest_revision.data;
         delete order.latest_revision;
 
-        for ( var key in data ){
-          order[ key ] = data[ key ];
-        }
+        order.items = data.items;
+        order.restaurant = data.restaurant;
       }
     });
 

@@ -42,7 +42,7 @@ definition.track = function( orderId, actorId, description, callback ){
 
   var options = {
     one:  [ { table: 'restaurants', alias: 'restaurant'
-            , columns: []
+            , columns: ['*']
             , one:  [ { table: 'restaurant_plans', alias: 'plan' }
                     , { table: 'regions', alias: 'region' }
                     ]

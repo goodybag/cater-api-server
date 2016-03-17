@@ -1,6 +1,7 @@
 var dirac     = require('dirac');
 var pluralize = require('pluralize');
 var _         = require('lodash');
+var errors    = require('../errors');
 
 module.exports = function(name, collection, options){
   if ( collection && !(collection instanceof dirac.DAL) ){
@@ -12,11 +13,11 @@ module.exports = function(name, collection, options){
   options.method = options.method || 'find';
 
   var defaults = {
-    notFound: function( req, res ){
-      return res.send(404);
+    onError( error, req, res, next ){
+      return next( error );
     }
-  , error: function( error, req, res  ){
-      return res.send(500);
+  , notFound: function( req, res, next ){
+      return next( errors.internal.NOT_FOUND );
     }
   };
 
@@ -24,7 +25,7 @@ module.exports = function(name, collection, options){
     if ( !( key in options ) ) options[ key ] = defaults[ key ];
   }
 
-  return function(req, res){
+  return function(req, res, next){
     collection = collection || req.collection;
 
     if ( collection ){
@@ -44,7 +45,7 @@ module.exports = function(name, collection, options){
 
       args.push( function( error, results ){
         if ( error ){
-          return options.error( error, req, res );
+          return options.onError( error );
         }
 
         if ( !results ){

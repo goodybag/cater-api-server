@@ -13,7 +13,7 @@ var promo = {
 , jacob: {
     email: 'jacobparker@goodybag.com'
   , promo_code: [
-      'gbaustin15', 'gbatx50', 'gbatx75', 'gbfeb25', 'gb25austin'
+      'gbaustin15', 'gbatx50', 'gb25austin', 'gbmar2016'
     ]
   }
 , debbie: {

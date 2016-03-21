@@ -63,6 +63,7 @@ define(function(require) {
     , nullable: false
     , default: 'false'
     }
+  , tax_exempt_id: { type: types.text }
   , receives_promos: {
       type: types.boolean
     , nullable: false

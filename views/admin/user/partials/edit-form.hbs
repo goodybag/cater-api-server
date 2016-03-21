@@ -65,6 +65,22 @@
       </div>
     </div>
 
+    <fieldset class="{{#unless edit_user.is_tax_exempt}}hide{{/unless}}">
+      <h2>Tax Exemption Info</h2>
+      <p>Tax exempt users need to have their Tax Exemption ID set.</p>
+      <div class="form-group">
+        <div class="col-4">
+          <label>Tax Exemption ID</label>
+          <input
+            type="text"
+            class="form-control"
+            name="tax_exempt_id"
+            value="{{edit_user.tax_exempt_id}}"
+          >
+        </div>
+      </div>
+    </fieldset>
+
     <div class="inline-columns form-group">
       <div class="col">
         <div name="groups" data-type="list">

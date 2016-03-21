@@ -619,8 +619,8 @@ define(function(require, exports, module) {
       , 'width="100%" height="450" frameborder="0" src="'
       , b && b.street ? config.google.directionsEmbedURL : config.google.mapsEmbedURL
       , b && b.street ? utils.queryParams({
-          origin: Address( a ).toString()
-        , destination: Address( b ).toString()
+          origin: Address( a ).toString({ street2: false })
+        , destination: Address( b ).toString({ street2: false })
         , key: config.google.apiKey
         }) : utils.queryParams({
           q: Address( a )

@@ -32,16 +32,17 @@
 
 {{#extend "scripts"}}
 <script>
-require([
+define( 'page', [
   'app/models/user'
 , 'app/views/admin/edit-user-view'
 ], function( User, View ) {
-  var user = new User( {{{json edit_user}}} );
-  var view = new View( {
-    model: user
+  return new View( {
+    model: new User( {{{json edit_user}}} )
   , el: '#users-edit'
   , patch: true
   });
 });
+
+require(['page'], function( page ){});
 </script>
 {{/extend}}

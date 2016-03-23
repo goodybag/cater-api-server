@@ -17,7 +17,7 @@ module.exports.fn = function(job, done) {
 
   utils.async.parallel([
     notifier.send.bind( notifier, 'gb-non-contracted-order-email', orderId )
-  , notifier.send.bind( notifier, 'gb-non-contracted-order-sms', orderId )
+  // , notifier.send.bind( notifier, 'gb-non-contracted-order-sms', orderId )
   ], done );
 };
 

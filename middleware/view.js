@@ -45,11 +45,11 @@ module.exports = function(name, collection, options){
 
       args.push( function( error, results ){
         if ( error ){
-          return options.onError( error );
+          return options.onError( error, req, res, next );
         }
 
         if ( !results ){
-          return options.notFound( req, res );
+          return options.notFound( req, res, next );
         }
 
         var alias = options.localsAlias;

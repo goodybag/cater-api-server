@@ -675,8 +675,22 @@ module.exports.changeStatus = function(req, res) {
 
     if (req.order.promo_code)
     if (req.order.status === 'submitted') {
-    if (utils.flatten(utils.pluck( promoConfig,'promo_code')).indexOf(req.order.promo_code) > -1)
-      venter.emit('order:submitted:promo', req.order);
+    // if (utils.flatten(utils.pluck( promoConfig,'promo_code')).indexOf(req.order.promo_code) > -1)
+
+      db.promos.findOne({ "promo_code": req.order.promo_code }, function(err, result) {
+
+        if(err) {
+          req.logger.warn("Error looking up promo code.", {
+            order_id: req.order.id
+          , error: err
+          });
+          return;
+        }
+
+        if(result) {
+          venter.emit('order:submitted:promo', req.order);
+        }
+      });
     }
   };
 

@@ -18,9 +18,6 @@ define( function( require, exports, module ){
     , options_sets: []
     , priority_account_price_hike_percentage: 0
     })
-    .enclose( function(){
-
-    })
     .methods({
       getTotal: function(){
         return [
@@ -59,12 +56,20 @@ define( function( require, exports, module ){
       }
 
     , getPriorityAccountBaseCost: function(){
+        if ( this.priority_account_price_hike_percentage === 0 ){
+          return 0;
+        }
+
         return utils.nearestNickel(
           this.getBaseCost() * this.priority_account_price_hike_percentage
         );
       }
 
     , getPriorityAccountOptionsCost: function(){
+        if ( this.priority_account_price_hike_percentage === 0 ){
+          return 0;
+        }
+
         var hike = this.priority_account_price_hike_percentage;
 
         return this.getFlattenedActiveOptions().reduce( function( total, option ){
@@ -93,7 +98,7 @@ define( function( require, exports, module ){
        * Create a cloned POJO of the item with price hike
        * factored into properties
        */
-    , toPriceHikedAttrs(){
+    , toPriceHikedAttrs: function(){
         var hike = this.priority_account_price_hike_percentage;
 
         var item = {

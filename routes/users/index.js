@@ -132,8 +132,8 @@ route.get('/:uid/orders/receipts'
 , m.param('uid', function(user_id, $query, options) {
     $query.where = $query.where || {};
     $query.where.user_id = user_id;
+    $query.status = { $or: [ 'accepted', 'submitted' ] };
   })
-, m.param('status', 'accepted')
 , m.sort('-datetime')
 , m.pagination({ pageParam: 'p' })
 , m.queryOptions({

@@ -675,7 +675,6 @@ module.exports.changeStatus = function(req, res) {
 
     if (req.order.promo_code)
     if (req.order.status === 'submitted') {
-    // if (utils.flatten(utils.pluck( promoConfig,'promo_code')).indexOf(req.order.promo_code) > -1)
 
       db.promos.findOne({ "promo_code": req.order.promo_code }, function(err, result) {
 

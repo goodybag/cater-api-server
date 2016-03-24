@@ -1,4 +1,4 @@
-insert into deltas ( version, date ) values ( '1.2.126', now() );
+insert into deltas ( version, date ) values ( '1.2.127', now() );
 create index concurrently idx_items_restaurant_id on items("restaurant_id");
 create index concurrently idx_order_items_order_id on order_items("order_id");
 create index concurrently idx_order_statuses_order_id on order_statuses("order_id");

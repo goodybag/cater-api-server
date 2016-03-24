@@ -284,7 +284,15 @@ config.defaults = {
 , defaultMonoLogo: 'https://www.filepicker.io/api/file/mbhVfKiSRO0W7SMV7Ygv'
 
 , enums: ['tags', 'meal_types', 'meal_styles', 'cuisines']
-, enableCaterWeb: local.enableCaterWeb || false
+
+, caterWeb: {
+    serverRendering: true,
+    bundles: ['runtime.js'],
+    useManifest: true,
+    cdnPrefix: '/assets/',
+    apiPrefix: '/api/',
+    mountPoint: 'dist/static'
+  }
 };
 
 config.dev = {
@@ -341,6 +349,15 @@ config.dev = {
 , receipt: _.extend( {}, config.defaults.receipt,
     { bucket: 'dev-receipts.goodybag.com' }
   )
+
+, caterWeb: {
+    serverRendering: false,
+    bundles: ['common.js', 'bundle.js'],
+    useManifest: false,
+    cdnPrefix: '/assets/',
+    apiPrefix: '/api/',
+    mountPoint: 'dist/build'
+  }
 };
 
 config.staging = {
@@ -397,8 +414,6 @@ config.staging = {
 , receipt: _.extend( {}, config.defaults.receipt,
     { bucket: 'staging-receipts.goodybag.com' }
   )
-
-, enableCaterWeb: process.env['ENABLE_CATER_WEB'] === 'true'
 };
 
 config.production = {

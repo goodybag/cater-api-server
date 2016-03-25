@@ -36,7 +36,11 @@
         {{#if ../address.state }}
           {{#eq this.abbr ../../address.state}} selected="selected"{{/eq}}
         {{else}}
+        {{#eq (or ../../address.user.region.state ../../user.region.state ) this.abbr}}
+          selected="selected"
+        {{else}}
           {{#if this.default}} selected="selected"{{/if}}
+        {{/eq}}
         {{/if}}>
         {{this.name}}
         </option>

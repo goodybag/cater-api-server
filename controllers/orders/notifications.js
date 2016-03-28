@@ -114,7 +114,14 @@ module.exports.JSON.list = function( req, res ){
 
       fns.push( function( done ){
         note.build( function( error, build ){
-          if ( error ) return done( error );
+          if ( error ){
+            logger.warn('Error building notification', {
+              error: error
+            , notification: note
+            });
+
+            return done();
+          }
 
           // Coerce to legacy structure
           build.cid = Math.random().toString(36);
@@ -131,7 +138,7 @@ module.exports.JSON.list = function( req, res ){
         return res.error( error );
       }
 
-      res.json( results );
+      res.json( results.filter( v => !!v ) );
     });
   });
 };

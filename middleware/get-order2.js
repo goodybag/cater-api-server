@@ -42,7 +42,7 @@ module.exports = function( options ){
         table: 'users'
       , alias: 'user'
       , many:  []
-      , one:   []
+      , one:   [ { table: 'regions', alias: 'region' } ]
       });
 
       users = $options.one[ users - 1 ];

@@ -309,3 +309,13 @@ errors.runtime.ERROR = {
 , name: 'RUNTIME_ERROR'
 , message: 'The application has encountered a run time error'
 }
+
+errors.notifications = {};
+
+errors.notifications.NOT_AVAILABLE = {
+  type: 'notifications'
+, code: '0801'
+, httpCode: '500'
+, name: 'NOT_AVAILABLE'
+, message: 'The requested notification is not available.'
+};

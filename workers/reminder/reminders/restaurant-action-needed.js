@@ -13,6 +13,7 @@ var utils           = require('../../../utils');
 var notifier        = require('../../../lib/order-notifier');
 var config          = require('../../../config');
 var moment          = require('moment-timezone');
+var datetime        = require('stamps/datetime');
 
 var getQuery = function( storage ){
   // 1. Filter submitted orders over an hour
@@ -51,20 +52,9 @@ var getOptions = function( storage ){
 };
 
 var withinBusinessHours = function (order) {
-  // check whether or not the current time is
-  // within business hours, based on orders timezone
-  var now = moment().tz(order.timezone)
-  , start = moment().tz(order.timezone)
-  , end = moment().tz(order.timezone)
-  , timeframe = config.reminders.actionNeeded.timeframe;
-
-  start.set('hour', +timeframe.start.split(':')[0])
-  start.set('minute', +timeframe.start.split(':')[1])
-
-  end.set('hour', +timeframe.end.split(':')[0])
-  end.set('minute', +timeframe.end.split(':')[1])
-
-  return now.isBetween(start, end);
+  return datetime({ businessHours: config.notifications })
+    .tz( order.timezone )
+    .duringBusinessHours();
 };
 
 var getOrders = function ( storage, callback ) {

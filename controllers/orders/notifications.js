@@ -8,6 +8,7 @@ var notifier    = require('../../lib/order-notifier');
 var Models      = require('../../models');
 var errors      = require('../../errors');
 var db          = require('../../db');
+var errors      = require('../../errors');
 var venter      = require('../../lib/venter');
 var notifications2 = require('../../lib/order-notifications2');
 
@@ -89,6 +90,10 @@ module.exports.JSON.list = function( req, res ){
     }).map( function( nid ){
       return function( done ){
         notifier.getNotification( nid, order, { render: false }, function( error, result ){
+          if ( error === errors.notifications.NOT_AVAILABLE ){
+            return done();
+          }
+
           if ( error ) return done( error );
 
           var def = utils.clone( notifier.defs[ nid ] );

@@ -775,13 +775,9 @@ dirac.use( function( dirac ){
     // then those will be used to narrow the order_revisions query
     for ( var key in orderRevisionToOrderMap ){
       if ( orderRevisionToOrderMap[ key ] in $query.where ){
-        orderRevisionsWhere[ 'order_revisions.' + key ] = $query.where[ key ];
-      } else {
-        var quoted = mosqlUtils.quoteObject( orderRevisionToOrderMap[ key ], 'orders' );
-
-        if ( quoted in $query.where ){
-          orderRevisionsWhere[ 'order_revisions.' + key ] = $query.where[ quoted ];
-        }
+        orderRevisionsWhere[ 'order_revisions.' + key ] = $query.where[
+          orderRevisionToOrderMap[ key ]
+        ];
       }
     }
 

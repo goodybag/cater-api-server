@@ -43,9 +43,9 @@ define( function( require, exports, module ){
       }
 
     , isAfterHours: function() {
-        var datetime = this._moment;
-        return datetime.hour() <  this.businessHours.start ||
-               datetime.hour() >= this.businessHours.end;
+        var hour = this._moment.hour();
+        return hour <  this.businessHours.start ||
+               hour >= this.businessHours.end;
       }
 
     , duringBusinessHours: function() {

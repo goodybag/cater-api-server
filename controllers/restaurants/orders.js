@@ -1,3 +1,4 @@
+var moment = require('moment-timezone');
 var db = require('../../db');
 var errors = require('../../errors');
 var utils = require('../../utils');
@@ -81,6 +82,10 @@ module.exports.current = function(req, res, next) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
 
     if (order) {
+      if ( !order.datetime || moment.tz( order.datetime, order.timezone ) < moment.tz( order.timezone ) ){
+        return res.render('shared-link/expired');
+      }
+
       req.url = req.url.replace(/^\/restaurants\/.*\/orders\/current/, '/orders/' + order.id);
       req.order = res.locals.order = order;
       Order.applyPriceHike( req.order );

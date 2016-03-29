@@ -3,6 +3,13 @@
 --------------------
 -- Event Handlers --
 --------------------
+create or replace function on_user_invoice_payment_status_paid()
+returns trigger as $$
+begin
+  perform set_user_invoice_orders_to_paid( NEW.id );
+  return NEW;
+end;
+$$ language plpgsql;
 
 create or replace function on_user_create()
 returns trigger as $$
@@ -36,7 +43,7 @@ begin
     org_id := create_or_get_organization( NEW.organization );
     perform organization_user_adoption( org_id, NEW.id );
   end if;
-  
+
   return NEW;
 end;
 $$ language plpgsql;
@@ -234,7 +241,7 @@ begin
   ) into preferred_delivery_services;
 
   -- None specified? Then load in all services available for the order
-  -- 
+  --
   -- NOTE: This does not take into account the delivery zip.
   --       In the future, we should do this
   if preferred_delivery_services[1] is null then
@@ -563,5 +570,15 @@ begin
   else
     return get_restaurant_text_id( rid, new_text_id, idx + 1 );
   end if;
+end;
+$$ language plpgsql;
+
+create or replace function set_user_invoice_orders_to_paid( invoice_id int )
+returns void as $$
+begin
+  update orders set payment_status = 'paid' where id in (
+    select order_id from user_invoice_orders
+    where user_invoice_id = invoice_id
+  );
 end;
 $$ language plpgsql;

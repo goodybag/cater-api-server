@@ -1,5 +1,5 @@
-var db = require('db');
-var utils = require('utils');
+var db = require('../db');
+var utils = require('../utils');
 
 /**
  * Audit Middleware handles inserting audit records

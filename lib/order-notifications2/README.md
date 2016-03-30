@@ -35,7 +35,7 @@ We've abstracted the process of defining a notification to simply passing an obj
 
 ```javascript
 var trello = require('trello').createClient(
-  require('config').trello
+  require('../../config').trello
 );
 
 var markdown = require('markdown');

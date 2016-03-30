@@ -3,7 +3,7 @@ var Restaurant = require('../../../public/js/app/models/restaurant');
 var Order = require('../../../public/js/app/models/order');
 var User = require('../../../public/js/app/models/user');
 var Orders = require('../../../public/js/app/collections/orders');
-var utils = require('utils');
+var utils = require('../../../utils');
 
 var sortedBy = function(list, prop) {
   var check = list.reduce(function(memo, item) {

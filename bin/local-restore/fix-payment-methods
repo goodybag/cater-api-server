@@ -3,8 +3,8 @@
 var options = { stripe_id: 'card_16HfaiEQiCMC2eZ7pqrrTdPp' };
 var fs      = require('fs');
 var async   = require('async');
-var db      = require('db');
-var utils   = require('utils');
+var db      = require('../../db');
+var utils   = require('../../utils');
 
 if ( fs.existsSync( __dirname + '/../../local-config.json') ){
   var testConfig = require('../../local-config.json');

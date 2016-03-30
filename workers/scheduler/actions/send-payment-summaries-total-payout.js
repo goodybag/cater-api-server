@@ -1,5 +1,5 @@
-var db        = require('db');
-var utils     = require('utils');
+var db        = require('../../../db');
+var utils     = require('../../../utils');
 var helpers   = require('../../../public/js/lib/hb-helpers');
 var PMS       = require('stamps/payment-summaries/db');
 var now       = require('stamps/datetime')({

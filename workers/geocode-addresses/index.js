@@ -1,7 +1,7 @@
 var fs              = require('fs');
-var db              = require('db');
-var utils           = require('utils');
-var config          = require('config');
+var db              = require('../../db');
+var utils           = require('../../utils');
+var config          = require('../../config');
 var GeoCodeRequests = require('stamps/requests/geocode');
 var Addresses       = require('stamps/addresses');
 

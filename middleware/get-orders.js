@@ -1,6 +1,6 @@
-var db = require('db');
+var db = require('../db');
 var moment = require('moment-timezone');
-var utils = require('utils');
+var utils = require('../utils');
 var orders = require('../lib/stamps/db/orders');
 
 module.exports = function(options) {

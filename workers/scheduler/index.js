@@ -1,6 +1,6 @@
 var logger = require('./logger');
 var forky = require('forky');
-var config = require('config');
+var config = require('../../config');
 
 try {
   forky({ path: __dirname + '/worker.js', workers: config.scheduler.workers });

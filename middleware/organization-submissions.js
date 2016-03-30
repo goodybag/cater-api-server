@@ -1,9 +1,9 @@
 /**
  * This middleware queries organizations that have submitted orders
  */
-var db = require('db');
+var db = require('../db');
 var builder = require('mongo-sql');
-var utils = require('utils');
+var utils = require('../utils');
 
 var withQuery = function(orderBy, filters) {
   var query = {

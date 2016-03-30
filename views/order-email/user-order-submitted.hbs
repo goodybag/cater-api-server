@@ -10,7 +10,7 @@
         {{> order_email_horizontal_rule}}
 
         <h2 style="text-align: left; font-size: 17px; font-weight: 500">
-          <a href="{{config.baseUrl}}/orders/{{order.id}}" style="font-weight: 300; color: #5592E5">{{#if order.user.display_invoice_instead_of_order}}Invoice{{else}}Order{{/if}} #{{order.id}}</a> - {{order.restaurant.name}}
+          <a href="{{config.baseUrl}}/orders/{{order.id}}" style="font-weight: 300; color: #5592E5">Order #{{order.id}}</a> - {{order.restaurant.name}}
         </h2>
 
         {{> order_email_gutter}}
@@ -24,15 +24,9 @@
         {{> order_email_items_table}}
         {{> order_email_order_points}}
 
-        {{#if order.user.display_invoice_instead_of_order}}
-          {{> order_email_big_button
-              text="View full invoice"
-              url=(concat config.baseUrl '/orders/' order.id) }}
-        {{else}}
-          {{> order_email_big_button
-              text="View full order"
-              url=(concat config.baseUrl '/orders/' order.id) }}
-        {{/if}}
+        {{> order_email_big_button
+            text="View full order"
+            url=(concat config.baseUrl '/orders/' order.id) }}
       </td>
     </tr>
   </table>

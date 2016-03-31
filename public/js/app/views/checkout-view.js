@@ -18,7 +18,7 @@ define(function(require, exports, module) {
         'click .item-edit':                             'itemEditClick',
         'click  #cancel-confirm-modal .btn-cancel':     'cancel',
         'click  .btn-expired-update':                   'onExpiredUpdateClick',
-        'click  #update-card .btn-cancel':              'onUpdateCardCancelClick',
+        'click  #update-card .btn-cancel-card':         'onUpdateCardCancelClick',
         'click  #update-card .btn-submit':              'onUpdateCardSubmitClick',
         'change input[type="radio"].payment-method':    'changePaymentMethod',
         'change #payment-method-id':                    'onPaymentMethodIdChange',

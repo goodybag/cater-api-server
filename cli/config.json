@@ -1,0 +1,45 @@
+{
+  "name": "goodybag-cli",
+  "description": "The goodybag kickass command line interface.",
+  "version": "0.1.0",
+  "commands": {
+    "help": {
+      "alias": "h",
+      "description": "Table of available commands.",
+      "usage": "help <[COMMAND] ...>",
+      "help": "Prints the basic usage information on each [COMMAND] given (1 or more). Otherwise, prints the full table of available commands.",
+      "flags": {}
+    },
+    "version": {
+      "alias": "v",
+      "description": "Current version.",
+      "usage": "version",
+      "help": "Prints out the current version of goodybag-cli.",
+      "flags": {}
+    },
+    "start": {
+      "alias": "st",
+      "description": "Starts the server.",
+      "usage": "start [-p] [-r] [-m] [-s]",
+      "help": "Starts the server from scratch if no flags are given. This means starting Postgres, redis, mongod, and the goodybag-cater-api server, in that order. If flags are given, then only the processes specified will start. If a process is already started, it will be ignored.",
+      "flags": {
+        "-p": "Opens the Postgres app.",
+        "-r": "Starts redis-server.",
+        "-m": "Starts mongod.",
+        "-s": "Starts goodybag-cater-api server."
+      }
+    },
+    "stop": {
+      "alias": "stp",
+      "description": "Stops the server.",
+      "usage": "stop [-p] [-r] [-m] [-s]",
+      "help": "Stops the server, closing all processes with it (e.g., Postgres, redis, mongod). If flags are given, then only the processes specified will be stopped. If a process is already stopped, it will be ignored.",
+      "flags": {
+        "-p": "Closes the Postgres app.",
+        "-r": "Stops redis-server.",
+        "-m": "Stops mongod.",
+        "-s": "Stops goodybag-cater-api server."
+      }
+    }
+  }
+}

@@ -25,6 +25,7 @@ public/components
 backups
 *~
 local-config.json
+cli/local-config.json
 tmp/
 !tmp/index
 workers/validate-addresses/log.json

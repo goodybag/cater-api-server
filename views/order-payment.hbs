@@ -30,7 +30,7 @@
       <div class="col-md-8">
         {{#if (eq order.payment_status "error") }}
         <div class="alert alert-danger">
-          <strong>Card Declined!</strong> An error occurred while trying to process your card, please resubmit your order payment. If you have any questions, contact our customer support team at (512) 270-6555.
+          <strong>Card Declined!</strong> An error occurred while trying to process your card, please resubmit your order payment. If you have any questions, contact our customer support team at {{phoneNumber config.phone.support}}.
         </div>
         <form id="payment-form">
           {{> order_payment_info}}

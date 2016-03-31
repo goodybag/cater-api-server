@@ -83,7 +83,11 @@ module.exports.current = function(req, res, next) {
 
     if (order) {
       if ( !order.datetime || moment.tz( order.datetime, order.timezone ) < moment.tz( order.timezone ) ){
-        return res.render('shared-link/expired');
+        if ( edit_token ){
+          return res.render('shared-link/expired');
+        } else {
+          return next();
+        }
       }
 
       req.url = req.url.replace(/^\/restaurants\/.*\/orders\/current/, '/orders/' + order.id);

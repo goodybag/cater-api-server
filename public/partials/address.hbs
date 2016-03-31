@@ -16,7 +16,9 @@
   {{#if phone}}
   <span class="group">Phone: {{phoneNumber phone}}</span><br>
   {{/if}}
+  {{#unless hideDeliveryInstructions}}
   {{#if delivery_instructions}}
   <span class="group">Delivery Instructions: {{delivery_instructions}}</span><br>
   {{/if}}
+  {{/unless}}
 </address>

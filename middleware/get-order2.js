@@ -29,6 +29,10 @@ module.exports = function( options ){
     , with:   []
     };
 
+    if ( options.useLatestRevision ){
+      $options.useLatestRevision = true;
+    }
+
     if ( options.submittedDate ) {
       $options.submittedDate = options.submittedDate;
     }

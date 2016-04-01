@@ -13,6 +13,7 @@ define( function( require, exports, module ){
   var items = require('./item');
   var amenities = require('./amenity');
   var moment = require('moment-timezone');
+  var profiler = require('../../../../../lib/profiler')();
 
   var Order = require('stampit')()
     .state({
@@ -25,7 +26,19 @@ define( function( require, exports, module ){
     , payment_method_id: null
     , service_fee: 0
     , priority_account_price_hike_percentage: 0
+    , tip: 0
     })
+    // .enclose( function(){
+    //   this.items = (this.items || []).map( function( item ){
+    //     item = items( item );
+
+    //     if ( this.priority_account_price_hike_percentage ){
+    //       item.priority_account_price_hike_percentage = this.priority_account_price_hike_percentage;
+    //     }
+
+    //     return item;
+    //   }.bind( this ));
+    // })
     .methods({
       getTax: function(){
         if ( this.user && this.user.is_tax_exempt ){
@@ -58,6 +71,7 @@ define( function( require, exports, module ){
       }
 
     , getItems: function(){
+        // return this.items;
         return (this.items || []).map( function( item ){
           item = items( item );
 
@@ -75,47 +89,47 @@ define( function( require, exports, module ){
       }
 
     , getTotalForContractFee: function() {
-        return [
-          this.getSubTotal()
-        , this.getPriorityAccountCost()
-        , this.adjustment_amount
-        , this.user_adjustment_amount
-        , this.getTax()
-        , this.delivery_fee
-        , this.tip
-        , this.service_fee
-        ].reduce( utils.add, 0 );
+        return 0
+        + this.getSubTotal()
+        + this.getPriorityAccountCost()
+        + this.adjustment_amount
+        + this.user_adjustment_amount
+        + this.getTax()
+        + this.delivery_fee
+        + this.tip
+        + this.service_fee
+        ;
       }
 
     , getTotal: function( options ){
-        return [
-          this.getSubTotal()
-        , this.getPriorityAccountCost()
-        , this.adjustment_amount
-        , this.user_adjustment_amount
-        , this.getTax()
-        , this.delivery_fee
-        , this.tip
-        , this.getNoContractFee()
-        , this.service_fee
-        ].reduce( utils.add, 0 );
+        return 0
+        + this.getSubTotal()
+        + this.getPriorityAccountCost()
+        + this.adjustment_amount
+        + this.user_adjustment_amount
+        + this.getTax()
+        + this.delivery_fee
+        + this.tip
+        + this.getNoContractFee()
+        + this.service_fee
+        ;
       }
 
     , getSubTotal: function(){
-        return [
-          this.getItemTotal()
-        , this.getAmenityTotal()
-        ].reduce( utils.add, 0 );
+        return 0
+        + this.getItemTotal()
+        + this.getAmenityTotal()
+        ;
       }
 
     , getRestaurantTotal: function(){
-        return [
-          this.getSubTotal()
-        , this.adjustment_amount
-        , this.getTax()
-        , this.type === 'delivery' ? this.delivery_fee : 0
-        , this.type === 'delivery' ? this.tip : 0
-        ].reduce( utils.add, 0 );
+        return 0
+        + this.getSubTotal()
+        + this.adjustment_amount
+        + this.getTax()
+        + this.type === 'delivery' ? this.delivery_fee : 0
+        + this.type === 'delivery' ? this.tip : 0
+        ;
       }
 
     , getPickupDateTime: function(){
@@ -133,29 +147,33 @@ define( function( require, exports, module ){
       }
 
     , getPriorityAccountCost: function(){
+        if ( this.priority_account_price_hike_percentage === 0 ){
+          return 0;
+        }
+
         var copyToAmenity = {
           guests: this.guests
         , priority_account_price_hike_percentage: this.priority_account_price_hike_percentage
         };
 
-        return [
-          this.getItems().reduce( function( total, item ){
+        return 0
+        + this.getItems().reduce( function( total, item ){
             return total + (item.getPriorityAccountCost() * item.quantity);
           }, 0 )
 
-        , this.amenities.reduce( function( total, amenity ){
+        + this.amenities.reduce( function( total, amenity ){
             return total + amenities(
               utils.extend( {}, amenity, copyToAmenity )
             ).getPriorityAccountCost();
           }, 0 )
-        ].reduce( utils.add, 0 );
+        ;
       }
 
     , getPriorityAccountSubTotal: function(){
-        return [
-          this.getSubTotal()
-        , this.getPriorityAccountCost()
-        ].reduce( utils.add, 0 );
+        return 0
+        + this.getSubTotal()
+        + this.getPriorityAccountCost()
+        ;
       }
 
     , getDeadline: function(){
@@ -196,24 +214,25 @@ define( function( require, exports, module ){
       }
     });
 
-  Order.applyPriceHike = function( order, options ){
-    options = utils.defaults( options || {}, {
-      useCachedSubTotal: false
-    });
-
+  Order.applyPriceHike = function( order ){
+    // profiler.profile('#' + order.id);
     order.items = order.orderItems || order.items;
 
-    var _order = options.useCachedSubTotal ? CachedOrder.create( order ) : Order.create( order );
+    var _order = Order.create( order );
     var phike = order.priority_account_price_hike_percentage || 0;
 
+    _order.sub_total = order.sub_total = _order.getPriorityAccountSubTotal();
+    _order.priority_account_price_hike_percentage = 0;
+
+    _order = CachedOrder.create( _order );
+
     order.total = _order.getTotal();
-    order.sub_total = _order.getPriorityAccountSubTotal();
+    // profiler.profile('#' + order.id);
     order.sales_tax = _order.getTax();
     order.orderItems = _order.getItems();
     order.no_contract_amount = _order.getNoContractFee();
 
     order.orderItems.forEach( function( item ){
-      item.sub_total = item.getTotal();
       Order.applyPriceHikeToItem( item, phike );
     });
 
@@ -235,7 +254,7 @@ define( function( require, exports, module ){
   Order.applyPriceHikeToItem = function( item, phike ){
     phike = phike || 0;
 
-    var cloned = items.create( utils.cloneDeep( item ) );
+    var cloned = items.create( item );
     cloned.priority_account_price_hike_percentage = phike;
     return utils.extend( item, cloned.toPriceHikedAttrs() );
   };

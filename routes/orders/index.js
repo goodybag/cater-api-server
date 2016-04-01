@@ -318,7 +318,9 @@ route.get('/:oid/add-items', m.getOrder2({
     userPaymentMethods: true,
     restaurant: true,
     deliveryService: true,
-    restaurantDbModelFind: true
+    restaurantDbModelFind: true,
+    useLatestRevision: true,
+    applyPriceHike: true
   }), m.restrict(['admin', 'order-owner', 'order-editor']), controllers.restaurants
   .orders.get
 );

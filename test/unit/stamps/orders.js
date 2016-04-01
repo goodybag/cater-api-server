@@ -149,6 +149,7 @@ describe('Orders Stamps', function(){
     var order = orders({
       restaurant: {
         region: { sales_tax: 0.0825 }
+      , no_contract_fee: 0
       }
     , items: [
         { price: 100, quantity: 1 }
@@ -173,6 +174,7 @@ describe('Orders Stamps', function(){
     var order = orders.Cached({
       restaurant: {
         region: { sales_tax: 0.0825 }
+      , no_contract_fee: 0
       }
     , sub_total: 717
     , guests: 5
@@ -189,6 +191,7 @@ describe('Orders Stamps', function(){
     var order = orders({
       restaurant: {
         region: { sales_tax: 0.0825 }
+      , no_contract_fee: 0
       }
     , user: { is_tax_exempt: true }
     , items: [
@@ -214,6 +217,7 @@ describe('Orders Stamps', function(){
     var order = orders({
       restaurant: {
         region: { sales_tax: 0.0825 }
+      , no_contract_fee: 0
       }
     , user: { is_tax_exempt: false }
     , priority_account_price_hike_percentage: 0.1
@@ -964,7 +968,9 @@ describe('Orders Stamps', function(){
       .state({
         restaurant: {
           region: { sales_tax: 0.0825 }
+        , no_contract_fee: 0
         }
+      , tip: 0
       });
 
     it('.isEligibleForHolidayPromo()', function(){

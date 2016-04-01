@@ -26,6 +26,11 @@ define( function( require, exports, module ){
     , service_fee: 0
     , priority_account_price_hike_percentage: 0
     })
+    .enclose(function(){
+      if ( Array.isArray( this.orderItems ) ){
+        this.items = this.orderItems;
+      }
+    })
     .methods({
       getTax: function(){
         if ( this.user && this.user.is_tax_exempt ){
@@ -276,6 +281,6 @@ define( function( require, exports, module ){
     });
 
   Order.Cached = CachedOrder;
-  
+
   return Order;
 });

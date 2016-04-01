@@ -2,7 +2,7 @@
   <div class="col-md-12">
     <legend>Delivery Info</legend>
     <div class="order-address read-only{{#unless order.isAddressComplete}} hide{{/unless}}">
-      {{> address order}}
+      {{> address order hideDeliveryInstructions=true}}
       <ul class="list-inline address-actions">
         <li><a href="javascript:void(0)" class="edit-address-btn toggle-edit">Edit</a></li>
         <li>|</li>

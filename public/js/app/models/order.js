@@ -116,8 +116,9 @@ define(function(require, exports, module) {
         errors.push({addressErrors: this.address.validationError});
       }
 
-      var order = new Order( attrs );
+      var order = new Order( _.defaults( attrs, this.attributes ) );
       order.restaurant = this.restaurant;
+      order.orderItems = this.orderItems;
 
       // Add on the restaurant fulfillability errors
       errors = errors.concat(
@@ -287,7 +288,7 @@ define(function(require, exports, module) {
 
         // Proxy the call to the original save function
         return Backbone.Model.prototype.save.call(this, attrs, options);
-    },  
+    },
 
     set: function(key, val, options) {
       // strip out updates to the address fields and proxy them through to the address model

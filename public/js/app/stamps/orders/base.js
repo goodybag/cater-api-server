@@ -13,7 +13,7 @@ define( function( require, exports, module ){
   var items = require('./item');
   var amenities = require('./amenity');
   var moment = require('moment-timezone');
-  var profiler = require('../../../../../lib/profiler')();
+  // var profiler = require('../../../../../lib/profiler')();
 
   var Order = require('stampit')()
     .state({

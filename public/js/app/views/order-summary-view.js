@@ -33,6 +33,7 @@ define(function(require, exports, module) {
 
       var html = this.template({
         order: this.model.toJSON()
+      , disableCheckout: this.model.validateOrderFulfillability().length > 0
       , edit_token: this.options.editToken
       , config: config
       });

@@ -149,13 +149,7 @@ route.put('/:oid', m.getOrder2({
 
 route.patch('/:oid', m.getOrder2({
     param: 'oid',
-    items: true,
-    user: true,
-    userAddresses: true,
-    userPaymentMethods: true,
-    restaurant: true,
-    deliveryService: true,
-    applyPriceHike: true
+    useLatestRevision: true
   }), m.restrict(['order-owner', 'order-restaurant', 'admin']), controllers.orders
   .editability, controllers.orders.update);
 

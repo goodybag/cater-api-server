@@ -165,7 +165,7 @@ define(function(require, exports, module) {
       this.isLoading = true;
 
       var self = this;
-      var jqxhr = this.model.save( this.getParams(), {
+      var jqxhr = this.model.save( this.model.isNew() ? null : this.getParams(), {
         // We've already done validation ourselves
         validate: false
       , patch: true

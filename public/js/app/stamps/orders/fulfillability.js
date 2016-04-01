@@ -13,6 +13,7 @@ define( function( require, exports, module ){
   var moment = require('moment-timezone');
 
   return require('stampit')()
+    .compose( require('./base') )
     .state({
       timezone: 'UTC'
     , dateFormat: 'YYYY-MM-DD'
@@ -163,6 +164,14 @@ define( function( require, exports, module ){
               , !this.guests ? true : this.guests <= time.max_guests
               ].every( _.identity );
             }.bind( this ));
+        }}
+
+      , { name: 'MinimumOrder', fn: function strategyMinimumOrder(){
+          if ( typeof this.restaurant.minimum_order !== 'number' ){
+            return true;
+          }
+
+          return this.restaurant.minimum_order <= this.getSubTotal();
         }}
       ]
 

@@ -4,6 +4,12 @@ define(function(require, exports, module) {
   var venter = require('venter');
   var config = require('config');
 
+  // Fulfillability errors we should ignore when preventing
+  // the user from submitting params
+  var errorsToIgnore = [
+    'MinimumOrder'
+  ];
+
   return module.exports = Backbone.View.extend({
     events: {
       'submit form': 'submit',
@@ -70,14 +76,18 @@ define(function(require, exports, module) {
       this.$el.find('.alert').addClass('hide');
     },
 
-    showErrors: function(){
+    showErrors: function( errors ){
       this.clear();
 
-      var errors = [].concat(
-        this.model.validateOrderFulfillability()
-      , this.model.validateRestaurantEvents()
-      , this.model.validateAfterHours()
-      );
+      var errors = errors || []
+        .concat(
+          this.model.validateOrderFulfillability()
+        , this.model.validateRestaurantEvents()
+        , this.model.validateAfterHours()
+        )
+        .filter( function( error ){
+          return errorsToIgnore.indexOf( error ) === -1;
+        });
 
       var this_ = this;
 
@@ -111,7 +121,7 @@ define(function(require, exports, module) {
       }
     },
 
-    updateParams: function () {
+    getParams: function(){
       var order = {
         zip: this.$el.find('input[name="zip"]').val().trim() || null,
         guests: parseInt(this.$el.find('input[name="guests"]').val()) || null,
@@ -127,7 +137,11 @@ define(function(require, exports, module) {
       if (order.zip === this.options.defaultAddress.get('zip'))
         _.extend(order, this.options.defaultAddress.pick(this.model.constructor.addressFields));
 
-      this.model.set( order );
+      return order;
+    },
+
+    updateParams: function () {
+      this.model.set( this.getParams() );
     },
 
     submit: function(e) {
@@ -151,7 +165,17 @@ define(function(require, exports, module) {
       this.isLoading = true;
 
       var self = this;
-      this.model.save().success(function(){
+      var jqxhr = this.model.save( this.model.isNew() ? null : this.getParams(), {
+        // We've already done validation ourselves
+        validate: false
+      , patch: true
+      });
+
+      if ( !jqxhr ){
+        return this.showErrors(['unknown']);
+      }
+
+      jqxhr.success(function(){
         self.model.trigger('change:orderparams');
         if ( self.submitHandlers.success ){
           self.submitHandlers.success( self.model );

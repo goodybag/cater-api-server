@@ -390,7 +390,7 @@ define(function(require, exports, module) {
         order.restaurant = order.restaurant._cached;
         order = Fulfillability.create( order );
         return order.why().map( function( reason ){
-          return fulfillabilityErrorToLegacyErrorMap[ reason ];
+          return fulfillabilityErrorToLegacyErrorMap[ reason ] || reason;
         });
       }
 

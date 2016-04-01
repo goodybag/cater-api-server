@@ -381,7 +381,11 @@ module.exports.update = function(req, res, next) {
       return res.error( errors.internal.UNKNOWN, error );
     }
 
-    res.send( order.toJSON({ plain:true }) );
+    var result = order.toJSON({ plain:true });
+
+    Order.applyPriceHike( result );
+
+    res.send( result );
 
     venter.emit( 'order:change', order.attributes.id );
 

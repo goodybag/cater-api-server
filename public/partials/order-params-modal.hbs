@@ -19,6 +19,8 @@
           <div class="alert alert-danger after_hours hide">We're sorry, it's too late to place an order for {{formatDateTime orderParams.date}}</div>
 
           <div class="alert alert-danger error-blank-fields hide">You must fill out all fields</div>
+
+          <div class="alert alert-danger error-unknown hide">An error occurred processing your request. Please refresh and try again.</div>
         </div>
         <div class="order-params-wrapper">
           {{> order_params_bar}}

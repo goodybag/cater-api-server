@@ -34,7 +34,7 @@
       </div>
       <div class="col-xs-6">
         {{#eq order.status "pending"}}
-        <button class="btn btn-primary btn-checkout pull-right {{#if edit_token}}hide{{/if}}"{{#unless order.submittable}} disabled="disabled"{{/unless}}{{#if restaurant.is_unacceptable}} disabled="disabled"{{/if}}>Checkout</button>
+        <button class="btn btn-primary btn-checkout pull-right {{#if edit_token}}hide{{/if}}"{{#if disableCheckout}} disabled="disabled"{{/if}}>Checkout</button>
         {{else}}
         <a href="/orders/{{order.id}}" class="btn btn-primary pull-right">To Order</a>
         {{/eq}}

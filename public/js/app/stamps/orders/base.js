@@ -13,7 +13,7 @@ define( function( require, exports, module ){
   var items = require('./item');
   var amenities = require('./amenity');
   var moment = require('moment-timezone');
-  var profiler = require('../../../../../lib/profiler')();
+  // var profiler = require('../../../../../lib/profiler')();
 
   var Order = require('stampit')()
     .state({
@@ -28,17 +28,11 @@ define( function( require, exports, module ){
     , priority_account_price_hike_percentage: 0
     , tip: 0
     })
-    // .enclose( function(){
-    //   this.items = (this.items || []).map( function( item ){
-    //     item = items( item );
-
-    //     if ( this.priority_account_price_hike_percentage ){
-    //       item.priority_account_price_hike_percentage = this.priority_account_price_hike_percentage;
-    //     }
-
-    //     return item;
-    //   }.bind( this ));
-    // })
+    .enclose(function(){
+      if ( Array.isArray( this.orderItems ) ){
+        this.items = this.orderItems;
+      }
+    })
     .methods({
       getTax: function(){
         if ( this.user && this.user.is_tax_exempt ){
@@ -295,6 +289,6 @@ define( function( require, exports, module ){
     });
 
   Order.Cached = CachedOrder;
-  
+
   return Order;
 });

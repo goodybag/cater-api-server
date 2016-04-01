@@ -107,7 +107,7 @@ route.get('/:uid/orders'
   })
 , m.param('status')
 , m.param('type')
-, m.sort('-orders.datetime')
+, m.sort('-orders.datetime', 'nulls last')
 , m.queryOptions({
     useLatestRevision: true
   , applyPriceHike: { useCachedSubTotal: false }

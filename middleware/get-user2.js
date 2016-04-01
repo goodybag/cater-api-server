@@ -60,6 +60,7 @@ module.exports = function( options ){
         }
       } else {
         req.user = req.session.canonical;
+        delete req.session.canonical;
         req.session.user = { id: req.user.id };
 
         req.user = new Models.User( req.user );

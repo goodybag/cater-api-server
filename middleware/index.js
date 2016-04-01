@@ -73,6 +73,7 @@ module.exports = utils.extend(
   , logger: require('./logger')
   , sessionAndUser: require('../lib/session-and-user')
   , setUserRegion: require('./set-user-region')
+  , sort: require('./sort')
   , storeUserAgent: require('./store-user-agent')
   , timeout: require('./timeout')
   , trackOrderRevision: require('./track-order-revision')

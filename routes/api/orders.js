@@ -142,12 +142,7 @@ route.get('/:id/delivery-fee', m.getOrder2({
 
 route.get('/:oid/items', m.getOrder2({
     param: 'oid',
-    items: true,
-    user: true,
-    userAddresses: true,
-    userPaymentMethods: true,
-    restaurant: true,
-    deliveryService: true,
+    useLatestRevision: true,
     applyPriceHike: true
   }), m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
   controllers.orders.orderItems.list

@@ -13,26 +13,14 @@
  */
 
 var utils = require('../utils');
+var createProfiler = require('../lib/profiler');
 
-module.exports = function( name, options ){
+module.exports = function( name){
   name = name || 'Profiler'
 
-  options = utils.defaults( options, {
-
-  });
-
   return function( req, res, next ){
-    if ( !req.profiler ) req.profiler = {};
-
-    if ( !req.profiler[ name ] ){
-      req.profiler[ name ] = new Date();
-      return next();
-    }
-
-    var result = new Date() - req.profiler[ name ];
-    delete req.profiler[ name ];
-
-    console.log( name + ': ' + result + 'ms' );
+    if ( !req.profiler ) req.profiler = createProfiler();
+    req.profiler.profile( name );
     next();
   };
 };

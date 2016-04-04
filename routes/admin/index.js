@@ -795,6 +795,7 @@ route.get('/orders/:id'
   , items:                  true
   , internalNotes:          true
   , alerts:                 true
+  , applyPriceHike:         true
   })
 
   // Lookup the restaurants in the order region

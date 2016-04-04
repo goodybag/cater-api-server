@@ -44,8 +44,11 @@ utils.async.waterfall([
       , table: 'orders'
       , type:  'select'
       , columns: ['restaurant_id']
+      , joins: [
+          { type: 'left', target: 'order_statuses', on: { order_id: '$orders.id$' } }
+        ]
       , where: {
-          status: 'accepted'
+          'order_statuses.status': 'submitted'
         , datetime: period.getMosqlRangeQuery()
         }
       }

@@ -18,6 +18,7 @@ define(function(require, exports, module) {
   var RestarantEvent = require('./restaurant-event');
   var OrderItem = require('./order-item');
   var Address = require('./address');
+  var Fulfillability = require('stamps/orders/fulfillability');
 
   var odsChecker = require('order-delivery-service-checker');
 
@@ -461,6 +462,18 @@ define(function(require, exports, module) {
 
       // If they have blank fields, that's the only thing we need to tell them
       return _.every(isPresent) ? this.restaurant.validateOrderFulfillability( this ) : ['has_blank_fields'];
+    },
+
+    areParamsFulfillable: function(){
+      var order = Fulfillability.create( this.attributes );
+
+      if ( this.restaurant.attributes._cached ){
+        order.restaurant = this.restaurant.attributes._cached;
+      }
+
+      return order.isFulfillable({
+        omit: [ Fulfillability.requirements.MinimumOrder ]
+      });
     },
 
     toJSON: function() {

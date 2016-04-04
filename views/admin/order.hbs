@@ -204,6 +204,15 @@
               value="{{order.courier_tracking_id}}">
           </dd>
         </div>
+        <div class="row{{#if order.restaurant.plan}} hide{{/if}}" id="waive-transaction-fee-row">
+          <dt>Waive Transaction Fee</dt>
+          <dd>
+            <input
+              type="checkbox"
+              name="waive_transaction_fee"
+              {{#if order.waive_transaction_fee}}checked{{/if}}>
+          </dd>
+        </div>
       </dl>
 
       {{#eq order.type 'courier'}}

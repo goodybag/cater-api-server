@@ -12,7 +12,9 @@
   {{/each}}
   </ul>
 
-  <a class="item-edit" href="#" data-id="{{id}}">Edit</a>
+  {{#unless this.hideEdit}}
+    <a class="item-edit" href="#" data-id="{{id}}">Edit</a>
+  {{/unless}}
 </td>
 <td class="item-quantity">x {{quantity}}</td>
 <td class="item-price">{{dollars sub_total}}</td>

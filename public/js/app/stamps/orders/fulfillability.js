@@ -11,9 +11,9 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 define( function( require, exports, module ){
   var _ = require('lodash');
   var moment = require('moment-timezone');
+  var Base = require('./base');
 
-  return require('stampit')()
-    .compose( require('./base') )
+  var Fulfillability = exports = require('stampit')()
     .state({
       timezone: 'UTC'
     , dateFormat: 'YYYY-MM-DD'
@@ -50,139 +50,28 @@ define( function( require, exports, module ){
       }
     })
     .methods({
-      // Since _all_ of these strategies are required to be fulfillable
-      // put the computationally least complex strategies first
-      fulfillmentRequirements: [
-        // Is the restaurant even open on that day?
-        { name: 'OpenDay', fn: function strategyOpenDay(){
-          if ( !this.datetime ) return true;
+      getFulfillmentRequirements: function( options ){
+        var omit = options && options.omit || [];
 
-          var hours = this.restaurant.hours.concat( this.restaurant.delivery_hours );
+        return Fulfillability.requirements
+          .filter( function( strategy ){
+            if ( strategy === undefined || strategy === null ){
+              console.warn('OrderFulfillability attempted to omit an undefined or null strategy');
+            }
 
-          return !!_.findWhere( hours, {
-            day: this.datetime.day()
+            return omit.indexOf( strategy ) === -1;
           });
-        }}
-
-        // Restaurant is open on that day, but what about time?
-      , { name: 'OpenHours', fn: function strategyOpenHours(){
-          if ( !this.datetime ) return true;
-          if ( this.ignoreTime ) return true;
-
-          var day = this.datetime.day();
-
-          var format = [ this.dateFormat, this.availabilityTimeFormat ].join(' ');
-          var hms = ['hour', 'minute', 'second'];
-
-          return this.restaurant.hours
-            .concat( this.restaurant.delivery_hours )
-            .filter( function( dayHours ){
-              return dayHours.day === day;
-            })
-            .some( function( dayHours ){
-              var startTime = _.object(
-                hms
-              , dayHours.start_time.split(':')
-              );
-
-              var endTime = _.object(
-                hms
-              , dayHours.end_time.split(':')
-              );
-
-              var startDate = this.datetime.clone();
-              var endDate = this.datetime.clone();
-
-              hms.forEach( function( component ){
-                startDate.set( component, startTime[ component ] );
-                endDate.set( component, endTime[ component ] );
-              });
-
-              return [
-                startDate <= this.datetime
-              , this.datetime < endDate
-              ].every( _.identity );
-            }.bind( this ));
-        }}
-
-      , { name: 'ClosedEvents', fn: function strategyClosedEvents(){
-          var datetime = this.datetime;
-
-          if ( !this.datetime ) datetime = moment.tz( this.timezone );
-
-          if ( !Array.isArray( this.restaurant.events ) ) return true;
-
-          return this.restaurant.events
-            .filter( function( evt ){
-              return evt.closed;
-            })
-            .every( function( evt ){
-              var start = moment.tz( evt.during.start.value, this.dateFormat, this.timezone );
-              var end   = moment.tz( evt.during.end.value, this.dateFormat, this.timezone );
-
-              var compare = function( a, b, isStart, inclusive ){
-                if ( isStart ){
-                  return inclusive ? a >= b : a > b;
-                }
-
-                return inclusive ? a <= b : a < b;
-              }.bind( this );
-
-              // Inner expression tests to see if datetime is between start/end
-              return !(
-                compare( datetime, start, true, evt.during.start.inclusive ) &&
-                compare( datetime, end, false, evt.during.end.inclusive )
-              );
-            }.bind( this ));
-        }}
-
-        // Simply check if the zip is supported by delivery
-      , { name: 'Zip', fn: function strategyZip(){
-          if ( !this.zip ) return true;
-
-          var zips = this.getAllSupportedDeliveryZips();
-
-          return !!_.findWhere( zips, { zip: this.zip } );
-        }}
-
-        // Is there a lead time that satisfies?
-      , { name: 'LeadTimes', fn: function strategyLeadTimes(){
-          if ( !this.datetime ) return true;
-
-          var leadTimes = this.getAllSupportedLeadTimes();
-
-          if ( leadTimes.length === 0 ) return false;
-
-          var minutes = moment.duration(
-            this.datetime - moment.tz( this.timezone )
-          ).asMinutes();
-
-          return leadTimes
-            .some( function( time ){
-              return [
-                minutes >= time.lead_time
-              , !this.guests ? true : this.guests <= time.max_guests
-              ].every( _.identity );
-            }.bind( this ));
-        }}
-
-      , { name: 'MinimumOrder', fn: function strategyMinimumOrder(){
-          if ( typeof this.restaurant.minimum_order !== 'number' ){
-            return true;
-          }
-
-          return this.restaurant.minimum_order <= this.getSubTotal();
-        }}
-      ]
-
-    , isFulfillable: function(){
-        return this.fulfillmentRequirements.every( function( strategy ){
-          return strategy.fn.call( this );
-        }.bind( this ));
       }
 
-    , why: function(){
-        return this.fulfillmentRequirements
+    , isFulfillable: function( options ){
+        return this.getFulfillmentRequirements( options )
+          .every( function( strategy ){
+            return strategy.fn.call( this );
+          }.bind( this ));
+      }
+
+    , why: function( options ){
+        return this.getFulfillmentRequirements( options )
           .filter( function( strategy ){
             return !strategy.fn.call( this );
           }.bind( this ))
@@ -241,4 +130,137 @@ define( function( require, exports, module ){
         );
       }
     });
+
+  // Since _all_ of these strategies are required to be fulfillable
+  // put the computationally least complex strategies first
+  var requirements = exports.requirements = [
+    // Is the restaurant even open on that day?
+    { name: 'OpenDay', fn: function strategyOpenDay(){
+      if ( !this.datetime ) return true;
+
+      var hours = this.restaurant.hours.concat( this.restaurant.delivery_hours );
+
+      return !!_.findWhere( hours, {
+        day: this.datetime.day()
+      });
+    }}
+
+    // Restaurant is open on that day, but what about time?
+  , { name: 'OpenHours', fn: function strategyOpenHours(){
+      if ( !this.datetime ) return true;
+      if ( this.ignoreTime ) return true;
+
+      var day = this.datetime.day();
+
+      var format = [ this.dateFormat, this.availabilityTimeFormat ].join(' ');
+      var hms = ['hour', 'minute', 'second'];
+
+      return this.restaurant.hours
+        .concat( this.restaurant.delivery_hours )
+        .filter( function( dayHours ){
+          return dayHours.day === day;
+        })
+        .some( function( dayHours ){
+          var startTime = _.object(
+            hms
+          , dayHours.start_time.split(':')
+          );
+
+          var endTime = _.object(
+            hms
+          , dayHours.end_time.split(':')
+          );
+
+          var startDate = this.datetime.clone();
+          var endDate = this.datetime.clone();
+
+          hms.forEach( function( component ){
+            startDate.set( component, startTime[ component ] );
+            endDate.set( component, endTime[ component ] );
+          });
+
+          return [
+            startDate <= this.datetime
+          , this.datetime < endDate
+          ].every( _.identity );
+        }.bind( this ));
+    }}
+
+  , { name: 'ClosedEvents', fn: function strategyClosedEvents(){
+      var datetime = this.datetime;
+
+      if ( !this.datetime ) datetime = moment.tz( this.timezone );
+
+      if ( !Array.isArray( this.restaurant.events ) ) return true;
+
+      return this.restaurant.events
+        .filter( function( evt ){
+          return evt.closed;
+        })
+        .every( function( evt ){
+          var start = moment.tz( evt.during.start.value, this.dateFormat, this.timezone );
+          var end   = moment.tz( evt.during.end.value, this.dateFormat, this.timezone );
+
+          var compare = function( a, b, isStart, inclusive ){
+            if ( isStart ){
+              return inclusive ? a >= b : a > b;
+            }
+
+            return inclusive ? a <= b : a < b;
+          }.bind( this );
+
+          // Inner expression tests to see if datetime is between start/end
+          return !(
+            compare( datetime, start, true, evt.during.start.inclusive ) &&
+            compare( datetime, end, false, evt.during.end.inclusive )
+          );
+        }.bind( this ));
+    }}
+
+    // Simply check if the zip is supported by delivery
+  , { name: 'Zip', fn: function strategyZip(){
+      if ( !this.zip ) return true;
+
+      var zips = this.getAllSupportedDeliveryZips();
+
+      return !!_.findWhere( zips, { zip: this.zip } );
+    }}
+
+    // Is there a lead time that satisfies?
+  , { name: 'LeadTimes', fn: function strategyLeadTimes(){
+      if ( !this.datetime ) return true;
+
+      var leadTimes = this.getAllSupportedLeadTimes();
+
+      if ( leadTimes.length === 0 ) return false;
+
+      var minutes = moment.duration(
+        this.datetime - moment.tz( this.timezone )
+      ).asMinutes();
+
+      return leadTimes
+        .some( function( time ){
+          return [
+            minutes >= time.lead_time
+          , !this.guests ? true : this.guests <= time.max_guests
+          ].every( _.identity );
+        }.bind( this ));
+    }}
+
+  , { name: 'MinimumOrder', fn: function strategyMinimumOrder(){
+      if ( typeof this.restaurant.minimum_order !== 'number' ){
+        return true;
+      }
+
+      var base = Base.create( this );
+
+      return this.restaurant.minimum_order <= base.getSubTotal();
+    }}
+  ];
+
+  requirements.forEach( function( strategy ){
+    requirements[ strategy.name ] = strategy;
+  });
+
+  return exports;
 });

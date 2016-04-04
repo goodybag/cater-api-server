@@ -15,7 +15,12 @@ create or replace function str_to_slug( str text )
 returns text as $$
 begin
   str := replace( lower( str ), ' ', '-' );
-  return regexp_replace( str, E'[^\\w -]', '', 'g' );
+  str := regexp_replace( str, E'&', 'and', 'g' );
+  str := regexp_replace( str, E'[^\\w -]', '', 'g' );
+  str := regexp_replace( str, E'^-', '', 'g' );
+  str := regexp_replace( str, E'-$', '', 'g' );
+  str := regexp_replace( str, E'-\+', '-', 'g' );
+  return str;
 end;
 $$ language plpgsql;
 

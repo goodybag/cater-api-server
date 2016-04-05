@@ -8,80 +8,70 @@
  */
 
 module.exports.name = 'Restaurant Action Needed';
+
 var db              = require('../../../db');
 var utils           = require('../../../utils');
 var notifier        = require('../../../lib/order-notifier');
 var config          = require('../../../config');
 var moment          = require('moment-timezone');
+var FlowStream      = require('../../../lib/flow-stream');
 
-var getQuery = function( storage ){
-  // 1. Filter submitted orders over an hour
-  // 2. Filter orders where last notification over an hour
-  var $query = {
-    where: {
+var getQuery = function(){
+  return {
+    with: [
+      { name: 'notifications_history'
+      , type: 'select'
+      , columns: [
+          { expression: 'key::int', alias: 'order_id' }
+        , { expression: "to_timestamp( value, 'Dy Mon DD YYYY HH24:MI:SS' )", alias: 'created_at' }
+        ]
+      , table: {
+          alias: 'last_notified'
+        , expression: {
+            values: [ module.exports.name ]
+          , expression: `
+              select * from json_each_text(
+                ( select "reminders"."data"->'lastNotified'
+                  from "reminders"
+                  where "reminders"."name" = $1
+                )
+              )
+            `
+          }
+        }
+      }
+    ]
+  , where: {
       status: 'submitted'
     , 'submitted_dates.submitted': { $older_than: config.reminders.actionNeeded.threshold }
+    , withinBusinessHoursBegin: {
+        $custom: ['extract( hour from now() at time zone regions.timezone ) >= $1', config.reminders.actionNeeded.timeframe.start]
+      }
+    , withinBusinessHoursEnd: {
+        $custom: ['extract( hour from now() at time zone regions.timezone ) < $1', config.reminders.actionNeeded.timeframe.end]
+      }
+    , 'notifications_history.created_at': {
+        $or: {
+          $null: true
+        , $older_than: config.reminders.actionNeeded.threshold
+        }
+      }
     }
-  };
-
-  // Don't notify until one hour since last notification
-  var recent = Object.keys(storage.lastNotified).reduce( function(list, id) {
-    var hourAgo = new Date(new Date() - config.reminders.actionNeeded.interval);
-    var date = new Date(storage.lastNotified[id]);
-    if ( date >= hourAgo ) {
-      list.push(id);
-    }
-    return list;
-  }, []);
-
-  if ( recent.length ) {
-    $query.where.id = {
-      $nin: recent
-    };
-  }
-
-  return $query;
-};
-
-var getOptions = function( storage ){
-  var options = {
-    submittedDate: true
-  };
-  return options;
-};
-
-var withinBusinessHours = function (order) {
-  // check whether or not the current time is
-  // within business hours, based on orders timezone
-  var now = moment().tz(order.timezone)
-  , start = moment().tz(order.timezone)
-  , end = moment().tz(order.timezone)
-  , timeframe = config.reminders.actionNeeded.timeframe;
-
-  start.set('hour', +timeframe.start.split(':')[0])
-  start.set('minute', +timeframe.start.split(':')[1])
-
-  end.set('hour', +timeframe.end.split(':')[0])
-  end.set('minute', +timeframe.end.split(':')[1])
-
-  return now.isBetween(start, end);
-};
-
-var getOrders = function ( storage, callback ) {
-  db.orders.find( getQuery( storage ), getOptions( storage ), function( error, results ){
-    if ( error ) return callback( error );
-
-    results = results.filter( withinBusinessHours );
-
-    return callback( null, results );
-  });
-};
-
-var notifyOrderFn = function( order ) {
-  return function( done ) {
-    notifier.send( 'order-submitted-needs-action-sms', order.id, function(error) {
-      done( error, error ? null : order );
-    });
+  , joins: [
+      { type: 'left'
+      , target: 'notifications_history'
+      , on: { 'notifications_history.order_id': '$orders.id$' }
+      }
+    , { type: 'left'
+      , target: 'restaurants'
+      , on: { 'orders.restaurant_id': '$restaurants.id$' }
+      }
+    , { type: 'left'
+      , target: 'regions'
+      , on: { 'restaurants.region_id': '$regions.id$' }
+      }
+    ]
+  , submittedDate: true
   };
 };
 
@@ -90,40 +80,48 @@ module.exports.schema = {
 };
 
 module.exports.check = function( storage, callback ){
-  getOrders( storage,  function ( error, results ) {
+  var options = utils.extend( getQuery(), {
+    limit: 1
+  , order: ['id desc']
+  });
+
+  db.orders.find( {}, options, function( error, results ){
     if ( error ) return callback( error );
+
     return callback( null, results.length > 0 );
   });
 };
 
 module.exports.work = function( storage, callback ){
   var stats = {
-    orders: { text: 'Idle submitted orders', value: 0 }
-  , sent:   { text: 'Notifications Sent', value: 0 }
-  , errors: { text: 'Errors', value: 0 }
+    sent:   { text: 'Notifications Sent', value: 0 }
+  , errors: { text: 'Errors', value: 0, objects: [] }
   };
 
-  getOrders( storage, function( error, orders ){
+  db.orders.findStream( {}, getQuery(), function( error, ordersStream ){
     if ( error ) return callback( error );
-    stats.orders.value = orders.length;
-    utils.async.parallelNoBail(orders.map(notifyOrderFn), function done(errors, results) {
-      if ( errors ) {
-        stats.errors.value = errors.length;
-      }
 
-      if (Array.isArray(results)) {
-        results.forEach(function( result, i ){
-          if ( !result || Object.keys(result).length === 0 ) return;
+    FlowStream
+      .create( ordersStream, { concurrency: 5 } )
+      .map( function( order, next ){
+        notifier.send( 'order-submitted-needs-action-sms', order.id, function( error ){
+          if ( error ){
+            error.order_id = order.id;
+          }
 
-          stats.sent.value++;
+          return next( error, order );
         });
-      }
-
-      orders.forEach(function( order ){
+      })
+      .errors( function( error ){
+        stats.errors.objects.push( error );
+      })
+      .forEach( function( order ){
+        stats.sent.value++;
         storage.lastNotified[ order.id ] = new Date().toString();
+      })
+      .end( function(){
+        stats.errors.value = stats.errors.objects.length;
+        callback( stats.errors.objects, stats );
       });
-
-      callback( errors, stats );
-    });
   });
 };

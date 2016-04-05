@@ -13,7 +13,6 @@ var utils     = require('../../../utils');
 
 module.exports.name = 'Remind Tech Order Payment Failed';
 
-// Ensures typeof storage.lastNotified === 'object'
 module.exports.schema = {
   notified: true
 };
@@ -22,15 +21,19 @@ function getQuery( storage ){
   var $query = {
     payment_status: 'error'
   , datetime: { $gte: config.paymentFailedStartDate }
+  , id: {
+      $nin: {
+        type: 'select'
+      , table: 'reminders'
+      , columns: [
+          { expression: "json_object_keys( reminders.data->'notified' )::int" }
+        ]
+      , where: {
+          name: module.exports.name
+        }
+      }
+    }
   };
-
-  if ( Object.keys( storage.notified ).length > 0 ){
-    $query.id = {
-      $nin: Object.keys( storage.notified ).map( function( id ){
-        return parseInt( id );
-      })
-    };
-  }
 
   return $query;
 }

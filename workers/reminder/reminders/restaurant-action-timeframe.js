@@ -6,65 +6,49 @@
  *   on an order within a certain timeframe
  */
 
-var Models    = require('../../../models');
-var utils     = require('../../../utils');
-var config    = require('../../../config');
-var notifier  = require('../../../lib/order-notifier');
-var views     = require('../lib/views');
-var helpers   = require('../../../public/js/lib/hb-helpers');
+var db          = require('../../../db');
+var utils       = require('../../../utils');
+var config      = require('../../../config');
+var notifier    = require('../../../lib/order-notifier');
+var FlowStream  = require('../../../lib/flow-stream');
 
 module.exports.name = 'Restaurant Action Timeframe';
-
-if ( config.isProduction ){
-  module.exports.alertEmails = [
-    'om', 'jay', 'jag', 'jacobparker'
-  ].map( function( n ){ return n + '@goodybag.com' });
-} else {
-  module.exports.alertEmails = [ config.testEmail ];
-}
 
 module.exports.schema = {
   lastNotified: true
 };
 
-// Return the function for carrying out all the notifications
-// for an order
-function notifyOrderFn( order ){
-  return utils.partial( utils.async.parallelNoBail, {
-    email: function( done ){
-      notifier.send( 'order-submitted-but-ignored', order.attributes.id, function( error ){
-        // If successful, we want an easy way to know on the receiving end
-        // So just pass back the original order object as the results
-        done( error, error ? null : order );
-      });
-    }
-  });
-};
-
-var getQuery = function( storage ){
-  // Query submitted orders older than 1 hour that hasn't already been notified
-  var $query = {
+var getQuery = function(){
+  return {
     where: {
       status: 'submitted'
-    , "submitted.created_at": {
+    , "submitted_dates.submitted": {
         $older_than: { value: 1, unit: 'hours' }
       }
+    , id: {
+        $nin: {
+          type: 'select'
+        , table: 'reminders'
+        , columns: [
+            { expression: "json_object_keys( reminders.data->'lastNotified' )::int" }
+          ]
+        , where: {
+            name: module.exports.name
+          }
+        }
+      }
     }
+  , submittedDate: true
   };
-
-  if ( Object.keys( storage.lastNotified ).length > 0 ){
-    $query.where.id = {
-      $nin: Object.keys( storage.lastNotified ).map( function( id ){
-        return parseInt( id );
-      })
-    };
-  }
-
-  return $query;
 };
 
 module.exports.check = function( storage, callback ){
-  Models.Order.find( getQuery( storage ), function( error, results ){
+  var options = utils.extend( getQuery(), {
+    limit: 1
+  , order: ['id desc']
+  });
+
+  db.orders.find( {}, options, function( error, results ){
     if ( error ) return callback( error );
 
     return callback( null, results.length > 0 );
@@ -73,37 +57,34 @@ module.exports.check = function( storage, callback ){
 
 module.exports.work = function( storage, callback ){
   var stats = {
-    ordersHandled:        { text: 'Orders Handled', value: 0 }
-  , errors:               { text: 'Errors', value: 0, objects: [] }
+    sent:   { text: 'Notifications Sent', value: 0 }
+  , errors: { text: 'Errors', value: 0, objects: [] }
   };
 
-  var $query = { where: { status: 'accepted' } };
-
-  Models.Order.find( getQuery( storage ), function( error, orders ){
+  db.orders.findStream( {}, getQuery(), function( error, ordersStream ){
     if ( error ) return callback( error );
 
-    utils.async.parallelNoBail(
-      orders.map( notifyOrderFn )
-    , function( errors, results ){
-        if ( errors ){
-          errors.forEach( function( e ){
-            Object.keys( e ).forEach( function( k ){
-              stats.errors.value++;
-              stats.errors.objects.push( e[ k ] );
-            });
-          });
-        }
+    FlowStream
+      .create( ordersStream, { concurrency: 5 } )
+      .map( function( order, next ){
+        notifier.send( 'order-submitted-but-ignored', order.id, function( error ){
+          if ( error ){
+            error.order_id = order.id;
+          }
 
-        // Anything that came back in results is considered a success
-        results.forEach( function( result, i ){
-          if ( !result || Object.keys( result ).length === 0 ) return;
-
-          stats.ordersHandled.value++;
-          storage.lastNotified[ orders[ i ].attributes.id ] = new Date().toString();
+          return next( error, order );
         });
-
-        return callback( errors, stats );
-      }
-    );
+      })
+      .errors( function( error ){
+        stats.errors.objects.push( error );
+      })
+      .forEach( function( order ){
+        stats.sent.value++;
+        storage.lastNotified[ order.id ] = new Date().toString();
+      })
+      .end( function(){
+        stats.errors.value = stats.errors.objects.length;
+        callback( stats.errors.objects, stats );
+      });
   });
 };

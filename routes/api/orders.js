@@ -1,29 +1,50 @@
 var express = require('express');
 
+var moment = require('moment-timezone');
 var m = require('../../middleware');
 var db = require('../../db');
 var controllers = require('../../controllers');
 var venter = require('../../lib/venter');
+var errors = require('../../errors');
 
 var route = module.exports = express.Router();
 
-route.get('/', m.restrict(['admin']), m.pagination(), m.param('status'), function(req, res, next) {
+route.get('/'
+, function( req, res, next ){
+    if ( req.user.isGuest() ){
+      return next( errors.auth.NOT_ALLOWED );
+    }
+
+    if ( !req.user.isAdmin() ){
+      req.queryObj.user_id = req.user.attributes.id;
+    }
+
+    return next();
+  }
+, m.pagination()
+, m.orderDateRange()
+, m.param('status')
+, function(req, res, next) {
   res.locals.status = req.params.status;
-  if (req.params.status == 'accepted') {
+  if (req.query.status == 'accepted') {
     req.queryOptions.statusDateSort = {
-      status: req.params.status
+      status: req.query.status
     };
   }
   return next();
-}, m.sort('-id'), m.queryOptions({
-  one: [{
-    table: 'users',
-    alias: 'user'
-  }, {
-    table: 'restaurants',
-    alias: 'restaurant'
-  }]
-}), m.find(db.orders));
+}
+, m.sort('-id')
+, m.queryOptions({
+    one: [{
+      table: 'users',
+      alias: 'user'
+    }, {
+      table: 'restaurants',
+      alias: 'restaurant'
+    }]
+  })
+, m.find(db.orders)
+);
 
 route.post('/'
 , m.geocodeBody()
@@ -121,12 +142,7 @@ route.get('/:id/delivery-fee', m.getOrder2({
 
 route.get('/:oid/items', m.getOrder2({
     param: 'oid',
-    items: true,
-    user: true,
-    userAddresses: true,
-    userPaymentMethods: true,
-    restaurant: true,
-    deliveryService: true,
+    useLatestRevision: true,
     applyPriceHike: true
   }), m.editOrderAuth, m.restrict(['admin', 'order-owner', 'order-editor']),
   controllers.orders.orderItems.list

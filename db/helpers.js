@@ -753,14 +753,60 @@ dirac.use( function( dirac ){
       return next();
     }
 
-    if ( !Array.isArray( $query.one ) ){
-      $query.one = [];
+    if ( !Array.isArray( $query.with ) ){
+      $query.with = [];
     }
 
-    $query.one.push({
-      table: 'order_revisions'
-    , alias: 'latest_revision'
-    , order: { id: 'desc' }
+    if ( !Array.isArray( $query.joins ) ){
+      $query.joins = [];
+    }
+
+    if ( !Array.isArray( $query.columns ) ){
+      $query.columns = ['*'];
+    }
+
+    $query.where = $query.where || {};
+
+    // Attempt to optimize by pulling conditionals from order
+    var orderRevisionToOrderMap = { user_id: 'user_id', order_id: 'id' };
+    var orderRevisionsWhere = {};
+
+    // If the query's where condition includes user_id, or order_id
+    // then those will be used to narrow the order_revisions query
+    for ( var key in orderRevisionToOrderMap ){
+      if ( orderRevisionToOrderMap[ key ] in $query.where ){
+        orderRevisionsWhere[ 'order_revisions.' + key ] = $query.where[
+          orderRevisionToOrderMap[ key ]
+        ];
+      }
+    }
+
+    $query.with.push({
+      name: 'revisions'
+    , type: 'select'
+    , table: 'orders'
+    , columns: ['order_revisions.*']
+    , distinct: ['orders.id']
+    , joins: [
+        { type: 'left'
+        , target: 'order_revisions'
+        , on: { 'order_revisions.order_id': '$orders.id$' }
+        }
+      ]
+    , where: orderRevisionsWhere
+    , order: ['orders.id desc', 'order_revisions.id desc']
+    });
+
+    $query.columns.push({
+      table:  'revisions'
+    , name:   'data'
+    , alias:  'latest_revision'
+    });
+
+    $query.joins.push({
+      type: 'left'
+    , target: 'revisions'
+    , on: { 'revisions.order_id': '$orders.id$' }
     });
 
     return next();
@@ -773,12 +819,12 @@ dirac.use( function( dirac ){
 
     results.forEach( function( order ){
       if ( order.latest_revision ){
-        var data = order.latest_revision.data;
+        var data = order.latest_revision;
         delete order.latest_revision;
 
-        for ( var key in data ){
-          order[ key ] = data[ key ];
-        }
+        order.items = data.items;
+        order.restaurant = data.restaurant;
+        order.user = data.user;
       }
     });
 
@@ -861,9 +907,21 @@ dirac.use( function( dirac ){
     }
 
     if ( $query.applyPriceHike ){
-      results.forEach( function( order ){
-        Order.applyPriceHike( order, $query.applyPriceHike );
-      });
+      for ( var i = results.length - 1, order; i >= 0; i-- ){
+        order = results[ i ];
+
+        if ( !order.restaurant ){
+          logger.warn('Attempted to apply price hike, but could not due to missing restaurant', {
+            order: order
+          });
+        } else if ( !order.restaurant.region ){
+          logger.warn('Attempted to apply price hike, but could not due to missing region', {
+            order: order
+          });
+        } else if ( order.priority_account_price_hike_percentage > 0 ){
+          Order.applyPriceHike( order, $query.applyPriceHike );
+        }
+      }
     }
 
     next();

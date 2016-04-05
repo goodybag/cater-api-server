@@ -26,9 +26,10 @@
           <th>Name</th>
           <th>Email</th>
           <th>Organization</th>
-          <th>Region</th>
+          <th width="120">Region</th>
           <th>Signed up</th>
           <th>Login</th>
+          <th>Orders</th>
         </tr>
       </thead>
       <tbody>
@@ -37,12 +38,15 @@
           <td>
             <a href="/admin/users/{{id}}">{{id}}</a>
           </td>
-          <td>{{name}}</td>
+          <td>
+            <a href="/admin/users/{{id}}">{{name}}</a>
+          </td>
           <td>{{email}}</td>
           <td>{{organization}}</td>
           <td>{{region.name}}</td>
           <td>{{datepart created_at}}</td>
           <td><a href="/users/{{id}}/session">login</a></td>
+          <td><a href="/users/{{id}}/orders">orders</a></td>
         </tr>
       {{/each}}
       </tbody>

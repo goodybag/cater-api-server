@@ -106,7 +106,7 @@ describe('Stamps', function() {
   describe('business-hours', function() {
     it('.getWorkingTime should return the earliest time during business hours given a datetime that is after hours', function() {
       var datetime = stamps.datetime({
-        datetime: '2015-01-15 3:00 AM'
+        datetime: '2015-01-15 03:00 AM'
       , businessHours: { start: 8, end: 22 }
       }).getWorkingTime();
       assert(datetime.hour() === 8);
@@ -158,28 +158,28 @@ describe('Stamps', function() {
 
     it('.isWeekend should return true for weekend', function() {
       var isWeekend = stamps.datetime({
-        datetime: '2015-01-17 12:00'
+        datetime: '2015-01-17 12:00:00'
       }).isWeekend();
       assert(isWeekend);
     });
 
     it('.isWeekend should return false for a weekday', function() {
       var isWeekend = stamps.datetime({
-        datetime: '2015-01-15 12:00'
+        datetime: '2015-01-15 12:00:00'
       }).isWeekend();
       assert(!isWeekend);
     });
 
     it('.isWeekday should return false for weekday', function() {
       var isWeekday = stamps.datetime({
-        datetime: '2015-01-17 12:00'
+        datetime: '2015-01-17 12:00:00'
       }).isWeekday();
       assert(!isWeekday);
     });
 
     it('.isWeekday should return true for a weekday', function() {
       var isWeekday = stamps.datetime({
-        datetime:  '2015-01-15 12:00'
+        datetime:  '2015-01-15 12:00:00'
       }).isWeekday();
       assert(isWeekday);
     });
@@ -189,37 +189,37 @@ describe('Stamps', function() {
       var businessHours = { start: 8, end: 18 };
       // ensure that business hours are [start, end)
       dt = stamps.datetime({
-        datetime: '2013-02-08 7:59'
+        datetime: '2013-02-08 7:59:00'
       , businessHours: businessHours
       });
       assert( dt.isAfterHours() );
 
       dt = stamps.datetime({
-        datetime: '2013-02-08 8:00'
+        datetime: '2013-02-08 08:00:00'
       , businessHours: businessHours
       });
       assert( !dt.isAfterHours() );
 
       dt = stamps.datetime({
-        datetime: '2013-02-08 8:01'
+        datetime: '2013-02-08 08:01:00'
       , businessHours: businessHours
       });
       assert( !dt.isAfterHours() );
 
       dt = stamps.datetime({
-        datetime: '2013-02-08 17:59'
+        datetime: '2013-02-08 17:59:00'
       , businessHours: businessHours
       });
       assert( !dt.isAfterHours() );
 
       dt = stamps.datetime({
-        datetime: '2013-02-08 18:00'
+        datetime: '2013-02-08 18:00:00'
       , businessHours: businessHours
       });
       assert( dt.isAfterHours() );
 
       dt = stamps.datetime({
-        datetime: '2013-02-08 18:01'
+        datetime: '2013-02-08 18:01:00'
       , businessHours: businessHours
       })
       assert( dt.isAfterHours() );
@@ -227,7 +227,7 @@ describe('Stamps', function() {
 
     it('.isAfterHours should return true for late night times', function() {
       var datetime = stamps.datetime({
-        datetime: '2013-02-08 20:30' // 8:30pm
+        datetime: '2013-02-08 20:30:00' // 8:30pm
       , businessHours: { start: 8, end: 18 }
       });
       var result = datetime.isAfterHours( );
@@ -236,7 +236,7 @@ describe('Stamps', function() {
 
     it('.isAfterHours should return false for day times', function() {
       var datetime = stamps.datetime({
-        datetime: '2013-02-08 12:00' // 12:00pm
+        datetime: '2013-02-08 12:00:00' // 12:00pm
       , businessHours: { start: 8, end: 18 }
       });
       var result = !datetime.isAfterHours();
@@ -245,7 +245,7 @@ describe('Stamps', function() {
 
     it('.duringBusinessHours should return true for business hours', function(){
       var datetime = stamps.datetime({
-        datetime: '2013-02-08 12:00' // 12:00pm
+        datetime: '2013-02-08 12:00:00' // 12:00pm
       , businessHours: { start: 8, end: 18 }
       });
       var result = datetime.duringBusinessHours();
@@ -254,7 +254,7 @@ describe('Stamps', function() {
 
     it('.duringBusinessHours should return false for hours outside biz hours', function() {
       var datetime = stamps.datetime({
-        datetime: '2013-02-08 20:30' // 8:30pm
+        datetime: '2013-02-08 20:30:00' // 8:30pm
       , businessHours: { start: 8, end: 18 }
       });
       var result = !datetime.duringBusinessHours();

@@ -23,6 +23,7 @@ var restaurants = require('stampit')()
   , region: {
       delivery_services:    []
     }
+  , minimum_order:          0
   })
   .methods({
     openTwentyFourHour: function(){
@@ -70,6 +71,11 @@ var restaurants = require('stampit')()
 
   , addCalendarEvent: function( evt ){
       this.events.push( evt );
+      return this;
+    }
+
+  , minOrder: function( amt ){
+      this.minimum_order = amt;
       return this;
     }
   });
@@ -149,6 +155,7 @@ describe('Orders Stamps', function(){
     var order = orders({
       restaurant: {
         region: { sales_tax: 0.0825 }
+      , no_contract_fee: 0
       }
     , items: [
         { price: 100, quantity: 1 }
@@ -173,6 +180,7 @@ describe('Orders Stamps', function(){
     var order = orders.Cached({
       restaurant: {
         region: { sales_tax: 0.0825 }
+      , no_contract_fee: 0
       }
     , sub_total: 717
     , guests: 5
@@ -189,6 +197,7 @@ describe('Orders Stamps', function(){
     var order = orders({
       restaurant: {
         region: { sales_tax: 0.0825 }
+      , no_contract_fee: 0
       }
     , user: { is_tax_exempt: true }
     , items: [
@@ -214,6 +223,7 @@ describe('Orders Stamps', function(){
     var order = orders({
       restaurant: {
         region: { sales_tax: 0.0825 }
+      , no_contract_fee: 0
       }
     , user: { is_tax_exempt: false }
     , priority_account_price_hike_percentage: 0.1
@@ -325,9 +335,9 @@ describe('Orders Stamps', function(){
       , restaurant: restaurants()
                       .zip( '78723', 100 )
                       .supports('delivery')
-      }).isFulfillable();
+      });
 
-      assert( result );
+      assert( result.isFulfillable() );
     });
 
     it( '.isFulfillable() test zip is fulfillable because of delivery service', function(){
@@ -539,6 +549,33 @@ describe('Orders Stamps', function(){
       }).isFulfillable();
 
       assert( result );
+    });
+
+    it( '.isFulfillable() minimum order', function(){
+      // Order in -24 hours
+      var date = moment().add('days', 2);
+
+      var result = fulfillability({
+        timezone: 'America/Chicago'
+      , date: date.format('YYYY-MM-DD')
+      , time: date.format('HH:mm a')
+      , guests: 20
+      , restaurant: restaurants()
+                      .openTwentyFourHour()
+                      .supports('delivery', 'courier')
+                      .leadTime( 10, 15 * 60 )
+                      .leadTime( 20, 23 * 60 )
+                      .minOrder( 5000 )
+      });
+
+      assert.deepEqual( result.why(), ['MinimumOrder'] );
+
+      result.items.push({
+        price: 5000
+      , quantity: 1
+      });
+
+      assert( result.isFulfillable() );
     });
   });
 
@@ -964,7 +1001,9 @@ describe('Orders Stamps', function(){
       .state({
         restaurant: {
           region: { sales_tax: 0.0825 }
+        , no_contract_fee: 0
         }
+      , tip: 0
       });
 
     it('.isEligibleForHolidayPromo()', function(){

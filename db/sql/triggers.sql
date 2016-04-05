@@ -126,3 +126,11 @@ create trigger on_restaurant_name_change
     on restaurants
     for each row
     execute procedure on_restaurant_name_change();
+
+drop trigger if exists on_user_invoice_payment_status_paid on user_invoices;
+create trigger on_user_invoice_payment_status_paid
+  after insert or update of status
+  on user_invoices
+  for each row
+  when ( NEW.status = 'paid' )
+  execute procedure on_user_invoice_payment_status_paid();

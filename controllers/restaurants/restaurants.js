@@ -135,9 +135,10 @@ module.exports.get = function(req, res) {
         if (err) return callback(err);
         if (!restaurant) return res.status(404).render('404');
         restaurant.getItems({ where: { 'is_hidden': false } }, function(err, items) {
+          if (err) return callback(err);
 
           // Apply user price hike
-          items.forEach( function( item ){
+          (items || []).forEach( function( item ){
             Order.applyPriceHikeToItem( item.attributes, req.user.attributes.priority_account_price_hike_percentage );
           });
 
@@ -190,6 +191,10 @@ module.exports.get = function(req, res) {
     });
 
     context.restaurant.menuLengths = menuLengths;
+
+    var fulfillability = orderFulfillability( context.order );
+    fulfillability.restaurant = context.restaurant._cached;
+    context.disableCheckout = !fulfillability.isFulfillable();
 
     res.render('menu', context, function(err, html) {
       if (err) return res.error(errors.internal.UNKNOWN, err);

@@ -124,7 +124,7 @@ module.exports.get = function(req, res) {
     orderModel.getRestaurant.bind( orderModel )
   ], function( error, restaurant ){
     if ( error ){
-      return res.error(errors.internal.DB_FAILURE, err);
+      return res.error(errors.internal.DB_FAILURE, error);
     }
 
     // order.restaurant is mutated by order.getRestaurant
@@ -381,7 +381,11 @@ module.exports.update = function(req, res, next) {
       return res.error( errors.internal.UNKNOWN, error );
     }
 
-    res.send( order.toJSON({ plain:true }) );
+    var result = order.toJSON({ plain:true });
+
+    Order.applyPriceHike( result );
+
+    res.send( result );
 
     venter.emit( 'order:change', order.attributes.id );
 
@@ -675,8 +679,21 @@ module.exports.changeStatus = function(req, res) {
 
     if (req.order.promo_code)
     if (req.order.status === 'submitted') {
-    if (utils.flatten(utils.pluck( promoConfig,'promo_code')).indexOf(req.order.promo_code) > -1)
-      venter.emit('order:submitted:promo', req.order);
+
+      db.promos.findOne({ "promo_code": req.order.promo_code }, function(err, result) {
+
+        if(err) {
+          req.logger.warn("Error looking up promo code.", {
+            order_id: req.order.id
+          , error: err
+          });
+          return;
+        }
+
+        if(result) {
+          venter.emit('order:submitted:promo', req.order);
+        }
+      });
     }
   };
 

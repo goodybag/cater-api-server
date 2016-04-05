@@ -39,22 +39,26 @@ module.exports.register = function(app) {
     });
   }
 
-  if (config.enableCaterWeb) {
-    let caterWebMiddleware = caterWeb.makeHandler({
-      env: process.env.NODE_ENV,
-      serverRendering: config.caterWebServerRendering,
-      baseUrl: config.baseUrl
-    });
+  let caterWebMiddleware = caterWeb.makeHandler({
+    env: config.env,
+    serverRendering: config.caterWeb.serverRendering,
+    baseUrl: config.baseUrl,
+    bundles: config.caterWeb.bundles,
+    manifest: config.caterWeb.useManifest ? require('@goodybag/cater-web/dist/manifest') : {},
+    cdnPrefix: config.caterWeb.cdnPrefix,
+    apiPrefix: config.caterWeb.apiPrefix
+  });
 
-    caterWeb.mountStatic(app);
-
-    app.use( function( req, res, next ){
-      // Always use legacy for share links
-      if ( req.query.edit_token ) return next();
-      if ( !req.user.attributes.features['cater-web'] ) return next();
-      caterWebMiddleware( req, res, next );
-    });
+  if (config.caterWeb.mountPoint) {
+    caterWeb.mountStatic(app, config.caterWeb.mountPoint);
   }
+
+  app.use( function( req, res, next ){
+    // Always use legacy for share links
+    if ( req.query.edit_token ) return next();
+    if ( !req.user.attributes.features['cater-web'] ) return next();
+    caterWebMiddleware( req, res, next );
+  });
 
   app.use(require('./public'));
   app.use(require('./documents'));

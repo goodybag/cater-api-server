@@ -63,6 +63,7 @@ define(function(require) {
     , nullable: false
     , default: 'false'
     }
+  , tax_exempt_id: { type: types.text }
   , receives_promos: {
       type: types.boolean
     , nullable: false
@@ -92,12 +93,6 @@ define(function(require) {
       type: types.numeric( 5, 5 )
     , notNull: true
     , default: 0
-    }
-
-  , display_invoice_instead_of_order: {
-      type: types.boolean
-    , nullable: false
-    , default: 'false'
     }
   };
 

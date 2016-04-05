@@ -42,7 +42,7 @@
 
       // ui related stuff
     , {name: 'spin',                    location: '../../components/spin.js',                   main: 'spin.js'}
-    , {name: 'fullcalendar',            location: '../../components/fullcalendar',              main: 'fullcalendar.js'}
+    , {name: 'fullcalendar',            location: '../../components/fullcalendar/dist',         main: 'fullcalendar.js'}
     , {name: 'keymaster',               location: '../../components/keymaster',                 main: 'keymaster.js'}
     , {name: 'react',                   location: '../../components/react',                     main: 'react.js'}
 

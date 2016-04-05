@@ -42,6 +42,7 @@ definition.track = function( orderId, actorId, description, callback ){
 
   var options = {
     one:  [ { table: 'restaurants', alias: 'restaurant'
+            , columns: ['*']
             , one:  [ { table: 'restaurant_plans', alias: 'plan' }
                     , { table: 'regions', alias: 'region' }
                     ]
@@ -68,6 +69,17 @@ definition.track = function( orderId, actorId, description, callback ){
     if ( error ){
       return callback( error );
     }
+
+    order.items.forEach( function( item ){
+      item.options_sets = item.options_sets
+        .filter( function( group ){
+          return group.options.some( option => option.state )
+        })
+        .map( function( group ){
+          group.options = group.options.filter( option => option.state );
+          return group;
+        });
+    });
 
     var doc = {
       order_id: order.id

@@ -11,6 +11,7 @@ define(function(require, exports, module) {
   var FullCalendar = require('fullcalendar');
   var Handlebars = require('handlebars');
   var user = require('user');
+  var Order = require('app/models/order');
 
   require('jquery-ui');
 
@@ -54,9 +55,10 @@ define(function(require, exports, module) {
       // click outside popover to close
       $(document).click(function(e) {
         $('.fc-day, .fc-event').each(function () {
-          if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
-            if ($(this).data('bs.popover').tip().hasClass('in')) {
-              $(this).popover('toggle');
+          var $this = $(this);
+          if (!$this.is(e.target) && $this.has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+            if ($this.data('bs.popover') && $this.data('bs.popover').tip().hasClass('in')) {
+              $this.popover('toggle');
             }
             return;
           }
@@ -69,6 +71,10 @@ define(function(require, exports, module) {
         viewRender:       this.viewRender.bind(this)
       , dayRender:        this.dayRender.bind(this)
       , eventRender:      this.eventRender.bind(this)
+      , events:           '/api/users/me/orders'
+      , eventDataTransform: function( data ){
+          return new Order( data ).getFullCalendarEvent();
+        }
       };
 
       if ( user.groups.indexOf('admin') > -1 ){
@@ -197,15 +203,15 @@ define(function(require, exports, module) {
      * Render events on the calendar
      */
     render: function() {
-      var this_ = this
-        , events = orders.getFullCalendarEvents();
+      // var this_ = this
+      //   , events = orders.getFullCalendarEvents();
 
-      this.clear();
-      utils.each(events, function(event) {
-        if (utils.contains(this_.filters, event.status) ) {
-          this_.$calendar.fullCalendar('renderEvent', event, true);
-        }
-      });
+      // this.clear();
+      // utils.each(events, function(event) {
+      //   if (utils.contains(this_.filters, event.status) ) {
+      //     this_.$calendar.fullCalendar('renderEvent', event, true);
+      //   }
+      // });
     },
 
     /**

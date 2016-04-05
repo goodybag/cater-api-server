@@ -1,0 +1,85 @@
+{{#extend "css"}}
+<link rel="stylesheet" href="{{cdn "/css/user-orders.css"}}">
+<link rel="stylesheet" href="{{cdn "/components/font-awesome/css/font-awesome.min.css"}}">
+{{/extend}}
+
+{{#extend "title"}} - My Orders{{/extend}}
+
+<div class="page-my-orders container">
+  <div class="row">
+    <h1 class="col-lg-12 page-title">My Orders</h1>
+  </div>
+  <div class="row">
+    <div class="col-lg-2">
+      <div class="panel">
+        <div class="panel-heading panel-heading-small">
+          <h4 class="panel-title">Status</h4>
+        </div>
+        <div class="panel-body">
+          {{> order_status_buttons}}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-10">
+      <div class="nav-orders">
+        <ul class="nav nav-tabs">
+          <li>
+            <a href="/users/me/orders/calendar">
+              <i class="icon-calendar"></i> Calendar
+            </a>
+          </li>
+          <li class="active">
+            <a href="/users/me/orders" class="">
+              <i class="icon-list"></i> List
+            </a>
+          </li>
+          <li>
+            <a href="/users/me/orders/receipts">
+              <i class="icon-list-alt"></i> Receipts
+            </a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade in active" id="list-view">
+            {{> orders_list }}
+            {{> order_list_paginator baseUrl="/users/me/orders"}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#extend "scripts"}}
+<script>
+  define( 'data/orders', ['app/collections/orders'],
+    function( Orders ) {
+      return new Orders({{{ json orders }}});
+    }
+  );
+
+  require([
+      'jquery'
+    , 'utils'
+    , 'user'
+    , 'app/views/orders-list-view'
+    , 'app/views/orders-calendar-view'
+    , 'app/views/orders-filter-view'
+    ]
+  , function($, utils, user, OrdersListView, OrdersCalendarView, OrdersFilterView) {
+      utils.extend( user, {{{json user}}} );
+
+      var ordersListView = new OrdersListView({
+        el: '.orders-list'
+      });
+
+      var ordersFilterView = new OrdersFilterView({
+        el:             '.orders-calendar-filters'
+      , subviews: {
+          listView:       ordersListView
+        }
+      });
+    }
+  );
+</script>
+{{/extend}}

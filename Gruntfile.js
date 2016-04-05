@@ -342,7 +342,7 @@ module.exports = function(grunt) {
       , { src: './public/components/select2/select2.css', dest: 'components/select2/select2.css', gzip: true }
       , { src: './public/components/respond/src/respond.js', dest: 'components/respond/src/respond.js', gzip: true }
       , { src: './public/components/jquery/jquery.js', dest: 'components/jquery/jquery.js', gzip: true }
-      , { src: './public/components/fullcalendar/fullcalendar.css', dest: 'components/fullcalendar/fullcalendar.css', gzip: true }
+      , { src: './public/components/fullcalendar/dist/fullcalendar.css', dest: 'components/fullcalendar/dist/fullcalendar.css', gzip: true }
       ].forEach( function( option ){
         try {
           if ( !fs.statSync( option.src ).isDirectory() ){

@@ -79,15 +79,16 @@ define( function( require, exports, module ){
     var fulfillabilityOptions = utils.extend( orderParams, { timezone: options.timezone } );
 
     if ( Object.keys( orderParams ).length > 0 ){
+      var omit = [ orderFulfillability.requirements.MinimumOrder ];
       var fulfillability = orderFulfillability( fulfillabilityOptions );
 
       if ( !orderParams.time ){
-        fulfillability.ignoreTime = true;
+        omit.push( orderFulfillability.requirements.OpenHours );
       }
 
       restaurants = restaurants.filter( function( result ){
         fulfillability.restaurant = result;
-        return fulfillability.isFulfillable();
+        return fulfillability.isFulfillable({ omit: omit });
       });
     }
 

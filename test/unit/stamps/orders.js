@@ -560,6 +560,7 @@ describe('Orders Stamps', function(){
       , date: date.format('YYYY-MM-DD')
       , time: date.format('HH:mm a')
       , guests: 20
+      , items: []
       , restaurant: restaurants()
                       .openTwentyFourHour()
                       .supports('delivery', 'courier')
@@ -569,6 +570,38 @@ describe('Orders Stamps', function(){
       });
 
       assert.deepEqual( result.why(), ['MinimumOrder'] );
+
+      result.items.push({
+        price: 5000
+      , quantity: 1
+      });
+
+      assert( result.isFulfillable() );
+    });
+
+    it( '.isFulfillable() should omit', function(){
+      // Order in -24 hours
+      var date = moment().add('days', 2);
+
+      var result = fulfillability({
+        timezone: 'America/Chicago'
+      , date: date.format('YYYY-MM-DD')
+      , time: date.format('HH:mm a')
+      , guests: 20
+      , items: []
+      , restaurant: restaurants()
+                      .openTwentyFourHour()
+                      .supports('delivery', 'courier')
+                      .leadTime( 10, 15 * 60 )
+                      .leadTime( 20, 23 * 60 )
+                      .minOrder( 5000 )
+      });
+
+      assert.deepEqual( result.why(), ['MinimumOrder'] );
+      assert.deepEqual(
+        result.why({ omit: [ fulfillability.requirements.MinimumOrder ] })
+      , []
+      );
 
       result.items.push({
         price: 5000

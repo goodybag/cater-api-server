@@ -44,17 +44,7 @@ route.get('/'
     applyPriceHike: {
       useCachedSubTotal: true
     },
-    one: [{
-      table: 'users',
-      alias: 'user'
-    }, {
-      table: 'restaurants',
-      alias: 'restaurant',
-      one: [{ table: 'regions', alias: 'region' }]
-    }, {
-      table: 'delivery_services',
-      alias: 'delivery_service'
-    }],
+    useLatestRevision: true,
     joins: [{
       type: 'left',
       target: 'restaurants',

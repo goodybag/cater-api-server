@@ -65,8 +65,8 @@ define(function(require, exports, module) {
       e.preventDefault();
       var this_ = this;
       var noOrder = !this.options.orderModel.id;
-      var unfulfillable = !this.options.isAdmin && !this.options.orderModel.isFulfillableOrder();
-      if ( noOrder ||  unfulfillable ) {
+      var unfulfillable = !this.options.isAdmin && !this.options.orderModel.areParamsFulfillable();
+      if ( noOrder || unfulfillable ) {
         return this.showOrderModal(e);
       }
 

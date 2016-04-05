@@ -75,6 +75,11 @@ if (config.isProduction || config.isStaging) {
   app.use(middleware.sslRedirect);
 }
 
+app.use( function( req, res, next ){
+  res.locals.req = req;
+  return next();
+});
+
 app.use( require('dirac-middleware')({ envelope: false }) );
 // app.use( require('./middleware/query-inspector')() );
 

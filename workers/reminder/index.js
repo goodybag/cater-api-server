@@ -64,12 +64,10 @@ var logResults = function( errors, results ){
   }
 };
 
-fs
-  .readdirSync( dir )
+fs.readdirSync( dir )
   .filter( function( file ){
     return fs.statSync( path.join( dir, file ) ).isFile();
   })
-  .filter( file => file === 'restaurant-action-timeframe.js' )
   .map( function( file ){
     return require( path.join( dir, file ) );
   })

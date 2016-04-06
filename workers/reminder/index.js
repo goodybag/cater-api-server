@@ -55,18 +55,23 @@ var logStat = function( group, result ){
 var logResults = function( errors, results ){
   console.log("\n\n")
 
-  errors.forEach( logError );
+  if ( errors && errors.length ){
+    errors.forEach( logError );
+  }
 
   for ( var key in results ){
     logStat( key, results[ key ] );
   }
 };
 
-fs.readdirSync( dir ).filter( function( file ){
-  return fs.statSync( path.join( dir, file ) ).isFile();
-}).map( function( file ){
-  return require( path.join( dir, file ) );
-}).forEach( reminder.register );
+fs.readdirSync( dir )
+  .filter( function( file ){
+    return fs.statSync( path.join( dir, file ) ).isFile();
+  })
+  .map( function( file ){
+    return require( path.join( dir, file ) );
+  })
+  .forEach( reminder.register );
 
 reminder.run( function( errors, results ){
   logResults( errors, results );

@@ -28,14 +28,20 @@ function getQuery( storage ){
       , table:    'order_notifications'
       , columns:  ['order_id']
       }
+    , $and: {
+        $nin: {
+          type: 'select'
+        , table: 'reminders'
+        , columns: [
+            { expression: "json_object_keys( reminders.data->'notified' )::int" }
+          ]
+        , where: {
+            name: module.exports.name
+          }
+        }
+      }
     }
   };
-
-  if ( Object.keys( storage.notified ).length > 0 ){
-    query.id.$and = {
-      $nin: Object.keys( storage.notified )
-    };
-  }
 
   return query;
 }

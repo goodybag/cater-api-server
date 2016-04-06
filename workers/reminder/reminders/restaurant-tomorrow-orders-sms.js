@@ -1,5 +1,5 @@
 /**
- * Restaurant Tomorrow Orders
+ * Restaurant Tomorrow Orders SMS
  *
  * Description:
  *   Send notifications to restaurants with accepted orders to
@@ -12,7 +12,7 @@ var notifier    = require('../../../lib/order-notifier');
 var db          = require('../../../db');
 var FlowStream  = require('../../../lib/flow-stream');
 
-module.exports.name = 'Restaurant Tomorrow Orders';
+module.exports.name = 'Restaurant Tomorrow Orders SMS';
 
 module.exports.schema = {
   lastNotified: true
@@ -39,7 +39,7 @@ const ordersWhereClause = {
   }
 
   // Filter to orders with timezones where it's currently time to send
-, $custom: ['extract( hour from now() at time zone orders.timezone ) = $1', config.reminders.tomorrowOrdersTime]
+// , $custom: ['extract( hour from now() at time zone orders.timezone ) = $1', config.reminders.tomorrowOrdersTime]
 };
 
 module.exports.check = function( storage, callback ){
@@ -70,7 +70,7 @@ module.exports.work = function( storage, callback ){
     FlowStream
       .create( ordersStream, { concurrency: 5 } )
       .map( function( order, next ){
-        notifier.send( 'restaurant-tomorrow-order', order.id, function( error ){
+        notifier.send( 'restaurant-tomorrow-order-sms', order.id, function( error ){
           if ( error ){
             error.order_id = order.id;
           }

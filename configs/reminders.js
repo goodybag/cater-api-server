@@ -5,17 +5,16 @@
 var isDev = process.env['GB_ENV'] === 'dev';
 
 module.exports = {
-  // What time to schedule the tomorrow orders notification
-  tomorrowOrdersTime: '12:00'
+  // What hour to schedule the tomorrow orders notification
+  tomorrowOrdersTime: 12
 
 , actionNeeded: {
-    interval: isDev ? 5 * 60 * 1000 : 60 * 60 * 1000
-  , threshold: { value: 1, unit: 'hours' }
+    threshold: { value: 1, unit: 'hours' }
 
     // Only run within a given time frame
   , timeframe: {
-      start: '06:00'
-    , end: '24:00'
+      start: 6
+    , end: 24
     }
   }
 };

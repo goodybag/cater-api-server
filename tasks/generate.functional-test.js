@@ -23,7 +23,7 @@ var tmpl = function( data ){
   , "var assert    = require('assert');"
   , "var test      = require('selenium-webdriver/testing');"
   , "var webdriver = require('selenium-webdriver');"
-  , "var config    = require('config');"
+  , "var config    = require('../config');"
   , "var utils     = require('../../utils');"
   , "var tutils    = require('../../lib/test-utils');"
   , ""

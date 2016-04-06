@@ -3,8 +3,8 @@
  */
 var moment = require('moment-timezone');
 var analytics = require('../lib/stamps/analytics');
-var utils = require('utils');
-var db = require('db');
+var utils = require('../utils');
+var db = require('../db');
 
 var OrderAnalytics = {
 

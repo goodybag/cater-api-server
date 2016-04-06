@@ -23,7 +23,7 @@ To run them on production, go to Heroku and set up a [scheduled cron
  job](https://scheduler.heroku.com/dashboard).
 
  The `grunt namedModules` task handles aliasing
- some of our commonly used modules like require('utils'). Read more here
+ some of our commonly used modules like require('../utils'). Read more here
  (todo: link to namedModules doc)
 
 ![Heroku Scheduler](https://s3.amazonaws.com/uploads.hipchat.com/42627/356137/QLkEXrrQJGCPupN/Screen%20Shot%202015-07-02%20at%2011.30.01%20AM.png)

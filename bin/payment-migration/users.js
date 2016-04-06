@@ -1,7 +1,7 @@
-var db = require('db');
-var config = require('config');
+var db = require('../../db');
+var config = require('../../config');
 var logger = require('./logger').create('User Setup');
-var utils = require('utils');
+var utils = require('../../utils');
 var concurrency = 5;
 
 logger.info('Mapping balanced uri to stripe ids');

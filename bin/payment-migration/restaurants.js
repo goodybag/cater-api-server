@@ -1,6 +1,6 @@
-var db = require('db');
+var db = require('../../db');
 var logger = require('./logger').create('User Setup');
-var utils = require('utils');
+var utils = require('../../utils');
 var concurrency = 5;
 var balanced = utils.balanced;
 

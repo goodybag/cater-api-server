@@ -23,7 +23,7 @@ var tmpl = function( data ){
   , ""
   , "define( function( require, exports, module ){"
   , "  var stampit = require('stampit');"
-  , "  var utils   = require('utils');"
+  , "  var utils   = require('../utils');"
   , ""
   , "  module.exports = stampit();"
   , ""

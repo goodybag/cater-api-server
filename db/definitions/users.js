@@ -9,7 +9,7 @@ if (typeof module === 'object' && typeof define !== 'function') {
 }
 
 var dirac = require('dirac');
-var utils = require('utils');
+var utils = require('../../utils');
 var types = require('../data-types');
 
 define(function(require) {

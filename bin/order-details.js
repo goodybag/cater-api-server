@@ -7,7 +7,7 @@ if ( !id ) {
   process.exit(0);
 }
 
-var db = require('db');
+var db = require('../db');
 var Table = require('cli-table');
 var OrderCharge = require('stamps/orders/charge');
 var helpers = require('../public/js/lib/hb-helpers');

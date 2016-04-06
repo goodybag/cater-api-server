@@ -2,7 +2,7 @@ var assert = require('assert');
 var Restaurant = require('../../public/js/app/models/restaurant');
 var Order = require('../../public/js/app/models/order');
 var moment = require('moment-timezone');
-var utils = require('utils');
+var utils = require('../../utils');
 
 describe('Restaurant Model', function() {
   describe('Lead times', function() {

@@ -1,7 +1,7 @@
 var CONCURRENCY = 5;
 
 var Promise   = require('bluebird');
-var db        = require('db');
+var db        = require('../../db');
 var invoices  = require('stamps/user-invoice');
 var now       = require('stamps/datetime')();
 var logger    = require('../../lib/logger').create('Worker-SendInvoices');

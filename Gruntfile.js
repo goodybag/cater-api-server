@@ -196,7 +196,7 @@ module.exports = function(grunt) {
           baseUrl: 'public/js/lib'
         , out: 'public/dist/<%= pkg.version %>/app.js'
         , optimize: 'uglify2'
-        , generateSourceMaps: true
+        , generateSourceMaps: false
         , preserveLicenseComments: false
         , useStrict: true
         , findNestedDependencies: false

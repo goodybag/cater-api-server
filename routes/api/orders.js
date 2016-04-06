@@ -202,7 +202,11 @@ route.all('/:oid/items/:iid', m.restrict(['client', 'admin']), function(req, res
 
 route.post('/:oid/rebuild-pdf/:type', m.restrict(['admin']), controllers.orders.rebuildPdf);
 
-route.get('/:oid/notifications', m.restrict(['admin']), controllers.orders.notifications.JSON.list);
+route.get('/:oid/notifications'
+, m.timeout({ timeout: 20 * 1000 })
+, m.restrict(['admin'])
+, controllers.orders.notifications.JSON.list
+);
 
 route.post('/:oid/notifications/:id', m.restrict(['admin']), controllers.orders.notifications.JSON.sendNotification);
 

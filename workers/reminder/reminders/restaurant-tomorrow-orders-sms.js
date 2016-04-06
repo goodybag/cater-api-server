@@ -39,7 +39,7 @@ const ordersWhereClause = {
   }
 
   // Filter to orders with timezones where it's currently time to send
-// , $custom: ['extract( hour from now() at time zone orders.timezone ) = $1', config.reminders.tomorrowOrdersTime]
+, $custom: ['extract( hour from now() at time zone orders.timezone ) = $1', config.reminders.tomorrowOrdersTime]
 };
 
 module.exports.check = function( storage, callback ){
@@ -54,7 +54,7 @@ module.exports.check = function( storage, callback ){
 
 module.exports.work = function( storage, callback ){
   var stats = {
-    restaurantsNotified:  { text: 'Restaurants Notified`', value: 0 }
+    restaurantsNotified:  { text: 'Restaurants Notified', value: 0 }
   , errors:               { text: 'Errors', value: 0, objects: [] }
   };
 

@@ -12,6 +12,7 @@
     {{/unless}}
 
     <div class="nav">
+      {{#if session.oldUser}}
       <li>
         <a href="/users/return?next={{req.originalUrl}}">Return to {{session.oldUser.name}}</a>
       </li>

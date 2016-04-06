@@ -116,7 +116,7 @@
               {{/contains}}
               {{#if session.oldUser}}
               <li>
-                <a href="/users/return" class="users-return navbar-btn">
+                <a href="/users/return?next={{req.originalUrl}}" class="users-return navbar-btn">
                   Return to {{session.oldUser.name}}
                 </a>
               </li>
@@ -148,7 +148,7 @@
                   <li><a href="/users/me/orders/receipts">My Receipts</a></li>
                 </ul>
               </li>
-              
+
             </ul>
 
             <a href="/users/me/rewards" class="gb-points-indicator">

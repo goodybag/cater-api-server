@@ -8,10 +8,10 @@
 define(function(require, exports, module) {
   var $ = require('jquery');
   var Handlebars = require('handlebars');
-  var utils = require('../utils');
+  var utils = require('utils');
   var React = require('react');
   var moment = require('moment');
-  var config = require('../config');
+  var config = require('config');
 
   var OrderSearch = React.createClass({
     getInitialState: function() {

@@ -52,7 +52,7 @@ define( function( require, exports, module ){
         if ( !this.isValid() ){
           throw new Error('Invalid Geocode Result');
         }
-        
+
         var a = address({
           street:   [ this.getAddressComponent('street_number').long_name
                     , this.getAddressComponent('route').long_name
@@ -80,11 +80,11 @@ define( function( require, exports, module ){
     });
 
   gResult.acceptableTypes = [
+  , 'street_address'
   , 'premise'
   , 'subpremise'
   , 'airport'
   , 'park'
-  , 'street_address'
   ];
 
   return gResult;

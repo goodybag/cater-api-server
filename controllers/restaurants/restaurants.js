@@ -193,7 +193,7 @@ module.exports.get = function(req, res) {
     context.restaurant.menuLengths = menuLengths;
 
     var fulfillability = orderFulfillability( context.order );
-    fulfillability.restaurant = context.restaurant._cached;
+    fulfillability.restaurant = context.restaurant._cached || context.restaurant;
     context.disableCheckout = !fulfillability.isFulfillable();
 
     res.render('menu', context, function(err, html) {

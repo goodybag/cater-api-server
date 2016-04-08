@@ -5,7 +5,7 @@
   <div class="medium-container">
     <form id="register-form" class="register-form form-vertical" action="/join{{queryParams query}}" method="POST">
       <h2 class="page-title">Get your free account</h2>
-      {{#if fromGuestOrder}}
+      {{#if reqQuery.fromGuestOrder}}
       <p>To continue and submit your order</p>
       {{else}}
       <p>Use Goodybag to simplify your office catering</p>

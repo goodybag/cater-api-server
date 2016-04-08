@@ -7,6 +7,7 @@
     class="form-control"
     type="email"
     name="email"
+    value="{{email}}"
     id="register-email">
 </div>
 
@@ -16,11 +17,7 @@
     {{#each regions}}
       <option
         value="{{this.id}}"
-        {{#eq ../user.region_id this.id}}
-        selected
-        {{else}}
-        {{#eq ../../reqQuery.region this.id}}selected{{/eq}}
-        {{/eq}}
+        {{#eq ../selectedRegion this.id}}selected{{/eq}}
       >{{this.name}}</option>
     {{/each}}
   </select>

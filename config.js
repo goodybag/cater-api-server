@@ -539,6 +539,7 @@ config.india = {
 , isIndia: true
 , cdn: config.production.cdn
 , postgresConnStr: process.env['DATABASE_URL']
+, numWorkers: 1
 };
 
 // fields to copy from staging to india

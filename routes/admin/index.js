@@ -926,3 +926,13 @@ route.get('/scheduler'
     layout: 'admin/layout2'
   })
 );
+
+/*
+ * Promos
+ */
+route.get('/promos'
+, m.restrict(['admin'])
+, m.view( 'admin/promos.hbs', {
+  layout: 'admin/layout2'
+  })
+);

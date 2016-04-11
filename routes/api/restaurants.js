@@ -285,3 +285,13 @@ route.put('/:id/bank-account'
 , m.restrict(['admin'])
 , controllers.api.restaurants.updateBankAccount
 );
+
+route.get('/:id/legal-entity'
+, m.restrict(['admin'])
+, controllers.api.restaurants.getLegalEntity
+);
+
+route.patch('/:id/legal-entity'
+, m.restrict(['admin'])
+, controllers.api.restaurants.updateLegalEntity
+);

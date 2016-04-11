@@ -108,6 +108,7 @@ module.exports.get = function(req, res) {
 
     return res.redirect( '/join' + utils.queryParams({
       next: '/orders/' + req.order.id
+    , fromGuestOrder: true
     }));
   }
 

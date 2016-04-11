@@ -242,9 +242,11 @@ module.exports.signup = function( req, res ){
 };
 
 module.exports.registerView = function( req, res ){
+  var selectedRegion = +req.query.region || req.user.attributes.region_id;
+
   res.render( 'landing/register', {
     layout: 'layout/default'
-  , fromGuestOrder: req.params.fromGuestOrder
+  , selectedRegion: selectedRegion
   });
 };
 
@@ -258,14 +260,17 @@ module.exports.register = function( req, res ){
   , groups:       ['client']
   };
 
+  var selectedRegion = +req.body.region_id || +req.query.region || req.user.attributes.region_id;
+
   // Don't bother sending a validation error if they didn't fill anything out
   if ( !data.email && !data.password ){
     return res.render( 'landing/register', {
       layout: 'layout/default'
+    , selectedRegion: selectedRegion
     });
   }
 
-putils.validator.validate( data, {
+  putils.validator.validate( data, {
     type: 'object'
   , properties: {
       email: {
@@ -292,6 +297,8 @@ putils.validator.validate( data, {
 
       return res.render( 'landing/register', {
         layout: 'layout/default'
+      , selectedRegion: selectedRegion
+      , email: req.body.email
       , error: error
       });
     }
@@ -305,6 +312,7 @@ putils.validator.validate( data, {
 
         return res.render( 'landing/register', {
           layout: 'layout/default'
+        , selectedRegion: selectedRegion
         , error: error
         });
       }

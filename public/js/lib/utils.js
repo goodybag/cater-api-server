@@ -91,7 +91,7 @@ define(function(require, exports, module) {
       var schema = this.constructor.schema
         ? _.result( this.constructor, 'schema' )
         : _.result( this, 'schema' );
-console.log('validating', attrs, schema);
+
       return this.validator.validate(attrs || this.toJSON(), schema, options || {}, function(err) { return err; });
     }
   });

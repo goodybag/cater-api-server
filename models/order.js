@@ -1081,7 +1081,7 @@ module.exports = Model.extend({
 
     utils.defaults( query.where = query.where || {}, {
       datetime: {
-        $between_days_from_now: { from: 1, to: 2, timezone: 'orders.timezone' }
+        $between_days_from_now: { from: 1, to: 2, nowTimezone: 'orders.timezone' }
       }
     });
 

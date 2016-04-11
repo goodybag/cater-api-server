@@ -190,19 +190,18 @@ mosql.registerConditionalHelper(
 , { cascade: false }
 , function( column, value, values, table, query ){
     var tz = value.timezone ? ' at time zone ' + mosqlUtils.quoteColumn( value.timezone ) : '';
+    var nowTimezone = value.nowTimezone ? ' at time zone ' + mosqlUtils.quoteColumn( value.nowTimezone ) : '';
 
     return [
-      [
-        column
+      [ column
       , tz
-      , " >= date_trunc(\'day\', (now() ", tz, ") + interval '"
+      , " >= date_trunc(\'day\', (now() ", nowTimezone, ") + interval '"
       , value.from
       , " days')"
       ].join('')
-    , [
-        column
+    , [ column
       , tz
-      , "  < date_trunc(\'day\', (now() ", tz, ") + interval '"
+      , "  < date_trunc(\'day\', (now() ", nowTimezone, ") + interval '"
       , value.to
       , " days')"
       ].join('')

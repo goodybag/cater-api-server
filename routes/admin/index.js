@@ -932,7 +932,8 @@ route.get('/scheduler'
  */
 route.get('/promos'
 , m.restrict(['admin'])
-, m.view( 'admin/promos.hbs', {
-  layout: 'admin/layout2'
+, m.view( 'admin/promos.hbs', db.promos, {
+    layout: 'admin/layout2'
+  , method: 'find'
   })
 );

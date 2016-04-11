@@ -17,7 +17,7 @@
           <div class="input-addon">%</div>
         </div>
       </div>
-    
+
       {{#if restaurant.stripe_id}}
       <h2>Stripe Info</h2>
       <ul>
@@ -27,14 +27,50 @@
       </ul>
       <label class="control-label">Customer URI</label>
       <blockquote class="blockquote blockquote-info">{{restaurant.stripe_id}}</blockquote>
+      <div class="form-group">
+        <div class="form-group-inline">
+          <label class="control-label">Managed</label>
+          {{#if restaurant.stripe_account.managed}}Yes{{else}}No{{/if}}
+        </div>
+        <div class="form-group-inline">
+          <label class="control-label">Charges Enabled</label>
+          {{#if restaurant.stripe_account.charged_enabled}}Yes{{else}}No{{/if}}
+        </div>
+        <div class="form-group-inline">
+          <label class="control-label">Transfers Enabled</label>
+          {{#if restaurant.stripe_account.transfers_enabled}}Yes{{else}}No{{/if}}
+        </div>
+      </div>
+      {{#if restaurant.stripe_account.transfer_schedule}}
+      <div class="form-group">
+        <div class="form-group-inline">
+          <label class="control-label">Delay</label>
+          {{restaurant.stripe_account.transfer_schedule.delay_days}} day{{#unless (eq restaurant.stripe_account.transfer_schedule.delay_days 1)}}s{{/unless}}
+        </div>
+        <div class="form-group-inline">
+          <label class="control-label">Interval</label>
+          {{restaurant.stripe_account.transfer_schedule.interval}}
+        </div>
+      </div>
       {{/if}}
-    
+      {{#if restaurant.stripe_account.verification.fields_needed.length}}
+        <div class="form-group">
+          <label class="control-label">Fields Needed</label>
+          <ul class="comma-separated-list">
+            {{#each restaurant.stripe_account.verification.fields_needed}}
+              <li>{{this}}</li>
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
+      {{/if}}
+
       {{#if restaurant.balanced_customer_uri}}
       <h2>Balanced Info</h2>
       <label class="control-label">Customer URI</label>
       <blockquote class="blockquote blockquote-info">{{restaurant.balanced_customer_uri}}</blockquote>
       {{/if}}
-    
+
       <h2>Billing Info</h2>
       <div class="form-group">
         <label class="control-label">Street</label>
@@ -159,6 +195,122 @@
       </div>
       <div class="form-group">
         <button class="btn btn-update" type="submit">Update Bank Account</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="stripe-legal-entity">
+    <h2>Stripe Legal Entity</h2>
+    <div class="alerts" style="max-width: 600px; margin-bottom: 20px"></div>
+    <form id="stripe-legal-entity-form" class="ap-form form-vertical">
+      <div class="form-group row">
+        <div class="col-3">
+          <label class="control-label">First Name</label>
+          <input
+            name="first_name"
+            type="text"
+            class="form-control"
+            value="{{restaurant.stripe_account.legal_entity.first_name}}">
+        </div>
+        <div class="col-3">
+          <label class="control-label">Last Name</label>
+          <input
+            name="last_name"
+            type="text"
+            class="form-control"
+            value="{{restaurant.stripe_account.legal_entity.last_name}}">
+        </div>
+        <div class="col-3">
+        <label class="control-label">&nbsp;</label>
+          <label>
+            <input
+              type="radio"
+              name="gender"
+              value="male"
+              {{#eq restaurant.stripe_account.legal_entity.gender 'male'}}
+              checked
+              {{/eq}}
+            /> Male
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="gender"
+              value="female"
+              {{#eq restaurant.stripe_account.legal_entity.gender 'female'}}
+              checked
+              {{/eq}}
+            /> Female
+          </label>
+        </div>
+      </div>
+      <div class="form-group row" type="stripe_dob" name="dob">
+        <div class="col-3">
+          <label class="control-label">Date of Birth</label>
+          <input
+            type="date"
+            class="form-control"
+            value="{{restaurant.stripe_account.legal_entity.dob.year}}-{{pad restaurant.stripe_account.legal_entity.dob.month 2}}-{{pad restaurant.stripe_account.legal_entity.dob.day 2}}"
+          />
+        </div>
+        <div class="col-3">
+          <label class="control-label">Phone Number</label>
+          <input
+            type="tel"
+            class="form-control"
+            name="phone_number"
+            value="{{phoneNumber restaurant.stripe_account.legal_entity.phone_number}}"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-4">
+          <label class="control-label">Street</label>
+          <input
+            type="text"
+            name="address.line1"
+            value="{{restaurant.stripe_account.legal_entity.address.line1}}"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-4">
+          <label class="control-label">Line 2</label>
+          <input
+            type="text"
+            name="address.line2"
+            value="{{restaurant.stripe_account.legal_entity.address.line2}}"
+          />
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-2">
+          <label class="control-label">City</label>
+          <input
+            type="text"
+            name="address.city"
+            value="{{restaurant.stripe_account.legal_entity.address.city}}"
+          />
+        </div>
+        <div class="col-1">
+          <label class="control-label">State</label>
+          <input
+            type="text"
+            name="address.state"
+            value="{{restaurant.stripe_account.legal_entity.address.state}}"
+          />
+        </div>
+        <div class="col-2">
+          <label class="control-label">Zip</label>
+          <input
+            type="number"
+            name="address.postal_code"
+            value="{{restaurant.stripe_account.legal_entity.address.postal_code}}"
+          />
+        </div>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-update" type="submit">Update Legal Entity</button>
       </div>
     </form>
   </div>

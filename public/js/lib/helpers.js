@@ -336,5 +336,24 @@ define(function(require, exports, module) {
     return amt - amtMod5 + (amtMod5 < 3 ? 0 : 5);
   };
 
+  helpers.set = function( obj, path, value ){
+    var dotIndex = path.indexOf('.');
+
+    if ( dotIndex === -1 ){
+      obj[ path ] = value;
+
+      return;
+    }
+
+    var initialPath = path.substring( 0, dotIndex );
+    var nextPath = path.substring( dotIndex + 1 );
+
+    return helpers.set(
+      obj[ initialPath ] = obj[ initialPath ] || {}
+    , nextPath
+    , value
+    );
+  };
+
   return module.exports = helpers;
 });

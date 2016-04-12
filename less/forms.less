@@ -93,6 +93,11 @@ input[disabled] {
   .error-msg {
     display: none;
   }
+
+  &.row,
+  .ap-form &.row {
+    &:extend(.row);
+  }
 }
 
 @media (max-width: @breakpoint-tablet) {

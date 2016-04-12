@@ -43,19 +43,19 @@
             </td>
           {{/if}}
           <td class="actions">
-            {{#if this.invoice_id}}
-              <a href="/invoices/invoice-{{this.invoice_id}}.pdf"
-                 class="btn btn-primary"
-                 target="_blank">Download Invoice PDF</a>
-            {{/if}}
             {{#unless this.restaurant.is_hidden}}
               <a  href="#"
-                  class="btn btn-default"
+                  class="btn btn-small btn-default btn-block"
                   data-action="copy-order"
                   data-id="{{../id}}">Order Again?</a>
             {{/unless}}
+            {{#if this.invoice_id}}
+              <a href="/invoices/invoice-{{this.invoice_id}}.pdf"
+                 class="btn btn-small btn-default btn-block"
+                 target="_blank">Download Invoice PDF</a>
+            {{/if}}
             <a  href="/receipts/order-{{this.id}}.pdf"
-                class="btn btn-primary"
+                class="btn btn-small btn-default btn-block"
                 target="_blank">Download PDF</a>
           </td>
         </tr>

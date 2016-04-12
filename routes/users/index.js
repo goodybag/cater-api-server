@@ -125,7 +125,18 @@ route.get('/:uid/orders'
 , m.view('user-orders-list', db.orders)
 );
 
-route.get('/:uid/orders/calendar', restrictOwner, m.view('user-orders-calendar'));
+route.get('/:uid/orders/calendar'
+, restrictOwner
+, function(req, res, next) {
+    res.locals.oldUID = -1;
+
+    if(req.session.oldUser) {
+      res.locals.oldUID = req.session.oldUser.id;
+    }
+
+    return next();
+  }
+, m.view('user-orders-calendar'));
 
 route.get('/:uid/orders/receipts'
 , restrictOwner

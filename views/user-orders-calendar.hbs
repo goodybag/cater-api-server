@@ -57,10 +57,12 @@
     , 'app/views/orders-filter-view'
     ]
   , function($, utils, user, OrdersListView, OrdersCalendarView, OrdersFilterView) {
+
       utils.extend( user, {{{json user}}} );
 
       var ordersCalendarView = new OrdersCalendarView({
-        el: '#main'
+        el: '#main',
+        oldUID: {{oldUID}}
       });
 
       var ordersFilterView = new OrdersFilterView({

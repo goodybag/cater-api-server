@@ -159,7 +159,10 @@ route.get('/:uid/orders/receipts'
     ]
   })
 , m.view('user-receipts', db.orders, {
-    layout: 'layout/default'
+    layout: 'layout/default',
+    transformLocals: (locals) => ({
+      has_invoiced_order: locals.orders.some((o) => !!o.invoice_id)
+    })
   })
 );
 

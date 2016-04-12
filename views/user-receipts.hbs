@@ -25,7 +25,9 @@
         <th>Date</th>
         <th>Restaurant</th>
         <th>Total</th>
+        {{#if has_invoiced_order}}
         <th>Invoice Status</th>
+        {{/if}}
         <th></th>
       </thead>
       <tbody>
@@ -35,7 +37,11 @@
           <td>{{formatDateTime this.datetime}}</td>
           <td>{{this.restaurant.name}}</td>
           <td>${{commatize (dollars this.total)}}</td>
-          <td><span class="label-tag label-status small {{this.invoice_status}}">{{capitalize this.invoice_status}}</span></td>
+          {{#if ../has_invoiced_order}}
+            <td>
+              {{#if this.invoice_id}}<span class="label-tag label-status small {{this.invoice_status}}">{{capitalize this.invoice_status}}</span>{{/if}}
+            </td>
+          {{/if}}
           <td class="actions">
             {{#if this.invoice_id}}
               <a href="/invoices/invoice-{{this.invoice_id}}.pdf"

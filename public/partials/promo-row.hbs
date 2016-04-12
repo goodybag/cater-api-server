@@ -1,8 +1,8 @@
 <td>
-  <input name="promo_code" value="{{promo.promo_code}}" />
+  <input class="promo-input" name="promo_code" value="{{promo.promo_code}}" />
 </td>
 <td>
-  <input name="recipients" type="array" value="{{promo.recipients}}" />
+  <input class="promo-input" name="recipients" type="array" value="{{promo.recipients}}" />
 </td>
 <td>
   {{formatDateTimeWithTz promo.created_at user.region.timezone "MM/DD/YY h:mm A"}}

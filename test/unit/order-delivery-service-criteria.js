@@ -154,4 +154,20 @@ describe ('Order Delivery Service Criteria', function(){
 
     assert( criteria.check( order ) );
   });
+
+  it.only ('should not be DS because of lead_time, but use submittedDate to check', function(){
+    var order = utils.deepExtend( {}, defaultOrder, {
+      datetime: '2016-01-08 12:30:00'
+    , submitted: '2016-01-01 12:30:00'
+    , status: 'accepted'
+    });
+
+    order.restaurant.lead_times = [
+      { lead_time: 100, max_guests: 10 }
+      // 6 days
+    , { lead_time: 8640, max_guests: 30 }
+    ];
+
+    assert.deepEqual( criteria.why( order ), [])
+  });
 });

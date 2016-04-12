@@ -146,6 +146,9 @@
                   <li><a href="/">Start New Order</a></li>
                   <li><a href="/users/me/orders/calendar">My Orders</a></li>
                   <li><a href="/users/me/orders/receipts">My Receipts</a></li>
+                  {{#if user.is_invoiced}}
+                  <li><a href="/users/me/invoices">My Invoices</a></li>
+                  {{/if}}
                 </ul>
               </li>
 

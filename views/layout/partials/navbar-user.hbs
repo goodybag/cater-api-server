@@ -40,6 +40,11 @@
           <li class="popover-item">
             <a href="/users/me/orders/receipts">My Receipts</a>
           </li>
+          {{#if user.is_invoiced}}
+          <li class="popover-item">
+            <a href="/users/me/invoices">My Invoices</a>
+          </li>
+          {{/if}}
         </ul>
       </div>
       </span>

@@ -65,6 +65,10 @@ module.exports = function(name, collection, options){
 
         res.locals[ alias ] = results;
 
+        if ( options.transformLocals ){
+          _.assign( res.locals, options.transformLocals( res.locals ) );
+        }
+
         res.render( name, _.omit( options, [ 'notFound', 'error' ] ) );
       });
 

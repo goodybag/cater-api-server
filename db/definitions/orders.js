@@ -258,6 +258,12 @@ define(function(require) {
     , default: 0
     }
   , courier_tracking_id: { type: types.text }
+  , waive_transaction_fee: {
+      type: types.boolean
+    , nullable: false
+    , editable: ['admin']
+    , default: false
+    }
   };
 
   definition.indices = {};

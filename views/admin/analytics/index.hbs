@@ -43,7 +43,7 @@
 {{#extend "scripts"}}
 <script>
 
-require(['jquery-loaded', '/components/Chart.js/Chart.js', 'handlebars', 'moment', 'lodash'], function($, Chart, Hbs, moment, _){
+require(['jquery-loaded', '/components/Chart.js/Chart.js', 'handlebars', 'moment', 'lodash', 'hb-helpers'], function($, Chart, Hbs, moment, _, helpers){
   $('[data-role="popover"]').gb_popover();
 
   // Format data
@@ -75,7 +75,9 @@ require(['jquery-loaded', '/components/Chart.js/Chart.js', 'handlebars', 'moment
 
     options: {
       responsive: true,
-      hoverMode: 'single'
+      hoverMode: 'single',
+      tooltips: {callbacks: {label: (d) => formatCurrency(d.yLabel)}},
+      scales: {yAxes: [{ticks: {callback: formatCurrency}}]}
     }
   });
 
@@ -90,9 +92,19 @@ require(['jquery-loaded', '/components/Chart.js/Chart.js', 'handlebars', 'moment
 
     options: {
       responsive: true,
-      hoverMode: 'single'
+      hoverMode: 'single',
+      tooltips: {callbacks: {label: (d) => formatNumber(d.yLabel)}},
+      scales: {yAxes: [{ticks: {callback: formatNumber}}]}
     }
   });
+
+  function formatCurrency(value) {
+    return '$' + helpers.commatize(value);
+  }
+
+  function formatNumber(value) {
+    return helpers.commatize(value);
+  }
 });
 </script>
 {{/extend}}

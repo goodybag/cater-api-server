@@ -1,7 +1,6 @@
 define(function(require, exports, module) {
   var utils = require('utils');
   var Handlebars = require('handlebars');
-  var Amenity = require('app/models/promo');
   var FormView = require('app/views/form-view-2');
   var api = require('api');
   var notify = require('notify');

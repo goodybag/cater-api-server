@@ -98,7 +98,7 @@ var stripe = {
 
       utils.stripe.transfers.create(data, function(err, transfer) {
         if ( err ) {
-          logger.error('Unable to create transfer');
+          logger.error('Unable to create transfer', err);
           return res.send(500, err);
         }
         logger.info('Complete');
@@ -117,7 +117,7 @@ var stripe = {
       });
       utils.stripe.transfers.list(query, function(err, transfers) {
         if ( err ) {
-          logger.error('Unable to list transfers');
+          logger.error('Unable to list transfers', err);
           return res.send(500, err);
         }
         req.restaurant_transfers = res.locals.restaurant_transfers = transfers;

@@ -177,3 +177,63 @@ module.exports.updateBankAccount = [
     });
   }
 ];
+
+module.exports.getLegalEntity = [
+  m.getRestaurant({
+    param:  'id'
+  , stripe: true
+  })
+
+, function( req, res ){
+    var entity = req.restaurant.stripe_account
+      ? req.restaurant.stripe_account.legal_entity
+      : {};
+
+    res.json( entity );
+  }
+];
+
+module.exports.updateLegalEntity = [
+  m.getRestaurant({
+    param:  'id'
+  , stripe: true
+  })
+
+, function( req, res ){
+    var concernedFields = [
+      'additional_owners'
+    , 'address'
+    , 'business_name'
+    , 'dob'
+    , 'first_name'
+    , 'gender'
+    , 'last_name'
+    , 'maiden_name'
+    , 'personal_address'
+    , 'phone_number'
+    , 'type'
+    ];
+
+    var stripeId = req.restaurant.stripe_id;
+    var existingEntity = req.restaurant.stripe_account.legal_entity || {};
+
+    var newEntity = utils.defaults(
+      utils.pick( req.body, concernedFields )
+    , utils.pick( existingEntity, concernedFields )
+    );
+
+    utils.stripe.accounts.update( stripeId, {
+      legal_entity: newEntity
+    }, function( error, result ){
+      if ( error ){
+        req.logger.warn('Error updating stripe legal_entity', {
+          error: error
+        });
+
+        return res.error( error );
+      }
+
+      return res.json( result );
+    });
+  }
+];

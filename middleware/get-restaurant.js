@@ -109,7 +109,8 @@ module.exports = function( options ){
       if ( options.stripe ){
         return utils.stripe.accounts.retrieve( restaurant.stripe_id, function( error, acct ){
           if ( error ){
-            logger.warn('Error looking up stripe account')
+            logger.error('Error looking up stripe account', error)
+            return res.error(errors.internal.BAD_DATA, err);
           }
 
           restaurant.stripe_account = acct;

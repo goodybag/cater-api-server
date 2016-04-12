@@ -1,0 +1,30 @@
+{{#extend "html-title"}}Promos{{/extend}}
+{{#extend "body"}}
+<div class="container">
+  <h2>Promo Codes</h2>
+  <p>Configure promo codes. Multiple recipients must be separated by a comma.</p>
+
+  {{#with promos}}
+  <div class="promos">
+    {{> promo_table }}
+  </div>
+  {{/with}}
+</div>
+
+{{/extend}}
+
+{{#extend "scripts"}}
+<script>
+  require( [
+    'app/views/edit-promos-view'
+  , 'app/collections/promos'
+  ],
+  function( View, Promos ){
+    var view = new View({
+      el: '.promos'
+    , promos: new Promos({{{json promos}}})
+    , user: {{{json user}}}
+    });
+  });
+</script>
+{{/extend}}

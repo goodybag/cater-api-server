@@ -797,6 +797,7 @@ route.get('/orders/:id'
   , alerts:                 true
   , applyPriceHike:         true
   , submittedDate:          true
+  , revisions:              true
   })
 
   // Lookup the restaurants in the order region
@@ -925,5 +926,16 @@ route.get('/scheduler'
 , m.restrict(['admin'])
 , m.view( 'admin/scheduler.hbs', {
     layout: 'admin/layout2'
+  })
+);
+
+/*
+ * Promos
+ */
+route.get('/promos'
+, m.restrict(['admin'])
+, m.view( 'admin/promos.hbs', db.promos, {
+    layout: 'admin/layout2'
+  , method: 'find'
   })
 );

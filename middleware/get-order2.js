@@ -74,6 +74,26 @@ module.exports = function( options ){
       }
     }
 
+    if ( options.revisions ){
+      $options.many.push({
+        table: 'order_revisions'
+      , columns: [
+          { name: 'users.name', alias: 'user_name' }
+        , 'order_revisions.user_id'
+        , 'order_revisions.created_at'
+        , 'order_revisions.description'
+        ]
+      , alias: 'revisions'
+      , joins: {
+          users: {
+            type: 'left'
+          , on: { id: '$order_revisions.user_id$' }
+          }
+        }
+      , order: { 'order_revisions.created_at': 'desc' }
+      });
+    }
+
     if ( options.amenities ){
       $options.many.push({
         table: 'order_amenities'

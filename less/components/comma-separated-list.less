@@ -1,0 +1,23 @@
+//////////////////////////
+// Comma-Separated List //
+//////////////////////////
+
+.comma-separated-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0;
+}
+
+.comma-separated-list > li {
+  display: inline;
+  font-size: 13px;
+}
+
+.comma-separated-list > li:before {
+  content: ", ";
+}
+
+.comma-separated-list > li:first-child:before {
+  content: "";
+}

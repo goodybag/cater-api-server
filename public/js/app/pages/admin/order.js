@@ -134,6 +134,14 @@ define(function(require){
             page.state.set( 'courier_tracking_id', v );
           }
         });
+
+        $('[name="waive_transaction_fee"]').change( function( e ){
+          var v = $(this).val();
+
+          if ( v !== page.order.get('waive_transaction_fee') ){
+            page.state.set( 'waive_transaction_fee', v );
+          }
+        });
       });
     }
 

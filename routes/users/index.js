@@ -120,12 +120,23 @@ route.get('/:uid/orders'
         status: req.params.status
       };
     }
-    return next();  
+    return next();
   }
 , m.view('user-orders-list', db.orders)
 );
 
-route.get('/:uid/orders/calendar', restrictOwner, m.view('user-orders-calendar'));
+route.get('/:uid/orders/calendar'
+, restrictOwner
+, function(req, res, next) {
+    res.locals.oldUID = -1;
+
+    if(req.session.oldUser) {
+      res.locals.oldUID = req.session.oldUser.id;
+    }
+
+    return next();
+  }
+, m.view('user-orders-calendar'));
 
 route.get('/:uid/orders/receipts'
 , restrictOwner
@@ -137,11 +148,32 @@ route.get('/:uid/orders/receipts'
 , m.sort('-datetime')
 , m.pagination({ pageParam: 'p' })
 , m.queryOptions({
+    columns: [
+      'orders.*'
+    , { name: 'user_invoices.status', alias: 'invoice_status' }
+    , { name: 'user_invoices.id', alias: 'invoice_id' }
+    ],
     useLatestRevision: true,
-    applyPriceHike: { useCachedSubTotal: false }
+    applyPriceHike: { useCachedSubTotal: false },
+    joins: [
+      {
+        type: 'left'
+      , target: 'user_invoice_orders'
+      , on: { order_id: '$orders.id$' }
+      }
+
+    , {
+        type: 'left'
+      , target: 'user_invoices'
+      , on: { id: '$user_invoice_orders.user_invoice_id$' }
+      }
+    ]
   })
 , m.view('user-receipts', db.orders, {
-    layout: 'layout/default'
+    layout: 'layout/default',
+    transformLocals: (locals) => ({
+      has_invoiced_order: locals.orders.some((o) => !!o.invoice_id)
+    })
   })
 );
 

@@ -79,6 +79,7 @@ define( function( require, exports, module ){
 
     , getNoContractFee: function(){
         if ( this.restaurant.plan ) return 0;
+        if ( this.waive_transaction_fee ) return 0;
         return Math.round( this.getTotalForContractFee() * this.restaurant.no_contract_fee );
       }
 

@@ -107,7 +107,7 @@ module.exports = require('stampit')()
         if ( error ) return callback( error );
 
         this.parseResults( results );
-        
+
         return callback( null, this );
       }.bind( this ));
     }
@@ -149,6 +149,8 @@ module.exports = require('stampit')()
           , $lt:  { $custom: ['orders.datetime < (payment_summaries.period_end + interval \'1 day\' )'] }
           }
         }
+
+      , order: { datetime: 'desc' }
 
       , many: [
           { table: 'oi', alias: 'items', where: { 'orders.id': '$oi.order_id$' } }

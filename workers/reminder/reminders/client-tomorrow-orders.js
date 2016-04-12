@@ -33,7 +33,7 @@ const ordersWhereClause = {
   }
 
 , datetime: {
-    $between_days_from_now: { from: 1, to: 2, timezone: 'orders.timezone' }
+    $between_days_from_now: { from: 1, to: 2, nowTimezone: 'orders.timezone' }
   }
 
   // Filter to orders with timezones where it's currently 8am

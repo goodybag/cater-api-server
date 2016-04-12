@@ -77,7 +77,7 @@ define(function(require, exports, module) {
         }
       };
 
-      if ( user.groups.indexOf('admin') > -1 ){
+      if ( user.groups.indexOf('admin') > -1  || this.options.oldUID > -1 ){
         utils.extend( options, {
           editable:         true
         , disableDragging:  false

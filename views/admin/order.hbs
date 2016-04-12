@@ -83,7 +83,7 @@
                 data-input="> input"
                 data-target="+ .popover-body > .popover-item"
                 data-fields="name,id,organization">
-            
+
                 <input type="text" placeholder="Filter...">
               </div>
               <div class="popover-body">
@@ -204,6 +204,15 @@
               value="{{order.courier_tracking_id}}">
           </dd>
         </div>
+        <div class="row{{#if order.restaurant.plan}} hide{{/if}}" id="waive-transaction-fee-row">
+          <dt>Waive Transaction Fee</dt>
+          <dd>
+            <input
+              type="checkbox"
+              name="waive_transaction_fee"
+              {{#if order.waive_transaction_fee}}checked{{/if}}>
+          </dd>
+        </div>
       </dl>
 
       {{#eq order.type 'courier'}}
@@ -238,7 +247,7 @@
                 data-input="> input"
                 data-target="+ .popover-body > .popover-item"
                 data-fields="name,id">
-            
+
                 <input type="text" placeholder="Filter...">
               </div>
               <div class="popover-body">
@@ -283,6 +292,29 @@
   <section class="panel-component" id="internal-notes">
     <h1 class="component-title">Notes</h1>
     <div class="panel-body"></div>
+  </section>
+
+  <section class="panel-component" id="order-revisions-timeline">
+    <h1 class="component-title">Revision Timeline</h1>
+    <div class="panel-body">
+      <table class="table">
+        <tr>
+          <th>User Name</th>
+          <th>User ID</th>
+          <th>Description</th>
+          <th>Date Occured</th>
+        </tr>
+
+        {{#each order.revisions}}
+        <tr>
+          <td>{{this.user_name}}</td>
+          <td>{{this.user_id}}</td>
+          <td>{{this.description}}</td>
+          <td>{{formatDateTimeWithTz this.created_at req.user.region.timezone "MM/DD/YYYY h:mm A"}}</td>
+        </tr>
+        {{/each}}
+      </table>
+    </div>
   </section>
 
   <section class="panel-component" id="order-pdfs">

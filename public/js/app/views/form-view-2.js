@@ -10,7 +10,7 @@ define(function(require){
   var config    = require('config');
   var Hbs       = require('handlebars');
 
-  return Backbone.View.extend({
+  var FormView = Backbone.View.extend({
     // Given an input type ( the key ) and a jquery element
     // ( the value function argument ), what is the value on
     // that jquery element?
@@ -37,6 +37,9 @@ define(function(require){
           .map( function( v ){
             return +v;
           });
+      }
+    , 'text[]': function( $el ){
+        return this.typeGetters.array.call( this, $el );
       }
     , 'list': function( $el ) {
         var result = $el.find('input[type="checkbox"]:checked').map( function() {
@@ -66,6 +69,14 @@ define(function(require){
 
   , initialize: function( options ){
       this.options = options;
+
+      if ( this.typeGetters !== FormView.prototype.typeGetters ){
+        this.typeGetters = utils.extend(
+          {}
+        , FormView.prototype.typeGetters
+        , this.typeGetters
+        );
+      }
 
       this.initTwoWays();
 
@@ -141,7 +152,7 @@ define(function(require){
         var k     = $this.attr('name');
         var val   = this_.getDomValue( k, $this );
 
-        data[ k in map ? map[ k ] : k ] = val;
+        utils.set( data, k in map ? map[ k ] : k, val );
       });
 
       return data;
@@ -227,4 +238,6 @@ define(function(require){
       return this;
     }
   });
+
+  return FormView;
 });

@@ -40,11 +40,15 @@ define(function(require, exports, module) {
     },
 
     destroy: function( promo_code, callback ) {
-      api('promos')(promo_code).del(( error, result ) => {
-        if( error ) { return callback( error ); }
+      if( promo_code ) {
+        api('promos')(promo_code).del(( error, result ) => {
+          if( error ) { return callback( error ); }
+          this.trigger('item:destroyed');
+          callback( null, result );
+        });
+      } else {
         this.trigger('item:destroyed');
-        callback( null, result );
-      });
+      }
     }
 
   });

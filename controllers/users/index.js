@@ -149,14 +149,14 @@ module.exports.update = function(req, res) {
 
     utils.async.waterfall(tasks, function(err, user) {
       if ( err ) {
-        logger.error('Transaction Error');
+        logger.error('Transaction Error', err);
         tx.rollback(utils.noop);
         return res.error(parseInt(err.code) === 23505 ? errors.registration.EMAIL_TAKEN : errors.internal.DB_FAILURE, err);
       }
 
       tx.commit(function(err) {
         if ( err ) {
-          logger.error('Transaction Commit Error');
+          logger.error('Transaction Commit Error', err);
           return res.error( errors.internal.DB_FAILURE, err );
         }
 

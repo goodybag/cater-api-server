@@ -216,12 +216,16 @@ $$ language plpgsql;
 create or replace function order_no_contract_rate( o orders )
 returns numeric( 5,5 ) as $$
 begin
-  return coalesce(
-    (select no_contract_fee
-    from restaurants
-    where restaurants.id = o.restaurant_id
-      and plan_id is null)
-  , 0
-  );
+  if o.waive_transaction_fee then
+    return 0;
+  else
+    return coalesce(
+      (select no_contract_fee
+      from restaurants
+      where restaurants.id = o.restaurant_id
+        and plan_id is null)
+    , 0
+    );
+  end if;
 end;
 $$ language plpgsql;

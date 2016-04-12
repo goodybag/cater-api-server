@@ -2,7 +2,7 @@ var utils = require('../utils');
 
 module.exports = function( options ){
   options = utils.defaults( options || {}, {
-
+    notPending: false
   });
 
   return function( req, res, next ){
@@ -14,6 +14,10 @@ module.exports = function( options ){
 
     if ( options.userIdParam && options.userIdParam in req.params ){
       where.user_id = req.params[ options.userIdParam ];
+    }
+
+    if ( options.notPending ){
+      where.status = { $ne: 'pending' };
     }
 
     require('stamps/user-invoice').find( where, queryOptions, function( error, results ){

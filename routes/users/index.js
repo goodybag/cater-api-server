@@ -120,7 +120,7 @@ route.get('/:uid/orders'
         status: req.params.status
       };
     }
-    return next();  
+    return next();
   }
 , m.view('user-orders-list', db.orders)
 );
@@ -141,6 +141,17 @@ route.get('/:uid/orders/receipts'
     applyPriceHike: { useCachedSubTotal: false }
   })
 , m.view('user-receipts', db.orders, {
+    layout: 'layout/default'
+  })
+);
+
+route.get('/:uid/invoices'
+, restrictOwner
+, m.getInvoices({
+    userIdParam: 'uid',
+    notPending: true
+  })
+, m.view('user-invoices', {
     layout: 'layout/default'
   })
 );

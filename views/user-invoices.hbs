@@ -1,0 +1,47 @@
+{{> scripts_copy_order}}
+
+{{#extend "page"}}user-invoices-page{{/extend}}
+
+{{#extend "body"}}
+  <div class="container">
+    <ul class="breadcrumbs main-breadcrumbs">
+      <li>
+        <a href="/">Home</a>
+      </li>
+      <li>
+        <a href="/users/me">{{#if user.name}}{{user.name}}{{else}}Me{{/if}}</a>
+      </li>
+      <li>
+        <a href="/users/me/orders">My Orders</a>
+      </li>
+      <li>Invoices</li>
+    </ul>
+
+    <h1 class="page-title">My Invoices</h1>
+
+    <table class="table table-lg table-striped table-receipts">
+      <thead>
+        <th>ID</th>
+        <th>Period</th>
+        <th>Status</th>
+        <th>Total</th>
+        <th></th>
+      </thead>
+      <tbody>
+        {{#each invoices}}
+        <tr>
+          <td><a href="/invoices/invoice-{{this.id}}.pdf">#{{this.id}}</a></td>
+          <td>{{datepart this.billing_period_start}} - {{datepart this.billing_period_end~}}</td>
+          <td><span class="label-tag label-status small {{this.status}}">{{capitalize this.status}}</span></td>
+          <td>${{commatize (dollars (invoice this 'total'))}}</td>
+          <td class="actions">
+            <a  href="/invoices/invoice-{{this.id}}.pdf"
+                class="btn btn-primary"
+                target="_blank">Download PDF</a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+{{/extend}}

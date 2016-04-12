@@ -451,6 +451,10 @@ module.exports.apiUpdate = function(req, res, next) {
         orderWithRestaurant
       ) ? 'courier' : 'delivery';
 
+      if ( $update.type !== order.type ){
+        req.logger.warn('Changing order % type from % to %', order.id, order.type, $update.type);
+      }
+
       let result = OrderFulfillability
         .create( orderWithRestaurant )
         .why();

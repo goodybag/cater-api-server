@@ -119,6 +119,7 @@ route.put('/:id'
   , restaurant: true
   , deliveryService: true
   , applyPriceHike: true
+  , submittedDate: true
   })
 , m.restrict(['order-owner', 'order-restaurant', 'admin'])
 , m.audit.orderType()

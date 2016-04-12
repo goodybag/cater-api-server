@@ -128,7 +128,13 @@ define(function( require, exports, module ){
 
       if ( !limit ) return false;
 
-      var now = moment().tz( restaurant.region.timezone ).format('YYYY-MM-DD HH:mm:ss');
+      if ( order.status !== 'pending' && !order.submitted ){
+        return false;
+      }
+
+      var nowDateString = order.status === 'pending' ? undefined : order.submitted;
+
+      var now = moment( nowDateString ).tz( restaurant.region.timezone ).format('YYYY-MM-DD HH:mm:ss');
       var minutes = (moment( date ) - moment( now )) / 60000;
       var leadTime = limit.lead_time;
 

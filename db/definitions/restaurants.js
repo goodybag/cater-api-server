@@ -259,6 +259,12 @@ define(function(require) {
       type: types.boolean
     , default: false
     }
+  , hide_item_recipients: {
+      type: types.boolean
+    , nullable: false
+    , default: true
+    , editable: ['admin']
+    }
   };
 
   definition.indices = {};

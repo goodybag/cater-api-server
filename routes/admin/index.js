@@ -927,3 +927,14 @@ route.get('/scheduler'
     layout: 'admin/layout2'
   })
 );
+
+/*
+ * Promos
+ */
+route.get('/promos'
+, m.restrict(['admin'])
+, m.view( 'admin/promos.hbs', db.promos, {
+    layout: 'admin/layout2'
+  , method: 'find'
+  })
+);

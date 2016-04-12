@@ -1,0 +1,13 @@
+<td>
+  <input class="promo-input" name="promo_code" value="{{promo.promo_code}}" />
+</td>
+<td>
+  <input class="promo-input" name="recipients" type="array" value="{{promo.recipients}}" />
+</td>
+<td>
+  {{formatDateTimeWithTz promo.created_at user.region.timezone "MM/DD/YY h:mm A"}}
+</td>
+<td>
+  <a href="#" class="js-btn-save">Save</a>
+  <a href="#" class="js-btn-delete">Remove</a>
+</td>

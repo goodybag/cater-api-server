@@ -22,7 +22,9 @@ define( function( require ){
         amenities: amenities
       });
 
-      page.affixOrderSummary();
+      if( $('.list-group').height() > $('.order-summary').height() ) {
+        page.affixOrderSummary();
+      }
 
       analytics.page('Checkout');
     },
@@ -30,8 +32,7 @@ define( function( require ){
     affixOrderSummary: function () {
       $('.order-summary').affix({
         offset: {
-          top: function () { return $('.list-group').offset().top }
-        , bottom: 225
+          top: function () { return $('.list-group').offset().top - 42 }
         }
       });
 

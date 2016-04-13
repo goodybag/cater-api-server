@@ -20,6 +20,10 @@
   width: 360px;
 }
 
+.order-summary.affix {
+  top: 42px;
+}
+
 .affix-bottom {
   position: absolute;
   width: 360px;
@@ -32,7 +36,8 @@
 }
 
 @media ( min-width: 992px ) and ( max-width: 1199px ){
-  .order-summary.affix {
+  .order-summary.affix,
+  .order-summary.affix-bottom {
     width: 293px;
   }
 }

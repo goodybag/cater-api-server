@@ -35,6 +35,7 @@
     , {name: 'plan',                    location: '../../components/plan.js',                   main: 'index.js'}
     , {name: 'stampit',                 location: '../../components/stampit',                   main: 'stampit.min.js'}
     , {name: 'resource',                location: '../../components/resource.js',               main: 'index.js'}
+    , {name: 'chartjs',                 location: '../../components/Chart.js',                  main: 'Chart.js'}
 
       // backbone stuff
     , {name: 'backbone',                location: '../../components/backbone',                  main: 'backbone.js'}

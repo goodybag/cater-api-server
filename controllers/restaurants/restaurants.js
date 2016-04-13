@@ -330,6 +330,7 @@ module.exports.create = function(req, res) {
     managed: true
   , country: 'US'
   , business_name: name
+  , transfer_schedule: { interval: 'manual' }
   }, function(error, acct) {
     if (error) {
       logger.error('Unable to create restaurant in stripe', error);

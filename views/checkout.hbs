@@ -48,6 +48,9 @@
       <div class="alert alert-danger alert-bad-lead-time row{{#unless order.restaurant.is_bad_lead_time}} hide{{/unless}}" data-error="is_bad_lead_time">
         {{> alert_is_bad_lead_time }}
       </div>
+      <div class="alert alert-danger alert-restaurant-closed{{#unless order.restaurant.is_bad_delivery_time}} hide{{/unless}} row" data-error="restaurant_closed">
+        {{> alert_restaurant_closed }}
+      </div>
     </div>
   </div>
   {{/if}}

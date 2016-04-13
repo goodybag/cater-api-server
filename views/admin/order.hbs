@@ -299,16 +299,20 @@
     <div class="panel-body">
       <table class="table">
         <tr>
-          <th>User Name</th>
-          <th>User ID</th>
+          <th>User</th>
           <th>Description</th>
           <th>Date Occured</th>
         </tr>
 
         {{#each order.revisions}}
         <tr>
-          <td>{{this.actor_name}}</td>
-          <td>{{this.actor_id}}</td>
+          <td>
+            {{#if this.actor_id}}
+              <a href="/admin/users/{{this.actor_id}}">#{{this.actor_id}}</a> {{this.actor_name}}
+            {{else}}
+              Unknown
+            {{/if}}
+          </td>
           <td>{{this.description}}</td>
           <td>{{formatDateTimeWithTz this.created_at req.user.region.timezone "MM/DD/YYYY h:mm A"}}</td>
         </tr>

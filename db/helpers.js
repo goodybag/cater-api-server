@@ -821,6 +821,7 @@ dirac.use( function( dirac ){
         var data = order.latest_revision;
         delete order.latest_revision;
 
+        order.amenities = data.amenities;
         order.items = data.items;
         order.restaurant = data.restaurant;
         order.user = data.user;

@@ -307,8 +307,8 @@
 
         {{#each order.revisions}}
         <tr>
-          <td>{{this.user_name}}</td>
-          <td>{{this.user_id}}</td>
+          <td>{{this.actor_name}}</td>
+          <td>{{this.actor_id}}</td>
           <td>{{this.description}}</td>
           <td>{{formatDateTimeWithTz this.created_at req.user.region.timezone "MM/DD/YYYY h:mm A"}}</td>
         </tr>

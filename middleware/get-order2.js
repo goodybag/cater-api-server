@@ -78,8 +78,8 @@ module.exports = function( options ){
       $options.many.push({
         table: 'order_revisions'
       , columns: [
-          { name: 'users.name', alias: 'user_name' }
-        , 'order_revisions.user_id'
+          { name: 'users.name', alias: 'actor_name' }
+        , 'order_revisions.actor_id'
         , 'order_revisions.created_at'
         , 'order_revisions.description'
         ]
@@ -87,7 +87,7 @@ module.exports = function( options ){
       , joins: {
           users: {
             type: 'left'
-          , on: { id: '$order_revisions.user_id$' }
+          , on: { id: '$order_revisions.actor_id$' }
           }
         }
       , order: { 'order_revisions.created_at': 'desc' }

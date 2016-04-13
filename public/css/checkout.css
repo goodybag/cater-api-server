@@ -20,6 +20,10 @@
   width: 360px;
 }
 
+.order-summary.affix {
+  top: 42px;
+}
+
 .affix-bottom {
   position: absolute;
   width: 360px;

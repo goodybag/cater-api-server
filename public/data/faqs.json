@@ -57,7 +57,7 @@
       , "a": "If you need to cancel an order, call us at 512-677-4224. We understand there are last minute complications and changes, but please try and cancel as far in advance as possible! Some of our restaurants may not be able to cancel if it is too close to the delivery time."
       }
     , { "q": "Can I give a tip?"
-      , "a": "You can add a tip during the checkout process or contact us to add one on after your order has been delivered."
+      , "a": "Yes, you can either add a tip during the checkout process or contact us to add one after your order has been delivered. A tip is not included in the delivery fee, so suggested tip percentage is 10-20%."
       }
     , { "q": "Something was wrong with my order, what do I do?"
       , "a": "If you aren't completely satisfied with your order, please let us know immediately and we can find a solution. We will contact the restaurant and/or can adjust the billing info if necessary."

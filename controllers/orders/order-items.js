@@ -127,8 +127,7 @@ module.exports.update = function(req, res, next) {
       db.order_revisions.track( result.order_id, req.user.attributes.id, 'update-item', function( error ){
         if ( error ){
           req.logger.warn('Error tracking order revision', {
-            order: { id: order.id }
-          , error: error
+            error: error
           });
         }
       });
@@ -150,8 +149,7 @@ module.exports.remove = function(req, res, next) {
     db.order_revisions.track( rows[0].order_id, req.user.attributes.id, 'remove-item', function( error ){
       if ( error ){
         req.logger.warn('Error tracking order revision', {
-          order: { id: order.id }
-        , error: error
+          error: error
         });
       }
     });

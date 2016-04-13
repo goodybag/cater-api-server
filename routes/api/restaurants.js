@@ -27,7 +27,6 @@ route.post('/', m.restrict(['admin']), m.insert(db.restaurants));
 route.get('/:id'
 , m.getRestaurant({
     param: 'id'
-  , stripe: true
   })
 , function( req, res, next ){
     if ( !res.locals.restaurant.items ) return next();

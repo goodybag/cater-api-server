@@ -33,6 +33,7 @@ define( function( require ){
       $('.order-summary').affix({
         offset: {
           top: function () { return $('.list-group').offset().top - 42 }
+        , bottom: 202
         }
       });
 

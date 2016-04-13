@@ -36,7 +36,8 @@
 }
 
 @media ( min-width: 992px ) and ( max-width: 1199px ){
-  .order-summary.affix {
+  .order-summary.affix,
+  .order-summary.affix-bottom {
     width: 293px;
   }
 }

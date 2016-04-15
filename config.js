@@ -223,6 +223,7 @@ config.defaults = {
     support: [ local.testEmail || 'test@goodybag.com' ]
   , tech: [ local.testEmail || 'test@goodybag.com' ]
   , orders: 'orders@goodybag.com'
+  , couriers: 'couriers@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , info: 'info@goodybag.com'
   , welcome: 'jacobparker@goodybag.com'

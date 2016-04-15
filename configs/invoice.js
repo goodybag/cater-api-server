@@ -24,4 +24,5 @@ module.exports = {
   })[ env ]
 
 , fromMail: 'payments@goodybag.com'
+, transfersWorkerStartDate: '2016-04-01 00:00:00'
 };

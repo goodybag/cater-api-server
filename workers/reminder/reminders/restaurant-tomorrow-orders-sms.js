@@ -10,7 +10,7 @@
 var config      = require('../../../config');
 var notifier    = require('../../../lib/order-notifier');
 var db          = require('../../../db');
-var FlowStream  = require('../../../lib/flow-stream');
+var EnumStream  = require('../../../lib/enum-stream');
 
 module.exports.name = 'Restaurant Tomorrow Orders SMS';
 
@@ -67,9 +67,9 @@ module.exports.work = function( storage, callback ){
 
     var errors = [];
 
-    FlowStream
+    EnumStream
       .create( ordersStream, { concurrency: 5 } )
-      .map( function( order, next ){
+      .mapAsync( function( order, next ){
         notifier.send( 'restaurant-tomorrow-order-sms', order.id, function( error ){
           if ( error ){
             error.order_id = order.id;

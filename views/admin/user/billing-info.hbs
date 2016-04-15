@@ -1,0 +1,79 @@
+{{#extend "page"}}page-users{{/extend}}
+
+{{#extend "page-head"}}
+{{> admin_user_page_head}}
+{{/extend}}
+
+{{#extend "nav-col"}}
+{{> admin_user_sidebar_nav}}
+{{/extend}}
+
+{{#extend "body"}}
+<div id="main-container">
+  <div class="billing-info-cards">
+    <h3>Cards</h3>
+
+    {{#each this.edit_user.cards}}
+    <div class="billing-info-card">
+      {{> payment_method hide-remove=true}}
+    </div>
+    {{else}}
+    <div>This user has no cards.</div>
+    {{/each}}
+  </div>
+
+  <div class="billing-info-transactions">
+    <h3>Transactions</h3>
+
+    {{#each this.edit_user.transaction_events}}
+      {{#if (eq this.type 'error')}}
+      <ul class="dl-horizontal">
+        <dt>Date Occured</dt>
+        <dd>{{formatDateTimeWithTz this.created_at req.user.region.timezone "MM/DD/YYYY h:mm A"}}</dd>
+        {{#if this.data.type}}
+        <dt>Type</dt>
+        <dd>{{this.data.type}}</dd>
+        {{/if}}
+
+        <dt>Message</dt>
+        <dd>{{this.data.message}}</dd>
+        {{#if this.data.raw.code}}
+          <dt>Code</dt>
+          <dd>{{this.data.code}}</dd>
+        {{/if}}
+
+        {{#if this.data.raw.decline_code}}
+          <dt>Decline Code</dt>
+          <dd>{{this.data.raw.decline_code}}</dd>
+        {{/if}}
+      </ul>
+      {{else}}
+      <ul class="dl-horizontal">
+        <dt>Date Occured</dt>
+        <dd>{{formatDateTimeWithTz this.created_at req.user.region.timezone "MM/DD/YYYY h:mm A"}}</dd>
+        <dt>Amount</dt>
+        <dd>${{commatize (dollars this.data.amount)}}</dd>
+        {{#if this.data.appears_on_statement_as}}
+        <dt>Appears As</dt>
+        <dd>{{this.data.appears_on_statement_as}}
+        {{/if}}
+        {{#if this.data.statement_descriptor}}
+        <dt>Appears As</dt>
+        <dd>{{this.data.statement_descriptor}}
+        {{/if}}
+        {{#if this.data.source.card_type}}
+        <dt>Card Type</dt>
+        <dd>{{this.data.source.card_type}}</dd>
+        {{/if}}
+        {{#if this.data.source.last_four}}
+        <dt>Last Four</dt>
+        <dd>{{this.data.source.last_four}}</dd>
+        {{/if}}
+      </ul>
+      {{/if}}
+    {{else}}
+      This user has no recorded transactions.
+    {{/each}}
+  </div>
+</div>
+{{/extend}}

@@ -14,7 +14,7 @@ var utils           = require('../../../utils');
 var notifier        = require('../../../lib/order-notifier');
 var config          = require('../../../config');
 var moment          = require('moment-timezone');
-var FlowStream      = require('../../../lib/flow-stream');
+var EnumStream      = require('../../../lib/enum-stream');
 
 var getQuery = function(){
   return {
@@ -101,9 +101,9 @@ module.exports.work = function( storage, callback ){
   db.orders.findStream( {}, getQuery(), function( error, ordersStream ){
     if ( error ) return callback( error );
 
-    FlowStream
+    EnumStream
       .create( ordersStream, { concurrency: 5 } )
-      .map( function( order, next ){
+      .mapAsync( function( order, next ){
         notifier.send( 'order-submitted-needs-action-sms', order.id, function( error ){
           if ( error ){
             error.order_id = order.id;

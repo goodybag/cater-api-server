@@ -1022,7 +1022,13 @@ module.exports = Model.extend({
       where: {
         payment_status: {$null: true}
       , status: 'accepted'
-      , $custom: ['now() > ("orders"."datetime" AT TIME ZONE "orders"."timezone" + interval \'3 hours\')']
+      , datetime: {
+          $older_than: {
+            value: 3
+          , unit: 'hours'
+          , nowTimezone: 'orders.timezone'
+          }
+        }
       , payment_method_id: { $notNull: true }
       }
     , limit: limit

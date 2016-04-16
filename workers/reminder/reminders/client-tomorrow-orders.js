@@ -8,7 +8,7 @@
 
 var db          = require('../../../db');
 var notifier    = require('../../../lib/order-notifier');
-var FlowStream  = require('../../../lib/flow-stream');
+var EnumStream  = require('../../../lib/enum-stream');
 
 module.exports.name = 'Client Tomorrow Orders';
 
@@ -65,9 +65,9 @@ module.exports.work = function( storage, callback ){
 
     var errors = [];
 
-    FlowStream
+    EnumStream
       .create( ordersStream, { concurrency: 5 } )
-      .map( function( order, next ){
+      .mapAsync( function( order, next ){
         notifier.send( 'client-tomorrow-order', order.id, function( error ){
           return next( error, order );
         });

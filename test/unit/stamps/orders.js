@@ -1130,4 +1130,70 @@ describe('Orders Stamps', function(){
       assert.equal( order.getPoints(), 44 );
     });
   });
+
+  describe('OrderTransfer', function(){
+    var Transfer = require('stamps/orders/transfer');
+    var defaultOrder = {
+      type: 'delivery'
+    , id: 1
+    , uuid: 'foo'
+    , region: { sales_tax: 0.0825 }
+    , restaurant: {
+        id: 2
+      , region: { sales_tax: 0.0825 }
+      , stripe_id: 'bar'
+      , plan: { type: 'flat', data: { fee: 0.1 } }
+      , is_direct_deposit: true
+      , no_contract_fee: 0
+      }
+    , items: [
+        { price: 100, quantity: 1 }
+      ]
+    , user: { is_tax_exempt: false, id: 3 }
+    , adjustment_amount: 0
+    , user_adjustment_amount: 0
+    , tip: 0
+    , delivery_fee: 0
+    , payment_method_id: 123
+    };
+
+    it('.getTransferData()', function(){
+      var transfer = Transfer.create({ order: defaultOrder });
+
+      assert.deepEqual( transfer.getTransferData(), {
+        amount: 89
+      , currency: 'usd'
+      , destination: 'bar'
+      , description: 'Order #1'
+      , statement_descriptor: 'GOODYBAG CATER #1'
+      , metadata: {
+          user_id: 3
+        , restaurant_id: 2
+        , order_id: 1
+        , order_uuid: 'foo'
+        }
+      });
+    });
+
+    it('.getErrorInsertData()', function(){
+      var transfer = Transfer.create({ order: defaultOrder });
+
+      assert.deepEqual( transfer.getErrorInsertData({ foo: 'bar' }), {
+        order_id: 1
+      , restaurant_id: 2
+      , error: { foo: 'bar' }
+      });
+    });
+
+    it('.getInsertData()', function(){
+      var transfer = Transfer.create({ order: defaultOrder });
+      transfer.transfer = { id: 'foo' };
+
+      assert.deepEqual( transfer.getInsertData(), {
+        order_id: 1
+      , restaurant_id: 2
+      , stripe_transfer_id: 'foo'
+      });
+    });
+  });
 });

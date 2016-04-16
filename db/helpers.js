@@ -214,11 +214,12 @@ mosql.registerConditionalHelper(
 , { cascade: false }
 , function( column, value, values, table, query ){
     var tz = value.timezone ? ' at time zone ' + mosqlUtils.quoteColumn( value.timezone ) : '';
+    var nowTimezone = value.nowTimezone ? ' at time zone ' + mosqlUtils.quoteColumn( value.nowTimezone ) : '';
 
     return [
       column
     , tz
-    , " < now() ", tz, " - interval '"
+    , " < now() ", nowTimezone, " - interval '"
     , value.value
     , ' '
     , value.unit || 'days'

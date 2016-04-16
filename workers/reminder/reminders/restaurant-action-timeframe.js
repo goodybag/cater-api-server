@@ -10,7 +10,7 @@ var db          = require('../../../db');
 var utils       = require('../../../utils');
 var config      = require('../../../config');
 var notifier    = require('../../../lib/order-notifier');
-var FlowStream  = require('../../../lib/flow-stream');
+var EnumStream  = require('../../../lib/enum-stream');
 
 module.exports.name = 'Restaurant Action Timeframe';
 
@@ -64,9 +64,9 @@ module.exports.work = function( storage, callback ){
   db.orders.findStream( {}, getQuery(), function( error, ordersStream ){
     if ( error ) return callback( error );
 
-    FlowStream
+    EnumStream
       .create( ordersStream, { concurrency: 5 } )
-      .map( function( order, next ){
+      .mapAsync( function( order, next ){
         notifier.send( 'order-submitted-but-ignored', order.id, function( error ){
           if ( error ){
             error.order_id = order.id;

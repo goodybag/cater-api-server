@@ -12,7 +12,7 @@ db.orders.findStream(
   , 'datetime': {
       $older_than: { value: 3, unit: 'hours', nowTimezone: 'orders.timezone' }
     , $custom: [
-        'orders.datetime > $1 at time zone orders.timezone'
+        'orders.datetime >= $1 at time zone orders.timezone'
       , config.invoice.transfersWorkerStartDate
       ]
     }

@@ -572,6 +572,11 @@ config.travis = _.extend( _.clone( config.dev ), {
   env: 'travis'
 });
 
+config.circle = _.extend( _.clone( config.dev ), {
+  env: 'dev'
+, postgresConnStr:  "ubuntu@!postgres://localhost:5432/circle_test"
+});
+
 var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';
 if (GB_ENV == null || !config.hasOwnProperty(GB_ENV)) GB_ENV = 'dev';
 

@@ -19,6 +19,29 @@
       {{/if}}
       {{#contains user.groups 'admin'}}
       <span class="gb-dropdown">{{> region_selector}}</span>
+      <span class="popover-wrapper gb-dropdown same-width-modal">
+        <button
+          class="btn btn-default btn-dropdown"
+          data-role="popover"
+          data-target="dropdown-popover">
+          Admin
+          <i class="gb-icon-caret-down"></i>
+        </button>
+
+        <div class="popover-modal dropdown-popover">
+          <ul class="popover-body">
+            <li class="popover-item">
+              <a href="/admin/restaurants">Restaurants</a>
+            </li>
+            <li class="popover-item">
+              <a href="/admin/orders">Orders</a>
+            </li>
+            <li class="popover-item">
+              <a href="/admin/users">Users</a>
+            </li>
+          </ul>
+        </div>
+      </span>
       {{/contains}}
       <span class="popover-wrapper gb-dropdown same-width-modal">
         <button

@@ -111,7 +111,6 @@ define(function( require, exports, module ){
       var date = order.datetime;
 
       if ( !moment( date ).isValid() ) return false;
-
       var restaurant = order.restaurant;
 
       var isDeliveryService = false;

@@ -33,7 +33,6 @@ describe('Stamps', function(){
 
         assert.deepEqual( res.toAddress(), {
           street: '1600 Amphitheatre Parkway'
-        , street2: null
         , city: 'Mountain View'
         , state: 'CA'
         , zip: '94043'

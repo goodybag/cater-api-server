@@ -29,7 +29,7 @@
 
     {{#each this.edit_user.transaction_events}}
     {{#if (eq this.type 'error')}}
-    <ul class="dl-horizontal">
+    <div class="dl-horizontal transaction-error">
       <dt>Date Occured</dt>
       <dd>{{formatDateTimeWithTz this.created_at req.user.region.timezone "MM/DD/YYYY h:mm A"}}</dd>
       {{#if this.data.type}}
@@ -48,9 +48,9 @@
         <dt>Decline Code</dt>
         <dd>{{this.data.raw.decline_code}}</dd>
       {{/if}}
-    </ul>
+    </div>
     {{else}}
-    <ul class="dl-horizontal">
+    <div class="dl-horizontal transaction-success">
       <dt>Date Occured</dt>
       <dd>{{formatDateTimeWithTz this.created_at req.user.region.timezone "MM/DD/YYYY h:mm A"}}</dd>
       <dt>Amount</dt>
@@ -75,7 +75,7 @@
       <dt>Stripe Charge</dt>
       <dd><a href="https://dashboard.stripe.com/payments/{{this.data.id}}">{{this.data.id}}</a></dd>
       {{/if}}
-    </ul>
+    </div>
     {{/if}}
     {{else}}
     This user has no recorded transactions.

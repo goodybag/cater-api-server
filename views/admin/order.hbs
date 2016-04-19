@@ -141,6 +141,18 @@
           <dt>Delivery Time</dt>
           <dd>{{formatDateTime2 order.datetime "R h:mm A"}} {{formatDateTimeWithTz order.datetime order.timezone "z"}}</dd>
         </div>
+        <div class="row">
+          <dt>Actual Delivery Time</dt>
+          <dd>
+            <input class="actual-delivery-time-in" type="number" min="1" max="12" />
+            <span>:</span>
+            <input class="actual-delivery-time-in" type="number" min="0" max="59" onchange="if(parseInt(this.value,10)<10)this.value='0'+this.value;" />
+            <select class="actual-delivery-time-in" name="actual_delivery_time_period">
+              <option value="am">AM</option>
+              <option value="pm">PM</option>
+            </select>
+          </dd>
+        </div>
 
         {{#is order.type 'pickup' 'courier'}}
           <div class="row">

@@ -264,6 +264,11 @@ define(function(require) {
     , editable: ['admin']
     , default: false
     }
+  , actual_delivery_datetime: {
+      type: types.timestamp
+    , nullable: true
+    , editable: ['admin']
+    }
   };
 
   definition.indices = {};

@@ -4,6 +4,7 @@ define(function(require){
   var utils   = require('utils');
   var flash   = require('flash');
   var Hbs     = require('handlebars');
+  var moment  = require('moment');
 
   var InternalNotesCollection = require('app/collections/order-internal-notes');
 
@@ -52,6 +53,11 @@ define(function(require){
         $('[data-role="popover"]').gb_popover();
 
         $('.navbar').navbar({ toggleText: false, toggleLogin: false });
+
+        var orderActualDT = page.order.get('actual_delivery_datetime');
+        if(orderActualDT && moment(orderActualDT).hour() >= 12) {
+          $('[name="actual-dt-period"]').val('pm');
+        };
 
         page.notificationHistory.setElement(
           $('#notifications-history-table')
@@ -113,6 +119,30 @@ define(function(require){
           e.preventDefault();
 
           page.saveOrder( flash.successOrError.bind( flash ) );
+        });
+
+        $('[role="save-actual-dt"]').click(function( e ) {
+          e.preventDefault();
+
+          var hour   = parseInt($('[name=actual-dt-hour]').val());
+          var min    = $('[name=actual-dt-min]').val();
+          var period = $('[name=actual-dt-period]').val();
+
+          if(hour && min) {
+            if( period === "pm" && hour < 12 ) {
+              hour = parseInt(hour) + 12;
+            };
+
+            if( hour === 12 && period === "am" ) { hour = 0 };
+
+            var datetime = page.order.get('datetime');
+            var actualdt = moment(datetime)
+              .hour(hour)
+              .minute(min)
+              .format('YYYY-MM-DD HH:mm:ss');
+
+            page.updateOrder({ actual_delivery_datetime: actualdt }, flash.successOrError.bind( flash ));
+          }
         });
 
         $('#restaurant-selector').delegate( '[data-id]', 'click', function( e ){

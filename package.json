@@ -10,7 +10,7 @@
   "scripts": {
     "prestart": "./node_modules/grunt-cli/bin/grunt namedModules && ./node_modules/grunt-cli/bin/grunt shell:ensureDir && ./bin/tasks.js loadUtilityFunctions && ./bin/tasks.js createTypes && ./bin/tasks.js loadFunctions && ./bin/tasks.js createViews && ./bin/tasks.js runDeltas && ./bin/tasks.js loadTriggers",
     "start": "node master",
-    "test": "grunt namedModules && ./node_modules/mocha/bin/mocha --recursive test/unit",
+    "test": "./node_modules/grunt-cli/bin/grunt namedModules && ./node_modules/mocha/bin/mocha --recursive -R spec test/unit",
     "test-react": "./node_modules/ecstatic/lib/ecstatic.js --cache 0 -p 8000 public",
     "postinstall": "./node_modules/.bin/bower install",
     "test-notifications": "./node_modules/.bin/mocha -R spec test/unit/notifications"

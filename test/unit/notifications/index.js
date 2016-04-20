@@ -3,7 +3,6 @@ var config          = require('../../../config');
 var errors          = require('../../../errors');
 var utils           = require('../../../utils');
 var notifications   = require('../../../lib/order-notifications2');
-var app             = require('../../../app');
 var events          = require('events');
 
 var venter = new events.EventEmitter;
@@ -24,14 +23,7 @@ var orders = require('stampit')()
     }
   })
 
-var oldRender = app.render;
 var oldSendRawEmail = utils.sendRawEmail;
-
-var overrideRender = function( returns ){
-  app.render = function( template, context, callback ){
-    return callback( null, returns );
-  };
-};
 
 before( function(){
   utils.sendRawEmail = function( from, to, text, callback ){
@@ -40,7 +32,6 @@ before( function(){
 });
 
 after( function(){
-  app.render = oldRender;
   utils.sendRawEmail = oldSendRawEmail;
 });
 
@@ -95,6 +86,14 @@ describe('Order Notifications', function(){
   });
 
   describe('Email', function(){
+    var getRenderer = function( str ){
+      return {
+        render: function( tmpl, context, callback ){
+          return callback( null, 'Test Preview');
+        }
+      }
+    };
+
     it('Should create a notification-compatible object', function(){
       var emailNote = notifications.email({
         template: 'test'
@@ -110,6 +109,8 @@ describe('Order Notifications', function(){
       , subject: function( order ){
           return order.subject;
         }
+
+      , renderer: getRenderer('Test Preview')
       });
 
       assert.equal( typeof emailNote.build, 'function' );
@@ -121,7 +122,6 @@ describe('Order Notifications', function(){
       , subject: 'Bill Bob'
       };
 
-      overrideRender('Test preview');
       emailNote.build( order, {}, {}, function( error, result ){
         assert( !error );
 
@@ -151,6 +151,8 @@ describe('Order Notifications', function(){
         , subject: function( order ){
             return order.subject;
           }
+
+        , renderer: getRenderer('Test Preview')
         })
       );
 
@@ -162,13 +164,11 @@ describe('Order Notifications', function(){
 
       var note = notes.create( order, 1 );
 
-      overrideRender('Test preview');
-      
       note.send( function( error, from, to, text ){
         assert( !error );
         assert.equal( to, order.to );
         assert.equal( from, order.from );
-        assert( text.indexOf('Test preview') > -1 );
+        assert( text.indexOf('Test Preview') > -1 );
         done();
       });
     });

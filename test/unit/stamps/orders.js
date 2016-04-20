@@ -1,5 +1,5 @@
 var assert      = require('assert');
-var moment      = require('moment');
+var moment      = require('moment-timezone');
 var stampit     = require('stampit');
 var utils       = require('../../../utils');
 var config      = require('../../../config');
@@ -12,18 +12,22 @@ var OrderRewards = require('stamps/orders/rewards');
 
 var restaurants = require('stampit')()
   .state({
-    lead_times:             []
-  , pickup_lead_times:      []
-  , hours:                  []
-  , delivery_hours:         []
-  , delivery_zips:          []
-  , locations:              []
-  , supported_order_types:  []
-  , events:                 []
-  , region: {
-      delivery_services:    []
-    }
-  , minimum_order:          0
+    minimum_order:          0
+  })
+  .enclose(function(){
+    utils.extend( this, {
+      lead_times:             []
+    , pickup_lead_times:      []
+    , hours:                  []
+    , delivery_hours:         []
+    , delivery_zips:          []
+    , locations:              []
+    , supported_order_types:  []
+    , events:                 []
+    , region: {
+        delivery_services:    []
+      }
+    });
   })
   .methods({
     openTwentyFourHour: function(){
@@ -328,287 +332,298 @@ describe('Orders Stamps', function(){
       assert( result );
     });
 
-    it( '.isFulfillable() test zip is fulfillable', function(){
-      var result = fulfillability({
-        timezone: 'America/Chicago'
-      , zip: '78723'
-      , restaurant: restaurants()
-                      .zip( '78723', 100 )
-                      .supports('delivery')
+    var tztests = {
+      timezones: ['America/Chicago', 'America/Los_Angeles', 'UTC']
+    , tests: {
+        '.isFulfillable() test zip is fulfillable': function( timezone ){ return function(){
+          var result = fulfillability({
+            timezone: 'America/Chicago'
+          , zip: '78723'
+          , restaurant: restaurants()
+                          .zip( '78723', 100 )
+                          .supports('delivery')
+          });
+
+          assert( result.isFulfillable() );
+        }}
+
+      , '.isFulfillable() test zip is fulfillable because of delivery service': function( timezone ){ return function(){
+          var result = fulfillability({
+            timezone: 'America/Chicago'
+          , zip: '78723'
+          , restaurant: restaurants({ zip: '78722' })
+                          .deliveryService({
+                            name: 'Blah Courier'
+                          , zips: [
+                              { "from": '78722', "to": '78723', price: 100 }
+                            ]
+                          })
+                          .supports('delivery', 'courier')
+          }).isFulfillable();
+
+          assert( result );
+        }}
+
+      , '.isFulfillable() test zip is not fulfillable': function( timezone ){ return function(){
+          var result = fulfillability({
+            timezone: 'America/Chicago'
+          , zip: '78724'
+          , restaurant: restaurants()
+                          .zip( '78723', 100 )
+                          .supports('delivery')
+          }).isFulfillable();
+
+          assert( !result );
+        }}
+
+      , '.isFulfillable() test day is fulfillable': function( timezone ){ return function(){
+          // Order in 24 hours
+          var date = moment.tz('America/Chicago').add(1, 'days');
+
+          var result = fulfillability({
+            timezone: 'America/Chicago'
+          , datetime: date.format('YYYY-MM-DD hh:mm:ss')
+          , restaurant: restaurants()
+                          .open( date.day() )
+                          .leadTime( 5, 60 )
+                          .supports('delivery', 'courier')
+          });
+
+          assert( result.isFulfillable() );
+        }}
+
+      , '.isFulfillable() test day is not fulfillable': function( timezone ){ return function(){
+          var result = fulfillability({
+            timezone: 'America/Chicago'
+          , date: '2015-04-22'
+          , restaurant: restaurants()
+                          .open(4)
+                          .supports('delivery', 'courier')
+          }).isFulfillable();
+
+          assert( !result );
+        }}
+
+      , '.isFulfillable() test lead times is fulfillable': function( timezone ){ return function(){
+          // Order in 24 hours
+          var date = moment.tz('America/Chicago').add(1, 'days');
+
+          var result = fulfillability({
+            timezone: 'America/Chicago'
+          , date: date.format('YYYY-MM-DD')
+          , time: date.format('HH:mm a')
+          , guests: 20
+          , restaurant: restaurants()
+                          .openTwentyFourHour()
+                          .supports('delivery', 'courier')
+                          .leadTime( 10, 15 * 60 )
+                          // Restaurant needs 23 hours
+                          .leadTime( 20, 23 * 60 )
+          });
+
+          assert( result.isFulfillable() );
+        }}
+
+      , '.isFulfillable() test lead times is not fulfillable': function( timezone ){ return function(){
+          // Order in 24 hours
+          var date = moment.tz('America/Chicago').add(1, 'days');
+
+          var result = fulfillability({
+            timezone: 'America/Chicago'
+          , date: date.format('YYYY-MM-DD')
+          , time: date.format('HH:mm a')
+          , guests: 20
+          , restaurant: restaurants()
+                          .openTwentyFourHour()
+                          .supports('delivery', 'courier')
+                          .leadTime( 10, 15 * 60 )
+                          // Restaurant needs 25 hours
+                          .leadTime( 20, 25 * 60 )
+          });
+
+          assert( !result.isFulfillable() );
+        }}
+
+      , '.isFulfillable() test lead times is not fulfillable because date is in the past': function( timezone ){ return function(){
+          // Order in -24 hours
+          var date = moment.tz('America/Chicago').add(-1, 'days');
+
+          var result = fulfillability({
+            timezone: 'America/Chicago'
+          , date: date.format('YYYY-MM-DD')
+          , time: date.format('HH:mm a')
+          , guests: 20
+          , restaurant: restaurants()
+                          .openTwentyFourHour()
+                          .supports('delivery', 'courier')
+                          .leadTime( 10, 15 * 60 )
+                          // Restaurant needs 23 hours
+                          .leadTime( 20, 23 * 60 )
+          }).isFulfillable();
+
+          assert( !result );
+        }}
+
+      , '.isFulfillable() is false because of calendar event': function( timezone ){ return function(){
+          // Order in -24 hours
+          var date = moment.tz('America/Chicago').add(2, 'days');
+
+          var result = fulfillability({
+            timezone: 'America/Chicago'
+          , date: date.format('YYYY-MM-DD')
+          , time: date.format('HH:mm a')
+          , guests: 20
+          , restaurant: restaurants()
+                          .openTwentyFourHour()
+                          .supports('delivery', 'courier')
+                          .leadTime( 10, 15 * 60 )
+                          .leadTime( 20, 23 * 60 )
+                          .addCalendarEvent({
+                            closed: true
+                          , during: {
+                              start: {
+                                inclusive: true
+                              , value: date.add(-3, 'days').format('YYYY-MM-DD')
+                              }
+                            , end: {
+                                inclusive: false
+                              , value: date.add(6, 'days').format('YYYY-MM-DD')
+                              }
+                            }
+                          })
+          }).isFulfillable();
+
+          assert( !result );
+        }}
+
+      , '.isFulfillable() should use now if no datetime provided': function( timezone ){ return function(){
+          // Order in -24 hours
+          var date = moment.tz('America/Chicago').add(2, 'days');
+
+          var result = fulfillability({
+            timezone: 'America/Chicago'
+          , guests: 20
+          , restaurant: restaurants()
+                          .openTwentyFourHour()
+                          .supports('delivery', 'courier')
+                          .leadTime( 10, 15 * 60 )
+                          .leadTime( 20, 23 * 60 )
+                          .addCalendarEvent({
+                            closed: true
+                          , during: {
+                              start: {
+                                inclusive: true
+                              , value: date.add(-3, 'days').format('YYYY-MM-DD')
+                              }
+                            , end: {
+                                inclusive: false
+                              , value: date.add(6, 'days').format('YYYY-MM-DD')
+                              }
+                            }
+                          })
+          }).isFulfillable();
+
+          assert( !result );
+        }}
+
+      , '.isFulfillable() is true even with a calendar event': function( timezone ){ return function(){
+          // Order in -24 hours
+          var date = moment.tz('America/Chicago').add(2, 'days');
+
+          var result = fulfillability({
+            timezone: 'America/Chicago'
+          , date: date.format('YYYY-MM-DD')
+          , time: date.format('HH:mm a')
+          , guests: 20
+          , restaurant: restaurants()
+                          .openTwentyFourHour()
+                          .supports('delivery', 'courier')
+                          .leadTime( 10, 15 * 60 )
+                          .leadTime( 20, 23 * 60 )
+                          .addCalendarEvent({
+                            closed: true
+                          , during: {
+                              start: {
+                                inclusive: true
+                              , value: date.add(-3, 'days').format('YYYY-MM-DD')
+                              }
+                            , end: {
+                                inclusive: false
+                              , value: date.add(2, 'days').format('YYYY-MM-DD')
+                              }
+                            }
+                          })
+          }).isFulfillable();
+
+          assert( result );
+        }}
+
+      , '.isFulfillable() minimum order': function( timezone ){ return function(){
+          // Order in -24 hours
+          var date = moment.tz('America/Chicago').add(2, 'days');
+
+          var result = fulfillability({
+            timezone: 'America/Chicago'
+          , date: date.format('YYYY-MM-DD')
+          , time: date.format('HH:mm a')
+          , guests: 20
+          , items: []
+          , restaurant: restaurants()
+                          .openTwentyFourHour()
+                          .supports('delivery', 'courier')
+                          .leadTime( 10, 15 * 60 )
+                          .leadTime( 20, 23 * 60 )
+                          .minOrder( 5000 )
+          });
+
+          assert.deepEqual( result.why(), ['MinimumOrder'] );
+
+          result.items.push({
+            price: 5000
+          , quantity: 1
+          });
+
+          assert( result.isFulfillable() );
+        }}
+
+      , '.isFulfillable() should omit': function( timezone ){ return function(){
+          // Order in -24 hours
+          var date = moment.tz('America/Chicago').add(2, 'days');
+
+          var result = fulfillability({
+            timezone: 'America/Chicago'
+          , date: date.format('YYYY-MM-DD')
+          , time: date.format('HH:mm a')
+          , guests: 20
+          , items: []
+          , restaurant: restaurants()
+                          .openTwentyFourHour()
+                          .supports('delivery', 'courier')
+                          .leadTime( 10, 15 * 60 )
+                          .leadTime( 20, 23 * 60 )
+                          .minOrder( 5000 )
+          });
+
+          assert.deepEqual( result.why(), ['MinimumOrder'] );
+          assert.deepEqual(
+            result.why({ omit: [ fulfillability.requirements.MinimumOrder ] })
+          , []
+          );
+
+          result.items.push({
+            price: 5000
+          , quantity: 1
+          });
+
+          assert( result.isFulfillable() );
+        }}
+      }
+    };
+
+    tztests.timezones.forEach( function( timezone ){
+      Object.keys( tztests.tests ).forEach( function( key ){
+        it( key + ' ' + timezone, tztests.tests[ key ]( timezone ) );
       });
-
-      assert( result.isFulfillable() );
-    });
-
-    it( '.isFulfillable() test zip is fulfillable because of delivery service', function(){
-      var result = fulfillability({
-        timezone: 'America/Chicago'
-      , zip: '78723'
-      , restaurant: restaurants({ zip: '78722' })
-                      .deliveryService({
-                        name: 'Blah Courier'
-                      , zips: [
-                          { "from": '78722', "to": '78723', price: 100 }
-                        ]
-                      })
-                      .supports('delivery', 'courier')
-      }).isFulfillable();
-
-      assert( result );
-    });
-
-    it( '.isFulfillable() test zip is not fulfillable', function(){
-      var result = fulfillability({
-        timezone: 'America/Chicago'
-      , zip: '78724'
-      , restaurant: restaurants()
-                      .zip( '78723', 100 )
-                      .supports('delivery')
-      }).isFulfillable();
-
-      assert( !result );
-    });
-
-    it( '.isFulfillable() test day is fulfillable', function(){
-      // Order in 24 hours
-      var date = moment().add('days', 1);
-
-      var result = fulfillability({
-        timezone: 'America/Chicago'
-      , datetime: date.format('YYYY-MM-DD hh:mm:ss')
-      , restaurant: restaurants()
-                      .open( date.day() )
-                      .leadTime( 5, 60 )
-                      .supports('delivery', 'courier')
-      });
-
-      assert( result.isFulfillable() );
-    });
-
-    it( '.isFulfillable() test day is not fulfillable', function(){
-      var result = fulfillability({
-        timezone: 'America/Chicago'
-      , date: '2015-04-22'
-      , restaurant: restaurants()
-                      .open(4)
-                      .supports('delivery', 'courier')
-      }).isFulfillable();
-
-      assert( !result );
-    });
-
-    it( '.isFulfillable() test lead times is fulfillable', function(){
-      // Order in 24 hours
-      var date = moment().add('days', 1);
-
-      var result = fulfillability({
-        timezone: 'America/Chicago'
-      , date: date.format('YYYY-MM-DD')
-      , time: date.format('HH:mm a')
-      , guests: 20
-      , restaurant: restaurants()
-                      .openTwentyFourHour()
-                      .supports('delivery', 'courier')
-                      .leadTime( 10, 15 * 60 )
-                      // Restaurant needs 23 hours
-                      .leadTime( 20, 23 * 60 )
-      });
-
-      assert( result.isFulfillable() );
-    });
-
-    it( '.isFulfillable() test lead times is not fulfillable', function(){
-      // Order in 24 hours
-      var date = moment().add('days', 1);
-
-      var result = fulfillability({
-        timezone: 'America/Chicago'
-      , date: date.format('YYYY-MM-DD')
-      , time: date.format('HH:mm a')
-      , guests: 20
-      , restaurant: restaurants()
-                      .openTwentyFourHour()
-                      .supports('delivery', 'courier')
-                      .leadTime( 10, 15 * 60 )
-                      // Restaurant needs 25 hours
-                      .leadTime( 20, 25 * 60 )
-      }).isFulfillable();
-
-      assert( !result );
-    });
-
-    it( '.isFulfillable() test lead times is not fulfillable because date is in the past', function(){
-      // Order in -24 hours
-      var date = moment().add('days', -1);
-
-      var result = fulfillability({
-        timezone: 'America/Chicago'
-      , date: date.format('YYYY-MM-DD')
-      , time: date.format('HH:mm a')
-      , guests: 20
-      , restaurant: restaurants()
-                      .openTwentyFourHour()
-                      .supports('delivery', 'courier')
-                      .leadTime( 10, 15 * 60 )
-                      // Restaurant needs 23 hours
-                      .leadTime( 20, 23 * 60 )
-      }).isFulfillable();
-
-      assert( !result );
-    });
-
-    it( '.isFulfillable() is false because of calendar event', function(){
-      // Order in -24 hours
-      var date = moment().add('days', 2);
-
-      var result = fulfillability({
-        timezone: 'America/Chicago'
-      , date: date.format('YYYY-MM-DD')
-      , time: date.format('HH:mm a')
-      , guests: 20
-      , restaurant: restaurants()
-                      .openTwentyFourHour()
-                      .supports('delivery', 'courier')
-                      .leadTime( 10, 15 * 60 )
-                      .leadTime( 20, 23 * 60 )
-                      .addCalendarEvent({
-                        closed: true
-                      , during: {
-                          start: {
-                            inclusive: true
-                          , value: date.add('days', -3).format('YYYY-MM-DD')
-                          }
-                        , end: {
-                            inclusive: false
-                          , value: date.add('days', 6).format('YYYY-MM-DD')
-                          }
-                        }
-                      })
-      }).isFulfillable();
-
-      assert( !result );
-    });
-
-    it( '.isFulfillable() should use now if no datetime provided', function(){
-      // Order in -24 hours
-      var date = moment().add('days', 2);
-
-      var result = fulfillability({
-        timezone: 'America/Chicago'
-      , guests: 20
-      , restaurant: restaurants()
-                      .openTwentyFourHour()
-                      .supports('delivery', 'courier')
-                      .leadTime( 10, 15 * 60 )
-                      .leadTime( 20, 23 * 60 )
-                      .addCalendarEvent({
-                        closed: true
-                      , during: {
-                          start: {
-                            inclusive: true
-                          , value: date.add('days', -3).format('YYYY-MM-DD')
-                          }
-                        , end: {
-                            inclusive: false
-                          , value: date.add('days', 6).format('YYYY-MM-DD')
-                          }
-                        }
-                      })
-      }).isFulfillable();
-
-      assert( !result );
-    });
-
-    it( '.isFulfillable() is true even with a calendar event', function(){
-      // Order in -24 hours
-      var date = moment().add('days', 2);
-
-      var result = fulfillability({
-        timezone: 'America/Chicago'
-      , date: date.format('YYYY-MM-DD')
-      , time: date.format('HH:mm a')
-      , guests: 20
-      , restaurant: restaurants()
-                      .openTwentyFourHour()
-                      .supports('delivery', 'courier')
-                      .leadTime( 10, 15 * 60 )
-                      .leadTime( 20, 23 * 60 )
-                      .addCalendarEvent({
-                        closed: true
-                      , during: {
-                          start: {
-                            inclusive: true
-                          , value: date.add('days', -3).format('YYYY-MM-DD')
-                          }
-                        , end: {
-                            inclusive: false
-                          , value: date.add('days', 2).format('YYYY-MM-DD')
-                          }
-                        }
-                      })
-      }).isFulfillable();
-
-      assert( result );
-    });
-
-    it( '.isFulfillable() minimum order', function(){
-      // Order in -24 hours
-      var date = moment().add('days', 2);
-
-      var result = fulfillability({
-        timezone: 'America/Chicago'
-      , date: date.format('YYYY-MM-DD')
-      , time: date.format('HH:mm a')
-      , guests: 20
-      , items: []
-      , restaurant: restaurants()
-                      .openTwentyFourHour()
-                      .supports('delivery', 'courier')
-                      .leadTime( 10, 15 * 60 )
-                      .leadTime( 20, 23 * 60 )
-                      .minOrder( 5000 )
-      });
-
-      assert.deepEqual( result.why(), ['MinimumOrder'] );
-
-      result.items.push({
-        price: 5000
-      , quantity: 1
-      });
-
-      assert( result.isFulfillable() );
-    });
-
-    it( '.isFulfillable() should omit', function(){
-      // Order in -24 hours
-      var date = moment().add('days', 2);
-
-      var result = fulfillability({
-        timezone: 'America/Chicago'
-      , date: date.format('YYYY-MM-DD')
-      , time: date.format('HH:mm a')
-      , guests: 20
-      , items: []
-      , restaurant: restaurants()
-                      .openTwentyFourHour()
-                      .supports('delivery', 'courier')
-                      .leadTime( 10, 15 * 60 )
-                      .leadTime( 20, 23 * 60 )
-                      .minOrder( 5000 )
-      });
-
-      assert.deepEqual( result.why(), ['MinimumOrder'] );
-      assert.deepEqual(
-        result.why({ omit: [ fulfillability.requirements.MinimumOrder ] })
-      , []
-      );
-
-      result.items.push({
-        price: 5000
-      , quantity: 1
-      });
-
-      assert( result.isFulfillable() );
     });
   });
 
@@ -1044,8 +1059,8 @@ describe('Orders Stamps', function(){
         submitted: moment().format( TSFORMAT )
 
       , holidays: [
-          { start: moment().add( 'hours', -1 ).format( TSFORMAT )
-          , end: moment().add( 'hours', 1 ).format( TSFORMAT )
+          { start: moment().add( -1, 'hours' ).format( TSFORMAT )
+          , end: moment().add( 1, 'hours' ).format( TSFORMAT )
           , rate: '2.0'
           , description: 'Some Holiday'
           }
@@ -1054,7 +1069,7 @@ describe('Orders Stamps', function(){
 
       assert( order.isEligibleForHolidayPromo() );
 
-      order.submitted = moment().add( 'hours', -2 ).format( TSFORMAT );
+      order.submitted = moment.tz('America/Chicago').add( -2, 'hours' ).format( TSFORMAT );
 
       assert( !order.isEligibleForHolidayPromo() );
     });
@@ -1066,7 +1081,7 @@ describe('Orders Stamps', function(){
 
       assert( order.isEligibleForMondayPromo() );
 
-      order.submitted = moment().day('Tuesday').format( TSFORMAT );
+      order.submitted = moment.tz('America/Chicago').day('Tuesday').format( TSFORMAT );
 
       assert( !order.isEligibleForMondayPromo() );
     });
@@ -1095,8 +1110,8 @@ describe('Orders Stamps', function(){
         submitted: moment().format( TSFORMAT )
 
       , holidays: [
-          { start: moment().add( 'hours', -1 ).format( TSFORMAT )
-          , end: moment().add( 'hours', 1 ).format( TSFORMAT )
+          { start: moment().add( -1, 'hours' ).format( TSFORMAT )
+          , end: moment().add( 1, 'hours' ).format( TSFORMAT )
           , rate: '2.0'
           , description: 'Some Holiday'
           }

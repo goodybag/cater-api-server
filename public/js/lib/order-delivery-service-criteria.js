@@ -153,11 +153,10 @@ define(function( require, exports, module ){
   , type: 'some'
   , requirements: [
       'sub_total'
-    , 'restaurant.minimum_order'
     , 'restaurant.delivery_service_order_amount_threshold'
     ]
   , fn: function( order ){
-      if ( order.sub_total < order.restaurant.minimum_order ) return false;
+      if ( order.sub_total < (order.restaurant.minimum_order || 0) ) return false;
       return order.sub_total < order.restaurant.delivery_service_order_amount_threshold;
     }
   });

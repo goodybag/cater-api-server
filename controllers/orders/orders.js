@@ -245,6 +245,7 @@ module.exports.apiCreate = function(req, res, next) {
       // the Order Delivery Service Criteria Checker
       let orderWithRestaurant = utils.extend( {}, order.attributes, {
         restaurant: restaurant
+      , timezone: restaurant.region.timezone
       });
 
       // Determine whether or not the order should

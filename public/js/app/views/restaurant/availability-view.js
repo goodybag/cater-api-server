@@ -52,13 +52,11 @@ define(function(require, exports, module) {
         var duringStart = $during.find('.event-date-start').text();
         var duringEnd = $during.find('.event-date-end').text();
 
-        // Note: Date ranges from backend are represented with [ start, end )
-        // but the frontend calendar plugin uses [ start, end ].
         return [
           '['
         , moment(duringStart).format('YYYY-MM-DD')
         , ', '
-        , moment(duringEnd).add('days', 1).format('YYYY-MM-DD')
+        , moment(duringEnd).format('YYYY-MM-DD')
         , ')'
         ].join('');
       },
@@ -71,6 +69,8 @@ define(function(require, exports, module) {
     initialize: function() {
       this.$calendar = this.$el.find('#calendar');
       this.setupCalendar();
+      // prevent formview from tripping up on calling back on save
+      this.options.validate = false;
     },
 
     setupCalendar: function() {

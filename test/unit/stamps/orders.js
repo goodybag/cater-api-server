@@ -496,36 +496,6 @@ describe('Orders Stamps', function(){
           assert( !result );
         }}
 
-      , '.isFulfillable() should use now if no datetime provided': function( timezone ){ return function(){
-          // Order in -24 hours
-          var date = moment.tz('America/Chicago').add(2, 'days');
-
-          var result = fulfillability({
-            timezone: 'America/Chicago'
-          , guests: 20
-          , restaurant: restaurants()
-                          .openTwentyFourHour()
-                          .supports('delivery', 'courier')
-                          .leadTime( 10, 15 * 60 )
-                          .leadTime( 20, 23 * 60 )
-                          .addCalendarEvent({
-                            closed: true
-                          , during: {
-                              start: {
-                                inclusive: true
-                              , value: date.add(-3, 'days').format('YYYY-MM-DD')
-                              }
-                            , end: {
-                                inclusive: false
-                              , value: date.add(6, 'days').format('YYYY-MM-DD')
-                              }
-                            }
-                          })
-          }).isFulfillable();
-
-          assert( !result );
-        }}
-
       , '.isFulfillable() is true even with a calendar event': function( timezone ){ return function(){
           // Order in -24 hours
           var date = moment.tz('America/Chicago').add(2, 'days');

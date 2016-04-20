@@ -189,7 +189,7 @@ define( function( require, exports, module ){
   , { name: 'ClosedEvents', fn: function strategyClosedEvents(){
       var datetime = this.datetime;
 
-      if ( !this.datetime ) datetime = moment.tz( this.timezone );
+      if ( !this.datetime ) return true;
 
       if ( !Array.isArray( this.restaurant.events ) ) return true;
 

@@ -45,7 +45,7 @@ define(function(require, exports, module) {
       return utils.extend({}, this.toJSON(), {
         title:  this.get('name')
       , start:  during.start.value
-      , end:    moment(during.end.value).add('days', -1).format('YYYY-MM-DD') // convert to inclusive bound
+      , end:    moment(during.end.value).format('YYYY-MM-DD')
       });
     },
 

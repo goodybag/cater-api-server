@@ -31,3 +31,5 @@ workers/validate-addresses/log.json
 workers/geocode-addresses/log.json
 workers/geocode-addresses/errors.json
 dump.rdb
+
+coverage

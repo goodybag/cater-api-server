@@ -70,17 +70,6 @@ definition.track = function( orderId, actorId, description, callback ){
       return callback( error );
     }
 
-    order.items.forEach( function( item ){
-      item.options_sets = item.options_sets
-        .filter( function( group ){
-          return group.options.some( option => option.state )
-        })
-        .map( function( group ){
-          group.options = group.options.filter( option => option.state );
-          return group;
-        });
-    });
-
     var doc = {
       order_id: order.id
     , user_id: order.user_id

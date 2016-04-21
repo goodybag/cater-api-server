@@ -177,6 +177,17 @@ route.get('/:uid/orders/receipts'
   })
 );
 
+route.get('/:uid/invoices'
+, restrictOwner
+, m.getInvoices({
+    userIdParam: 'uid',
+    notPending: true
+  })
+, m.view('user-invoices', {
+    layout: 'layout/default'
+  })
+);
+
 route.all('/:uid', restrictOwner, function(req, res, next) {
   res.set('Allow', 'GET');
   res.send(405);

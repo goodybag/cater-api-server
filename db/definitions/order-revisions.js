@@ -30,6 +30,7 @@ definition.schema = {
   // like (add_item, remove_item, update_quantity, etc.)
 , description:          { type: types.text }
 , data:                 { type: types.jsonb, nullable: false, default: "'{}'::jsonb" }
+, details:              { type: types.jsonb, nullable: false, default: "'{}'::jsonb" }
 , created_at:           { type: types.timestamp, nullable: false, default: 'now()' }
 };
 

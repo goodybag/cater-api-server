@@ -2,7 +2,10 @@
   {{#if name}}<div>{{capitalize name}}</div>{{/if}}
   <div class="payment-method-info"><strong>{{capitalize data.brand}}</strong> ending in {{data.last4}}</div>
   <div>Expires {{pad data.exp_month 2 }}/{{data.exp_year}}</div>
+
+  {{#unless this.hide-remove}}
   <div class="btn-toolbar">
      <button type="button" class="btn btn-default btn-remove-card">Remove Card</button>
   </div>
+  {{/unless}}
 </div>

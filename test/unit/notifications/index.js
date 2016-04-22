@@ -266,7 +266,7 @@ describe('Order Notifications', function(){
       , phone:          config.phone.orders
       , first_name:     'Goodybag'
       , last_name:      '#' + order.id
-      , email:          config.emails.orders
+      , email:          config.emails.couriers
       , company_name:   'The Test Restaurant'
       , remarks:        [ 'Head Count:'
                         , order.guests + '\n'

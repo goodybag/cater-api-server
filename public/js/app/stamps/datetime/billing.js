@@ -8,16 +8,16 @@ define( function( require, exports, module ){
   var moment = require('moment-timezone');
   var stampit = require('stampit');
   var billingP = require('./billing-period');
+  var FORMAT = 'YYYY-MM-DD';
 
   return stampit()
     .methods({
       getBillingPeriod: function(){
         var start, end;
-
         // Zero out values less granular than `month`
-        var d     = this._moment.format('YYYY-MM-DD');
-        var start = moment( d ).startOf('month');
-        var end   = moment( d ).startOf('month');
+        var d     = this._moment.format( FORMAT );
+        var start = moment( d, FORMAT ).startOf('month');
+        var end   = moment( d, FORMAT ).startOf('month');
         if ( this._moment.date() < 15 ){
           start.set( 'date', 1 );
           end.set( 'date', 15 );
@@ -27,8 +27,8 @@ define( function( require, exports, module ){
         }
 
         return billingP({
-          startDate:  start.format('YYYY-MM-DD')
-        , endDate:    end.format('YYYY-MM-DD')
+          startDate:  start.format( FORMAT )
+        , endDate:    end.format( FORMAT )
         });
       }
 
@@ -36,9 +36,9 @@ define( function( require, exports, module ){
         var start, end;
 
         // Zero out values less granular than `month`
-        var d     = this._moment.toString();
-        var start = moment( d ).startOf('month');
-        var end   = moment( d ).startOf('month');
+        var d     = this._moment.format( FORMAT );
+        var start = moment( d, FORMAT ).startOf('month');
+        var end   = moment( d, FORMAT ).startOf('month');
 
         if ( this._moment.date() < 15 ){
           start.subtract( 1, 'month' ).set( 'date', 16 );
@@ -49,8 +49,8 @@ define( function( require, exports, module ){
         }
 
         return billingP({
-          startDate:  start.format('YYYY-MM-DD')
-        , endDate:    end.format('YYYY-MM-DD')
+          startDate:  start.format( FORMAT )
+        , endDate:    end.format( FORMAT )
         });
       }
 

@@ -10,9 +10,14 @@ define( function( require, exports, module ){
 
   return stampit().state({
     timezone: null
+  , format: 'YYYY-MM-DD hh:mm:ss'
   }).enclose(function() {
     this.datetime = this.datetime || new Date(); // need to dynamically create
-    this._moment = moment.tz(this.datetime, this.timezone);
+    if ( this.datetime instanceof Date ){
+      this._moment = moment.tz(this.datetime, this.timezone);
+    } else {
+      this._moment = moment.tz(this.datetime, this.format, this.timezone);
+    }
   }).methods({
     tz: function(timezone) {
       if ( timezone ) this._moment.tz(timezone);

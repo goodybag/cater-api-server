@@ -24,15 +24,8 @@
   {{> order_manifest_main}}
 </div>
 
-<div class="accept-reject-bar">
-  {{#eq order.status 'submitted'}}
-    <button class="btn-accept">Accept</button>
-    <button class="btn-reject">Reject</button>
-  {{/eq}}
-  <a
-    href="/manifests/manifest-{{order.id}}.pdf?review_token={{order.review_token}}"
-    class="btn-download"
-    target="_blank">Download</a>
+<div id="accept-reject-container">
+  {{> accept_reject_bar}}
 </div>
 {{/extend}}
 
@@ -42,29 +35,31 @@
   define(
     'pages/order-restaurant'
   , [ 'jquery'
+    , 'handlebars'
     , 'app/views/shelf'
     , 'app/views/order-rejection-view'
     , 'app/models/order-rejection'
     , 'app/models/order-acceptance'
     , 'spinner'
     ]
-  , function( $, ShelfView, OrderRejectionView, OrderRejection, OrderAcceptance, spinner ){
+  , function( $, Hbs, ShelfView, OrderRejectionView, OrderRejection, OrderAcceptance, spinner ){
       return {
         init: function( options ){
           this.options = options;
+          var order = options.order;
 
           $(function(){
             var $acceptBtn = $('.btn-accept');
             var $rejectBtn = $('.btn-reject');
 
             var rejection = this.rejection = new OrderRejection({
-              order_id: this.options.order.get('id')
-            , review_token: this.options.order.get('review_token')
+              order_id: order.get('id')
+            , review_token: order.get('review_token')
             });
 
             var acceptance = new OrderAcceptance({
-              order_id: options.order.get('id')
-            , review_token: options.order.get('review_token')
+              order_id: order.get('id')
+            , review_token: order.get('review_token')
             });
 
             var rejectionView = this.rejectionView = new OrderRejectionView({
@@ -98,10 +93,18 @@
               $rejectBtn.addClass('hide');
             };
 
+            var renderAcceptReject = function(){
+              $('#accept-reject-container').html(
+                Hbs.partials.accept_reject_bar({
+                  order: order.toJSON()
+                })
+              );
+            };
+
             var onSave = function(){
               shelf.close();
-              hideAcceptReject();
               spinner.stop();
+              renderAcceptReject();
             };
 
             var onError = function( error ){
@@ -116,10 +119,12 @@
             });
 
             rejection.on( 'loading', spinner.start );
+            rejection.on( 'save', order.set.bind( order, 'status', 'denied' ) );
             rejection.on( 'save', onSave );
             rejection.on( 'error', onError );
 
             acceptance.on( 'loading', spinner.start );
+            acceptance.on( 'save', order.set.bind( order, 'status', 'accepted' ) );
             acceptance.on( 'save', onSave );
             acceptance.on( 'error', onError );
 

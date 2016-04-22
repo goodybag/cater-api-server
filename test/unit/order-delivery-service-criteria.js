@@ -17,6 +17,7 @@ describe ('Order Delivery Service Criteria', function(){
   , guests:     25
   , zip:        '78756'
   , datetime:   now.format('YYYY-MM-DD 12:00:00')
+  , status:     'pending'
   , restaurant: {
       minimum_order: 100
     , supported_order_types: ['pickup', 'delivery', 'courier']
@@ -117,18 +118,18 @@ describe ('Order Delivery Service Criteria', function(){
     assert( criteria.check( order ) );
   });
 
-  it ('should be delivery service because lead time', function(){
+  it('should be delivery service because lead time', function(){
     var order = utils.deepExtend( {}, defaultOrder, {
       restaurant: {
         // Make lead times trigger pickup
         lead_times: [
           { lead_time: 100, max_guests: 10 }
-        , { lead_time: 200, max_guests: 20 }
+        , { lead_time: 9999999999999, max_guests: 40 }
         ]
       }
     });
 
-    assert( criteria.check( order ) );
+    assert.deepEqual( criteria.why( order ), [{ name: 'lead_times', type: 'some' }] );
   });
 
   it ('should not be delivery service because courier not supported', function(){
@@ -155,7 +156,7 @@ describe ('Order Delivery Service Criteria', function(){
     assert( criteria.check( order ) );
   });
 
-  it.only ('should not be DS because of lead_time, but use submittedDate to check', function(){
+  it ('should not be DS because of lead_time, but use submittedDate to check', function(){
     var order = utils.deepExtend( {}, defaultOrder, {
       datetime: '2016-01-08 12:30:00'
     , submitted: '2016-01-01 12:30:00'

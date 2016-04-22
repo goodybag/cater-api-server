@@ -128,9 +128,18 @@ module.exports.JSON.list = function( req, res ){
             return done();
           }
 
-          // Coerce to legacy structure
-          build.cid = Math.random().toString(36);
-          notifications2Notifications[ id ]( build, req );
+          try {
+            // Coerce to legacy structure
+            build.cid = Math.random().toString(36);
+            notifications2Notifications[ id ]( build, req );
+          } catch ( err ) {
+            logger.warn('Error building notification', {
+              error: err
+            , notification: note
+            });
+
+            return done();
+          }
 
           done( null, build );
         });

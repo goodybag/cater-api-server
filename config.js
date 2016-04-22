@@ -223,6 +223,7 @@ config.defaults = {
     support: [ local.testEmail || 'test@goodybag.com' ]
   , tech: [ local.testEmail || 'test@goodybag.com' ]
   , orders: 'orders@goodybag.com'
+  , couriers: 'couriers@goodybag.com'
   , waitlist: 'waitlist@goodybag.com'
   , info: 'info@goodybag.com'
   , welcome: 'jacobparker@goodybag.com'
@@ -570,6 +571,11 @@ config.test = _.extend( _.clone( config.dev ), {
 
 config.travis = _.extend( _.clone( config.dev ), {
   env: 'travis'
+});
+
+config.circle = _.extend( _.clone( config.dev ), {
+  env: 'dev'
+, postgresConnStr:  "ubuntu@!postgres://localhost:5432/circle_test"
 });
 
 var GB_ENV = process.env['GB_ENV'] = process.env['GB_ENV'] || 'dev';

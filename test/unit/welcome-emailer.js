@@ -3,6 +3,8 @@ var moment    = require('moment-timezone');
 var config    = require('../../config');
 var welcomer  = require('../../lib/welcome-emailer');
 
+require('../../utils').overload.config({ dataTypes: require('../../models') });
+
 describe ('Welcome Emailer', function(){
   it ('should state the time is valid', function(){
     var user = { attributes: {} };

@@ -336,6 +336,66 @@ route.get('/users/:id/invoices', m.param('id'), m.viewPlugin('mainNav', {
   localsAlias: 'edit_user'
 }));
 
+route.get('/users/:id/billing-info', m.param('id'), m.viewPlugin('mainNav', {
+  active: 'users'
+}), m.viewPlugin('sidebarNav', {
+  active: 'billing-info',
+  baseUrl: '/admin/users/:id'
+}), m.viewPlugin('breadCrumbs', {
+  currentPage: 'Billing Info'
+}), m.queryOptions({
+  with: [{
+    name: 'transaction_events',
+    type: 'union',
+    all: true,
+    queries: [{
+      type: 'select',
+      columns: ['order_id', 'data', 'created_at', {
+        expression: "'transaction'", as: 'type'
+      }],
+      table: 'transactions'
+    }, {
+      type: 'select',
+      columns: ['order_id', 'data', 'created_at', {
+        expression: "'error'", as: 'type'
+      }],
+      table: 'transaction_errors'
+    }]
+  }],
+  one: [{
+    table: 'regions',
+    alias: 'region'
+  }],
+  many: [{
+    table: 'users_payment_methods',
+    alias: 'cards',
+    columns: ['payment_methods.*', 'users_payment_methods.name'],
+    joins: [{
+      target: 'payment_methods',
+      type: 'left',
+      on: { 'id': '$users_payment_methods.payment_method_id$' }
+    }]
+  }, {
+    table: 'orders',
+    alias: 'transaction_events',
+    columns: ['transaction_events.*'],
+    order: { 'transaction_events.created_at': 'desc' },
+    joins: [{
+      target: 'transaction_events',
+      on: { 'order_id': '$orders.id$' }
+    }]
+  }],
+  userGroups: true
+}), m.db.regions.find({}, {
+  limit: 'all'
+}), m.viewPlugin('mainNav', {
+  active: 'users'
+}), m.view('admin/user/billing-info', db.users, {
+  layout: 'admin/layout-single-object',
+  method: 'findOne',
+  localsAlias: 'edit_user'
+}));
+
 route.get('/users/:id/invoice-recipients', m.param('id'), m.viewPlugin('mainNav', {
   active: 'users'
 }), m.viewPlugin('sidebarNav', {

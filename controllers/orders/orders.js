@@ -233,6 +233,7 @@ module.exports.apiCreate = function(req, res, next) {
   var order = new models.Order(
     utils.extend({
       user_id: req.user.attributes.user ? req.user.attributes.user.id : null
+    , sub_total: 0
     }, req.body)
   );
 
@@ -245,6 +246,7 @@ module.exports.apiCreate = function(req, res, next) {
       // the Order Delivery Service Criteria Checker
       let orderWithRestaurant = utils.extend( {}, order.attributes, {
         restaurant: restaurant
+      , timezone: restaurant.region.timezone
       });
 
       // Determine whether or not the order should

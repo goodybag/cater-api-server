@@ -110,6 +110,16 @@
             <ul class="nav navbar-nav navbar-right">
               {{#contains user.groups 'admin'}}
                 <li class="form-control-wrapper">{{> region_selector}}</li>
+                <li class="nav-account dropdown">
+                  <button class="btn btn-default navbar-btn dropdown-toggle pull-right" data-toggle="dropdown">
+                    Admin<span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a href="/admin/restaurants">Restaurants</a></li>
+                    <li><a href="/admin/orders">Orders</a></li>
+                    <li><a href="/admin/users">Users</a></li>
+                  </ul>
+                </li>
               {{/contains}}
               {{#contains user.groups 'restaurant'}}
                 <li><a href="/restaurants/manage" class="btn-link">Home</a></li>
@@ -146,6 +156,9 @@
                   <li><a href="/">Start New Order</a></li>
                   <li><a href="/users/me/orders/calendar">My Orders</a></li>
                   <li><a href="/users/me/orders/receipts">My Receipts</a></li>
+                  {{#if user.is_invoiced}}
+                  <li><a href="/users/me/invoices">My Invoices</a></li>
+                  {{/if}}
                 </ul>
               </li>
 

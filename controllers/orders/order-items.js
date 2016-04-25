@@ -88,7 +88,10 @@ module.exports.add = function(req, res, next) {
 
       venter.emit('order:items:change', order, result);
 
-      db.order_revisions.track( result.order_id, req.user.attributes.id, 'add-item', function( error ){
+      db.order_revisions.track( result.order_id, req.user.attributes.id, {
+        description: 'add-item'
+      , details: {order_item: result}
+      }, function( error ){
         if ( error ){
           req.logger.warn('Error tracking order revision', {
             order: { id: order.id }
@@ -124,7 +127,10 @@ module.exports.update = function(req, res, next) {
       venter.emit( 'order:change', req.params.oid );
       venter.emit('order:items:change', req.order, result);
 
-      db.order_revisions.track( result.order_id, req.user.attributes.id, 'update-item', function( error ){
+      db.order_revisions.track( result.order_id, req.user.attributes.id, {
+        description: 'update-item'
+      , details: {order_item: result}
+      }, function( error ){
         if ( error ){
           req.logger.warn('Error tracking order revision', {
             error: error
@@ -146,7 +152,10 @@ module.exports.remove = function(req, res, next) {
     venter.emit( 'order:change', req.params.oid );
     venter.emit('order:items:change', req.order, result);
 
-    db.order_revisions.track( rows[0].order_id, req.user.attributes.id, 'remove-item', function( error ){
+    db.order_revisions.track( rows[0].order_id, req.user.attributes.id, {
+      description: 'remove-item'
+    , details: {order_item: rows[0]}
+    }, function( error ){
       if ( error ){
         req.logger.warn('Error tracking order revision', {
           error: error

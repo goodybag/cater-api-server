@@ -342,7 +342,18 @@
               Unknown
             {{/if}}
           </td>
-          <td>{{this.description}}</td>
+          <td>
+            {{this.description}}
+            {{#if this.details.order_item}}
+              <div class="item-card-tooltip">
+                (<div class="item-card-tooltip-text">{{this.details.order_item.name}}</div>)
+
+                <div class="item-card-tooltip-card">
+                  {{> timeline_order_item_description this.details.order_item}}
+                </div>
+              </div>
+            {{/if}}
+          </td>
           <td>{{formatDateTimeWithTz this.created_at req.user.region.timezone "MM/DD/YYYY h:mm A"}}</td>
         </tr>
         {{/each}}

@@ -38,8 +38,11 @@ definition.indices = {};
 definition.extras = [];
 
 
-definition.track = function( orderId, actorId, description, callback ){
+definition.track = function( orderId, actorId, desc, callback ){
   callback = callback || function(){};
+  if ( typeof desc === 'string' ){
+    desc = { description: desc, details: {} };
+  }
 
   var options = {
     one:  [ { table: 'restaurants', alias: 'restaurant'
@@ -75,7 +78,8 @@ definition.track = function( orderId, actorId, description, callback ){
       order_id: order.id
     , user_id: order.user_id
     , actor_id: actorId
-    , description: description
+    , description: desc.description
+    , details: JSON.stringify( desc.details )
     , data: JSON.stringify( order )
     };
 

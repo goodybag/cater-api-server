@@ -164,8 +164,8 @@
                 min="0" max="59"
                 onchange="if(parseInt(this.value,10)<10)this.value='0'+this.value;" />
               <select class="actual-dt-in" name="actual-dt-period">
-                <option value="am">AM</option>
-                <option value="pm">PM</option>
+                <option value="am"{{#eq (getAMPM order.actual_delivery_datetime) 'am'}} selected{{/eq}}>AM</option>
+                <option value="pm"{{#eq (getAMPM order.actual_delivery_datetime) 'pm'}} selected{{/eq}}>PM</option>
               </select>
             </div>
             <input

@@ -382,7 +382,7 @@ utils.sendMail2 = function( options, callback ){
 
 utils.sendRawEmail = function( from, to, text, callback ){
   if ( config.emailProvider === 'mailgun' ){
-    mailgun.sendRaw( options.from, options.to, message, callback );
+    mailgun.sendRaw( from, to, text, callback );
   } else if ( config.emailProvider === 'mandrill' ){
     mandrill.messages.sendRaw({
       from_email: from
@@ -515,7 +515,7 @@ utils.sendError = function(res, error, details){
     error = errors[error];
   }
   if ( !error.details ) error.details = utils.pick(details, ['message', 'stack']);
-  
+
   utils.sendJSON(res, { error: error });
 };
 

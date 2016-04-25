@@ -54,11 +54,6 @@ define(function(require){
 
         $('.navbar').navbar({ toggleText: false, toggleLogin: false });
 
-        var orderActualDT = page.order.get('actual_delivery_datetime');
-        if(orderActualDT && moment(orderActualDT).hour() >= 12) {
-          $('[name="actual-dt-period"]').val('pm');
-        };
-
         page.notificationHistory.setElement(
           $('#notifications-history-table')
         ).render();

@@ -647,6 +647,14 @@ define(function(require, exports, module) {
       }
 
       return str;
+    },
+
+    getAMPM: function( datetime ){
+      if( datetime && moment(datetime).hour() >= 12) {
+        return 'pm';
+      }
+
+      return 'am';
     }
   };
 

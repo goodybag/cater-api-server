@@ -59,7 +59,7 @@ config.defaults = {
   , end:    { hour: 8, minute: 30 }
   }
 
-, emailProvider: 'mandrill'
+, emailProvider: 'mailgun'
 
 , tmpDir: './tmp'
 

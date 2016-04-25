@@ -88,11 +88,6 @@
               shelf.open();
             });
 
-            var hideAcceptReject = function(){
-              $acceptBtn.addClass('hide');
-              $rejectBtn.addClass('hide');
-            };
-
             var renderAcceptReject = function(){
               $('#accept-reject-container').html(
                 Hbs.partials.accept_reject_bar({

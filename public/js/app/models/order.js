@@ -561,8 +561,9 @@ define(function(require, exports, module) {
      * Convert datetime to a full calendar event object
      */
     getFullCalendarEvent: function() {
+
       var fullCalendarEvent = utils.extend({}, this.toJSON(), {
-        title: this.restaurant.get('name')
+        title: this.get('name') ? [this.get('name'), this.restaurant.get('name')].join('\n') : this.restaurant.get('name')
       , start: this.get('datetime')
       , color: this.getStatusColor()
       , orderId: this.get('id')

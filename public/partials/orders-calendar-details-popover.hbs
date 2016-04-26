@@ -1,5 +1,8 @@
 <p>
   <ul class="calendar-popover-info list-unstyled">
+  {{#if name}}
+    <li><strong>{{restaurant.name}}</strong></li>
+  {{/if}}
   {{#if datetime}}
     <li>Delivery Date: {{datepart datetime}} @ {{timepart datetime}}</li>
   {{/if}}

@@ -156,7 +156,7 @@ define(function(require, exports, module) {
     eventRender: function(event, element, view) {
       var this_ = this;
       var $element = $(element);
-
+      var titleName = event.name ? event.name : event.restaurant.name;
       // Activate popover
       $element.popover({
         content: this.templates.detailsPopover(utils.omit(event, 'source'))
@@ -164,7 +164,7 @@ define(function(require, exports, module) {
           '<strong>#'
         , event.id
         , '</strong> '
-        , event.restaurant.name
+        , titleName
         , '<button class="close">&times</button>'
         ].join('')
       , trigger: 'click'

@@ -8,7 +8,7 @@ define(function(require){
     }
   , salesTax: 1.0825
   , taxRate: 0.0825
-  , menuRefresh: 5000
+  , menuRefresh: 12000
   , debounceWait: 300
   , diets: require('diets')
   };

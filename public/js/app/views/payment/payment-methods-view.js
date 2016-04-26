@@ -191,14 +191,16 @@ define(function(require, exports, module) {
       , width: '260px'
       };
 
-      for ( var i = 0, l = errors.length; i < l; ++i ){
+      for ( var i = 0, l = errors.length, fieldName; i < l; ++i ){
         error = errors[i];
 
         $el = $( template( error ) );
         $el.css( css );
 
+        fieldName = error.property || error.param || error.name;
+
         $parent = this.$el.find(
-          selector.replace( /{property}/g, error.name.toLowerCase().replace(/_/g, '-') )
+          selector.replace( /{property}/g, fieldName.toLowerCase().replace(/_/g, '-') )
         ).parents('.form-group').eq(0);
 
         $parent.prepend( $el );

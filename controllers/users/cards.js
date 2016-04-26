@@ -28,6 +28,10 @@ module.exports.create = function(req, res, next) {
           return res.error( errors.stripe.CARD_EXPIRED );
         }
 
+        if ( err.code === 'incorrect_cvc' ){
+          return res.error( errors.stripe.INCORRECT_CVC );
+        }
+
         return res.error(errors.stripe.ERROR_ADDING_CARD)
       }
       var pmData = utils.extend( {}, req.body, { stripe_id: req.body.data.id } );

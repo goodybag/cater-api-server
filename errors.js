@@ -208,7 +208,7 @@ errors[errors.stripe.CARD_DECLINED.code] = errors.stripe.CARD_DECLINED;
 
 errors.stripe.CARD_EXPIRED = {
   type: "input"
-, code: "0402"
+, code: "0403"
 , httpCode: "402"
 , name: "CARD_EXPIRED"
 , message: "Your card is expired"
@@ -216,6 +216,17 @@ errors.stripe.CARD_EXPIRED = {
 };
 
 errors[errors.stripe.CARD_EXPIRED.code] = errors.stripe.CARD_EXPIRED;
+
+errors.stripe.INCORRECT_CVC = {
+  type: "input"
+, code: "0404"
+, httpCode: "402"
+, name: "INCORRECT_CVC"
+, message: "Invalid security code"
+, property: "cvc"
+};
+
+errors[errors.stripe.INCORRECT_CVC.code] = errors.stripe.INCORRECT_CVC;
 
 /**
  * Yelp Errors

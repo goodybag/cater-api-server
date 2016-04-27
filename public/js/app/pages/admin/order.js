@@ -116,7 +116,7 @@ define(function(require){
           page.saveOrder( flash.successOrError.bind( flash ) );
         });
 
-        $('[role="save-actual-dt"]').click(function( e ) {
+        $('[name="actual-dt-hour"], [name="actual-dt-min"], [name="actual-dt-period"]').change(function( e ) {
           e.preventDefault();
 
           var hour   = parseInt($('[name=actual-dt-hour]').val());
@@ -136,7 +136,7 @@ define(function(require){
               .minute(min)
               .format('YYYY-MM-DD HH:mm:ss');
 
-            page.updateOrder({ actual_delivery_datetime: actualdt }, flash.successOrError.bind( flash ));
+            page.state.set({ actual_delivery_datetime: actualdt })
           }
         });
 

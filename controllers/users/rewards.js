@@ -21,12 +21,8 @@ module.exports.list = function( req, res ){
                         user_id:        req.params.uid
                       }, {
                         order:          { datetime: 'desc' }
-                      , one:            [ { table: 'restaurants'
-                                          , alias: 'restaurant'
-                                          , one: [{ table: 'regions', alias: 'region' }]
-                                          }
-                                        , { table: 'users', alias: 'user' }
-                                        ]
+                      , useLatestRevision: true
+                      , applyPriceHike: true
                       , submittedDate:  true
                       })
 

@@ -6,99 +6,56 @@
 
 #components { #order-manifest { #header {
   .init(
-    
+
   ){
-    .manifest-header {
-      min-height: 82px;
-      padding-top: 8px;
-      margin-bottom: 40px;
-      color: #fff;
-      font-family: 'Din Condensed';
+    .manifest-header {}
+
+    .manifest-header-section {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+    }
+
+    .manifest-header-section {
+      border-bottom: 2px solid #909090;
+    }
+
+    .manifest-header-section:last-child {
+      border-bottom: 0;
+    }
+
+    .manifest-header-column {
+      display: inline-block;
+      min-width: 200px;
+    }
+
+    .manifest-header-column-right {
+      text-align: right;
+    }
+
+    .manifest-header-column-text {
+      font-weight: 900;
+      font-size: 3em;
+      line-height: 1em;
       text-transform: uppercase;
-      background-color: @manifest-gray;
-      border: solid @manifest-gray 1px;
-      border-bottom-width: 2px;
+    }
 
-      &:before {
-        content: "";
-        position: absolute;
-        left: 12px;
-        top: 14px;
-        width: 250px;
-        height: 41px;
-        background-image: url('/img/thankyou.svg');
-        background-repeat: no-repeat;
-        background-size: 250px;
-      }
+    .manifest-header-column-label {
+      text-transform: uppercase;
+      color: #909090;
+      font-weight: 900;
+    }
 
-      .header-text {
-        margin-top: 30px;
-        margin-right: 12px;
-        margin-bottom: 8px;
-        font-size: 14px;
-        text-align: right;
-        white-space: pre;
-      }
+    .manifest-header-column-value {
+      font-weight: 900;
+      font-size: 2em;
+      line-height: 1em;
+    }
 
-      .signature {
-        text-transform: none;
-      }
-
-      .subtext {
-        @subtext-color: #666;
-        padding-top: 3px;
-        background: #FFF;
-        border-left: solid 1px @manifest-gray;
-        border-right: solid 1px @manifest-gray;
-        font-family: 'Din';
-        color: @subtext-color;
-        font-size: 11px;
-        line-height: 13px;
-        text-align: center;
-
-        .phone {
-          color: darken( @subtext-color, 30% );
-        }
-      }
-
-      .order-info {
-        border-bottom: solid 2px @manifest-gray;
-      }
-
-      .order-info > .info-item {
-        display: table-cell;
-        width: 1%;
-        padding: 6px 8px 2px;
-
-        background: #fff;
-        border-left: solid 1px @manifest-gray;
-        border-right: solid 1px @manifest-gray;
-        color: @manifest-gray;
-        line-height: 20px;
-
-        // Highlight order type
-        // Actually, we decided against this
-        // &.info-item-order-type {
-        //   background: @manifest-gray;
-        //   &, .item-value {
-        //     color: #fff;
-        //   }
-        // }
-
-        &.info-item-company {
-          white-space: nowrap;
-          max-width: 230px;
-        }
-      }
-
-      .order-info .item-title {
-        white-space: nowrap;
-      }
-
-      .order-info .item-value {
-        color: #000;
-        font-size: 22px;
-      }
+    .manifest-header-column-value-small {
+      font-weight: bold;
+      font-size: 1.25em;
+      line-height: 1.25em;
     }
   }
 }}}

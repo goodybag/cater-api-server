@@ -4,17 +4,18 @@
 
 #components { #order-manifest { #table {
   .init(
-    
+
   ){
     .manifest-table {
       #box > .flex(1);
       width: 100%;
-      border: solid #000 1px;
+      border: solid #909090 1px;
       border-top: none;
+      border-collapse: seperate;
       font-size: 13px;
 
       th {
-        background: #000;
+        background: #909090;
         color: #fff;
         text-transform: uppercase;
         font-size: 16px;
@@ -26,7 +27,7 @@
       }
 
       td {
-        border-left: solid #000 1px;
+        border-left: solid #909090 1px;
         padding: 5px;
       }
 
@@ -43,8 +44,6 @@
       }
 
       tbody {
-        font-family: 'Share Tech Mono';
-        letter-spacing: -1.5px;
       }
 
       td.checkbox   { width: 40px; }
@@ -54,6 +53,10 @@
 
       .item {
         text-transform: uppercase;
+      }
+
+      .item-name {
+        font-weight: 900;
       }
 
       .options {

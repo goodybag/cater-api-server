@@ -2,15 +2,15 @@
   <section class="manifest-page table-page">
     <div class="inner">
       {{> order_manifest_header}}
-  
+
       <table class="manifest-table">
         <thead>
           <tr>
             <th class="checkbox"><img src="{{cdn "/img/checkmark_white.svg"}}" width="18"></th>
             <th class="item">Item</th>
-            <th class="options-notes">Options/Notes</th>
-            <th class="recipient">Recipient</th>
             <th class="feeds">Feeds</th>
+            <th class="options-notes">Notes</th>
+            <th class="recipient">Label</th>
             <th class="qty">Qty</th>
             <th class="price">Price</th>
           </tr>
@@ -20,7 +20,7 @@
           <tr>
             <td class="checkbox"></td>
             <td class="item">
-              {{this.name}}
+              <div class="item-name">{{this.name}}</div>
               <div class="options">
                 {{#each this.options_sets}}
                 {{#if this.name.length}}
@@ -41,9 +41,9 @@
                 {{/each}}
               </div> --}}
             </td>
+            <td class="feeds">{{this.feeds_max}}</td>
             <td class="options-notes">{{this.notes}}</td>
             <td class="recipient">{{{join this.recipients "<br>"}}}</td>
-            <td class="feeds">{{this.feeds_max}}</td>
             <td class="qty">x{{this.quantity}}</td>
             <td class="price">${{dollars this.sub_total}}</td>
           </tr>
@@ -75,60 +75,49 @@
       </div>
     </div>
   </section>
-  
+
   <section class="manifest-page">
     <div class="inner">
       {{> order_manifest_header}}
-        
+
       <h2 class="section-title">Order Info</h2>
       <dl class="manifest-section-dl">
-        <dt>Restaurant:</dt>
+        <dt>Restaurant</dt>
         <dd>{{order.restaurant.name}}</dd>
-        <dt>Order Number:</dt>
-        <dd>#{{order.id}}</dd>
-        {{#if order.name}}
-        <dt>Order Name:</dt>
-        <dd>{{order.name}}</dd>
-        {{/if}}
-        <dt>Number of Guests:</dt>
+        <dt>Guests</dt>
         <dd>{{order.guests}}</dd>
-        <dt>Customer Notes:</dt>
-        <dd>{{order.notes}}</dd>
-        <dt>Sub-Total:</dt>
+
+        <dt>Subtotal</dt>
         <dd>${{dollars order.sub_total}}</dd>
         {{#eq order.type 'delivery'}}
-        <dt>Delivery Fee:</dt>
+        <dt>Delivery Fee</dt>
         <dd>${{dollars order.delivery_fee}}</dd>
         {{/eq}}
-        <dt>Tax:</dt>
+        <dt>Tax</dt>
         <dd>${{dollars order.sales_tax}}</dd>
         {{#is order.type 'delivery' 'pickup'}}
-        <dt>Tip:</dt>
+        <dt>Tip</dt>
         <dd>${{dollars order.tip}}</dd>
         {{/is}}
         {{#if order.adjustment.amount}}
-        <dt>Adjustment:</dt>
+        <dt>Adjustment</dt>
         <dd>${{dollars order.adjustment.amount}}
           <br>
           {{order.adjustment.description}}
         </dd>
         {{/if}}
-        <dt>Total:</dt>
+        <dt>Total</dt>
         <dd>${{dollars order.total}}</dd>
       </dl>
-        
+
       {{#eq order.type 'delivery'}}
         <h2 class="section-title">Delivery</h2>
         <dl class="manifest-section-dl">
-          <dt>Contact:</dt>
-          <dd>
-            {{order.user.name}} - {{phoneNumber order.phone "xxx.xxx.xxxx"}}
-          </dd>
           {{#if order.user.organization}}
-          <dt>Company:</dt>
+          <dt>Company</dt>
           <dd>{{order.user.organization}}</dd>
           {{/if}}
-          <dt>Address:</dt>
+          <dt>Address</dt>
           <dd>
             {{order.street}}
             {{#if order.street2}}
@@ -138,53 +127,59 @@
             <br>
             {{order.city}}, {{order.state}} {{order.zip}}
           </dd>
-          <dt>Phone:</dt>
-          <dd>{{phoneNumber order.phone "xxx.xxx.xxxx"}}</dd>
+          <dt>Contact</dt>
+          <dd>
+            {{order.user.name}}
+          </dd>
+          <dt>Phone</dt>
+          <dd>{{phoneNumber order.phone "xxx.xxx.xxxx"}} - <b>Call upon delivery only.</b> Please call Goodybag with any questions about the order.</dd>
           {{#if order.secondary_contact_phone }}
-          <dt>Secondary Phone:</dt>
-          <dd>{{phoneNumber order.secondary_contact_phone "xxx.xxx.xxxx"}}</dd>
+            {{#unless (eq order.secondary_contact_phone order.phone)}}
+            <dt>Secondary</dt>
+            <dd>{{phoneNumber order.secondary_contact_phone "xxx.xxx.xxxx"}}</dd>
+            {{/unless}}
           {{/if}}
-          <dt>Delivery Date:</dt>
-          <dd>{{formatDateTime order.datetime "MM/DD/YYYY"}}</dd>
-          <dt>Delivery Time:</dt>
-          <dd>{{formatDateTime order.datetime "h:mm A"}}</dd>
-          <dt>Delivery Instructions:</dt>
+          <dt>Delivery Info</dt>
           <dd>{{order.delivery_instructions}}</dd>
         </dl>
       {{else}}
         <h2 class="section-title">Pickup</h2>
         <dl class="manifest-section-dl">
-          <dt>Contact:</dt>
-          <dd>
-            {{order.user.name}} - {{phoneNumber order.phone "xxx.xxx.xxxx"}}
-          </dd>
-          {{#if order.secondary_contact_phone }}
-          <dt>Secondary Phone:</dt>
-          <dd>{{phoneNumber order.secondary_contact_phone "xxx.xxx.xxxx"}}</dd>
-          {{/if}}
           {{#if order.user.organization}}
-          <dt>Company:</dt>
+          <dt>Company</dt>
           <dd>{{order.user.organization}}</dd>
           {{/if}}
-          <dt>Phone:</dt>
+          <dt>Address</dt>
+          <dd>
+            {{order.street}}
+            {{#if order.street2}}
+              <br>
+              {{order.street2}}
+            {{/if}}
+            <br>
+            {{order.city}}, {{order.state}} {{order.zip}}
+          </dd>
+          <dt>Contact</dt>
+          <dd>{{order.user.name}}</dd>
+          <dt>Phone</dt>
           <dd>{{phoneNumber order.phone "xxx.xxx.xxxx"}}</dd>
-          <dt>Pickup Date:</dt>
-          <dd>{{formatDateTime order.pickup_datetime "MM/DD/YYYY"}}</dd>
-          <dt>Pickup Time:</dt>
-          <dd>{{formatDateTime order.pickup_datetime "h:mm A"}}</dd>
+          {{#if order.secondary_contact_phone }}
+            {{#unless (eq order.secondary_contact_phone order.phone)}}
+            <dt>Secondary</dt>
+            <dd>{{phoneNumber order.secondary_contact_phone "xxx.xxx.xxxx"}}</dd>
+            {{/unless}}
+          {{/if}}
         </dl>
       {{/eq}}
-        
+
       <h2 class="section-title">Goodybag</h2>
       <dl class="manifest-section-dl">
-        <dt>Phone:</dt>
+        <dt>Phone</dt>
         <dd>{{phoneNumber  (or order.restaurant.region.support_phone config.phone.support) "xxx.xxx.xxxx"}}</dd>
-        <dt>Email:</dt>
+        <dt>Email</dt>
         <dd>{{config.emails.support}}</dd>
-        <dt>Website:</dt>
-        <dd>https://www.goodybag.com</dd>
       </dl>
-        
+
       <div class="page-number">
         Page <span class="current">1</span>/<span class="total">2</span>
       </div>

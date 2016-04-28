@@ -28,12 +28,26 @@ module.exports.create = function(req, res, next) {
           return res.error( errors.stripe.CARD_EXPIRED );
         }
 
+        if ( err.code === 'incorrect_cvc' ){
+          return res.error( errors.stripe.INCORRECT_CVC );
+        }
+
         return res.error(errors.stripe.ERROR_ADDING_CARD)
       }
       var pmData = utils.extend( {}, req.body, { stripe_id: req.body.data.id } );
-      models.User.createPaymentMethod( +req.param('uid'), pmData, function(err, card) {
-        if (err) return logger.error('error adding payment method to user: ' + req.user.attributes.id, err), res.error(errors.internal.DB_FAILURE, err);
-        return res.json(card);
+      var userId = +req.params.uid;
+
+      db.users_payment_methods.create( userId, pmData, ( error, result )=>{
+        if ( error ){
+          logger.error('Error adding payment method to user', {
+            user_id: userId
+          , pmData
+          });
+
+          return res.error( errors.internal.DB_FAILURE, error );
+        }
+
+        return res.json( result );
       });
     }
   );

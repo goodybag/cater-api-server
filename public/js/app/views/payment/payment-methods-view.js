@@ -191,14 +191,16 @@ define(function(require, exports, module) {
       , width: '260px'
       };
 
-      for ( var i = 0, l = errors.length; i < l; ++i ){
+      for ( var i = 0, l = errors.length, fieldName; i < l; ++i ){
         error = errors[i];
 
         $el = $( template( error ) );
         $el.css( css );
 
+        fieldName = error.property || error.param || error.name;
+
         $parent = this.$el.find(
-          selector.replace( /{property}/g, error.name.toLowerCase().replace(/_/g, '-') )
+          selector.replace( /{property}/g, fieldName.toLowerCase().replace(/_/g, '-') )
         ).parents('.form-group').eq(0);
 
         $parent.prepend( $el );
@@ -228,23 +230,23 @@ define(function(require, exports, module) {
       var paymentId = options.paymentId || undefined;
 
       var data = {
-        card_name:         $el.find('[data-stripe="name"]').val()
-      , card_number:       $el.find('[data-stripe="number"]').inputmask('unmaskedvalue')
-      , security_code:     $el.find('[data-stripe="cvc"]').val()
-      , expiration_month: +$el.find('[data-stripe="exp-month"]').val()
-      , expiration_year:  +$el.find('[data-stripe="exp-year"]').val()
+        number:            $el.find('[data-stripe="number"]').inputmask('unmaskedvalue')
+      , cvc:               $el.find('[data-stripe="cvc"]').val()
+      , exp_month:        +$el.find('[data-stripe="exp-month"]').val()
+      , exp_year:         +$el.find('[data-stripe="exp-year"]').val()
       , save_card:         options.saveCard || false
       };
 
       if (PaymentMethod.getCardType(data.card_number) == 'amex') {
-        data = _.extend({
+        _.extend(data, {
           postal_code: $el.find('[name="postal_code"]').val()
         , country_code: 'USA'
-        }
-        , data);
+        });
       }
 
-      Stripe.card.createToken($el, this.stripeResponseHandler.bind(this, userId, callback));
+      var cardName = $el.find('.credit-card-name').val();
+
+      Stripe.card.createToken(data, this.stripeResponseHandler.bind(this, userId, cardName, callback));
     },
 
     processCardComplete: function(errors) {
@@ -264,14 +266,14 @@ define(function(require, exports, module) {
       }, this.processCardComplete.bind(this));
     },
 
-    stripeResponseHandler: function(user_id, callback, status, response) {
+    stripeResponseHandler: function(user_id, cardName, callback, status, response) {
       if ( status !== 200 ) return callback(response.error);
 
       var pm = new PaymentMethod();
 
       var props = {
         data: response.card
-      , name: response.card.name
+      , name: cardName
       , type: response.type
       , user_id: user_id
       , token_id: response.id

@@ -52,7 +52,7 @@
           {{#if checked}}
           <tr>
             <td class="checkbox"></td>
-            <td class="item">{{name}}{{#if description}} - {{description}}{{/if}}</td>
+            <td class="item"><div class="item-name">{{name}}</div>{{#if description}} - {{description}}{{/if}}</td>
             <td class="options"></td>
             <td class="recipient"></td>
             <td class="feeds"></td>
@@ -80,7 +80,7 @@
     <div class="inner">
       {{> order_manifest_header}}
 
-      <h2 class="section-title">Order Info</h2>
+      <h2 class="section-title">Order</h2>
       <dl class="manifest-section-dl">
         <dt>Restaurant</dt>
         <dd>{{order.restaurant.name}}</dd>

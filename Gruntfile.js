@@ -5,6 +5,8 @@ var config        = require('./config');
 var utils         = require('./utils');
 var requireConfig = require('./public/js/require-config');
 
+var LessPluginAutoPrefix = require('less-plugin-autoprefix');
+
 module.exports = function(grunt) {
   grunt.loadTasks('./tasks');
 
@@ -41,7 +43,10 @@ module.exports = function(grunt) {
       less: {
         files: [ 'less/*.less', 'less/**/*.less' ]
       , tasks: ['less']
-      , options: { spawn: false }
+      , options: {
+          spawn: false
+        , plugins: [new LessPluginAutoPrefix({browsers: ['> 1%', 'ie >= 8']})]
+        }
       }
 
     , handlebars: {

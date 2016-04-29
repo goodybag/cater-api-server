@@ -83,7 +83,7 @@ define(function(require, exports, module) {
           context = context[ key[i] ];
         }
       }
-      return JSON.stringify(context);
+      return (JSON.stringify(context) || '').replace(/<\//g, '<\\/');
     },
 
     jsonPretty: function(context, key) {

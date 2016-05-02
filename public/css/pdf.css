@@ -17,8 +17,10 @@ body {
 }
 
 .page {
-  width: 700px;
-  min-height: 920px;
+  box-sizing: border-box;
+  width: 812px;
+  min-height: 1056px;
+  padding: 40px 20px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   page-break-after: always;

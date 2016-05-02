@@ -3,6 +3,7 @@ var definition = require('../../db/definitions/restaurant-events');
 var errors = require('../../errors');
 var utils = require('../../utils');
 var models = require('../../models');
+var restaurantIdParam = require('../../middleware/restaurant-id-param');
 
 /**
  * GET /restaurants/:rid/events?date=
@@ -11,10 +12,13 @@ module.exports.list = function(req, res, next) {
   utils.async.parallel({
     events: function getEvents(callback) {
       var query = {
-        where: { 
-          restaurant_id: req.params.rid 
-        }
+        where: {}
+      , joins: []
       };
+
+      restaurantIdParam.applyValueToWhereClause( req.params.rid, query.where );
+      query.joins.push( restaurantIdParam.getJoinFrom('restaurant_events') );
+
       models.RestaurantEvent.find(query, function( error, results) {
         callback(error, results);
       });
@@ -22,10 +26,11 @@ module.exports.list = function(req, res, next) {
 
     restaurant: function getRestaurant(callback) {
       var query = {
-        where: { 
-          id: req.params.rid 
-        }
+        where: {}
       };
+
+      restaurantIdParam.applyValueToWhereClause( req.params.rid, query.where );
+
       models.Restaurant.findOne(query, function( error, restaurant ) {
         callback(error, restaurant.toJSON());
       });

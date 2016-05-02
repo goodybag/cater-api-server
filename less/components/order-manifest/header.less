@@ -8,24 +8,27 @@
   .init(
 
   ){
-    .manifest-header {}
-
-    .manifest-header-section {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
+    .manifest-header {
+      margin-bottom: 20px;
     }
 
     .manifest-header-section {
+      display: -webkit-box;
+      -webkit-box-pack: justify;
       border-bottom: 1pt solid #9c9c9c;
-    }
+      padding: 10px 0;
 
-    .manifest-header-section:last-child {
-      border-bottom: 0;
+      &:first-child {
+        padding-top: 0;
+      }
+
+      &:last-child {
+        padding-bottom: 0;
+        border-bottom: 0;
+      }
     }
 
     .manifest-header-column {
-      display: inline-block;
       min-width: 120pt;
     }
 

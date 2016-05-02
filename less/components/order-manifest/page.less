@@ -4,9 +4,9 @@
 
 #components { #order-manifest { #page {
   .init(
-    @page-width:          800px
-  , @page-height:         930px
-  , @page-margin-top:     0.2in
+    @page-width:          812px
+  , @page-height:         1056px
+  , @page-margin-top:     0.25in
   , @page-margin-bottom:  0.25in
   , @page-margin-left:    0.25in
   , @page-margin-right:   0.25in
@@ -35,9 +35,17 @@
       }
 
       .page-number {
+        position: absolute;
+        bottom: 0.25in;
+        left: 0;
+        right: 0;
         font-size: 12px;
-        margin-top: 20px;
         text-align: center;
+      }
+
+      .inner {
+        margin-bottom: 20px;
+        position: static;
       }
     }
 

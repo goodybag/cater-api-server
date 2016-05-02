@@ -1,15 +1,9 @@
 {
   "script": "lib/gen-pdf.js"
 , "paperSize": {
-    "width": "8.5in"
-  , "height": "11in"
+    "width": "812px"
+  , "height": "1056px"
   , "margin": "0in"
   , "orientation": "portrait"
-  },
-  "viewportSize": {
-    "width": 812
-  , "height": 1056
   }
-, "dpi": 96
-, "zoomFactor": 1
 }

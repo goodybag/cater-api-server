@@ -3,8 +3,13 @@
 , "paperSize": {
     "width": "8.5in"
   , "height": "11in"
-  , "margin": { "left": "1.4cm", "right": "1.4cm", "top": "1.5cm", "bottom": "1cm" }
+  , "margin": "0in"
   , "orientation": "portrait"
   },
-  "zoomFactor": 1
+  "viewportSize": {
+    "width": 812
+  , "height": 1056
+  }
+, "dpi": 96
+, "zoomFactor": 1
 }

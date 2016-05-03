@@ -346,7 +346,7 @@ var User = module.exports = Model.extend({
               , { table: 'users', alias: 'user' }
               ]
       };
-      
+
       db.orders.findOne( orderId, options, function( error, order ){
         if ( error ) return callback( error );
 
@@ -427,11 +427,8 @@ var User = module.exports = Model.extend({
 
     var options = {
       submittedDate: true
-    , one:  [ { table: 'restaurants'
-              , alias: 'restaurant'
-              , one: [{ table: 'regions', alias: 'region' }]
-              }
-            ]
+    , useLatestRevision: true
+    , applyPriceHike: true
     };
 
     db.orders.find(query, options, function(error, orders){

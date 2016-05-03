@@ -122,6 +122,18 @@ module.exports = require('stampit')()
       }.bind( this ));
     }
 
+  , remove: function( callback ){
+      db.payment_summaries.remove( this.id, this, function( error, results ){
+        if ( error ) return callback( error );
+
+        return callback( null );
+      }.bind( this ));
+    }
+
+  , isEmpty: function(){
+      return !(this.orders && this.orders.length);
+    }
+
   , parseResults: function( results ){
       results = results[0] || results;
       utils.extend( this, this.parseDbResult( results ) );

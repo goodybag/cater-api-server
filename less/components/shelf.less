@@ -21,6 +21,14 @@
       -webkit-transition: -webkit-transform @easing;
       transition: transform @easing;
 
+      // Modernizr bugging on these browsers
+      // https://github.com/Modernizr/Modernizr/issues/897
+      [data-useragent*="Android 4.1"] &,
+      [data-useragent*="Android 4.2"] &,
+      .no-csstransforms3d & {
+        display: none;
+      }
+
       &.top,
       &.bottom {
         left: 0;
@@ -63,6 +71,14 @@
 
       &.in {
         #components > #shelf > .translation( 0, 0 );
+
+        // Modernizr bugging on these browsers
+        // https://github.com/Modernizr/Modernizr/issues/897
+        [data-useragent*="Android 4.1"] &,
+        [data-useragent*="Android 4.2"] &,
+        .no-csstransforms3d & {
+          display: block;
+        }
       }
 
       [data-role="close"] {
@@ -91,15 +107,5 @@
 
   .translation( @x, @y ){
     .transform( translate3d( @x * 100%, @y * 100%, 0 ) );
-
-    // All shelves will be on the right/top
-    // Modernizr bugging on these browsers
-    // https://github.com/Modernizr/Modernizr/issues/897
-    [data-useragent*="Android 4.1"] &,
-    [data-useragent*="Android 4.2"] &,
-    .no-csstransforms3d & {
-      right: @x * 100%;
-      bottom: @x * 100%;
-    }
   }
 }}

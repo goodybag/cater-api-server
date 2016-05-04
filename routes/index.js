@@ -54,6 +54,9 @@ module.exports.register = function(app) {
   }
 
   app.use( function( req, res, next ){
+    // Because legacy routes
+    if ( req.method !== 'GET' ) return next();
+
     // Always use legacy for share links
     if ( req.query.edit_token ) return next();
     if ( !req.user.attributes.features['cater-web'] ) return next();

@@ -63,10 +63,10 @@ describe('Stamps', function(){
           .replace( '{destinations}', testCase.destinations.join(',') );
 
         it( txt, function( done ){
-          var req = DMReq();
-
-          testCase.origins.forEach( req.origin.bind( req ) );
-          testCase.destinations.forEach( req.destination.bind( req ) );
+          var req = DMReq({
+            origins: testCase.origins
+          , destinations: testCase.destinations
+          });
 
           req.send( function( error, rows ){
             assert( !error, error ? error.message : '' );
@@ -105,8 +105,7 @@ describe('Stamps', function(){
       });
 
       it('Should throw INVALID_REQUEST', function( done ){
-        DMReq()
-          .origin('Poop')
+        DMReq({origins: ['Poop']})
           .send( function( error ){
             assert.deepEqual( error, errors.google.distanceMatrix.INVALID_REQUEST );
             done();

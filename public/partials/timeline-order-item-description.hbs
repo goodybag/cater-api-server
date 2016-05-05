@@ -1,0 +1,30 @@
+<div class="item-card-container">
+  <div class="item-block">
+    <div class="item-name">{{name}}</div>
+
+    {{#if recipient}}
+      <div class="item-recipient">for <div class="item-recipient-name">{{recipient}}</div></div>
+    {{/if}}
+  </div>
+
+  <div class="item-block">
+    <div class="item-options">
+      {{#each options_sets}}{{#each this.options}}
+        <div class="item-choice"><div class="item-choice-text">{{this.name}}</div></div>
+      {{/each}}{{/each}}
+    </div>
+  </div>
+
+  {{#if notes}}
+    <div class="item-block">
+      <div class="item-notes">
+        Notes: <div class="item-notes-text">{{notes}}</div>
+      </div>
+    </div>
+  {{/if}}
+
+  <div class="item-block">
+    <div class="item-block-left"><div class="item-quantity">x{{quantity}}</div></div>
+    <div class="item-block-right"><div class="item-price">${{dollars sub_total}}</div></div>
+  </div>
+</div>

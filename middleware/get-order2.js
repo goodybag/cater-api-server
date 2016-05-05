@@ -82,6 +82,7 @@ module.exports = function( options ){
         , 'order_revisions.actor_id'
         , 'order_revisions.created_at'
         , 'order_revisions.description'
+        , 'order_revisions.details'
         ]
       , alias: 'revisions'
       , joins: {

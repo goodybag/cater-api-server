@@ -2,7 +2,11 @@
   {{#each restaurants }}
   <div class="tile">
     <a class="tile-link" title="{{name}}" href="/restaurants/{{text_id}}{{queryParams (pick ../reqQuery 'zip' 'date' 'time' 'guests')}}">
+      {{#if (lte @index 12)}}
       <div class="tile-cover" style="background-image: url('{{filepicker list_photo_url}}');">
+      {{else}}
+      <div class="tile-cover" data-pic="{{filepicker list_photo_url}}">
+      {{/if}}
         <div class="tile-cover-gradient"></div>
         {{#if (and (gt no_contract_fee 0) (not plan_id) )}}
 

@@ -5,7 +5,11 @@
   <a class="tile-link" title="{{name}}" href="/restaurants/{{text_id}}{{queryParams (pick ../reqQuery 'zip' 'date' 'time' 'guests')}}">
     <ul class="inline-list">
       <li>
+        {{#if (lte @index 12)}}
         <div class="listing-img" style="background-image: url('{{filepicker list_photo_url}}');"></div>
+        {{else}}
+        <div class="listing-img" data-pic="{{filepicker list_photo_url}}"></div>
+        {{/if}}
       </li>
       <li>
         <div class="listing-info">

@@ -5,6 +5,8 @@ var config        = require('./config');
 var utils         = require('./utils');
 var requireConfig = require('./public/js/require-config');
 
+var LessPluginAutoPrefix = require('less-plugin-autoprefix');
+
 module.exports = function(grunt) {
   grunt.loadTasks('./tasks');
 
@@ -41,7 +43,10 @@ module.exports = function(grunt) {
       less: {
         files: [ 'less/*.less', 'less/**/*.less' ]
       , tasks: ['less']
-      , options: { spawn: false }
+      , options: {
+          spawn: false
+        , plugins: [new LessPluginAutoPrefix({browsers: ['> 1%', 'ie >= 8']})]
+        }
       }
 
     , handlebars: {
@@ -122,7 +127,7 @@ module.exports = function(grunt) {
         , "public/dist/<%= pkg.version %>/cater-tool.css":         "less/core-cater-tool.less"
         , "public/dist/<%= pkg.version %>/cater-tool-ielt9.css":   "less/ielt9-cater-tool.less"
         , "public/dist/<%= pkg.version %>/css/admin.css":          "less/core-admin.less"
-        , "public/dist/<%= pkg.version %>/order-manifest.css":     "less/core-order-manifest.less"
+        , "public/dist/<%= pkg.version %>/css/order-manifest.css": "less/core-order-manifest.less"
         , "public/dist/<%= pkg.version %>/css/goodybag.css":       "less/core-goodybag.less"
         }
       }

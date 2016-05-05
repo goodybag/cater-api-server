@@ -76,12 +76,29 @@ route.get('/manifests/manifest-:oid.pdf'
   })
 );
 
-route.get(config.invoice.pdfRoute, m.basicAuth(), m.restrict(['admin', 'receipts']), m.s3({
-  path: '/' + config.invoice.fileFormat,
-  key: config.amazon.awsId,
-  secret: config.amazon.awsSecret,
-  bucket: config.invoice.bucket
-}));
+route.get( config.invoice.pdfRoute
+, m.basicAuth()
+, function( req, res, next ){
+    db.user_invoices.findOne( req.params.id, ( error, invoice )=>{
+      if ( error ){
+        return next( error );
+      }
+
+      if ( invoice.user_id === req.user.attributes.id ){
+        req.user.attributes.groups.push('invoice-owner');
+      }
+
+      return next();
+    });
+  }
+, m.restrict(['admin', 'receipts', 'invoice-owner'])
+, m.s3({
+    path: '/' + config.invoice.fileFormat,
+    key: config.amazon.awsId,
+    secret: config.amazon.awsSecret,
+    bucket: config.invoice.bucket
+  })
+);
 
 route.get(
   config.invoice.htmlRoute, m.basicAuth(), m.restrict(['admin', 'receipts']),

@@ -15,7 +15,7 @@ module.exports = function( options ){
   , where:  {}
             // Refresh every hour
   , age:    1000*60*60
-  , pluck:  [{ table: 'region_delivery_zips', alias: 'zips', column: 'zip' }]
+  , pluck:  [{ table: 'region_zips', alias: 'zips', column: 'zip' }]
   });
 
   var end = 0;

@@ -37,6 +37,14 @@
   }
 }
 
+[data-useragent*="Android 4.0"] &,
+[data-useragent*="Android 4.1"] &,
+[data-useragent*="Android 4.2"] & {
+  .accept-reject-bar {
+    display: block;
+  }
+}
+
 @media print {
   html, body {
     padding: 0;

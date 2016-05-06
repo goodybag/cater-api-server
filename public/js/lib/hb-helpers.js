@@ -96,8 +96,15 @@ define(function(require, exports, module) {
       return JSON.stringify(context, true, '  ');
     },
 
-    or: function(value1, value2) {
-      return value1 || value2;
+    or: function() {
+      var args = Array.prototype.slice.call( arguments );
+      var options = args.pop();
+
+      for ( var i = 0; i < args.length; i++ ){
+        if ( args[ i ] ) return args[ i ];
+      }
+
+      return null;
     },
 
     and: function(value1, value2) {

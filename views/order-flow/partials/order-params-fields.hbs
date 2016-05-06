@@ -1,0 +1,58 @@
+<div class="form-group form-group-address" data-icon="gb-icon-location">
+  <label class="control-label">Address</label>
+  <input
+    type="text"
+    class="form-control"
+    name="address"
+    placeholder="address"
+    data-gplaces
+    data-variant="flip"
+    autocomplete="off"
+    value="{{addressToString order}}"
+  />
+</div>
+
+<span class="form-group form-group-datetime" name="datetime" type="datetime">
+  <div class="form-group" data-icon="gb-icon-calendar">
+    <label class="control-label">Delivery Date</label>
+    <input
+      type="text"
+      class="form-control"
+      role="date"
+      placeholder="delivery date"
+      maxlength="10"
+      value="{{#if order}}{{formatDateTime order.datetime}}{{/if}}"
+    />
+  </div>
+
+  <div class="form-group" data-icon="gb-icon-time">
+    <label class="control-label">Delivery Time</label>
+    <input
+      type="text"
+      class="form-control"
+      role="time-range"
+      placeholder="delivery time"
+      value="{{#if order.datetime}}{{join (timeToRange (formatDateTime order.datetime "h:mm A") "h:mm A") " - "}}{{/if}}"
+      disabled="true"
+    />
+    <input
+      type="text"
+      class="form-control"
+      role="time"
+      placeholder="delivery time"
+      maxlength="8"
+      value="{{#if order.datetime}}{{formatDateTime order.datetime "h:mm A"}}{{/if}}"
+    />
+  </div>
+</span>
+
+<div class="form-group" data-icon="gb-icon-user">
+  <label class="control-label">Number of Guests</label>
+  <input
+    type="number"
+    class="form-control form-control-guests"
+    name="guests"
+    placeholder="guests"
+    value="{{#if order}}{{order.guests}}{{/if}}"
+  />
+</div>

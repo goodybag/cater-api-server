@@ -186,6 +186,7 @@ define(function(require, exports, module) {
         options = format;
         format = undefined;
       }
+
       return utils.timeFormatter(time, format || "h:mm A");
     },
 
@@ -203,6 +204,10 @@ define(function(require, exports, module) {
       var line2 = utils.joinIf([utils.joinIf([utils.capitalize(loc.city), stateStr], ', '), loc.zip], ' ');
       return utils.joinIf([line1 ? '<span class="addr addr-street">' + line1 + '</span> ' : null,
                      line2 ? '<span class="addr addr-city-state-zip">' + line2 + '</span>' : null], '\n');
+    },
+
+    addressToString: function( address ){
+      return Address.create( address ).toString();
     },
 
     phoneNumber: function(num, format, options) {
@@ -654,6 +659,17 @@ define(function(require, exports, module) {
       }
 
       return str;
+    },
+
+    getRandomOrderCreatorIntro: function(){
+      var intros = [
+        "Let's get started!"
+      , "Hi! Oh, I'm doing great. How are you?"
+      , "I really like what you've done with your hair!"
+      , "It's a good day for food."
+      ];
+
+      return intros[ ~~(intros.length * Math.random()) ];
     },
 
     getAMPM: function( datetime ){

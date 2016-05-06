@@ -44,7 +44,7 @@ define( function( require ){
 
       var listView = new ListView({
         el: '#main'
-        , searchUrl: '/restaurants'
+        , searchUrl: ''
         , filters: [
             sortView
           , orderParamsView

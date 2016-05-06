@@ -114,6 +114,7 @@ define(function(require) {
   , review_token: {
       type: types.text
     , nullable: false
+    , default: 'uuid_generate_v4()'
     }
   , ds_token: {
       type: types.text

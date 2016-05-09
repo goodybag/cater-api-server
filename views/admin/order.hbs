@@ -242,6 +242,15 @@
               {{#if order.waive_transaction_fee}}checked{{/if}}>
           </dd>
         </div>
+        <div class="row" id="waive-delivery-fee-row">
+          <dt>Waive Delivery Fee</dt>
+          <dd>
+            <input
+              type="checkbox"
+              name="waive_delivery_fee"
+              {{#if order.waive_delivery_fee}}checked{{/if}}>
+          </dd>
+        </div>
       </dl>
 
       {{#eq order.type 'courier'}}

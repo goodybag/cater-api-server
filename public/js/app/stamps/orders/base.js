@@ -27,6 +27,7 @@ define( function( require, exports, module ){
     , service_fee: 0
     , priority_account_price_hike_percentage: 0
     , tip: 0
+    , waive_delivery_fee: false
     })
     .enclose(function(){
       if ( Array.isArray( this.orderItems ) ){
@@ -44,11 +45,19 @@ define( function( require, exports, module ){
         , this.getPriorityAccountCost()
         , this.adjustment_amount
         , this.user_adjustment_amount
-        , this.delivery_fee
+        , this.getDeliveryFee()
         , this.service_fee
         ].reduce( utils.add, 0 );
 
         return Math.round( amount * this.restaurant.region.sales_tax );
+      }
+
+    , getDeliveryFee: function(){
+        if ( this.waive_delivery_fee ){
+          return 0;
+        }
+
+        return this.delivery_fee;
       }
 
     , getAmenityTotal: function() {
@@ -90,7 +99,7 @@ define( function( require, exports, module ){
         + this.adjustment_amount
         + this.user_adjustment_amount
         + this.getTax()
-        + this.delivery_fee
+        + this.getDeliveryFee()
         + this.tip
         + this.service_fee
         ;
@@ -103,7 +112,7 @@ define( function( require, exports, module ){
         + this.adjustment_amount
         + this.user_adjustment_amount
         + this.getTax()
-        + this.delivery_fee
+        + this.getDeliveryFee()
         + this.tip
         + this.getNoContractFee()
         + this.service_fee
@@ -122,7 +131,7 @@ define( function( require, exports, module ){
         + this.getSubTotal()
         + this.adjustment_amount
         + this.getTax()
-        + this.type === 'delivery' ? this.delivery_fee : 0
+        + this.type === 'delivery' ? this.getDeliveryFee() : 0
         + this.type === 'delivery' ? this.tip : 0
         ;
       }

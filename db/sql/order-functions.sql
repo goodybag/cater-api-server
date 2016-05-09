@@ -119,6 +119,10 @@ begin
     return 0;
   end if;
 
+  if o.waive_delivery_fee then
+    return 0;
+  end if;
+
   -- If `zip` does not exist, just pick the least expensive one
   default_fee := coalesce(
     (select fee from restaurant_delivery_zips

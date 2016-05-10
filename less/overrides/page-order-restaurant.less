@@ -9,6 +9,10 @@
   .manifest-container {
     max-width: 100%;
     overflow: scroll;
+
+    @media print {
+      overflow: visible;
+    }
   }
 
   .accept-reject-bar {

@@ -88,6 +88,8 @@
         <dt>Guests</dt>
         <dd>{{order.guests}}</dd>
 
+        <div class="manifest-section-spacer"></div>
+
         <dt>Subtotal</dt>
         <dd>${{dollars order.sub_total}}</dd>
         {{#eq order.type 'delivery'}}
@@ -128,6 +130,9 @@
             <br>
             {{order.city}}, {{order.state}} {{order.zip}}
           </dd>
+
+          <div class="manifest-section-spacer"></div>
+
           <dt>Contact</dt>
           <dd>
             {{order.user.name}}

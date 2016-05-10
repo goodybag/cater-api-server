@@ -3,7 +3,7 @@ define( function( require ){
   var odsChecker = require('order-delivery-service-checker');
 
   require('bootstrap');
-  require('individual-active-tab');
+  //require('individual-active-tab');
 
   var Views = {
     Item:               require('app/views/item-view')

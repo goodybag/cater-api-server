@@ -237,6 +237,11 @@ define(function(require){
 
       return this;
     }
+
+  , clear: function(){
+      this.$el.find('select, input').val('');
+      return this;
+    }
   });
 
   return FormView;

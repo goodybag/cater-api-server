@@ -33,7 +33,7 @@ module.exports.fn = function( job, done ){
         return done( error );
       }
 
-      var totalDollars = helpers.dollars( total );
+      var totalDollars = helpers.commatize( helpers.dollars( total ) );
 
       utils.sendMail2({
         to: job.data.recipient

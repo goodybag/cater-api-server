@@ -67,3 +67,8 @@ route.get('/stripe-events/:id'
 , m.restrict(['admin'])
 , m.stripe.getStripeEvent()
 );
+
+route.post('/payment-summaries/period-total-requests'
+, m.restrict(['admin'])
+, controllers.paymentSummaries.createPeriodTotalRequest
+);

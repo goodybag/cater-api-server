@@ -54,9 +54,15 @@
 
       <div class="popover-modal dropdown-popover">
         <ul class="popover-body">
-          <li class="popover-item">
-            <a href="/orders/create">Start New Order</a>
+          {{#if user.features.order-flow}}
+            <li class="popover-item">
+              <a href="/orders/create">Start New Order</a>
+            </li>
+          {{else}}
+            <li class="popover-item">
+            <a href="/restaurants">Start New Order</a>
           </li>
+          {{/if}}
           <li class="popover-item">
             <a href="/users/me/orders/calendar">My Orders</a>
           </li>

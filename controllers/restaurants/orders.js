@@ -22,7 +22,12 @@ module.exports.current = function(req, res, next) {
   var logger = req.logger.create('Current Order');
 
   logger.info('Lookup existing pending order');
-  var where = {'orders.status': 'pending'};
+  var where = {
+    'orders.status': 'pending'
+  , 'orders.datetime': {
+      $custom: ['orders.datetime > now() at time zone orders.timezone']
+    }
+  };
 
   var options = {
     many: [{ table: 'order_items', alias: 'orderItems' }]

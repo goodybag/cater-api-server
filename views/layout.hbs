@@ -153,7 +153,11 @@
                   My Orders <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
+                  {{#if user.features.order_flow}}
                   <li><a href="/orders/create">Start New Order</a></li>
+                  {{else}}
+                  <li><a href="/restaurants">Start New Order</a></li>
+                  {{/if}}
                   <li><a href="/users/me/orders/calendar">My Orders</a></li>
                   <li><a href="/users/me/orders/receipts">My Receipts</a></li>
                   {{#if user.is_invoiced}}

@@ -181,7 +181,7 @@ define( function( require, exports, module ){
 
           return [
             startDate <= this.datetime
-          , this.datetime < endDate
+          , this.datetime <= endDate
           ].every( _.identity );
         }.bind( this ));
     }}

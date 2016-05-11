@@ -319,3 +319,25 @@ errors.notifications.NOT_AVAILABLE = {
 , name: 'NOT_AVAILABLE'
 , message: 'The requested notification is not available.'
 };
+
+/**
+ * Promo Errors
+ */
+
+errors.promos = { };
+
+ errors.promos.DOES_NOT_EXIST = {
+   type: 'promos'
+ , code: '0901'
+ , httpCode: '400'
+ , name: 'DOES_NOT_EXIST'
+ , message: 'The requested promo code does not exist.'
+ };
+
+errors.promos.ALREADY_APPLIED = {
+   type: 'promos'
+ , code: '0902'
+ , httpCode: '400'
+ , name: 'ALREADY_APPLIED'
+ , message: 'The requested promo code has already been applied to the order.'
+ };

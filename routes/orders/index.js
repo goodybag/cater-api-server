@@ -316,3 +316,7 @@ route.get('/:oid/payment', m.getOrder2({
   deliveryService: true,
   restaurantDbModelFind: true
 }), m.restrict(['admin', 'order-owner']), m.view('order-payment', {}));
+
+route.post('/:oid/promo/validate'
+, m.restrict(['admin', 'order-owner'])
+, controllers.orders.promos.validate);

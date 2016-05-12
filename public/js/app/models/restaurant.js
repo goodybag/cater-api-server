@@ -26,6 +26,7 @@ define(function(require, exports, module) {
   , OpenDay:      'restaurant_closed'
   , OpenHours:    'restaurant_closed'
   , AfterHours:   'after_hours'
+  , MinimumOrder: 'below_min'
   };
 
   return module.exports = Backbone.Model.extend({
@@ -382,14 +383,14 @@ define(function(require, exports, module) {
       return this.validateOrder( order ).length === 0;
     },
 
-    validateOrderFulfillability: function( order ){
+    validateOrderFulfillability: function( order, options ){
       var errors = [];
 
       if ( order.restaurant.get('_cached') ){
         order = order.toJSON();
         order.restaurant = order.restaurant._cached;
         order = Fulfillability.create( order );
-        return order.why().map( function( reason ){
+        return order.why( options ).map( function( reason ){
           return fulfillabilityErrorToLegacyErrorMap[ reason ] || reason;
         });
       }

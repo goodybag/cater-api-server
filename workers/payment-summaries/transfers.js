@@ -30,6 +30,7 @@ db.payment_summaries.findStream( where, options, ( error, resultStream )=>{
 
   EnumStream
     .create( resultStream, { concurrency: 10 } )
+    // Filter out restaurants that do not ahve transfers enabled
     .filterAsync( ( restaurant, next )=>{
       utils.stripe.accounts.retrieve( restaurant.stripe_id, function( error, acct ){
         if ( error ){
@@ -40,9 +41,34 @@ db.payment_summaries.findStream( where, options, ( error, resultStream )=>{
         return next( null, !!acct.transfers_enabled );
       });
     })
+    // Fetch full payment summary record
     .mapAsync( ( pms, next )=> PMS.fetch( next ) )
+    // Transfer to the stripe account
     .mapAsync( ( pms, next )=>{
-      utils.stripe.transfers.create
+      var data = {
+        amount: pms.getTotalPayout()
+      , currency: 'usd'
+      , destination: pms.stripe_id
+      , description: 'Payment #' + pms.id
+      };
+
+      utils.stripe.transfers.create( data, ( error, result )=>{
+        if ( error ){
+          error.payment_summary_id = pms.id;
+          return next( error );
+        }
+
+        return next( null, pms );
+      });
+    })
+    // Transfer from the stripe account to default bank account
+    .mapAsync( ( pms, next )=>{
+      var data = {
+        amount: pms.getTotalPayout()
+      , currency: 'usd'
+      , destination: 'default_for_currency'
+      , description: 'Payment #' + pms.id
+      };
     })
     .errorsAsync( ( error, next )=>{
 

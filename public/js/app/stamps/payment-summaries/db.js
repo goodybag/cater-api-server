@@ -217,6 +217,16 @@ module.exports = require('stampit')()
 
       return options;
     }
+
+  , appendLog: function( status, data, callback ){
+      var doc = {
+        status: status
+      , data: JSON.stringify( data )
+      , payment_summary_id: this.id
+      };
+
+      db.payment_summary_transfer_logs.insert( doc, callback );
+    }
   });
 
 module.exports.find = function( where, options, callback ){

@@ -20,8 +20,6 @@ module.exports.register = function(app) {
 
   if ( process.env.NODE_ENV !== 'production' ){
     app.get('/test-error/:status', function( req, res, next ){
-      req.xhr = req.query.xhr == 'true';
-
       var e = new Error('Test error message');
       e.httpCode = req.params.status;
 

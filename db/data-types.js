@@ -80,4 +80,5 @@ module.exports = {
 , plan_type: 'plan_type'
 , invoice_status: 'invoice_status'
 , feedback_rating: 'feedback_rating'
+, pms_status: 'pms_status'
 };

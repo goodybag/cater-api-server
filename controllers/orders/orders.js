@@ -45,7 +45,6 @@ module.exports.auth = function(req, res, next) {
 
   if ( req.user != null && utils.contains(req.user.attributes.groups, 'admin') ){
     req.order.isAdmin = true;
-    return next();
   }
 
   var reviewToken = req.body.review_token || req.query.review_token;

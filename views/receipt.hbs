@@ -10,6 +10,7 @@
 {{/if}}
 
 {{#extend "banner"}}
+{{{dump user.groups}}}
   {{#if (contains user.groups 'order-owner')}}
     {{#if (not order.order_feedback.ease_of_submitting_rating)}}
     <div class="feedback-order">

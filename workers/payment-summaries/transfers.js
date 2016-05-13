@@ -1,5 +1,8 @@
-var loggly = require('loggly');
 var config = require('../../config');
+var loggly = require('loggly').createClient({
+  token:      config.credentials['loggly.com'].token
+, subdomain:  config.credentials['loggly.com'].subdomain
+});
 var db = require('../../db');
 var utils = require('../../utils');
 var logger = require('../../logger').create('Worker-Transfers');
@@ -49,9 +52,10 @@ db.payment_summaries.findStream( where, options, ( error, resultStream )=>{
     .mapAsync( ( pms, next )=> pms.transferToStripeAccount( pms.stripe_id, next ) )
     // Transfer from the stripe account to default bank account
     .mapAsync( ( pms, next )=> pms.transferToBankAccount( pms.stripe_id, next ) )
-    .errorsAsync
+    .errorsAsync( ( error, next )=>{
+      loggly.log( { error }, ['Worker-Transfers'], ()=> next() );
+    })
     .errors( pms => process.stdout.write('x') )
     .forEach( pms => process.stdout.write('.') )
     .end( ()=> process.exit(0) );
 });
-''

@@ -10,11 +10,11 @@ module.exports = require('stampit')()
 
   })
   .methods({
-    transferToStripeAccount: function( stripe_id, callback ){
+    transferToStripeAccount: function( callback ){
       var data = {
         amount: this.getTotalPayout()
       , currency: 'usd'
-      , destination: this.stripe_id
+      , destination: this.restaurant.stripe_id
       , description: 'Payment #' + this.id
       };
 
@@ -27,7 +27,7 @@ module.exports = require('stampit')()
       });
     }
 
-  , transferToBankAccount: function( stripe_id, callback ){
+  , transferToBankAccount: function( callback ){
       var data = {
         amount: this.getTotalPayout()
       , currency: 'usd'
@@ -36,10 +36,10 @@ module.exports = require('stampit')()
       };
 
       var options = {
-        stripe_account: 'acct_16CZlbImWewFwddn'
+        stripe_account: this.restaurant.stripe_id
       };
 
-      utils.stripe.transfers.create( data, ( error, result )=>{
+      utils.stripe.transfers.create( data, options, ( error, result )=>{
         if ( error ){
           return this.appendLog( 'error', { error }, ()=> callback( error ) );
         }

@@ -4,6 +4,33 @@
   <div class="container">
     <h1 class="page-title">Payment Summaries</h1>
   </div>
+
+  <div class="container pms-emailer">
+    <div class="panel-component panel-island panel-island-standard">
+      <p>Email the total for payment summary payouts for a given period</p>
+      <form class="form">
+        <div class="form-group">
+          <label class="control-label">Start</label>
+          <input type="date" class="form-control" name="period_begin">
+        </div>
+        <div class="form-group">
+          <label class="control-label">End</label>
+          <input type="date" class="form-control" name="period_end">
+        </div>
+        <div class="form-group">
+          <label class="control-label">Recipient</label>
+          <input type="email" class="form-control" name="recipient">
+        </div>
+        <div class="form-group">
+          <label class="control-label"></label>
+          <button class="btn btn-default">Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <hr>
+
   {{#each payment_summary_groups}}
     <div class="container pms-container" id="pms-{{add @index 1}}">
       <div class="table-list payment-summaries-table-list striped">
@@ -40,12 +67,56 @@ require([
 , 'utils'
 , 'app/views/admin/payment-summaries-table'
 , 'table-list'
-], function( $, api, utils, pmsTable ) {
+, 'flash'
+, 'app/views/form-view-2'
+], function( $, api, utils, pmsTable, tableList, flash, FormView ) {
+
+  var PmsEmailerRequest = function( data ){
+    utils.extend( this, data );
+  };
+
+  PmsEmailerRequest.prototype.send = function( callback ){
+    api('payment-summaries/period-total-requests').post( this, callback );
+  };
+
+  var PmsEmailerView = FormView.extend({
+    events: {
+      'submit form': 'onSubmit'
+    }
+
+  , onSubmit: function( e ){
+      e.preventDefault();
+
+      var req = new PmsEmailerRequest( this.getModelData() );
+
+      req.send( function( error ){
+        if ( error ){
+          console.error( error );
+          return flash.info([
+            '<h3>Ruh roh</h3>'
+          , '<p>There was an error processing the request.</p>'
+          ].join('\n'));
+        }
+
+        flash.info([
+          '<h3>Success</h3>'
+        , '<p>You should see the email in a bit :)</p>'
+        ].join('\n'));
+
+        this.clear();
+      }.bind( this ));
+    }
+  });
+
   $(function(){
     var $tableList = $('.table-list');
     $tableList.gb_tablelist();
     $('[data-role="popover"]').gb_popover();
     pmsTable( $tableList );
+
+    var pmsEmailer = new PmsEmailerView({
+      el: '.pms-emailer'
+    })
   });
 });
 </script>

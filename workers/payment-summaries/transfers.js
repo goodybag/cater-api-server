@@ -1,9 +1,10 @@
+var loggly = require('loggly');
 var config = require('../../config');
 var db = require('../../db');
 var utils = require('../../utils');
 var logger = require('../../logger').create('Worker-Transfers');
 var EnumStream = require('../../lib/enum-stream');
-var PMS = require('../../public/js/app/stamps/payment-summaries');
+var PMS = require('../../public/js/app/stamps/payment-summaries/transfers');
 var now = require('stamps/datetime')({
   datetime: process.argv.length < 3 ? new Date() : process.argv[2]
 });
@@ -12,7 +13,8 @@ var period = now.getBillingPeriod();
 
 var where = {
   'restaurants.direct_deposit': true
-,
+, 'payment_summaries.period_begin': { $gte: period.startDate }
+, 'payment_summaries.period_end': { $lte: period.endDate }
 };
 
 var options = {
@@ -44,33 +46,12 @@ db.payment_summaries.findStream( where, options, ( error, resultStream )=>{
     // Fetch full payment summary record
     .mapAsync( ( pms, next )=> PMS.fetch( next ) )
     // Transfer to the stripe account
-    .mapAsync( ( pms, next )=>{
-      var data = {
-        amount: pms.getTotalPayout()
-      , currency: 'usd'
-      , destination: pms.stripe_id
-      , description: 'Payment #' + pms.id
-      };
-
-      utils.stripe.transfers.create( data, ( error, result )=>{
-        if ( error ){
-          error.payment_summary_id = pms.id;
-          return next( error );
-        }
-
-        return next( null, pms );
-      });
-    })
+    .mapAsync( ( pms, next )=> pms.transferToStripeAccount( pms.stripe_id, next ) )
     // Transfer from the stripe account to default bank account
-    .mapAsync( ( pms, next )=>{
-      var data = {
-        amount: pms.getTotalPayout()
-      , currency: 'usd'
-      , destination: 'default_for_currency'
-      , description: 'Payment #' + pms.id
-      };
-    })
-    .errorsAsync( ( error, next )=>{
-
-    })
+    .mapAsync( ( pms, next )=> pms.transferToBankAccount( pms.stripe_id, next ) )
+    .errorsAsync
+    .errors( pms => process.stdout.write('x') )
+    .forEach( pms => process.stdout.write('.') )
+    .end( ()=> process.exit(0) );
 });
+''

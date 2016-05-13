@@ -44,7 +44,7 @@ module.exports = require('stampit')()
           return this.appendLog( 'error', { error }, ()=> callback( error ) );
         }
 
-        this.appendLog( 'in-account', { result }, ()=> callback( null, this ) );
+        this.appendLog( 'paid', { result }, ()=> callback( null, this ) );
       });
     }
   });

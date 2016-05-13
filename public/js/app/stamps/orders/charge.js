@@ -27,8 +27,8 @@ define( function( require, exports, module ){
         return [
           this.getTax()
         , this.getPriorityAccountCost()
-        , this.type === 'courier' ? this.delivery_fee   : 0
-        , this.type === 'courier' ? this.tip            : 0
+        , this.type === 'courier' ? this.getDeliveryFee() : 0
+        , this.type === 'courier' ? this.tip              : 0
         , plan.getApplicationCut(
             this.restaurant.plan, this.getTotalForPayoutCalculations()
           )
@@ -44,14 +44,14 @@ define( function( require, exports, module ){
        */
     , getTotalForPayoutCalculations: function(){
         var nonPriorityModel = factory( utils.deepExtend( {}, this ) );
-        
+
         nonPriorityModel.priority_account_price_hike_percentage = 0;
 
         return [
           this.getSubTotal()
         , this.adjustment_amount
         , nonPriorityModel.getTax()
-        , this.type === 'courier' ? 0 : this.delivery_fee
+        , this.type === 'courier' ? 0 : this.getDeliveryFee()
         , this.type === 'courier' ? 0 : this.tip
         ].reduce( utils.add, 0 );
       }
@@ -67,7 +67,7 @@ define( function( require, exports, module ){
         , this.adjustment_amount
         , this.getTax()
         , this.getPriorityAccountCost()
-        , this.delivery_fee
+        , this.getDeliveryFee()
         , this.tip
         , this.service_fee
         ].reduce( utils.add, 0 );

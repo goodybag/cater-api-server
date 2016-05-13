@@ -27,7 +27,7 @@ define( function( require, exports, module ){
       toPaymentSummaryItem: function(){
         var result = {
           total:            this.getTotal()
-        , delivery_fee:     this.type === 'courier' ? -this.delivery_fee : 0
+        , delivery_fee:     this.type === 'courier' ? -this.getDeliveryFee() : 0
         , tip:              this.type === 'courier' ? -this.tip : 0
         , user_adjustment: -this.user_adjustment_amount
         , gb_fee:          -this.getApplicationCut()

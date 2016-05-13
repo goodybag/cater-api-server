@@ -264,6 +264,12 @@ define(function(require) {
     , editable: ['admin']
     , default: false
     }
+  , waive_delivery_fee: {
+      type: types.boolean
+    , nullable: false
+    , editable: ['admin']
+    , default: false
+    }
   , actual_delivery_datetime: {
       type: types.timestamp
     , nullable: true

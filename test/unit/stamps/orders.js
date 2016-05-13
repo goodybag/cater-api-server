@@ -245,6 +245,18 @@ describe('Orders Stamps', function(){
     assert.equal( order.getPriorityAccountCost(), 70 );
   });
 
+  it('.getDeliveryFee()', function(){
+    var order = orders({
+      delivery_fee: 100
+    });
+
+    assert.equal( order.getDeliveryFee(), 100 );
+
+    order.waive_delivery_fee = true;
+
+    assert.equal( order.getDeliveryFee(), 0 );
+  });
+
   it('Should filter by month', function() {
     var sql = orders.db({ month: 12 }).get();
     assert(sql.$query);

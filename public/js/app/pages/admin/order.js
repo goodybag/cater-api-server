@@ -161,11 +161,11 @@ define(function(require){
         });
 
         $('[name="waive_transaction_fee"]').change( function( e ){
-          var v = $(this).val();
+          page.state.set( 'waive_transaction_fee', this.checked );
+        });
 
-          if ( v !== page.order.get('waive_transaction_fee') ){
-            page.state.set( 'waive_transaction_fee', v );
-          }
+        $('[name="waive_delivery_fee"]').change( function( e ){
+          page.state.set( 'waive_delivery_fee', this.checked );
         });
       });
     }

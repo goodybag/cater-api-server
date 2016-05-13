@@ -256,7 +256,7 @@ module.exports.apiCreate = function(req, res, next) {
 
       let result = OrderFulfillability
         .create( orderWithRestaurant )
-        .why();
+        .why({ omit: ['MinimumOrder'] });
 
       if ( Array.isArray( result ) && result.length ){
         let error = utils.clone( errors.input.FULFILLABILITY_FAILED );

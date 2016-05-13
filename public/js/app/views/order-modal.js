@@ -81,7 +81,7 @@ define(function(require, exports, module) {
 
       var errors = errors || []
         .concat(
-          this.model.validateOrderFulfillability()
+          this.model.validateOrderFulfillability({ omit: ['MinimumOrder'] })
         , this.model.validateRestaurantEvents()
         , this.model.validateAfterHours()
         )

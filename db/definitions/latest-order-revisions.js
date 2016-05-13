@@ -1,5 +1,5 @@
 /**
- * Order Revisions
+ * Latest Order Revisions View
  */
 
 var types = require('../data-types');
@@ -7,7 +7,7 @@ var orderRecord = require('../../lib/order-record');
 
 var definition = module.exports;
 
-definition.name = 'order_revisions';
+definition.name = 'latest_order_revisions';
 
 definition.schema = {
   id:                   { type: types.serial, pk: true }
@@ -35,30 +35,4 @@ definition.schema = {
 };
 
 definition.indices = {};
-var dirac = require('dirac');
 definition.extras = [];
-
-
-definition.track = function( orderId, actorId, desc, callback ){
-  callback = callback || function(){};
-  if ( typeof desc === 'string' ){
-    desc = { description: desc, details: {} };
-  }
-
-  orderRecord.generate( orderId, function( error, data ){
-    if ( error ){
-      return callback( error);
-    }
-
-    var doc = {
-      order_id: data.id
-    , user_id: data.user_id
-    , actor_id: actorId
-    , description: desc.description
-    , details: JSON.stringify( desc.details )
-    , data: JSON.stringify( data )
-    };
-
-    this.insert( doc, callback );
-  }.bind(this));
-};

@@ -816,10 +816,11 @@ module.exports.getDeliveryFee = function( req, res ){
   var origin = Address( req.order ).toString();
   var destination = Address( location ).toString();
 
-  DMReq()
-    .origin( origin )
-    .destination( destination )
-    .send()
+  DMReq({
+    origins: [origin],
+    destinations: [destination],
+    arrivalTime: moment.tz( req.order.datetime, req.order.timezone )
+  }).send()
     .then( function( results ){
       var result = results[0].elements[0];
 

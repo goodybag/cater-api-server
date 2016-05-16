@@ -230,7 +230,7 @@
               <span name="notes" class="item-notes-span order-item-field order-item-notes">{{#if this.notes}}{{this.notes}}{{else}}&nbsp;{{/if}}</span>
               {{/if}}
             </td>
-            {{#if order.restaurant.show_item_recipients}}
+            {{#if ../order.restaurant.show_item_recipients}}
             <td class="line-item-recipient" data-title="Recipient">
               {{#if ../isAdmin}}
                 <textarea name="recipient" class="item-notes-textarea form-control order-item-field order-item-recipient">{{this.recipient}}</textarea>

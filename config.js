@@ -592,12 +592,4 @@ if ( local ){
   _.extend( module.exports, local );
 }
 
-if ( GB_ENV !== 'dev' ){
-  if ( module.exports.postgresConnStr.indexOf('?ssl=true') === -1 ){
-    module.exports.postgresConnStr += '?ssl=true';
-  }
-}
-
-console.log('POSTGRES', module.exports.postgresConnStr);
-
 console.log('Loading ' + GB_ENV + ' config');

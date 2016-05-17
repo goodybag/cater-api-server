@@ -592,7 +592,7 @@ if ( local ){
   _.extend( module.exports, local );
 }
 
-if ( process.env.ENFORCE_SSL ){
+if ( !process.env.DISABLE_SSL ){
   if ( module.exports.postgresConnStr.indexOf('?ssl=true') === -1 ){
     module.exports.postgresConnStr += '?ssl=true';
   }

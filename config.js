@@ -592,10 +592,11 @@ if ( local ){
   _.extend( module.exports, local );
 }
 
-// if ( process.env.ENFORCE_SSL ){
-//   if ( module.exports.postgresConnStr.indexOf('?ssl=true') === -1 ){
-//     module.exports.postgresConnStr += '?ssl=true';
-//   }
-// }
+if ( process.env.ENFORCE_SSL ){
+  if ( module.exports.postgresConnStr.indexOf('?ssl=true') === -1 ){
+    module.exports.postgresConnStr += '?ssl=true';
+  }
+}
+
 console.log('CONNSTRING', process.env.DATABASE_URL);
 console.log('Loading ' + GB_ENV + ' config');

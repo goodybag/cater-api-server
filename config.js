@@ -294,6 +294,8 @@ config.defaults = {
     apiPrefix: '/api/',
     mountPoint: 'dist/static'
   }
+
+, blockedAddresses: ['2.235.239.192']
 };
 
 config.dev = {

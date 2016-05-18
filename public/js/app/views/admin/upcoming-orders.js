@@ -70,7 +70,10 @@ define(function(require){
 
       // apply styling
       this.$el.find('.active').removeClass('active');
+      this.$el.find('i').removeClass('gb-icon-caret-down');
       $el.addClass('active');
+      $el.find('i').addClass('gb-icon-caret-down');
+      console.log($el[0]);
 
       // sort
       this.options.orders.setComparator(sortBy);

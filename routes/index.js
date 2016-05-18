@@ -37,6 +37,14 @@ module.exports.register = function(app) {
     });
   }
 
+  app.use(function( req, res, next ){
+    if ( config.blockedAddresses.indexOf( req.ip ) !== -1 ){
+      res.sendStatus( 404 );
+    } else {
+      next();
+    }
+  });
+
   let caterWebMiddleware = caterWeb.makeHandler({
     env: config.env,
     serverRendering: config.caterWeb.serverRendering,

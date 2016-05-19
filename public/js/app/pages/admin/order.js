@@ -17,7 +17,7 @@ define(function(require){
 
   var page = {
     fieldsThatRefreshThePageWhenChanged: [
-      'user_id', 'restaurant_id'
+      'user_id', 'restaurant_id', 'datetime'
     ]
 
   , init: function( options ){
@@ -116,6 +116,46 @@ define(function(require){
           page.saveOrder( flash.successOrError.bind( flash ) );
         });
 
+        $('#order-date').change(function( e ) {
+          var month = $('#order-date').val().substring(0, 2);
+          var date  = $('#order-date').val().substring(3, 5);
+          var year  = $('#order-date').val().substring(6);
+
+          var datetime = page.order.get('datetime');
+          var updateDT = moment(datetime)
+            .month(month)
+            .date(date)
+            .year(year)
+            .format('YYYY-MM-DD HH:mm:ss');
+
+          page.state.set({ datetime: updateDT });
+        });
+
+        $('[name="dt-hour"], [name="dt-min"], [name="dt-period"]').change(function( e ) {
+          e.preventDefault();
+
+          var hour   = parseInt($('[name=dt-hour]').val());
+          var min    = $('[name=dt-min]').val();
+          var period = $('[name=dt-period]').val();
+
+          if( hour && min ) {
+            if( period === "pm" && hour < 12 ) {
+              hour = parseInt(hour) + 12;
+            };
+
+            if( hour === 12 && period === "am" ) { hour = 0 };
+
+            var datetime = page.order.get('datetime');
+            var updateDT = moment(datetime)
+              .hour(hour)
+              .minute(min)
+              .format('YYYY-MM-DD HH:mm:ss');
+
+            page.state.set({ datetime: updateDT });
+          }
+
+        });
+
         $('[name="actual-dt-hour"], [name="actual-dt-min"], [name="actual-dt-period"]').change(function( e ) {
           e.preventDefault();
 
@@ -123,7 +163,7 @@ define(function(require){
           var min    = $('[name=actual-dt-min]').val();
           var period = $('[name=actual-dt-period]').val();
 
-          if(hour && min) {
+          if( hour && min ) {
             if( period === "pm" && hour < 12 ) {
               hour = parseInt(hour) + 12;
             };
@@ -136,7 +176,7 @@ define(function(require){
               .minute(min)
               .format('YYYY-MM-DD HH:mm:ss');
 
-            page.state.set({ actual_delivery_datetime: actualdt })
+            page.state.set({ actual_delivery_datetime: actualdt });
           }
         });
 
@@ -167,8 +207,16 @@ define(function(require){
         $('[name="waive_delivery_fee"]').change( function( e ){
           page.state.set( 'waive_delivery_fee', this.checked );
         });
+
+        page.initDatepicker();
       });
     }
+
+  , initDatepicker: function() {
+    page.datepicker = $('.form-group-delivery-date > .order-datetime').pickadate({
+      format: 'mm/dd/yyyy'
+    }).pickadate('picker');
+  }
 
   , saveOrder: function( callback ){
       var props = page.state.toJSON();

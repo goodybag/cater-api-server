@@ -242,13 +242,25 @@ header {
     &:hover { color: @palette-gray-dark; }
   }
 
-  .actual-dt-in {
+  .form-group-delivery-date {
+    width: 100%;
+
+    &::before {
+      position: absolute;
+      z-index: 100;
+      right: 10px;
+      top: 19px;
+      font-size: 1.3em;
+    }
+  }
+
+  .dt-in {
     display: inline-block;
     width: 30%;
     vertical-align: middle;
   }
 
-  .actual-dt-row {
+  .dt-row {
     margin-bottom: 5px;
   }
 }

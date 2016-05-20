@@ -109,6 +109,7 @@ define(function(require){
       var endDate   = this.endDate.get();
       var startTime = this.startTime.get();
       var endTime   = this.endTime.get();
+      var formatStr = "ddd MMM DD @ hh:mm a";
 
       // format startDate and endDate
       if( startDate ) startDate = moment(startDate);
@@ -119,20 +120,20 @@ define(function(require){
       if( endTime )   endDate = this.setTime( endDate, endTime );
 
       if(  startDate &&  endDate ) {
-        this.$filterMessage.text( "Filtering from " + startDate.format("ddd MMM DD @ hh:mm a")
-                                  +  " to " +  endDate.format("ddd MMM DD @ hh:mm a") );
+        this.$filterMessage.text( "Filtering from " + startDate.format(formatStr)
+                                  +  " to " +  endDate.format(formatStr) );
         return utils.filter(orders, function (order) {
           var orderDate = moment( order.datetime );
           return orderDate.isBetween(startDate, endDate);
         });
       } else if(  startDate && !endDate ) {
-        this.$filterMessage.text( "Filtering from " + startDate.format("ddd MMM DD @ hh:mm a") );
+        this.$filterMessage.text( "Filtering from " + startDate.format(formatStr) );
         return utils.filter(orders, function(order) {
           var orderDate = moment( order.datetime );
           return orderDate.isAfter(startDate);
         });
       } else if( !startDate &&  endDate ) {
-        this.$filterMessage.text( "Filtering to " + endDate.format("ddd MMM DD @ hh:mm a") );
+        this.$filterMessage.text( "Filtering to " + endDate.format(formatStr) );
         return utils.filter(orders, function(order) {
           var orderDate = moment( order.datetime );
           return orderDate.isBefore(endDate);

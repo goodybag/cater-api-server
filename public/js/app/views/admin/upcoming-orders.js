@@ -11,6 +11,8 @@ define(function(require){
       this.$tbody = this.$el.find('tbody');
       this.start();
 
+      this.$filterMessage = this.$el.find(".filter-message");
+
       this.startDate = this.$el.find("input[name='start-date']").eq(0).pickadate({
         format: 'mm/dd/yyyy'
       }).pickadate('picker');
@@ -116,26 +118,28 @@ define(function(require){
       if( startTime ) startDate = this.setTime( startDate, startTime );
       if( endTime )   endDate = this.setTime( endDate, endTime );
 
-      if(  startDate && !endDate ) {
+      if(  startDate &&  endDate ) {
+        this.$filterMessage.text( "Filtering from " + startDate.format("ddd MMM DD @ hh:mm a")
+                                  +  " to " +  endDate.format("ddd MMM DD @ hh:mm a") );
+        return utils.filter(orders, function (order) {
+          var orderDate = moment( order.datetime );
+          return orderDate.isBetween(startDate, endDate);
+        });
+      } else if(  startDate && !endDate ) {
+        this.$filterMessage.text( "Filtering from " + startDate.format("ddd MMM DD @ hh:mm a") );
         return utils.filter(orders, function(order) {
           var orderDate = moment( order.datetime );
           return orderDate.isAfter(startDate);
         });
-      };
-
-      if( !startDate &&  endDate ) {
+      } else if( !startDate &&  endDate ) {
+        this.$filterMessage.text( "Filtering to " + endDate.format("ddd MMM DD @ hh:mm a") );
         return utils.filter(orders, function(order) {
           var orderDate = moment( order.datetime );
           return orderDate.isBefore(endDate);
         });
+      } else {
+        return orders;
       };
-
-      if( !startDate && !endDate ) return orders;
-
-      return utils.filter(orders, function (order) {
-        var orderDate = moment( order.datetime );
-        return orderDate.isBetween(startDate, endDate);
-      });
     }
   });
 });

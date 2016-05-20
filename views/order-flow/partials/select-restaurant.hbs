@@ -66,10 +66,10 @@
 
     function load(){
       var $el = $(this);
-      $el.css( 'background-image', "url(':url')".replace(':url', $el.data('pic')))
+      $el.css( 'background-image', "url('" + $el.data('pic') + "')" )
     }
 
-    $('.tile-cover, .listing-img').on('appear', load);
+    $('.tile-cover[data-pic], .listing-img[data-pic]').on('appear', load);
   });
 </script>
 {{/extend}}

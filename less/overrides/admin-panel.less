@@ -362,6 +362,22 @@ header {
   min-height: 400px;
   display: block;
   overflow: scroll;
+  padding-left: 90px;
+  padding-right: 20px;
+
+  .form-row {
+    display: inline-block;
+    margin-right: 30px;
+    margin-bottom: 20px;
+  }
+
+  .form-group::before {
+    position: absolute;
+    right: 9px;
+    bottom: 21px;
+    z-index: 100;
+    font-size: 1.3em;
+  }
 }
 
 .upcoming-orders .picker {

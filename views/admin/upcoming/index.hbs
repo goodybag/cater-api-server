@@ -17,17 +17,31 @@
   </div>
 </div>
 
-<div class="container upcoming-orders">
-  <div class="form-group">
-    <label>Start Date</label>
-    <input class="datepicker" name="startDate">
+<div class="upcoming-orders">
+  <div class="form-row">
+    <div class="form-group form-group-delivery-date" data-icon="gb-icon-calendar">
+      <label class="control-label" for="start-date">Start Date</label>
+      <input type="text" class="datepicker" id="start-date" name="start-date">
+    </div>
+    <div class="form-group form-group-delivery-date" data-icon="gb-icon-calendar">
+      <label class="control-label" for="end-date">End Date</label>
+      <input type="text" class="datepicker" id="end-date" name="end-date">
+    </div>
   </div>
-  <div class="form-group">
-    <label>End Date</label>
-    <input class="datepicker" name="endDate">
+  <div class="form-row">
+    <div class="form-group form-group-delivery-time" data-icon="gb-icon-time">
+      <label class="control-label" for="start-time">Start Time</label>
+      <input type="text" class="timepicker" id="start-time" name="start-time" />
+    </div>
+    <div class="form-group form-group-delivery-time" data-icon="gb-icon-time">
+      <label class="control-label" for="end-time">End Time</label>
+      <input type="text" class="timepicker" id="end-time" name="end-time" />
+    </div>
   </div>
-  <div class="form-group">
-    <a href="{{config.baseUrl}}/admin/upcoming">clear</a>
+  <div class="form-row">
+    <div class="form-group">
+      <a href="{{config.baseUrl}}/admin/upcoming">clear</a>
+    </div>
   </div>
 
   <table class="table table-upcoming">

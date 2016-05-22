@@ -44,6 +44,11 @@ define(function(require){
       return this.success();
     }
 
+  , successOrError2: function( error ){
+      if ( error ) return this.showError( error );
+      return this.showSuccess();
+    }
+
   , success: function(){
       return flash.info([
         "Success!<br>"
@@ -60,6 +65,34 @@ define(function(require){
         'Error :(<br>'
       , '<small class="really-small">Press CMD+Alt+J</small>'
       ].join(''), 1000 );
+    }
+
+  , showSuccess: function( error ) {
+      var yesTitle   = '<span class ="flash-success">Success</span>';
+      var yesMessage = '<span class ="flash-message">'+ this.successfuls[ ~~( Math.random() * this.successfuls.length ) ] +'</span>';
+
+      return flash.info([
+        yesTitle
+      , yesMessage
+      ].join(''), 3000 );
+    }
+
+  , showError: function( error ){
+      if( error.responseJSON ){
+        console.error(error);
+
+        var errTitle   = '<span class="flash-error">'+ error.responseJSON.name +'</span>';
+        var errMessage = '<span class="flash-message">'+ error.responseJSON.message +'</span>';
+        var errDetails = '<span class="flash-details">'+ error.responseJSON.details.join(', ') +'</span>';
+
+        return flash.info([
+          errTitle
+        , errMessage
+        , errDetails
+        ].join(''), 5000 );
+      } else {
+        this.error( error );
+      }
     }
   };
 

@@ -96,6 +96,19 @@ define(function(require, exports, module) {
       return JSON.stringify(context, true, '  ');
     },
 
+    formatJSON: function(context) {
+      var formatted = '{\n';
+      var keys = Object.keys(context);
+
+      for( var i = 0; i < keys.length; i++ ) {
+        formatted = formatted + '\t' + keys[i] + ': ' + context[keys[i]] + '\n';
+      };
+
+      formatted = formatted + '\n}';
+
+      return '<pre>'+ formatted +'</pre>';
+    },
+
     or: function(value1, value2) {
       return value1 || value2;
     },
@@ -120,8 +133,39 @@ define(function(require, exports, module) {
       ].join('\n');
     },
 
+    recipientList: function( list ) {
+      var recipientList = list;
+      var html = "";
+
+      if( !utils.isArray( list ) ) {
+        recipientList = [ list ];
+      }
+
+      for( var i = 0; i < recipientList.length; i++ ) {
+        if( parseInt(recipientList[i]) ) {
+          html = html + "<div><i class='gb-icon-phone'></i>" + helpers.phoneNumber(recipientList[i]) + "</div>";
+          continue;
+        }
+
+        if( recipientList[i].indexOf('@') > -1 ) {
+          html = html + "<div><i class='gb-icon-email'></i>" + helpers.mailto(recipientList[i]) + "</div>";
+          continue;
+        }
+
+        html = html + "<div>" + recipientList[i] + "</div>";
+      }
+
+      return html;
+    },
+
     tax: function() {
       return (tax.apply(this, arguments) / 100).toFixed(2);
+    },
+
+    calcTipPercent: function( tip, subtotal ) {
+      var percent = (tip / subtotal * 100).toFixed(2) + "%";
+
+      return percent.replace('.00', '');
     },
 
     total: function(order, options) {
@@ -655,7 +699,24 @@ define(function(require, exports, module) {
       }
 
       return 'am';
+    },
+
+    formatPercent: function( percent ){
+      return percent * 100 + "%";
+    },
+
+    index: function( i ) {
+      return i + 1;
+    },
+
+    displayWebsite: function( string ) {
+      if( string.startsWith('http') ) {
+        return '<a href="' + string + '" target="_blank">' + string +'</a>';
+      }
+
+      return string;
     }
+
   };
 
   return module.exports = utils.defaults(helpers, GbHelpers);

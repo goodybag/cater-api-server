@@ -17,7 +17,7 @@ define(function(require){
 
   var page = {
     fieldsThatRefreshThePageWhenChanged: [
-      'user_id', 'restaurant_id'
+      'user_id', 'restaurant_id', 'datetime', 'type', 'courier_tracking_id'
     ]
 
   , init: function( options ){
@@ -50,6 +50,13 @@ define(function(require){
       page.notificationHistory.on( 'highlight', page.onHighlight );
 
       $(function(){
+        page.initDatetimePicker();
+        page.initTextareaResize();
+
+        $('.catch-mouse-overlay').click( function( ) {
+          $(this).addClass('hide');
+        });
+
         $('[data-role="popover"]').gb_popover();
 
         $('.navbar').navbar({ toggleText: false, toggleLogin: false });
@@ -89,7 +96,7 @@ define(function(require){
 
         $('[name="order_status"]').change(function (e) {
           var silent = !!$(this).find(':selected').data('silent');
-          page.updateOrder({ status: e.target.value },{ silent: silent }, flash.successOrError.bind( flash ));
+          page.updateOrder({ status: e.target.value },{ silent: silent }, flash.successOrError2.bind( flash ));
         });
 
         $('[name="payment_status"]').change(function (e) {
@@ -113,7 +120,32 @@ define(function(require){
         $('[role="save"]').click( function( e ){
           e.preventDefault();
 
-          page.saveOrder( flash.successOrError.bind( flash ) );
+          page.saveOrder( flash.successOrError2.bind( flash ) );
+        });
+
+        $('[role="cancel"]').click( function( e ) {
+          e.preventDefault();
+          document.location.reload();
+        });
+
+        $('[name="delivery-date"], [name="delivery-time"]').change(function( e ) {
+          var newDate = $('[name="delivery-date"]').val().split(' ');
+          var newTime = $('[name ="delivery-time"]').val().replace(':', " ").split(" ");
+          var hour    = parseInt(newTime[0]);
+          var min     = parseInt(newTime[1]);
+          var period  = newTime[2];
+
+          var datetime = page.order.get('datetime');
+          var updateDT = moment(datetime)
+            .set({
+              'month'  : newDate[1]
+            , 'date'   : parseInt(newDate[2])
+            , 'year'   : parseInt(newDate[3])
+            , 'hour'   : parseInt(page.setHour(hour, period))
+            , 'minute' : parseInt(min)
+            }).format('YYYY-MM-DD HH:mm:ss');
+
+          page.state.set({ datetime: updateDT });
         });
 
         $('[name="actual-dt-hour"], [name="actual-dt-min"], [name="actual-dt-period"]').change(function( e ) {
@@ -124,17 +156,12 @@ define(function(require){
           var period = $('[name=actual-dt-period]').val();
 
           if(hour && min) {
-            if( period === "pm" && hour < 12 ) {
-              hour = parseInt(hour) + 12;
-            };
-
-            if( hour === 12 && period === "am" ) { hour = 0 };
-
             var datetime = page.order.get('datetime');
             var actualdt = moment(datetime)
-              .hour(hour)
-              .minute(min)
-              .format('YYYY-MM-DD HH:mm:ss');
+              .set({
+                'hour'   : parseInt(page.setHour(hour, period))
+              , 'minute' : parseInt(min)
+              }).format('YYYY-MM-DD HH:mm:ss');
 
             page.state.set({ actual_delivery_datetime: actualdt })
           }
@@ -160,6 +187,21 @@ define(function(require){
           }
         });
 
+        $('#edit-courier-tracking').click( function( ) {
+          $('#courier-tracking-group').addClass('hide');
+          $('[name="courier_tracking_id"]').removeClass('hide');
+        });
+
+        $('[name="order-notes"]').keyup( function( ) {
+          var v = $(this).val();
+          page.state.set('notes', v);
+        });
+
+        $('[name="order-delivery-instructions"]').keyup( function( ) {
+          var v = $(this).val();
+          page.state.set('delivery_instructions', v);
+        });
+
         $('[name="waive_transaction_fee"]').change( function( e ){
           page.state.set( 'waive_transaction_fee', this.checked );
         });
@@ -168,6 +210,36 @@ define(function(require){
           page.state.set( 'waive_delivery_fee', this.checked );
         });
       });
+    }
+
+  , initDatetimePicker: function( ) {
+      page.datepicker = $('input[name="delivery-date"]').pickadate({
+        format: 'ddd mmm dd, yyyy'
+      }).pickadate('picker');
+
+      page.timepicker = $('input[name="delivery-time"]').pickatime({
+        format: 'h:i A'
+      , interval: 15
+      }).pickatime('picker');
+    }
+
+  , initTextareaResize: function( ) {
+      var $textNotes = $('textarea#order-notes');
+      var $textInstructions = $('textarea#order-delivery-instructions');
+      $textNotes.css('height', $textNotes.prop('scrollHeight') + 'px');
+      $textInstructions.css('height', $textInstructions.prop('scrollHeight') + 'px');
+    }
+
+  , setHour: function( hour, period ) {
+      period = period.toLowerCase();
+
+      if( period === "pm" && hour < 12 ) {
+        hour = parseInt(hour) + 12;
+      };
+
+      if( hour === 12 && period === "am" ) { hour = 0 };
+
+      return hour;
     }
 
   , saveOrder: function( callback ){

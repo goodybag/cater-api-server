@@ -1,25 +1,35 @@
-<thead>
-  <tr>
-    <th>Recipients</th>
-    <th>Name</th>
-    <th>Data</th>
-    <th>Send Date</th>
-    <th>Actions</th>
-  </tr>
-</thead>
-<tbody>
-  {{#each items}}
-  <tr>
-    <td>{{{list this.data.to}}}</td>
-    <td>{{this.name}}</td>
-    <td>{{{this.data_html}}}</td>
-    <td>{{formatDateTime this.send_date "MM/DD/YYYY h:mma"}}</td>
-    <td class="actions">
-      <button
-        class="btn btn-small btn-default btn-highlight"
-        data-cid="{{this.cid}}"
-      >Highlight in Available</button>
-    </td>
-  </tr>
-  {{/each}}
-</tbody>
+{{#if items}}
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Date Sent</th>
+      <th>Recipients</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each items}}
+    <tr>
+      <td>
+        {{this.name}}
+        <div>
+          {{{this.data_html}}}
+        </div>
+      </td>
+      <td>{{formatDateTime this.send_date "ddd MMM DD, YYYY h:mma"}}</td>
+      <td>{{{recipientList this.data.to}}}</td>
+      <td class="actions">
+        <button
+          class="btn btn-small btn-default btn-highlight"
+          data-cid="{{this.cid}}">
+            Highlight in Available
+        </button>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+{{else}}
+  <div class="no-history">
+    No history yet.
+  </div>
+{{/if}}

@@ -1,31 +1,33 @@
 <thead>
   <tr>
-    <th>Recipients</th>
     <th>Name</th>
-    <th>Actions</th>
+    <th>Recipients</th>
+    <th></th>
   </tr>
 </thead>
 <tbody>
   {{#each items}}
   <tr id="notification-{{this.cid}}">
-    <td>{{{list this.email.to}}}</td>
     <td>
       {{this.name}}
       <p class="notification-description">{{this.description}}</p>
     </td>
+    <td>{{{recipientList this.email.to}}}</td>
     <td class="actions">
       {{#or2 this.options this.requiredOptions}}
         <button
           class="btn btn-small btn-default btn-options btn-icon btn-toggle"
           data-cid="{{this.cid}}"
-          data-toggle="-"
-        >+</button>
+          data-toggle="-">
+            +
+        </button>
       {{/or2}}
       <a href="{{this.email.url}}" target="_blank" class="btn btn-small btn-default btn-preview">Preview</a>
       <button
         class="btn btn-small btn-primary btn-send"
-        data-cid="{{this.cid}}"
-      >Send</button>
+        data-cid="{{this.cid}}">
+          Send
+      </button>
     </td>
   </tr>
   {{/each}}

@@ -82,10 +82,10 @@ module.exports.register = function(app) {
   app.use('/api', require('./api'));
 
   app.get('/api/places',
-    m.restrict('admin'),
     gplaces.proxy({
       key: config.credentials['google.com'].apiKey
-    }));
+    })
+  );
 
   app.get('/api/upcoming',
     m.restrict('admin'),

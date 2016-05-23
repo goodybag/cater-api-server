@@ -27,12 +27,15 @@ define(function(require){
     , 'I knew you could do it!'
     ]
 
-  , info: function( msg, duration ){
+  , info: function( msg, duration, callback ){
       duration = duration || flash.defaultDuration;
 
       var modal = $( tmpl( msg ) ).modernModal().open();
 
-      var closeTimeout = setTimeout( modal.close, duration );
+      var closeTimeout = setTimeout( function(){
+        modal.close();
+        if ( callback ) callback();
+      }, duration );
 
       modal.$this.on( 'close', clearTimeout.bind( null, closeTimeout ) );
 

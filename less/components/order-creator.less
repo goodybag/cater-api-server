@@ -1,0 +1,62 @@
+//////////////////
+// Order Create //
+//////////////////
+
+#components { #order-creator {
+  .init(
+
+  ){
+    .order-creator {
+      &.with-labels {
+        ::-webkit-input-placeholder {
+          opacity: 0;
+        }
+
+        :-moz-placeholder {
+          opacity: 0;
+        }
+
+        ::-moz-placeholder {
+          opacity: 0;
+        }
+
+        :-ms-input-placeholder {
+          // Setting opacity: 0 makes the borders disappear
+          // Use font-size instead
+          font-size: 0;
+        }
+
+        label {
+          display: block;
+        }
+      }
+
+      label {
+        display: none;
+      }
+
+      [name="time-range"],
+      [role="time-range"] {
+        position: absolute;
+      }
+
+      [data-icon]:before {
+        position: absolute;
+        bottom: 20px;
+        z-index: 1;
+        left: 9px;
+      }
+
+      .form-control {
+        padding-left: 30px;
+      }
+
+
+
+      // Fix the .hide { display: none!important } global declaration
+      .gplaces-popover.flip.hide {
+        display: inherit!important;
+      }
+    }
+  }
+}}

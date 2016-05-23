@@ -336,8 +336,8 @@ errors.promos = { };
 
 errors.promos.ALREADY_APPLIED = {
    type: 'promos'
- , code: '0902'
- , httpCode: '400'
- , name: 'ALREADY_APPLIED'
- , message: 'The requested promo code has already been applied to the order.'
- };
+, code: '0902'
+, httpCode: '400'
+, name: 'ALREADY_APPLIED'
+, message: 'The requested promo code has already been applied to the order.'
+};

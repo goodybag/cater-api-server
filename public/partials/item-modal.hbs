@@ -26,10 +26,12 @@
         <label for="item-notes">Comments or Instructions</label>
         <textarea name="notes" id="item-notes" rows="3" class="form-control"{{#unless editable}} disabled="true"{{/unless}}>{{item.notes}}</textarea>
       </div>
+      {{#if order.restaurant.show_item_recipients}}
       <div class="form-group form-group-item-recipient">
         <label for="item-recipient">Who is this item for? (optional)</label>
         <input type="text" name="recipient" value="{{item.recipient}}" id="item-recipient" rows="3" class="form-control"{{#unless editable}} disabled="true"{{/unless}} />
       </div>
+      {{/if}}
     </div>
     <div class="modal-footer">
       <div class="row modal-footer-actions">

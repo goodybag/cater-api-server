@@ -335,7 +335,7 @@ errors.promos = { };
  };
 
 errors.promos.ALREADY_APPLIED = {
-   type: 'promos'
+  type: 'promos'
 , code: '0902'
 , httpCode: '400'
 , name: 'ALREADY_APPLIED'

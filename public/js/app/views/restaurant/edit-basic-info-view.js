@@ -26,6 +26,7 @@ define(function(require, exports, module) {
     , cover_photo_url:                          '[name="cover_photo_url"]'
     , supported_order_types:                    '[name="supported_order_types"]'
     , accepts_tips:                             '[name="accepts_tips"]'
+    , show_item_recipients:                      '[name="show_item_recipients"]'
     },
 
     fieldGetters: _.extend({
@@ -47,6 +48,10 @@ define(function(require, exports, module) {
 
       accepts_tips: function() {
         return this.$el.find(this.fieldMap.accepts_tips).is(':checked');
+      },
+
+      show_item_recipients: function() {
+        return this.$el.find(this.fieldMap.show_item_recipients).is(':checked');
       },
 
       yelp_business_id: function() {

@@ -1,7 +1,7 @@
 <div class="tiles">
   {{#each restaurants }}
   <div class="tile">
-    <a class="tile-link" title="{{name}}" href="/restaurants/{{text_id}}{{queryParams (pick ../reqQuery 'zip' 'date' 'time' 'guests')}}">
+    <a class="tile-link" title="{{name}}" href="/restaurants/{{text_id}}{{queryParams (pick ../reqQuery 'zip' 'date' 'time' 'guests')}}" data-id="{{id}}">
       {{#if (lte @index 12)}}
       <div class="tile-cover" style="background-image: url('{{filepicker list_photo_url}}');">
       {{else}}

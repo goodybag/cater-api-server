@@ -9,6 +9,7 @@
 @import (less) "../public/components/pickadate/lib/themes/classic.css";
 @import (less) "../public/components/pickadate/lib/themes/classic.date.css";
 @import (less) "../public/components/pickadate/lib/themes/classic.time.css";
+@import (less) "../public/components/gplaces/dist/gplaces.css";
 
 @import "../public/components/bootstrap/less/variables.less";
 
@@ -86,6 +87,7 @@
 @import "components/shelf.less";
 @import "components/order-manifest/index.less";
 @import "components/label-tag.less";
+@import "components/order-creator.less";
 
 // Bootstrap components
 @import "../public/components/bootstrap/less/dropdowns.less";
@@ -114,6 +116,47 @@
   }
 }
 
+.page-create-order {
+  .page-title {
+    margin-top: 60px;
+  }
+
+  #main {
+    padding-bottom: 40px;
+  }
+
+  .errors {
+    margin-bottom: 20px;
+  }
+}
+
+.page-order-select-restaurant {
+  .page-restaurant-list;
+
+  .order-creator {
+    [data-icon]:before {
+      color: @gray-dark;
+    }
+
+    .form-group-address {
+      width: 210px;
+    }
+
+    .form-group-datetime {
+      width: auto;
+    }
+  }
+
+  .restaurant-already-selected {
+    margin-top: 40px;
+
+    .cupcake-alert {
+      margin: 40px 0;
+    }
+  }
+}
+
 #components > #results-too-few > .init();
 #components > #shelf > .init();
 #components > #order-manifest > .init();
+#components > #order-creator > .init();

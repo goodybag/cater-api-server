@@ -12,7 +12,7 @@ create or replace view orders_search_view as
   join restaurants on orders.restaurant_id = restaurants.id
   join users on orders.user_id = users.id;
 
-CREATE VIEW latest_order_revisions AS (
+CREATE OR REPLACE VIEW latest_order_revisions AS (
   SELECT DISTINCT ON (orv.order_id) orv.*
   FROM order_revisions orv
   ORDER BY orv.order_id, orv.created_at DESC

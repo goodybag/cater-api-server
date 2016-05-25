@@ -1,15 +1,13 @@
 var db      = require('db');
 var utils   = require('utils');
+var Order   = require('../orders/base');
 
 function getQueryOptions(){
   return {
     many: [ { table: 'user_invoice_orders'
-            , one:    [ { table: 'orders'
-                        , alias: 'order'
-                        , one:  [ { table: 'restaurants'
-                                  , alias: 'restaurant'
-                                  }
-                                ]
+            , one:    [ { table: 'latest_order_revisions'
+                        , alias: 'latest_revision'
+                        , where: { 'latest_order_revisions.order_id': '$user_invoice_orders.order_id$' }
                         }
                       ]
             , joins:  [ { type: 'left'
@@ -173,10 +171,15 @@ module.exports = require('stampit')()
       if ( result ){
         result.orders = result.user_invoice_orders.map( function( order ){
           ['user_invoice_id', 'order_id'].forEach( function( k ){
-            order.order[ k ] = order[ k ];
+            order.latest_revision.data[ k ] = order[ k ];
           });
 
-          return order.order;
+          Order.applyPriceHike(
+            order.latest_revision.data
+          , order.latest_revision.data.priority_account_price_hike_percentage
+          );
+
+          return order.latest_revision.data;
         });
 
         utils.extend( this, result );

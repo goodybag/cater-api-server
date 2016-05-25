@@ -232,7 +232,7 @@
             </td>
             {{#if ../order.restaurant.show_item_recipients}}
             <td class="line-item-recipient" data-title="Recipient">
-              {{#if ../isAdmin}}
+              {{#if ../../isAdmin}}
                 <textarea name="recipient" class="item-notes-textarea form-control order-item-field order-item-recipient">{{this.recipient}}</textarea>
               {{else}}
                 <span name="recipient" class="item-recipient-span order-item-field order-item-recipient">{{#if this.recipient}}{{this.recipient}}{{else}}&nbsp;{{/if}}</span>
@@ -259,7 +259,7 @@
                 {{#if checked}}checked{{/if}}>
             </td>
             <td class="line-item-notes" data-title="Notes"></td>
-            {{#if ../order.restaurant.show_item_recipients}}
+            {{#if ../../order.restaurant.show_item_recipients}}
             <td class="line-item-recipient" data-title="Recipient"></td>
             {{/if}}
             <td class="line-item-feeds" data-title="Feeds"></td>
@@ -288,7 +288,7 @@
               {{/eq}}
             </td>
             <td class="line-item-notes" data-title="Notes"></td>
-            {{#if ../order.restaurant.show_item_recipients}}
+            {{#if ../../../order.restaurant.show_item_recipients}}
             <td class="line-item-recipient" data-title="Recipient"></td>
             {{/if}}
             <td class="line-item-feeds" data-title="Feeds"></td>

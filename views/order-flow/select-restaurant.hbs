@@ -1,0 +1,9 @@
+{{#extend "page"}}page-order-select-restaurant{{/extend}}
+
+{{#extend "body"}}
+  {{#if order.items.length}}
+    {{> order_flow_select_restaurant_already_selected}}
+  {{else}}
+    {{> order_flow_select_restaurant}}
+  {{/if}}
+{{/extend}}

@@ -1,0 +1,9 @@
+<script>
+  require( ['jquery', 'gplaces'], function( $, gplaces ){
+    gplaces.http( function( input, callback ){
+      $.getJSON( '/api/places?input=' + input )
+        .error( callback )
+        .success( callback.bind( null, null ) );
+    });
+  });
+</script>

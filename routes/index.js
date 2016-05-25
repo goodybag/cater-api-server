@@ -37,6 +37,14 @@ module.exports.register = function(app) {
     });
   }
 
+  app.use(function( req, res, next ){
+    if ( config.blockedAddresses.indexOf( req.ip ) !== -1 ){
+      res.sendStatus( 404 );
+    } else {
+      next();
+    }
+  });
+
   let caterWebMiddleware = caterWeb.makeHandler({
     env: config.env,
     serverRendering: config.caterWeb.serverRendering,
@@ -74,10 +82,10 @@ module.exports.register = function(app) {
   app.use('/api', require('./api'));
 
   app.get('/api/places',
-    m.restrict('admin'),
     gplaces.proxy({
       key: config.credentials['google.com'].apiKey
-    }));
+    })
+  );
 
   app.get('/api/upcoming',
     m.restrict('admin'),

@@ -1,0 +1,53 @@
+{{#extend "html-title"}} Create Order{{/extend}}
+
+{{#extend "page"}}page-create-order{{/extend}}
+
+{{#extend "body"}}
+<div class="container">
+  <h1 class="page-title">Start an order</h1>
+  <p>Enter these details so we can figure out which restaurants will work for you!</p>
+  <div class="order-creator-wrapper">
+    <div class="col-4">
+      <div class="order-creator with-labels" id="order-creator">
+        <div class="errors"></div>
+        <form class="form-vertical">
+          {{> order_flow_order_params_fields}}
+
+          <div class="form-group actions">
+            <button class="btn btn-primary btn-search">
+              Select a restaurant
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="cupcake-alert">
+        <h1 class="cupcake-alert-title">{{getRandomOrderCreatorIntro}}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+{{/extend}}
+
+{{#extend "scripts"}}
+
+{{> gplaces_init}}
+
+<script>
+  require(['jquery', 'api', 'app/views/order-flow-order-editor'], function( $, api, OrderEditorView ){
+    var user = {{{json (or user "{}")}}};
+
+    $(function(){
+      var editor = new OrderEditorView({
+        el: '#order-creator'
+      , user_id: user.id
+      });
+
+      editor.on('save', function( order ){
+        window.location.href = '/orders/' + order.id + '/select-restaurant';
+      });
+    });
+  });
+</script>
+{{/extend}}

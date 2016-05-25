@@ -10,7 +10,9 @@
             <th class="item">Item</th>
             <th class="feeds">Feeds</th>
             <th class="options-notes">Notes</th>
+            {{#if order.restaurant.show_item_recipients}}
             <th class="recipient">Label</th>
+            {{/if}}
             <th class="qty">Qty</th>
             <th class="price">Price</th>
           </tr>
@@ -43,7 +45,9 @@
             </td>
             <td class="feeds">{{this.feeds_max}}</td>
             <td class="options-notes">{{this.notes}}</td>
+            {{#if ../order.restaurant.show_item_recipients}}
             <td class="recipient">{{{join this.recipients "<br>"}}}</td>
+            {{/if}}
             <td class="qty">x{{this.quantity}}</td>
             <td class="price">${{dollars this.sub_total}}</td>
           </tr>
@@ -54,7 +58,9 @@
             <td class="checkbox"></td>
             <td class="item"><div class="item-name">{{name}}</div>{{#if description}} - {{description}}{{/if}}</td>
             <td class="options"></td>
-            <td class="recipient"></td>
+            {{#if ../order.restaurant.show_item_recipients}}
+            <td class="recipient">{{{join this.recipients "<br>"}}}</td>
+            {{/if}}
             <td class="feeds"></td>
             <td class="qty">{{#eq scale "multiply"}}x{{../../../order.guests}}{{/eq}}</td>
             <td class="price">

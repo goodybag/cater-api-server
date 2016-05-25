@@ -57,11 +57,10 @@
   {{/unless}}
 
   {{> config}}
-
   {{> analytics }}
-  {{> olark }}
 
   {{#if config.isProduction}}
+    {{> olark }}
     {{> adroll }}
   {{/if}}
 

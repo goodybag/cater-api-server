@@ -713,7 +713,7 @@ var Restaurant = module.exports = Model.extend({
       unacceptable.push('(zips.to IS NULL)');
     }
 
-    if (orderParams && orderParams.guests) {
+    if (orderParams && !isNaN(parseInt(orderParams.guests))) {
       query.joins.guests = {
         type: 'left'
       , alias: 'guests'

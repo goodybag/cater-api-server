@@ -506,7 +506,7 @@
 {{#if config.isProduction}}
 {{#if reqQuery.submitted}}
 {{#eq order.user_id user.id}}
-  {{> adwords_order_conversion conversionAmount=(dollars order.total)}}
+  {{> quantcast_order}}
 {{/eq}}
 {{/if}}
 {{/if}}

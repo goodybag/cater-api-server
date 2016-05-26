@@ -3,6 +3,16 @@
 {{#extend "body"}}
 <div class="container">
   <h1 class="page-title">All Invoices</h1>
+  <div class="paginator-wrapper">
+    <div class="paginator">
+      <a href="/admin/invoices?period={{previousPeriod.startDate}}" class="btn btn-default">
+          {{formatDateTime previousPeriod.startDate}} - {{formatDateTime previousPeriod.endDate}}
+      </a>
+      <a href="/admin/invoices?period={{nextPeriod.startDate}}" class="btn btn-default">
+        {{formatDateTime nextPeriod.startDate}} - {{formatDateTime nextPeriod.endDate}}
+      </a>
+    </div>
+  </div>
   <div class="table-list invoices-table-list striped">
     <div class="list-header">
       <label class="component item-selector">
@@ -11,6 +21,7 @@
       <div class="component list-info">
         {{invoices.length}} Invoice
         {{~#unless (eq invoices.length 1)}}s{{/unless}}
+        from {{formatDateTime period.startDate}} - {{formatDateTime period.endDate}}
       </div>
       <ul class="component list-nav nav">
         <li class="selected-only popover-wrapper gb-dropdown right">

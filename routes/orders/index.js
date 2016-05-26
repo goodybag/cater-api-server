@@ -303,7 +303,6 @@ route.all('/:oid/duplicates', m.restrict(['client', 'admin']), function(req, res
 route.get('/:oid/add-items'
 , m.getOrder2({
     param: 'oid'
-  , restaurantDbModelFind: true
   , useLatestRevision: true
   , applyPriceHike: true
   })

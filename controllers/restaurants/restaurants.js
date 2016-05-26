@@ -23,6 +23,20 @@ var Order = require('stamps/orders/base');
 
 utils.findWhere(states, {abbr: 'TX'}).default = true;
 
+var elasticsearch = require('elasticsearch');
+var Logger = require('loglog/lib/logger');
+
+Logger.prototype.trace = Logger.prototype.info;
+
+var options = {
+  host: 'localhost:9200'
+, log: 'trace'
+, concurrency: 100
+, log: Logger
+};
+
+var client = new elasticsearch.Client( options );
+
 module.exports.list = function(req, res) {
   var logger = req.logger.create('Controller-Restaurants-List');
 
@@ -36,23 +50,50 @@ module.exports.list = function(req, res) {
     return res.error( results.error );
   }
 
-  if (!_.isEqual(req.session.searchParams, req.query)) {
-    req.session.searchParams = _.cloneDeep(req.query);
-  }
+  var next = function(){
+    if (!_.isEqual(req.session.searchParams, req.query)) {
+      req.session.searchParams = _.cloneDeep(req.query);
+    }
 
-  return res.render('restaurant/list', {
-    layout:           'layout/default'
-  , defaultAddress:   req.user.attributes.defaultAddress
-  , restaurants:      restaurantsFilter( results, req.query, {
-                        sorts_by_no_contract: req.user.attributes.region.sorts_by_no_contract
-                      , timezone:             req.user.attributes.region.timezone
-                      })
-  , filterCuisines:   cuisines
-  , filterPrices:     utils.range(1, 5)
-  , filterMealTypes:  enums.getMealTypes()
-  , filterMealStyles: enums.getMealStyles()
-  , filterDiets:      enums.getTags()
-  });
+    return res.render('restaurant/list', {
+      layout:           'layout/default'
+    , defaultAddress:   req.user.attributes.defaultAddress
+    , restaurants:      restaurantsFilter( results, req.query, {
+                          sorts_by_no_contract: req.user.attributes.region.sorts_by_no_contract
+                        , timezone:             req.user.attributes.region.timezone
+                        })
+    , filterCuisines:   cuisines
+    , filterPrices:     utils.range(1, 5)
+    , filterMealTypes:  enums.getMealTypes()
+    , filterMealStyles: enums.getMealStyles()
+    , filterDiets:      enums.getTags()
+    });
+  };
+
+  if ( req.query.search ){
+    console.log('matching', req.user.attributes.region_id);
+    client.search({
+      index: ['restaurants']
+    , size: results.length
+    , body: {
+        query: {
+          match: {
+            region_id: req.user.attributes.region_id
+          }
+        }
+      }
+    , q: `region_id:${req.user.attributes.region_id} AND ${req.query.search}`
+    }, ( error, search )=>{
+      if ( error ) return res.error( error );
+
+      var resultIndex = _.indexBy( search.hits.hits, '_id' );
+      results = results.filter( result => result.id in resultIndex );
+
+      next();
+    });
+  } else {
+    next();
+  }
 };
 
 module.exports.get = function(req, res) {

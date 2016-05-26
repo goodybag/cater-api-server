@@ -111,10 +111,10 @@ define( function( require, exports, module ){
       restaurants = restaurants.filter( filters[ filter ] );
     });
 
-    if ( typeof query.search === 'string' )
-    if ( query.search.trim() ){
-      restaurants = utils.search( restaurants, query.search.trim(), ['name'] );
-    }
+    // if ( typeof query.search === 'string' )
+    // if ( query.search.trim() ){
+    //   restaurants = utils.search( restaurants, query.search.trim(), ['name'] );
+    // }
 
     var fulfillabilityOptions = utils.extend( orderParams, { timezone: options.timezone } );
 

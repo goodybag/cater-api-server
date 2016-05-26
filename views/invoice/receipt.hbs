@@ -160,7 +160,7 @@
   <div class="order-bottom-wrapper">
     <div class="order-bottom">
       <div class="order-adjustment">
-        {{#if order.adjustment.amount}}
+        {{#if (or order.adjustment.amount order.adjustment.description)}}
           <div class="columns">
             <div class="adjustment-notes column-fluid">
               {{#if order.adjustment.description}}
@@ -175,7 +175,7 @@
             </div>
           </div>
         {{/if}}
-        {{#if order.user_adjustment_amount}}
+        {{#if (or order.user_adjustment_amount order.user_adjustment_description)}}
           <div class="columns">
             <div class="adjustment-notes column-fluid">
               {{#if order.user_adjustment_description}}

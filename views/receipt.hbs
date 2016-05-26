@@ -337,7 +337,7 @@
         </div>
       </div>
       {{else}}
-      {{#if (or order.adjustment.amount order.user_adjustment_amount)}}
+      {{#if (or order.adjustment.amount order.user_adjustment_amount order.adjustment.description order.user_adjustment_description)}}
       <div class="row adjustment">
         <div class="col-lg-8">
           {{#if order.adjustment.description}}

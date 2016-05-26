@@ -8,11 +8,13 @@ module.exports = function( options ){
   options = utils.defaults( options || {}, {
     notPending: false
   , paginate: true
+  , limit: 'all'
   });
 
   return function( req, res, next ){
     var queryOptions = {
       order: ['id desc']
+    , limit: options.limit
     };
 
     var where = {};

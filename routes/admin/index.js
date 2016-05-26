@@ -333,6 +333,10 @@ route.get('/users/:id/invoices'
 , m.getInvoices({
     userIdParam: 'id'
   , paginate: false
+    // For now, just limit the amount invoices on the user listing to
+    // avoid adding in pagination. If someone asks for older invoices,
+    // we can just look them up for them.
+  , limit: 40
   })
 , m.view('admin/user/invoices', db.users, {
     layout: 'admin/layout-single-object'

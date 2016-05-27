@@ -239,7 +239,9 @@ module.exports.apiCreate = function(req, res, next) {
   , sub_total: 0
   }, req.body );
 
-  if ( req.body.restaurant_id ){
+  var skipFulfillability = !!(req.user.isAdmin() && req.query.skipFulfillability);
+
+  if ( !skipFulfillability && req.body.restaurant_id ){
     var restaurant = db.cache.restaurants.byId( req.body.restaurant_id );
 
     if ( restaurant ){
@@ -448,8 +450,10 @@ module.exports.apiUpdate = function(req, res, next) {
   var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
   if (order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
 
+  var skipFulfillability = !!(req.user.isAdmin() && req.query.skipFulfillability);
+
   // If they're clearing out the restaurant, don't bother with fulfillability
-  if ( req.body.restaurant_id !== null )
+  if ( !skipFulfillability && req.body.restaurant_id !== null )
   if ( fieldsRequiringFulfillabilityCheck.some( key => key in req.body ) ){
     var restaurant = db.cache.restaurants.byId( order.restaurant_id );
 

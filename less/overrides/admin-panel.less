@@ -425,6 +425,10 @@ header {
     background: @palette-gray-lighter;
     text-align: center;
     border-radius: 4px;
+    padding-top: 8px;
+    padding-bottom: 20px;
+    margin-top: 14px;
+    border: 1px solid @palette-gray-light;
 
     .row {
       text-align: left;
@@ -452,11 +456,8 @@ header {
   }
 
   #order-pdfs {
-    text-align: center;
-
     .pdf-preview {
       .component-title {
-        text-align: left;
         margin-bottom: 0;
       }
 
@@ -567,6 +568,10 @@ header {
 
     #order-details {
       width: 55%;
+    }
+
+    .pdf-preview[data-type="manifest"] {
+      float: right;
     }
   }
 }

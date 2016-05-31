@@ -32,60 +32,74 @@ var logError = ( error, callback )=>{
   }
 };
 
-
 var esClient = elasticsearch();
 
-var options = {
-  columns: ['id', 'name', 'description', 'cuisine', 'region_id']
-, many: [ { table: 'categories'
-          , columns: ['name', 'description']
-          , where: { is_hidden: false }
+var updateRestaurants = ( done )=>{
+  var options = {
+    columns: ['id', 'name', 'description', 'cuisine', 'region_id']
+  , many: [ { table: 'categories'
+            , columns: ['name', 'description']
+            , where: { is_hidden: false }
+            }
+          , { table: 'items'
+            , columns: ['name', 'description']
+            , where: { is_hidden: false }
+            }
+          , { table: 'amenities'
+            , columns: ['name', 'description']
+            }
+          ]
+  };
+
+  db.restaurants.findStream( {}, options, ( error, results )=>{
+    if ( error ){
+      throw error;
+    }
+
+    EnumStream
+      .create( results, { concurrency: 1 } )
+      .mapAsync( ( restaurant, next )=>{
+        esClient.update({
+          index:          'restaurants'
+        , type:           'restaurant'
+        , id:             restaurant.id
+        , body:           { doc: restaurant }
+        , doc_as_upsert:  true
+        }, ( error, response )=>{
+          if ( error ){
+            error.restaurant_id = restaurant.id;
+            return next( error );
           }
-        , { table: 'items'
-          , columns: ['name', 'description']
-          , where: { is_hidden: false }
-          }
-        , { table: 'amenities'
-          , columns: ['name', 'description']
-          }
-        ]
+
+          next( null, response );
+        });
+      })
+      // Ensure we don't max out elasticsearch's update queue
+      // This is primarily to be defensive about not doing a TON
+      // of writes while someone is performing a search
+      .wait(50)
+      .errors( error => process.stdout.write('x') )
+      .errorsAsync( logError )
+      .forEach( error => process.stdout.write('.') )
+      .end( ()=> {
+        if ( config.env === 'dev' ){
+          errorLog.end( ']', ()=> process.exit(0) )
+        } else {
+          process.exit(0);
+        }
+      });
+  });
 };
 
-db.restaurants.findStream( {}, options, ( error, results )=>{
-  if ( error ){
-    throw error;
-  }
 
-  EnumStream
-    .create( results, { concurrency: 1 } )
-    .mapAsync( ( restaurant, next )=>{
-      esClient.update({
-        index:          'restaurants'
-      , type:           'restaurant'
-      , id:             restaurant.id
-      , body:           { doc: restaurant }
-      , doc_as_upsert:  true
-      }, ( error, response )=>{
-        if ( error ){
-          error.restaurant_id = restaurant.id;
-          return next( error );
-        }
-
-        next( null, response );
-      });
-    })
-    // Ensure we don't max out elasticsearch's update queue
-    // This is primarily to be defensive about not doing a TON
-    // of writes while someone is performing a search
-    .wait(50)
-    .errors( error => process.stdout.write('x') )
-    .errorsAsync( logError )
-    .forEach( error => process.stdout.write('.') )
-    .end( ()=> {
-      if ( config.env === 'dev' ){
-        errorLog.end( ']', ()=> process.exit(0) )
-      } else {
-        process.exit(0);
-      }
+async.waterfall([
+  ( next )=> esClient.indices.exists({ index: 'restaurants' }, next )
+, ( exists, status, next )=>{
+    if ( exists ) return next();
+    esClient.indices.create({ index: 'restaurants' }, error =>{
+      if ( error ) throw error;
+      return next();
     });
-});
+  }
+, updateRestaurants
+]);

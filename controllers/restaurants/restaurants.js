@@ -24,9 +24,9 @@ var elasticsearch = require('../../lib/elastic-search-client');
 
 utils.findWhere(states, {abbr: 'TX'}).default = true;
 
-var esClient = elasticsearch();
 
 module.exports.list = function(req, res) {
+  var esClient = elasticsearch();
   var logger = req.logger.create('Controller-Restaurants-List');
 
   var results = db.cache.restaurants.byRegion( req.user.attributes.region_id );

@@ -15,13 +15,13 @@ var logglyClient = loggly.createClient({
 
 var errorLog;
 
-if ( config.env === 'dev' ){
+if ( config.env === 'dev' || true ){
   errorLog = fs.createWriteStream( __dirname + '/errors.json' );
   errorLog.write('[');
 }
 
 var logError = ( error, callback )=>{
-  if ( config.env === 'dev' ){
+  if ( config.env === 'dev' || true ){
     errorLog.write( JSON.stringify( error, true, '  ' ) + ',', callback );
   } else {
     logglyClient.log({

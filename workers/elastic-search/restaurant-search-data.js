@@ -1,31 +1,27 @@
 var fs = require('fs');
-var elasticsearch = require('elasticsearch');
 var async = require('async');
 var _ = require('lodash');
 var loggly = require('loggly');
 var db = require('../../db');
 var config = require('../../config');
 var EnumStream = require('../../lib/enum-stream');
-var Logger = require('loglog/lib/logger');
+var elasticsearch = require('../../lib/elastic-search-client');
 
 var logglyClient = loggly.createClient({
   token:      config.credentials['loggly.com'].token
 , subdomain:  config.credentials['loggly.com'].subdomain
-, tags:       ['RestaurantSearchData']
+, tags:       [ process.env.GB_ENV, 'RestaurantSearchData' ]
 });
-
-Logger.prototype.trace = Logger.prototype.info;
-Logger.prototype.warning = Logger.prototype.warn;
 
 var errorLog;
 
-if ( process.env.GB_ENV === 'dev' ){
+if ( config.env === 'dev' ){
   errorLog = fs.createWriteStream( __dirname + '/errors.json' );
   errorLog.write('[');
 }
 
 var logError = ( error, callback )=>{
-  if ( process.env.GB_ENV === 'dev' ){
+  if ( config.env === 'dev' ){
     errorLog.write( JSON.stringify( error, true, '  ' ) + ',', callback );
   } else {
     logglyClient.log({
@@ -37,10 +33,7 @@ var logError = ( error, callback )=>{
 };
 
 
-var client = new elasticsearch.Client({
-  host: 'localhost:9200'
-, log: Logger
-});
+var esClient = elasticsearch();
 
 var options = {
   columns: ['id', 'name', 'description', 'cuisine', 'region_id']
@@ -66,7 +59,7 @@ db.restaurants.findStream( {}, options, ( error, results )=>{
   EnumStream
     .create( results, { concurrency: 1 } )
     .mapAsync( ( restaurant, next )=>{
-      client.update({
+      esClient.update({
         index:          'restaurants'
       , type:           'restaurant'
       , id:             restaurant.id
@@ -82,12 +75,14 @@ db.restaurants.findStream( {}, options, ( error, results )=>{
       });
     })
     // Ensure we don't max out elasticsearch's update queue
+    // This is primarily to be defensive about not doing a TON
+    // of writes while someone is performing a search
     .wait(50)
     .errors( error => process.stdout.write('x') )
     .errorsAsync( logError )
     .forEach( error => process.stdout.write('.') )
     .end( ()=> {
-      if ( process.env.GB_ENV === 'dev' ){
+      if ( config.env === 'dev' ){
         errorLog.end( ']', ()=> process.exit(0) )
       } else {
         process.exit(0);

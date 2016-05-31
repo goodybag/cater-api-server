@@ -20,22 +20,11 @@ var models = require('../../models');
 var restaurantDefinitionSchema = require('../../db/definitions/restaurants').schema;
 var OrderItem = require('stamps/orders/item');
 var Order = require('stamps/orders/base');
+var elasticsearch = require('../../lib/elastic-search-client');
 
 utils.findWhere(states, {abbr: 'TX'}).default = true;
 
-var elasticsearch = require('elasticsearch');
-var Logger = require('loglog/lib/logger');
-
-Logger.prototype.trace = Logger.prototype.info;
-
-var options = {
-  host: 'localhost:9200'
-, log: 'trace'
-, concurrency: 100
-, log: Logger
-};
-
-var client = new elasticsearch.Client( options );
+var esClient = elasticsearch();
 
 module.exports.list = function(req, res) {
   var logger = req.logger.create('Controller-Restaurants-List');
@@ -71,8 +60,7 @@ module.exports.list = function(req, res) {
   };
 
   if ( req.query.search ){
-    console.log('matching', req.user.attributes.region_id);
-    client.search({
+    esClient.search({
       index: ['restaurants']
     , size: results.length
     , body: {

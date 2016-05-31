@@ -229,9 +229,9 @@ module.exports.JSON.history = function( req, res ){
     // Get order notifications
   , function( order, next ){
       var $where = { order_id: +req.params.oid };
-      var options = { order: { send_date: 'desc' } };
+      var options = { order: { created_at: 'desc' } };
 
-      db.order_notifications.find( $where, options, function( error, notes ){
+      db.order_notification_history.find( $where, options, function( error, notes ){
         if ( error ){
           logger.error( 'Error getting order notifications for order #' + req.params.oid, error );
           return res.error( error );

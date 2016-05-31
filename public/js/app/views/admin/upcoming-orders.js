@@ -11,18 +11,32 @@ define(function(require){
       this.$tbody = this.$el.find('tbody');
       this.start();
 
-      this.startDate = this.$el.find("input[name='startDate']").eq(0).pickadate({
+      this.$filterMessage = this.$el.find(".filter-message");
+
+      this.startDate = this.$el.find("input[name='start-date']").eq(0).pickadate({
         format: 'mm/dd/yyyy'
       }).pickadate('picker');
 
-      this.endDate = this.$el.find("input[name='endDate']").eq(0).pickadate({
+      this.endDate = this.$el.find("input[name='end-date']").eq(0).pickadate({
         format: 'mm/dd/yyyy'
       }).pickadate('picker');
+
+      this.startTime = this.$el.find("input[name='start-time']").eq(0).pickatime({
+          format: 'hh:i A'
+        , interval: 15
+      }).pickatime('picker');
+
+      this.endTime = this.$el.find("input[name='end-time']").eq(0).pickatime({
+          format: 'hh:i A'
+        , interval: 15
+      }).pickatime('picker');
+
     },
 
     events: {
       'click .btn-sort-by': 'sortByOnClick'
     , 'change .datepicker': 'poll'
+    , 'change .timepicker': 'poll'
     },
 
     start: function() {
@@ -46,7 +60,7 @@ define(function(require){
     },
 
     update: function(orders) {
-      orders = this.filterByDateRange(orders)
+      orders = this.filterByDateTimeRange(orders);
 
       // When resetting, do not check if order needs to be courier or delivery
       // i.e. the order type at initialization should not change
@@ -77,20 +91,56 @@ define(function(require){
       this.poll();
     },
 
-    filterByDateRange: function (orders) {
+    setTime: function( date, time ) {
+      var hour = parseInt(time.match(/\d+/)[0]);
+      var minute = parseInt(time.match(/(\d+)(?=\D+$)/)[0]);
+      var period = time.substring(6);
+
+      if( period === "PM" && hour < 12 ) { hour = hour + 12 };
+      if( hour === 12 && period === "AM" ) { hour = 0 };
+
+      if( !date ) date = moment();
+
+      return date.set({ 'hour': hour, 'minute': minute });
+    },
+
+    filterByDateTimeRange: function (orders) {
       var startDate = this.startDate.get();
-      var endDate = this.endDate.get();
-      if (!(startDate && endDate)) return orders;
+      var endDate   = this.endDate.get();
+      var startTime = this.startTime.get();
+      var endTime   = this.endTime.get();
+      var formatStr = "ddd MMM DD @ hh:mm a";
 
-      startDate = new Date(startDate);
-      endDate = new Date(endDate);
+      // format startDate and endDate
+      if( startDate ) startDate = moment(startDate);
+      if( endDate )   endDate = moment(endDate);
 
-      return utils.filter(orders, function (order) {
-        var orderDate = moment( new Date(order.datetime) );
-        return orderDate.isBetween(startDate, endDate)
-            || orderDate.diff(startDate, 'days') === 0
-            || orderDate.diff(endDate, 'days') === 0;
-      });
+      // set startTime and endTime
+      if( startTime ) startDate = this.setTime( startDate, startTime );
+      if( endTime )   endDate = this.setTime( endDate, endTime );
+
+      if(  startDate &&  endDate ) {
+        this.$filterMessage.text( "Filtering from " + startDate.format(formatStr)
+                                  +  " to " +  endDate.format(formatStr) );
+        return utils.filter(orders, function (order) {
+          var orderDate = moment( order.datetime );
+          return orderDate.isBetween(startDate, endDate);
+        });
+      } else if(  startDate && !endDate ) {
+        this.$filterMessage.text( "Filtering from " + startDate.format(formatStr) );
+        return utils.filter(orders, function(order) {
+          var orderDate = moment( order.datetime );
+          return orderDate.isAfter(startDate);
+        });
+      } else if( !startDate &&  endDate ) {
+        this.$filterMessage.text( "Filtering to " + endDate.format(formatStr) );
+        return utils.filter(orders, function(order) {
+          var orderDate = moment( order.datetime );
+          return orderDate.isBefore(endDate);
+        });
+      } else {
+        return orders;
+      };
     }
   });
 });

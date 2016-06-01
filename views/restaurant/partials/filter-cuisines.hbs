@@ -16,9 +16,9 @@
         <h1>Cuisine</h1>
         {{#each filterCuisines~}}
           {{!-- TODO: Omit when "Boxed Lunches" gets populated --}}
-          {{#dneq this "Boxed Lunches"}}
+          {{#dneq this "Boxed Lunches"~}}
             <label><input type="checkbox" value="{{this}}" {{#contains ../reqQuery.cuisines this}}checked="checked"{{/contains}}/> {{this}}</label>
-          {{/dneq}}
+          {{~/dneq}}
         {{~/each}}
         <button class="btn btn-default">Save and close</button>
       </div>

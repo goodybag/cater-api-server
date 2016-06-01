@@ -114,11 +114,17 @@ module.exports.get = function(req, res, next) {
     where: { id: order.attributes.restaurant_id }
   , includes: [ {type: 'closed_restaurant_events'} ]
   };
+
   models.Restaurant.findOne(restaurantQuery, function(err, restaurant) {
     if (err) return res.error(errors.internal.DB_FAILURE, err);
     if (!restaurant) return res.error(errors.internal.UNKNOWN, 'no restaurant for existing order');
     restaurant.getItems(function(err, items) {
       if (err) return res.error(errors.internal.DB_FAILURE, err);
+
+      (items || []).forEach( function( item ){
+        Order.applyPriceHikeToItem( item.attributes, req.order.priority_account_price_hike_percentage );
+      });
+
       var context = {
         order: order.toJSON(),
         restaurant: restaurant.toJSON()

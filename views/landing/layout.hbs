@@ -55,9 +55,10 @@
 
     {{> olark }}
 
-    {{#unless config.isProduction}}
+    {{#if config.isProduction}}
       {{> adroll }}
-    {{/unless}}
+      {{> quantcast_init}}
+    {{/if}}
 
     {{{block "scripts"}}}
   </body>

@@ -244,12 +244,12 @@
 
     {{#if config.isProduction}}
       {{> adroll }}
+      {{> quantcast_init}}
     {{/if}}
 
     {{#unless config.isDev}}
       {{#if isNewSignup}}
       {{> facebook_pixel config.facebook.pixel.restaurantList }}
-      {{> google_adwords_conversion config.googleAdwordsConversionId }}
       {{/if}}
     {{/unless}}
 

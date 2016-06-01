@@ -1,7 +1,7 @@
 -- Delta
 
 DO $$
-  declare version       text := '1.2.137';
+  declare version       text := '1.2.138';
   declare r cuisines;
 begin
   raise notice '## Running Delta v% ##', version;

@@ -156,6 +156,17 @@ describe ('Order Delivery Service Criteria', function(){
     assert( criteria.check( order ) );
   });
 
+  it ('should be delivery because courier not supported', function(){
+    var order = utils.deepExtend( {}, defaultOrder, {
+
+    });
+
+    order.restaurant.supported_order_types = ['delivery'];
+
+    assert( !criteria.check( order ) );
+    assert.deepEqual( criteria.why( order ), [] );
+  });
+
   it ('should not be DS because of lead_time, but use submittedDate to check', function(){
     var order = utils.deepExtend( {}, defaultOrder, {
       datetime: '2016-01-08 12:30:00'

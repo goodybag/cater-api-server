@@ -1,7 +1,13 @@
-module.exports = {
-  host: 'localhost:9200'
-};
+module.exports = function( local ){
+  var config = {
+    host: 'localhost:9200'
+  , enabled: !!local.elasticSearchEnabled
+  };
 
-if ( process.NODE_ENV !== 'development' ){
-  module.exports.host = process.env.BONSAI_URL;
-}
+  if ( process.env.NODE_ENV !== 'development' ){
+    config.host = process.env.BONSAI_URL;
+    config.enabled = !!config.host;
+  }
+
+  return config;
+};

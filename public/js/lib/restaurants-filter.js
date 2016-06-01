@@ -12,6 +12,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 
 define( function( require, exports, module ){
   var utils = require('utils');
+  var config = require('config');
   var orderFulfillability = require('stamps/orders/fulfillability');
   var orderDeliveryFee = require('stamps/orders/delivery-fee');
 
@@ -111,10 +112,11 @@ define( function( require, exports, module ){
       restaurants = restaurants.filter( filters[ filter ] );
     });
 
-    // if ( typeof query.search === 'string' )
-    // if ( query.search.trim() ){
-    //   restaurants = utils.search( restaurants, query.search.trim(), ['name'] );
-    // }
+    if ( !config.elasticsearch.enabled )
+    if ( typeof query.search === 'string' )
+    if ( query.search.trim() ){
+      restaurants = utils.search( restaurants, query.search.trim(), ['name'] );
+    }
 
     var fulfillabilityOptions = utils.extend( orderParams, { timezone: options.timezone } );
 
@@ -132,43 +134,45 @@ define( function( require, exports, module ){
       });
     }
 
-    var contractSort = options.sorts_by_no_contract;
-    var resultParts = [];
+    // Add in delivery fee range
+    // TODO: Move this to some restaurant model logic
+    for ( var i = restaurants.length - 1, range, restaurant; i >= 0; i-- ){
+      restaurant = restaurants[i];
+      range = orderDeliveryFee( fulfillabilityOptions );
+      range = range.getZipBasedRange( restaurant );
 
-    resultParts.push( restaurants.filter( function( r ){
-      return !!r.is_featured;
-    }));
-
-    if ( contractSort ){
-      resultParts.push( restaurants.filter( function( r ){
-        return !!r.plan_id && !r.is_featured;
-      }));
+      restaurant.delivery_fee_from = range.min;
+      restaurant.delivery_fee_to = range.max;
     }
 
-    resultParts.push( restaurants.filter( function( r ){
+    if ( !config.elasticsearch.enabled || typeof query.search !== 'string' ){
+      var contractSort = options.sorts_by_no_contract;
+      var resultParts = [];
+
+      resultParts.push( restaurants.filter( function( r ){
+        return !!r.is_featured;
+      }));
+
       if ( contractSort ){
-        return !r.is_featured && !r.plan_id;
+        resultParts.push( restaurants.filter( function( r ){
+          return !!r.plan_id && !r.is_featured;
+        }));
       }
 
-      return !r.is_featured;
-    }));
+      resultParts.push( restaurants.filter( function( r ){
+        if ( contractSort ){
+          return !r.is_featured && !r.plan_id;
+        }
 
-    resultParts.forEach( function( part, i ){
-      // Add in delivery fee range
-      // TODO: Move this to some restaurant model logic
-      for ( var i = part.length - 1, range, restaurant; i >= 0; i-- ){
-        restaurant = part[i];
-        range = orderDeliveryFee( fulfillabilityOptions );
-        range = range.getZipBasedRange( restaurant );
+        return !r.is_featured;
+      }));
 
-        restaurant.delivery_fee_from = range.min;
-        restaurant.delivery_fee_to = range.max;
-      }
+      resultParts.forEach( function( part, i ){
+        resultParts[ i ] = part.sort( sort );
+      });
 
-      resultParts[ i ] = part.sort( sort );
-    });
-
-    restaurants = utils.flatten( resultParts );
+      restaurants = utils.flatten( resultParts );
+    }
 
     return restaurants;
   };

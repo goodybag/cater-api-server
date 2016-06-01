@@ -45,7 +45,7 @@ config.defaults = {
 , promo: require('./configs/promo')
 , hipchat: require('./configs/hipchat')
 , dropoff: require('./configs/dropoff')
-, elasticsearch: require('./configs/elastic-search')
+, elasticsearch: require('./configs/elastic-search')( local )
 
 , deliveryTime: {
     padding: 15

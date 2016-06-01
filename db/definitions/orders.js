@@ -114,6 +114,7 @@ define(function(require) {
   , review_token: {
       type: types.text
     , nullable: false
+    , default: 'uuid_generate_v4()'
     }
   , ds_token: {
       type: types.text
@@ -263,6 +264,17 @@ define(function(require) {
     , nullable: false
     , editable: ['admin']
     , default: false
+    }
+  , waive_delivery_fee: {
+      type: types.boolean
+    , nullable: false
+    , editable: ['admin']
+    , default: false
+    }
+  , actual_delivery_datetime: {
+      type: types.timestamp
+    , nullable: true
+    , editable: ['admin']
     }
   };
 

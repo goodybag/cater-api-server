@@ -122,7 +122,7 @@ app.use( function logErrors( error, req, res, next ){
 });
 
 app.use( function clientErrors( error, req, res, next ){
-  if ( !req.xhr ){
+  if ( req.accepts(['html', 'json']) === 'html' ){
     return next( error );
   }
 

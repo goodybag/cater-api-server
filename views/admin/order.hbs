@@ -141,6 +141,35 @@
           <dt>Delivery Time</dt>
           <dd>{{formatDateTime2 order.datetime "R h:mm A"}} {{formatDateTimeWithTz order.datetime order.timezone "z"}}</dd>
         </div>
+        <div class="row">
+          <dt>Actual Delivery Time</dt>
+          <dd>
+            <div class="actual-dt-row">
+              <input
+                class="actual-dt-in"
+                name="actual-dt-hour"
+                type="number"
+                {{#if order.actual_delivery_datetime}}
+                  value="{{formatDateTime2 order.actual_delivery_datetime "h"}}"
+                {{/if}}
+                min="1" max="12" />
+              <span>:</span>
+              <input
+                class="actual-dt-in"
+                name="actual-dt-min"
+                type="number"
+                {{#if order.actual_delivery_datetime}}
+                  value="{{formatDateTime2 order.actual_delivery_datetime "mm"}}"
+                {{/if}}
+                min="0" max="59"
+                onchange="if(parseInt(this.value,10)<10)this.value='0'+this.value;" />
+              <select class="actual-dt-in" name="actual-dt-period">
+                <option value="am"{{#eq (getAMPM order.actual_delivery_datetime) 'am'}} selected{{/eq}}>AM</option>
+                <option value="pm"{{#eq (getAMPM order.actual_delivery_datetime) 'pm'}} selected{{/eq}}>PM</option>
+              </select>
+            </div>
+          </dd>
+        </div>
 
         {{#is order.type 'pickup' 'courier'}}
           <div class="row">
@@ -211,6 +240,15 @@
               type="checkbox"
               name="waive_transaction_fee"
               {{#if order.waive_transaction_fee}}checked{{/if}}>
+          </dd>
+        </div>
+        <div class="row" id="waive-delivery-fee-row">
+          <dt>Waive Delivery Fee</dt>
+          <dd>
+            <input
+              type="checkbox"
+              name="waive_delivery_fee"
+              {{#if order.waive_delivery_fee}}checked{{/if}}>
           </dd>
         </div>
       </dl>
@@ -313,7 +351,18 @@
               Unknown
             {{/if}}
           </td>
-          <td>{{this.description}}</td>
+          <td>
+            {{this.description}}
+            {{#if this.details.order_item}}
+              <div class="item-card-tooltip">
+                (<div class="item-card-tooltip-text">{{this.details.order_item.name}}</div>)
+
+                <div class="item-card-tooltip-card">
+                  {{> timeline_order_item_description this.details.order_item}}
+                </div>
+              </div>
+            {{/if}}
+          </td>
           <td>{{formatDateTimeWithTz this.created_at req.user.region.timezone "MM/DD/YYYY h:mm A"}}</td>
         </tr>
         {{/each}}

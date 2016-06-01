@@ -19,6 +19,6 @@
     {{~/if~}}
   </td>
   <td><a href="/admin/regions">{{restaurant.region.name}}</a></td>
-  <td>{{{makeAnchor courier_tracking_id}}}</td>
+  <td>{{#if (eq type 'courier')}}{{{makeAnchor courier_tracking_id}}}{{/if}}</td>
 </tr>
 {{/each}}

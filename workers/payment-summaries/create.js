@@ -25,7 +25,15 @@ function onRestaurant( restaurant, done ){
       return done( error );
     }
 
-    return pms.save( done );
+    if ( pms.isEmpty() ){
+      if ( pms.id ){
+        pms.remove( done );
+      } else {
+        done( null );
+      }
+    } else {
+      pms.save( done );
+    }
   });
 }
 

@@ -65,7 +65,7 @@ var addPageRuler = function( $page ){
 // Recursively adjust and add new pages
 var adjustPage = function( $page, options, callback ){
   var defaults = {
-    pageHeight: 920
+    pageHeight: 1056
 
   , onPageClone: function( $page, $clone ){
 
@@ -92,7 +92,7 @@ var adjustPage = function( $page, options, callback ){
     options.onPageAdjustment( $page );
     return callback();
   }
-  
+
   if ( options.getPageHeight( $page ) <= options.pageHeight ){
     options.onPageAdjustment( $page );
     return callback();

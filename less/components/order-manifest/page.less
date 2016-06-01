@@ -4,9 +4,9 @@
 
 #components { #order-manifest { #page {
   .init(
-    @page-width:          800px
-  , @page-height:         930px
-  , @page-margin-top:     0.2in
+    @page-width:          812px
+  , @page-height:         1056px
+  , @page-margin-top:     0.25in
   , @page-margin-bottom:  0.25in
   , @page-margin-left:    0.25in
   , @page-margin-right:   0.25in
@@ -26,20 +26,26 @@
       padding-right:   @page-margin-right;
 
       .section-title {
-        background: #000;
+        background: #909090;
         color: #fff;
         margin: 0;
-        margin-bottom: 8px;
-        font-size: 18px;
-        line-height: 18px;
-        padding: 5px 20px 0;
+        font-size: 10pt;
+        padding: 5px 20px;
         text-transform: uppercase;
       }
 
       .page-number {
+        position: absolute;
+        bottom: 0.25in;
+        left: 0;
+        right: 0;
         font-size: 12px;
-        margin-top: 20px;
         text-align: center;
+      }
+
+      .inner {
+        margin-bottom: 20px;
+        position: static;
       }
     }
 

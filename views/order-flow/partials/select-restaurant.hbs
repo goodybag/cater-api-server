@@ -1,0 +1,75 @@
+<div class="restaurant-list-search">
+  <div class="search-params">
+    <section>
+      <div class="container">
+        <div class="restaurant-params form-inline">
+          <div class="order-creator" id="order-editor">
+            <form>
+              <span class="search-lead">Select a restaurant</span>
+              {{> order_flow_order_params_fields}}
+              <div class="form-group actions">
+                <button class="btn btn-primary btn-search">
+                  Update
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class="search-advanced">
+    {{> restaurant_search_advanced }}
+  </div>
+</div>
+
+<div class="list-options">
+  <div class="container">
+    {{> restaurant_list_tags }}
+    {{> restaurant_toggle_list }}
+  </div>
+</div>
+<div class="restaurant-list">
+  <div class="container">
+    <div class="restaurant-toggle-list {{#if (eq cookies.gb_display 'list') }} hide {{/if}}" data-state="tile">
+      {{> restaurant_tiles }}
+    </div>
+    <div class="restaurant-toggle-list {{#if (dneq cookies.gb_display 'list') }} hide {{/if}}" data-state="list">
+      {{> restaurant_list}}
+    </div>
+    {{#lte restaurants.length config.resultsTooFewContactUsThreshold}}
+      <div class="results-too-few">
+        <h4 class="results-too-few-heading">Need more options?<br>We will help get your order placed today!</h4>
+        <p>Give us a call: {{phoneNumber (or user.region.support_phone config.phone.support)}}</p>
+      </div>
+    {{/lte}}
+  </div>
+</div>
+
+{{#extend "scripts"}}
+{{> gplaces_init}}
+
+<script>
+  require( ['jquery-loaded', 'app/pages/order-select-restaurant'], function( $, page ){
+    page.init({
+      order: {{{json order}}}
+    , user:  {{{json user}}}
+    });
+
+    // hack to make the alerts dissmissiable
+    $('.alert .close').click( function( e ){
+      e.preventDefault();
+      $(this).closest('.alert').remove();
+    });
+
+    $('[data-role="popover"]').gb_popover();
+
+    function load(){
+      var $el = $(this);
+      $el.css( 'background-image', "url('" + $el.data('pic') + "')" )
+    }
+
+    $('.tile-cover[data-pic], .listing-img[data-pic]').on('appear', load);
+  });
+</script>
+{{/extend}}

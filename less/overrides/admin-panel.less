@@ -241,6 +241,16 @@ header {
     color: @palette-gray;
     &:hover { color: @palette-gray-dark; }
   }
+
+  .actual-dt-in {
+    display: inline-block;
+    width: 30%;
+    vertical-align: middle;
+  }
+
+  .actual-dt-row {
+    margin-bottom: 5px;
+  }
 }
 
 ///////
@@ -350,6 +360,8 @@ header {
 
 .upcoming-orders {
   min-height: 400px;
+  display: block;
+  overflow: scroll;
 }
 
 .upcoming-orders .picker {

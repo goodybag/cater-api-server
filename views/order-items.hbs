@@ -59,7 +59,9 @@
             <th class="line-item-feeds">Feeds</th>
             <th class="line-item-quantity">Quantity</th>
             <th class="line-item-notes">Notes</th>
+            {{#if order.restaurant.show_item_recipients}}
             <th class="line-item-recipient"><abbr title="Specify a recipient per item (optional)">Recipient</abbr></th>
+            {{/if}}
             <th class="line-item-price">Price</th>
           </tr>
         </thead>
@@ -102,13 +104,15 @@
                 <span name="notes" class="item-notes-span order-item-field order-item-notes">{{#if this.notes}}{{this.notes}}{{else}}&nbsp;{{/if}}</span>
               {{/if}}
             </td>
+            {{#if ../order.restaurant.show_item_recipients}}
             <td class="line-item-recipient" data-title="Recipient">
-              {{#if ../order.editable}}
+              {{#if ../../order.editable}}
                 <textarea name="recipient" class="item-notes-textarea form-control order-item-field order-item-recipient">{{this.recipient}}</textarea>
               {{else}}
                 <span name="recipient" class="item-recipient-span order-item-field order-item-recipient">{{#if this.recipient}}{{this.recipient}}{{else}}&nbsp;{{/if}}</span>
               {{/if}}
             </td>
+            {{/if}}
             <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
           </tr>
           {{/each}}

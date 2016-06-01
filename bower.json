@@ -54,7 +54,7 @@
     "jquery-appear": "~0.2.2",
     "Chart.js": "^2.0.0",
     "resource.js": "~1.0.2",
-    "gplaces": "~1.0.5",
+    "gplaces": "^1.0.13",
     "gb-handlebars-helpers": "~0.0.4",
     "jasmine-core": "~2.3.4",
     "fullcalendar": "^2.6.1"

@@ -56,13 +56,14 @@
   <script src="/js/require-config.js"></script>
   {{/unless}}
 
+  {{> rollbar}}
   {{> config}}
-
   {{> analytics }}
-  {{> olark }}
 
   {{#if config.isProduction}}
+    {{> olark }}
     {{> adroll }}
+    {{> quantcast_init}}
   {{/if}}
 
   {{#if isNewSignup}}

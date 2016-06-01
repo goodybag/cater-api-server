@@ -4,6 +4,7 @@ define(function(require){
   var utils   = require('utils');
   var flash   = require('flash');
   var Hbs     = require('handlebars');
+  var moment  = require('moment');
 
   var InternalNotesCollection = require('app/collections/order-internal-notes');
 
@@ -115,6 +116,30 @@ define(function(require){
           page.saveOrder( flash.successOrError.bind( flash ) );
         });
 
+        $('[name="actual-dt-hour"], [name="actual-dt-min"], [name="actual-dt-period"]').change(function( e ) {
+          e.preventDefault();
+
+          var hour   = parseInt($('[name=actual-dt-hour]').val());
+          var min    = $('[name=actual-dt-min]').val();
+          var period = $('[name=actual-dt-period]').val();
+
+          if(hour && min) {
+            if( period === "pm" && hour < 12 ) {
+              hour = parseInt(hour) + 12;
+            };
+
+            if( hour === 12 && period === "am" ) { hour = 0 };
+
+            var datetime = page.order.get('datetime');
+            var actualdt = moment(datetime)
+              .hour(hour)
+              .minute(min)
+              .format('YYYY-MM-DD HH:mm:ss');
+
+            page.state.set({ actual_delivery_datetime: actualdt })
+          }
+        });
+
         $('#restaurant-selector').delegate( '[data-id]', 'click', function( e ){
           e.preventDefault();
           $('#restaurant-selector > [data-role="popover"]').data('gb.popover').close();
@@ -136,11 +161,11 @@ define(function(require){
         });
 
         $('[name="waive_transaction_fee"]').change( function( e ){
-          var v = $(this).val();
+          page.state.set( 'waive_transaction_fee', this.checked );
+        });
 
-          if ( v !== page.order.get('waive_transaction_fee') ){
-            page.state.set( 'waive_transaction_fee', v );
-          }
+        $('[name="waive_delivery_fee"]').change( function( e ){
+          page.state.set( 'waive_delivery_fee', this.checked );
         });
       });
     }

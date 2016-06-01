@@ -307,34 +307,43 @@ route.get('/users/:id/basic-info'
   })
 );
 
-route.get('/users/:id/invoices', m.param('id'), m.viewPlugin('mainNav', {
-  active: 'users'
-}), m.viewPlugin('sidebarNav', {
-  active: 'invoices',
-  baseUrl: '/admin/users/:id'
-}), m.viewPlugin('breadCrumbs', {
-  currentPage: 'Invoices'
-}), m.queryOptions({
-  one: [{
-    table: 'regions',
-    alias: 'region'
-  }],
-  many: [{
-    table: 'user_invoice_recipients',
-    alias: 'invoice_recipients'
-  }],
-  userGroups: true
-}), m.getInvoices({
-  userIdParam: 'id'
-}), m.db.regions.find({}, {
-  limit: 'all'
-}), m.viewPlugin('mainNav', {
-  active: 'users'
-}), m.view('admin/user/invoices', db.users, {
-  layout: 'admin/layout-single-object',
-  method: 'findOne',
-  localsAlias: 'edit_user'
-}));
+route.get('/users/:id/invoices'
+, m.param('id')
+, m.viewPlugin('mainNav', {
+    active: 'users'
+  })
+, m.viewPlugin('sidebarNav', {
+    active: 'invoices'
+  , baseUrl: '/admin/users/:id'
+  })
+, m.viewPlugin('breadCrumbs', {
+    currentPage: 'Invoices'
+  })
+, m.queryOptions({
+    one: [{
+      table: 'regions'
+    , alias: 'region'
+    }]
+  , many: [{
+      table: 'user_invoice_recipients'
+    , alias: 'invoice_recipients'
+    }]
+  , userGroups: true
+  })
+, m.getInvoices({
+    userIdParam: 'id'
+  , paginate: false
+    // For now, just limit the amount invoices on the user listing to
+    // avoid adding in pagination. If someone asks for older invoices,
+    // we can just look them up for them.
+  , limit: 40
+  })
+, m.view('admin/user/invoices', db.users, {
+    layout: 'admin/layout-single-object'
+  , method: 'findOne'
+  , localsAlias: 'edit_user'
+  })
+);
 
 route.get('/users/:id/billing-info', m.param('id'), m.viewPlugin('mainNav', {
   active: 'users'
@@ -419,12 +428,13 @@ route.get('/users/:id/invoice-recipients', m.param('id'), m.viewPlugin('mainNav'
  * Invoices standalone
  */
 
-route.get('/invoices', m.getInvoices(), m.db.regions.find({}, {
-  limit: 'all'
-}), m.view('admin/invoices', db.users, {
-  layout: 'admin/layout2',
-  method: 'findOne'
-}));
+route.get('/invoices'
+, m.getInvoices()
+, m.view('admin/invoices', db.users, {
+    layout: 'admin/layout2'
+  , method: 'findOne'
+  })
+);
 
 /**
  * Restaurant list

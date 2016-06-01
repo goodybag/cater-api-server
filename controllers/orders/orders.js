@@ -9,6 +9,9 @@ var models  = require('../../models');
 var venter  = require('../../lib/venter');
 var pdfs    = require('../../lib/pdfs');
 var scheduler = require('../../lib/scheduler');
+var enums = require('../../db/enums');
+var states = require('../../public/js/lib/states');
+var cuisines = require('../../public/cuisines');
 
 var moment = require('moment-timezone');
 var twilio = require('twilio')(config.twilio.account, config.twilio.token);
@@ -24,6 +27,7 @@ var GeocodeRequest = require('stamps/requests/geocode');
 var Order = require('stamps/orders/base');
 var OrderFulfillability = require('stamps/orders/fulfillability');
 var odsChecker = require('order-delivery-service-checker');
+var restaurantsFilter = require('../../public/js/lib/restaurants-filter');
 
 var addressFields = [
   'street'
@@ -230,33 +234,33 @@ module.exports.create = function(req, res, next) {
 };
 
 module.exports.apiCreate = function(req, res, next) {
-  var order = new models.Order(
-    utils.extend({
-      user_id: req.user.attributes.user ? req.user.attributes.user.id : null
-    , sub_total: 0
-    }, req.body)
-  );
+  var order = utils.extend({
+    user_id: req.user.attributes.user ? req.user.attributes.user.id : null
+  , sub_total: 0
+  }, req.body );
 
-  if ( req.body.restaurant_id ){
+  var skipFulfillability = !!(req.user.isAdmin() && req.query.skipFulfillability);
+
+  if ( !skipFulfillability && req.body.restaurant_id ){
     var restaurant = db.cache.restaurants.byId( req.body.restaurant_id );
 
     if ( restaurant ){
       // We need a POJO version of the order that has the restaurant
       // added to it so we can check things like fulfillability and
       // the Order Delivery Service Criteria Checker
-      let orderWithRestaurant = utils.extend( {}, order.attributes, {
+      let orderWithRestaurant = utils.extend( {}, order, {
         restaurant: restaurant
       , timezone: restaurant.region.timezone
       });
 
       // Determine whether or not the order should
-      order.attributes.type = orderWithRestaurant.type = odsChecker.check(
+      order.type = orderWithRestaurant.type = odsChecker.check(
         orderWithRestaurant
       ) ? 'courier' : 'delivery';
 
       let result = OrderFulfillability
         .create( orderWithRestaurant )
-        .why();
+        .why({ omit: [ OrderFulfillability.requirements.MinimumOrder ] });
 
       if ( Array.isArray( result ) && result.length ){
         let error = utils.clone( errors.input.FULFILLABILITY_FAILED );
@@ -266,42 +270,50 @@ module.exports.apiCreate = function(req, res, next) {
     }
   }
 
-  order.save(function(err) {
-    if (err) return res.error(errors.internal.DB_FAILURE, err);
+  db.orders.insert( order, function( error, results ){
+    if ( error ){
+      req.logger.error('Error saving order', {
+        error, order
+      });
+
+      return res.error( errors.internal.DB_FAILURE, error );
+    }
+
+    utils.extend( order, results[0] );
 
     if ( req.user.isGuest() ){
       if ( !req.session.guestOrders ){
         req.session.guestOrders = [];
       }
 
-      req.session.guestOrders.push( order.attributes.id );
+      req.session.guestOrders.push( order.id );
     }
 
-    db.order_types.insert({
-      order_id: order.attributes.id
-    , user_id:  order.attributes.user_id
-    , type:     order.attributes.type
-    },
-    function( err ){
-      if ( err ) return res.error(errors.internal.DB_FAILURE, err);
-
-      req.session.save( function(){
-        var result = order.toJSON();
-        result.restaurant = db.cache.restaurants.byId( +result.restaurant_id );
-        result.deadline = Order.fixed.methods.getDeadline.call( result );
-        delete result.restaurant;
-
-        res.send(201, result);
-      });
-    });
-
-    db.order_revisions.track( order.attributes.id, req.user.attributes.id, 'create', function( error ){
+    utils.async.parallel({
+      order_revisions:  db.order_revisions.track.bind(
+                          db.order_revisions
+                        , order.id
+                        , req.user.attributes.id
+                        , 'create'
+                        )
+    , session:          req.session.save.bind( req.session )
+    }, function( error, results ){
       if ( error ){
-        req.logger.warn('Error tracking order revision', {
-          order: { id: order.attributes.id }
-        , error: error
+        req.logger.error('Error saving revision or session', {
+          error
+        , order
         });
+
+        return res.error( errors.internal.UNKNOWN, error );
       }
+
+      if ( req.body.restaurant_id ){
+        order.restaurant = db.cache.restaurants.byId( +order.restaurant_id );
+        order.deadline = Order.fixed.methods.getDeadline.call( order );
+        delete order.restaurant;
+      }
+
+      res.json( order );
     });
   });
 };
@@ -438,6 +450,10 @@ module.exports.apiUpdate = function(req, res, next) {
   var restaurantUpdateableFields = ['tip', 'tip_percent', 'reason_denied'];
   if (order.isRestaurantManager) updateableFields = restaurantUpdateableFields;
 
+  var skipFulfillability = !!(req.user.isAdmin() && req.query.skipFulfillability);
+
+  // If they're clearing out the restaurant, don't bother with fulfillability
+  if ( !skipFulfillability && req.body.restaurant_id !== null )
   if ( fieldsRequiringFulfillabilityCheck.some( key => key in req.body ) ){
     var restaurant = db.cache.restaurants.byId( order.restaurant_id );
 
@@ -816,10 +832,11 @@ module.exports.getDeliveryFee = function( req, res ){
   var origin = Address( req.order ).toString();
   var destination = Address( location ).toString();
 
-  DMReq()
-    .origin( origin )
-    .destination( destination )
-    .send()
+  DMReq({
+    origins: [origin],
+    destinations: [destination],
+    arrivalTime: moment.tz( req.order.datetime, req.order.timezone )
+  }).send()
     .then( function( results ){
       var result = results[0].elements[0];
 
@@ -849,4 +866,38 @@ module.exports.getDeliveryFee = function( req, res ){
 
       res.error( error );
     });
+};
+
+module.exports.selectRestaurant = function( req, res, next ){
+  var logger = req.logger.create('Controller-Orders-SelectRestaurant');
+
+  var results = db.cache.restaurants.byRegion( req.user.attributes.region_id );
+
+  if ( results.error ){
+    logger.error('Error getting restaurants by region', {
+      error: error
+    });
+
+    return res.error( results.error );
+  }
+
+  var query = utils.extend(
+    utils.pick( req.order, ['zip', 'datetime', 'guests'])
+  , req.query
+  );
+
+  return res.render('order-flow/select-restaurant', {
+    layout:           'layout/default'
+  , order:            req.order
+  , defaultAddress:   req.user.attributes.defaultAddress
+  , restaurants:      restaurantsFilter( results, query, {
+                        sorts_by_no_contract: req.user.attributes.region.sorts_by_no_contract
+                      , timezone:             req.user.attributes.region.timezone
+                      })
+  , filterCuisines:   cuisines
+  , filterPrices:     utils.range(1, 5)
+  , filterMealTypes:  enums.getMealTypes()
+  , filterMealStyles: enums.getMealStyles()
+  , filterDiets:      enums.getTags()
+  });
 };

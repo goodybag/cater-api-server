@@ -20,6 +20,7 @@ define( function( require, exports, module ){
     .state({
       origins:      []
     , destinations: []
+    , arrivalTime:  null
     })
     .enclose( function(){
       this.json();
@@ -30,21 +31,17 @@ define( function( require, exports, module ){
       this.query( 'units', 'imperial' );
     })
     .methods({
-      origin: function( origin ){
-        this.origins.push( origin );
-        return this;
-      }
-
-    , destination: function( destination ){
-        this.destinations.push( destination );
-        return this;
-      }
-
-    , getOriginDestinationQuery: function(){
-        return {
+      getOriginDestinationQuery: function(){
+        var query = {
           origins:      this.origins.join('|')
         , destinations: this.destinations.join('|')
         };
+
+        if ( this.arrivalTime ){
+          query.arrival_time = +this.arrivalTime;
+        }
+
+        return query;
       }
 
     , parseResponse: function( res ){

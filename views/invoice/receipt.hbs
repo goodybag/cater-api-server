@@ -94,7 +94,9 @@
     <thead>
       <tr>
         <th class="orders">Item</th>
+        {{#if order.restaurant.show_item_recipients}}
         <th class="recipient">Recipient</th>
+        {{/if}}
         <th class="quantity">Quantity</th>
         <th class="notes">Notes</th>
         <th class="price">Price</th>
@@ -116,9 +118,11 @@
             {{/each}}
           </ul>
         </td>
+        {{#if ../order.restaurant.show_item_recipients}}
         <td class="line-item-recipient" data-title="Recipient">
           <span class="item-recipient-span order-item-field order-item-recipient" />{{this.recipient}}</span>
         </td>
+        {{/if}}
         <td class="line-item-quantity" data-title="Quantity">
           <span class="item-quantity-span order-item-field order-item-quantity" />x {{this.quantity}}</span>
         </td>
@@ -134,7 +138,9 @@
       <td class="line-item-name">
         <div class="item-name">{{name}}</div>
       </td>
+      {{#if ../order.restaurant.show_item_recipients}}
       <td class="line-item-recipient"></td>
+      {{/if}}
       <td class="line-item-quantity">{{#eq scale "multiply"}}x {{../../../order.guests}}{{/eq}}</td>
       <td class="line-item-notes">{{description}}</td>
       <td class="line-item-price">
@@ -154,7 +160,7 @@
   <div class="order-bottom-wrapper">
     <div class="order-bottom">
       <div class="order-adjustment">
-        {{#if order.adjustment.amount}}
+        {{#if (or order.adjustment.amount order.adjustment.description)}}
           <div class="columns">
             <div class="adjustment-notes column-fluid">
               {{#if order.adjustment.description}}
@@ -169,7 +175,7 @@
             </div>
           </div>
         {{/if}}
-        {{#if order.user_adjustment_amount}}
+        {{#if (or order.user_adjustment_amount order.user_adjustment_description)}}
           <div class="columns">
             <div class="adjustment-notes column-fluid">
               {{#if order.user_adjustment_description}}

@@ -13,7 +13,7 @@ module.exports = {
 , email_status:   ['pending', 'delivered', 'error']
 , job_status:     ['pending', 'in-progress', 'completed', 'failed']
 , order_type:     ['pickup', 'delivery', 'courier']
-, invoice_status: ['pending', 'emailed', 'paid', 'error']
+, invoice_status: ['pending', 'emailed', 'paid', 'error', 'expensed']
 , timezone:       { type: 'domain', as: 'text check ( is_timezone( value ) )' }
 , feedback_rating:{ type: 'domain', as: 'int check ( value > 0 and value < 6 )' }
 , amenity_scale:  ['multiply', 'flat']

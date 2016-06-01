@@ -7,6 +7,7 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 define(function(require, exports, module) {
   var Backbone = require('backbone');
   var amanda = require('amanda');
+  var _ = require('lodash');
 
   return module.exports = Backbone.Model.extend({
     schema: {

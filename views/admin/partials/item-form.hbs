@@ -5,7 +5,7 @@
   , function( $, FormView, Collection ){
       return new FormView({
         el:     $('{{itemForm.selector}}')
-      , model:  new Collection( null, {{{json this.itemForm.collectionOptions}}})
+      , model:  new Collection( null, {{{or (json this.itemForm.collectionOptions) "{}"}}})
                   .createModel({{#if itemForm.localModelProp}}{{{json this itemForm.localModelProp}}}{{/if}})
       });
     }

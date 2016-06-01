@@ -82,6 +82,7 @@ module.exports = function( options ){
         , 'order_revisions.actor_id'
         , 'order_revisions.created_at'
         , 'order_revisions.description'
+        , 'order_revisions.details'
         ]
       , alias: 'revisions'
       , joins: {
@@ -183,8 +184,13 @@ module.exports = function( options ){
 
       if ( !order ) return res.render('404');
 
+      if ( options.items ){
+        order.items = order.orderItems;
+      }
+
       if ( options.restaurant )
-      if ( options.deliveryService ){
+      if ( options.deliveryService )
+      if ( order.restaurant ){
         order.restaurant.delivery_service = order.delivery_service;
       }
 
@@ -238,6 +244,7 @@ module.exports = function( options ){
         Order.applyRestaurantTotals( req.order );
       }
 
+      if ( order.restaurant )
       if ( options.applyPriceHike )
       if ( req.user.attributes.groups.indexOf('order-restaurant') === -1 ){
         Order.applyPriceHike( req.order );
@@ -245,6 +252,7 @@ module.exports = function( options ){
 
       // Looking up many delivery services and many delivery zips
       // is too expensive. Use cache
+      if ( order.restaurant )
       if ( options.restaurantRegionDeliveryServices ){
         req.order.restaurant.region.delivery_services = db.cache.delivery_services.byRegion(
           req.order.restaurant.region_id

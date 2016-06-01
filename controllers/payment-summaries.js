@@ -10,6 +10,7 @@ var pdfs    = require('../lib/pdfs');
 var m       = require('dirac-middleware');
 var PMS     = require('stamps/payment-summaries/db');
 var errors  = require('../errors');
+var scheduler = require('../lib/scheduler');
 
 var PMSEmail = PMS.compose( require('stamps/payment-summaries/email') );
 
@@ -79,4 +80,22 @@ module.exports.send = function( req, res ){
 
       res.send(204);
     });
+};
+
+module.exports.createPeriodTotalRequest = function( req, res, next ){
+  var data = utils.pick( req.body, [
+    'period_begin', 'period_end', 'recipient'
+  ]);
+
+  scheduler.enqueue( 'send-payment-summaries-total-payout', new Date(), data, ( error )=>{
+    if ( error ){
+      req.logger.warn('Error enqueueing send-payment-summaries-total-payout', {
+        error
+      });
+
+      return next( error );
+    }
+
+    res.status(204).send();
+  });
 };

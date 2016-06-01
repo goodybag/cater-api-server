@@ -17,12 +17,17 @@ define( function( require, exports, module ){
     .state({
       pricePerMile: 0
     , basePrice:    0
+    , waive_delivery_fee: false
     })
     .enclose( function(){
 
     })
     .methods({
       getPrice: function(){
+        if ( this.waive_delivery_fee ){
+          return 0;
+        }
+
         return this.basePrice + Math.round( this.pricePerMile * this.miles() );
       }
 

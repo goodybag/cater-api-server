@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * Restaurant Filter
  */
@@ -12,6 +14,10 @@ define( function( require, exports, module ){
   var utils = require('utils');
   var orderFulfillability = require('stamps/orders/fulfillability');
   var orderDeliveryFee = require('stamps/orders/delivery-fee');
+
+  var regs = {
+    zip: /\d{5}/
+  };
 
   module.exports = function( restaurants, query, options ){
     options = utils.defaults( options || {}, {
@@ -64,6 +70,40 @@ define( function( require, exports, module ){
     var sort = sorts[ query.sort ] || sorts.popular;
 
     var orderParams = utils.pick( query, 'zip', 'date', 'time', 'guests' );
+
+    if ( query.datetime ){
+      var parts = query.datetime.split(' ');
+      orderParams.date = parts[0];
+      orderParams.time = parts[1];
+    }
+
+    if ( typeof orderParams.zip === 'number' ){
+      orderParams.zip += '';
+    }
+
+    if ( typeof orderParams.zip === 'string' ){
+      if ( !regs.zip.test( orderParams.zip ) ){
+        delete orderParams.zip
+      } else {
+        orderParams.zip = orderParams.zip.match( regs.zip )[0];
+      }
+    }
+
+    if ( 'date' in orderParams || 'time' in orderParams ){
+      let isValidDateTime = new Date(
+        orderParams.date + ' ' + orderParams.time
+      ).toString() !== 'Invalid Date';
+
+      if ( !isValidDateTime ){
+        delete orderParams.date;
+        delete orderParams.time;
+      }
+    }
+
+
+    if ( 'guests' in orderParams && isNaN( +orderParams.guests ) ){
+      delete orderParams.guests;
+    }
 
     Object.keys( filters ).forEach( function( filter ){
       if ( !(filter in query) ) return;

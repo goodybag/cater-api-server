@@ -89,6 +89,7 @@
 @import "components/inline-columns.less";
 @import "components/comma-separated-list.less";
 @import "components/item-card.less";
+@import "components/paginator.less";
 
 // Bootstrap components
 @import "../public/components/bootstrap/less/dropdowns.less";
@@ -106,3 +107,16 @@
 @import "overrides/invoice-recipients.less";
 @import "overrides/promos.less";
 @import "overrides/billing-info.less";
+
+.page-payment-summaries {
+  .pms-emailer {
+    margin-bottom: 40px;
+  }
+}
+
+.page-invoices {
+  .paginator-wrapper {
+    text-align: right;
+    margin-bottom: 20px;
+  }
+}

@@ -72,7 +72,7 @@ create trigger on_order_create
 
 drop trigger if exists order_total_change on orders;
 create trigger order_total_change
-    after insert or update of zip, tip, adjustment_amount, user_adjustment_amount, restaurant_location_id
+    after insert or update of zip, tip, adjustment_amount, user_adjustment_amount, restaurant_location_id, waive_delivery_fee, waive_transaction_fee
     on orders
     for each row
     execute procedure on_order_total_change();

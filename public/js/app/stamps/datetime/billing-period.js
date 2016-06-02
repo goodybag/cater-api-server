@@ -36,9 +36,45 @@ define( function( require, exports, module ){
 
     , getMosqlRangeQuery: function(){
         return {
-          $gt: this.startDate
+          $gte: this.startDate
         , $lt: moment( this.endDate ).add( 'days', 1 ).format( this.format )
         };
+      }
+
+    , next: function(){
+        var start = moment( this.startDate, this.format );
+        var end = moment( this.endDate, this.format );
+
+        if ( start.date() < 15 ){
+          start.set('date', 16);
+          end.endOf('month');
+        } else {
+          start.add('month', 1).set('date', 1);
+          end.add('month', 1).set('date', 15);
+        }
+
+        return module.exports.create({
+          startDate: start.format( this.format )
+        , endDate: end.format( this.format )
+        })
+      }
+
+    , previous: function(){
+        var start = moment( this.startDate, this.format );
+        var end = moment( this.endDate, this.format );
+
+        if ( start.date() < 15 ){
+          start.add('month', -1).set('date', 16);
+          end.add('month', -1).endOf('month');
+        } else {
+          start.set('date', 1);
+          end.set('date', 15);
+        }
+
+        return module.exports.create({
+          startDate: start.format( this.format )
+        , endDate: end.format( this.format )
+        });
       }
     });
 });

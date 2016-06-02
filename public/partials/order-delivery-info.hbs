@@ -17,16 +17,16 @@
       {{#with orderAddress}}
         {{> edit_address}}
       {{/with}}
-      {{#if order.isAddressComplete}}
       <div class="btn-toolbar">
         <button type="button" class="btn btn-default cancel-edit-btn">Cancel</button>
+        {{#if user.addresses}}
         <a
           href="#select-address-modal"
           data-toggle="modal"
           class="btn btn-default">Select an Address</a>
+        {{/if}}
         <button type="button" class="btn btn-primary save-address">Save Address</button>
       </div>
-      {{/if}}
     </div>
     {{#with orderAddress}}
     <div class="row delivery-instructions-external">

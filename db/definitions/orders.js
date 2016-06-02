@@ -114,6 +114,7 @@ define(function(require) {
   , review_token: {
       type: types.text
     , nullable: false
+    , default: 'uuid_generate_v4()'
     }
   , ds_token: {
       type: types.text
@@ -259,6 +260,12 @@ define(function(require) {
     }
   , courier_tracking_id: { type: types.text }
   , waive_transaction_fee: {
+      type: types.boolean
+    , nullable: false
+    , editable: ['admin']
+    , default: false
+    }
+  , waive_delivery_fee: {
       type: types.boolean
     , nullable: false
     , editable: ['admin']

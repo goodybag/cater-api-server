@@ -188,7 +188,9 @@
             <th class="line-item-feeds">Feeds</th>
             <th class="line-item-quantity">Quantity</th>
             <th class="line-item-notes">Notes</th>
+            {{#if order.restaurant.show_item_recipients}}
             <th class="line-item-recipient">Recipient</th>
+            {{/if}}
             <th class="line-item-price">Price</th>
           </tr>
         </thead>
@@ -229,13 +231,15 @@
               <span name="notes" class="item-notes-span order-item-field order-item-notes">{{#if this.notes}}{{this.notes}}{{else}}&nbsp;{{/if}}</span>
               {{/if}}
             </td>
+            {{#if ../order.restaurant.show_item_recipients}}
             <td class="line-item-recipient" data-title="Recipient">
-              {{#if ../isAdmin}}
+              {{#if ../../isAdmin}}
                 <textarea name="recipient" class="item-notes-textarea form-control order-item-field order-item-recipient">{{this.recipient}}</textarea>
               {{else}}
                 <span name="recipient" class="item-recipient-span order-item-field order-item-recipient">{{#if this.recipient}}{{this.recipient}}{{else}}&nbsp;{{/if}}</span>
               {{/if}}
             </td>
+            {{/if}}
             <td class="line-item-price" data-title="Price">{{dollars this.sub_total}}</td>
           </tr>
           {{/each}}
@@ -256,7 +260,9 @@
                 {{#if checked}}checked{{/if}}>
             </td>
             <td class="line-item-notes" data-title="Notes"></td>
+            {{#if ../../order.restaurant.show_item_recipients}}
             <td class="line-item-recipient" data-title="Recipient"></td>
+            {{/if}}
             <td class="line-item-feeds" data-title="Feeds"></td>
             <td class="line-item-price" data-title="Price">
               {{#eq scale "multiply"}}
@@ -283,7 +289,9 @@
               {{/eq}}
             </td>
             <td class="line-item-notes" data-title="Notes"></td>
+            {{#if ../../../order.restaurant.show_item_recipients}}
             <td class="line-item-recipient" data-title="Recipient"></td>
+            {{/if}}
             <td class="line-item-feeds" data-title="Feeds"></td>
             <td class="line-item-price" data-title="Price">
               {{#eq scale "multiply"}}
@@ -330,7 +338,7 @@
         </div>
       </div>
       {{else}}
-      {{#if (or order.adjustment.amount order.user_adjustment_amount)}}
+      {{#if (or order.adjustment.amount order.user_adjustment_amount order.adjustment.description order.user_adjustment_description)}}
       <div class="row adjustment">
         <div class="col-lg-8">
           {{#if order.adjustment.description}}
@@ -499,7 +507,7 @@
 {{#if config.isProduction}}
 {{#if reqQuery.submitted}}
 {{#eq order.user_id user.id}}
-  {{> adwords_order_conversion conversionAmount=(dollars order.total)}}
+  {{> quantcast_order}}
 {{/eq}}
 {{/if}}
 {{/if}}

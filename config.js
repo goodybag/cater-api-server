@@ -294,6 +294,8 @@ config.defaults = {
     apiPrefix: '/api/',
     mountPoint: 'dist/static'
   }
+
+, blockedAddresses: ['2.235.239.192']
 };
 
 config.dev = {
@@ -312,6 +314,7 @@ config.dev = {
 
 , rollbar: {
     accessToken: 'c7f82820e02c4bd7a759015518948ce3'
+  , clientAccessToken: '81a56e920dd24892b8d94f06a6a1bc79'
   }
 
 , segmentIo: {
@@ -380,6 +383,7 @@ config.staging = {
 
 , rollbar: {
     accessToken: '8d240c636751439791b214c9ec8cf8af'
+  , clientAccessToken: '34d5312335de43ce9515a2ab79929003'
   }
 
 , segmentIo: {
@@ -444,6 +448,7 @@ config.production = {
 
 , rollbar: {
     accessToken: 'b85e21df4a1746b49d471441dfd70fa0'
+  , clientAccessToken: 'c44d62a677fb42cab0d4abf3ef478d9b'
   }
 
 , segmentIo: {

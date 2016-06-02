@@ -73,18 +73,20 @@ route.get('/search', function(req, res, next) {
   }]
 }), m.find(db.orders));
 
-route.get('/:id', m.restrict(['admin']), m.getOrder2({
-  param: 'id',
-  items: true,
-  user: true,
-  userAddresses: true,
-  userPaymentMethods: true,
-  restaurant: true,
-  paymentMethod: true,
-  deliveryService: true
-}), function(req, res) {
-  res.json(req.order);
-});
+route.get('/:id'
+, m.getOrder2({
+    param: 'id',
+    items: true,
+    user: true,
+    userAddresses: true,
+    userPaymentMethods: true,
+    restaurant: true,
+    paymentMethod: true,
+    deliveryService: true
+  })
+, m.restrict(['admin', 'order-owner'])
+, m.sendJson('req.order')
+);
 
 route.put('/silent/:id'
 , m.restrict(['admin'])

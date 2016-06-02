@@ -71,6 +71,12 @@ define( function( require, exports, module ){
 
     var orderParams = utils.pick( query, 'zip', 'date', 'time', 'guests' );
 
+    if ( query.datetime ){
+      var parts = query.datetime.split(' ');
+      orderParams.date = parts[0];
+      orderParams.time = parts[1];
+    }
+
     if ( typeof orderParams.zip === 'number' ){
       orderParams.zip += '';
     }

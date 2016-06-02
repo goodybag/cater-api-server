@@ -114,7 +114,7 @@ define(function(require){
      */
   , displayErrors: function( errors, $errors, Model ){
       var frag = document.createDocumentFragment();
-      var template = Handlebars.partials.alert_error;
+      var template = Hbs.partials.alert_error;
       var selector = '[name="{property}"]';
 
       errors = utils.prepareErrors( errors, config.errorTypeMessages, Model );
@@ -127,10 +127,21 @@ define(function(require){
       $errors.html( frag.innerHTML );
 
       // Highlight form fields with error
+      this.clearErrors();
+      this.$el
+        .find(
+          '[name="' + utils.pluck( errors, 'property' ).join('"], [name="') + '"]'
+        )
+        .map( function(){
+          if ( $(this).hasClass('form-group') ) return this;
+          return $(this).parent()[0];
+        })
+        .addClass('has-error');
+    },
+
+    clearErrors: function(){
       this.$el.find('.has-error').removeClass('has-error');
-      this.$el.find(
-        '[name="' + utils.pluck( errors, 'property' ).join('"], [name="') + '"]'
-      ).parent().addClass('has-error');
+      return this;
     }
 
     /**
@@ -235,6 +246,11 @@ define(function(require){
         $el.html( val );
       }
 
+      return this;
+    }
+
+  , clear: function(){
+      this.$el.find('select, input').val('');
       return this;
     }
   });

@@ -1,15 +1,13 @@
 'use strict';
 
 var fs              = require('fs');
-var _               = require('highland');
 var db              = require('../../db');
 var utils           = require('../../utils');
 var config          = require('../../config');
 var GeoCodeRequests = require('stamps/requests/geocode');
 var Addresses       = require('stamps/addresses');
 var logger          = require('../../lib/logger').create('Worker-UpdateAddressContent');
-
-var rate = 1000 / config.google.geocoding.limit.second;
+var EnumStream      = require('../../lib/enum-stream');
 
 var errorLog = fs.createWriteStream( __dirname + '/errors.json' );
 var isFirstError = true;
@@ -21,8 +19,9 @@ db.addresses.findStream( {}, { limit: 'all' }, function( error, stream ){
     throw error;
   }
 
-  _( stream )
-    .flatMap( _.wrapCallback( function( address, next ){
+  EnumStream
+    .create( stream, { concurrency: 10 } )
+    .mapAsync( ( address, next )=>{
       var stringAddress = Addresses.create( address ).toString({ street2: false });
 
       GeoCodeRequests.create()
@@ -57,8 +56,8 @@ db.addresses.findStream( {}, { limit: 'all' }, function( error, stream ){
 
           next( null, resAddress );
         });
-    }))
-    .flatMap( _.wrapCallback( function( address, next ){
+    })
+    .mapAsync( ( address, next )=>{
       db.addresses.update( address.id, address, function( error ){
         if ( error ){
           error.address_id = address.id;
@@ -66,8 +65,8 @@ db.addresses.findStream( {}, { limit: 'all' }, function( error, stream ){
 
         return next( error, address );
       });
-    }))
-    .errors( function( error ){
+    })
+    .errors( ( error )=>{
       process.stdout.write('x');
       try {
         errorLog.write( JSON.stringify( error ) + ',\n' );
@@ -75,11 +74,10 @@ db.addresses.findStream( {}, { limit: 'all' }, function( error, stream ){
         // Oh well
       }
     })
-    .each( function( data ){
+    .forEach( ( data )=>{
       process.stdout.write('.');
     })
-    .throttle( rate )
-    .done( function(){
+    .end( ()=>{
       errorLog.end(']', function(){
         process.exit(0);
       });

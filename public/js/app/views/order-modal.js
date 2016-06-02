@@ -3,6 +3,7 @@ define(function(require, exports, module) {
   var utils = require('utils');
   var venter = require('venter');
   var config = require('config');
+  var fulfillability = require('stamps/orders/fulfillability');
 
   // Fulfillability errors we should ignore when preventing
   // the user from submitting params
@@ -81,7 +82,9 @@ define(function(require, exports, module) {
 
       var errors = errors || []
         .concat(
-          this.model.validateOrderFulfillability()
+          this.model.validateOrderFulfillability({
+            omit: [ fulfillability.requirements.MinimumOrder ]
+          })
         , this.model.validateRestaurantEvents()
         , this.model.validateAfterHours()
         )

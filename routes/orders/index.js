@@ -72,6 +72,12 @@ route.all('/', function(req, res, next) {
   res.send(405);
 });
 
+route.get('/create'
+, m.view('order-flow/create', {
+    layout: 'layout/default'
+  })
+);
+
 /**
  *  Order voice resource.  TwiML for phone notifications of order submitted.
  */
@@ -294,13 +300,15 @@ route.all('/:oid/duplicates', m.restrict(['client', 'admin']), function(req, res
  * Order add items resource.  Page to add items to an order.  (basically the menu page)
  */
 
-route.get('/:oid/add-items', m.getOrder2({
-    param: 'oid',
-    restaurantDbModelFind: true,
-    useLatestRevision: true,
-    applyPriceHike: true
-  }), m.restrict(['admin', 'order-owner', 'order-editor']), controllers.restaurants
-  .orders.get
+route.get('/:oid/add-items'
+, m.getOrder2({
+    param: 'oid'
+  , useLatestRevision: true
+  , applyPriceHike: true
+  })
+, m.restrict(['admin', 'order-owner', 'order-editor'])
+, m.defaultLocals({ hideBackToSearch: true })
+, controllers.restaurants.orders.get
 );
 
 
@@ -316,3 +324,11 @@ route.get('/:oid/payment', m.getOrder2({
   deliveryService: true,
   restaurantDbModelFind: true
 }), m.restrict(['admin', 'order-owner']), m.view('order-payment', {}));
+
+route.get('/:oid/select-restaurant'
+, m.getOrder2({
+    items: true
+  })
+, m.restrict(['admin', 'order-owner'])
+, controllers.orders.selectRestaurant
+);

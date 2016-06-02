@@ -153,7 +153,11 @@
                   My Orders <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a href="/">Start New Order</a></li>
+                  {{#if user.features.order-flow}}
+                  <li><a href="/orders/create">Start New Order</a></li>
+                  {{else}}
+                  <li><a href="/restaurants">Start New Order</a></li>
+                  {{/if}}
                   <li><a href="/users/me/orders/calendar">My Orders</a></li>
                   <li><a href="/users/me/orders/receipts">My Receipts</a></li>
                   {{#if user.is_invoiced}}
@@ -231,6 +235,7 @@
     <script src="{{cdn "components/requirejs/require.js"}}"></script>
     <script src="{{cdn "js/require-config.js"}}"></script>
     {{/unless}}
+    {{> rollbar}}
     {{> config}}
 
     {{#unless config.isDev}}
@@ -239,12 +244,12 @@
 
     {{#if config.isProduction}}
       {{> adroll }}
+      {{> quantcast_init}}
     {{/if}}
 
     {{#unless config.isDev}}
       {{#if isNewSignup}}
       {{> facebook_pixel config.facebook.pixel.restaurantList }}
-      {{> google_adwords_conversion config.googleAdwordsConversionId }}
       {{/if}}
     {{/unless}}
 

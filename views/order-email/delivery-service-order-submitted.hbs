@@ -51,15 +51,10 @@
         <td>"{{order.delivery_instructions}}"</td>
       </tr>
       {{/if}}
-
-      <tr><td colspan="2" style="height: 20px"></td></tr>
-
-      <tr>
-        <td>Order subtotal</td>
-        <td>${{dollars order.sub_total}}</td>
-      </tr>
     </tbody>
   </table>
+
+  {{> order_email_items_table hide_pricing=true}}
 
   <p>Contact Goodybag for any issues or questions at: {{phoneNumber config.phone.support}} or {{{mailto config.emails.orders}}}</p>
 

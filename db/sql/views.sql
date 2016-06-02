@@ -12,7 +12,14 @@ create or replace view orders_search_view as
   join restaurants on orders.restaurant_id = restaurants.id
   join users on orders.user_id = users.id;
 
-create or replace view latest_payment_summary_transfer_logs as
+create or replace view latest_payment_summary_transfer_logs as (
   select distinct on ( payment_summary_id ) *
   from payment_summary_transfer_logs
   order by payment_summary_id, created_at desc
+);
+
+CREATE OR REPLACE VIEW latest_order_revisions AS (
+  SELECT DISTINCT ON (orv.order_id) orv.*
+  FROM order_revisions orv
+  ORDER BY orv.order_id, orv.created_at DESC
+);

@@ -28,6 +28,8 @@
       </td>
     </tr>
   {{/each}}
+
+  {{#unless this.hide_pricing}}
   <tr>
     <td colspan="2" style="font-family: Helvetica, arial, sans-serif; color: #434a54; font-size: 13px; padding-top: 26px; padding-bottom: 6px; padding-left: 22px; padding-right: 0; text-align: right; border-top: solid #e6e9ed 1px">Subtotal:</td>
     <td style="font-family: Helvetica, arial, sans-serif; color: #434a54; font-size: 13px; padding-top: 26px; padding-bottom: 6px; padding-left: 22px; padding-right: 12px; text-align: right; border-top: solid #e6e9ed 1px">${{dollars order.sub_total}}</td>
@@ -52,5 +54,6 @@
     <td colspan="2" style="font-family: Helvetica, arial, sans-serif; color: #434a54; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 22px; padding-right: 0; text-align: right; font-weight: bolder;">Total:</td>
     <td style="font-family: Helvetica, arial, sans-serif; color: #434a54; font-size: 14px; padding-top: 10px; padding-bottom: 10px; padding-left: 22px; padding-right: 12px; text-align: right;">${{dollars order.total}}</td>
   </tr>
+  {{/unless}}
 </table>
 <!--</OrderItems>-->

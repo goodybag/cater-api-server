@@ -145,7 +145,7 @@ define( function( require, exports, module ){
       restaurant.delivery_fee_to = range.max;
     }
 
-    if ( !config.elasticsearch.enabled || typeof query.search !== 'string' ){
+    if ( !config.elasticsearch.enabled || typeof query.search !== 'string' || query.sort !== 'popular' ){
       var contractSort = options.sorts_by_no_contract;
       var resultParts = [];
 

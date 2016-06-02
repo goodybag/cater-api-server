@@ -128,6 +128,7 @@ var reports = {
     , 'Restaurant Net Payout'
     , 'Caterer Name'
     , 'Region'
+    , 'Courier Tracking'
     ]);
 
     var where = { status: status || {}, restaurant_id: { $notNull: true } };
@@ -283,6 +284,7 @@ var reports = {
             , dollars(orderCharge(order, 'getRestaurantCut'))
             , order.restaurant.name
             , order.restaurant.region.name
+            , order.courier_tracking_id
             ]
           );
 

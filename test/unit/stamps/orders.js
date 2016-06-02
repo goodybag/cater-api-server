@@ -405,7 +405,7 @@ describe('Orders Stamps', function(){
         }}
 
       , '.isFulfillable() test day is not fulfillable': function( timezone ){ return function(){
-          var date = moment.tz('2015-04-22', timezone);
+          var date = moment.tz(timezone).add(1, 'weeks').day(1);
           var result = fulfillability({
             timezone: timezone
           , date: date.format('YYYY-MM-DD')

@@ -60,13 +60,17 @@ module.exports.list = function(req, res) {
               region_id: req.user.attributes.region_id
             }
           }
+        , sort: [ {'_score': 'desc' } ]
         }
       , q: `region_id:${req.user.attributes.region_id} AND ${req.query.search}`
       }, ( error, search )=>{
         if ( error ) return res.error( error );
 
         var resultIndex = _.indexBy( search.hits.hits, '_id' );
-        results = results.filter( result => result.id in resultIndex );
+
+        results = results
+          .filter( result => result.id in resultIndex )
+          .sort( ( a, b ) => b._score - a._score );
 
         next( null, results );
       });

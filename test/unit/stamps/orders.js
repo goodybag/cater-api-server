@@ -349,7 +349,7 @@ describe('Orders Stamps', function(){
     , tests: {
         '.isFulfillable() test zip is fulfillable': function( timezone ){ return function(){
           var result = fulfillability({
-            timezone: 'America/Chicago'
+            timezone: timezone
           , zip: '78723'
           , restaurant: restaurants()
                           .zip( '78723', 100 )
@@ -361,7 +361,7 @@ describe('Orders Stamps', function(){
 
       , '.isFulfillable() test zip is fulfillable because of delivery service': function( timezone ){ return function(){
           var result = fulfillability({
-            timezone: 'America/Chicago'
+            timezone: timezone
           , zip: '78723'
           , restaurant: restaurants({ zip: '78722' })
                           .deliveryService({
@@ -378,7 +378,7 @@ describe('Orders Stamps', function(){
 
       , '.isFulfillable() test zip is not fulfillable': function( timezone ){ return function(){
           var result = fulfillability({
-            timezone: 'America/Chicago'
+            timezone: timezone
           , zip: '78724'
           , restaurant: restaurants()
                           .zip( '78723', 100 )
@@ -390,10 +390,10 @@ describe('Orders Stamps', function(){
 
       , '.isFulfillable() test day is fulfillable': function( timezone ){ return function(){
           // Order in 24 hours
-          var date = moment.tz('America/Chicago').add(1, 'days');
+          var date = moment.tz(timezone).add(1, 'days');
 
           var result = fulfillability({
-            timezone: 'America/Chicago'
+            timezone: timezone
           , datetime: date.format('YYYY-MM-DD hh:mm:ss')
           , restaurant: restaurants()
                           .open( date.day() )
@@ -405,23 +405,26 @@ describe('Orders Stamps', function(){
         }}
 
       , '.isFulfillable() test day is not fulfillable': function( timezone ){ return function(){
+          var date = moment.tz('2015-04-22', timezone);
           var result = fulfillability({
-            timezone: 'America/Chicago'
-          , date: '2015-04-22'
+            timezone: timezone
+          , date: date.format('YYYY-MM-DD')
           , restaurant: restaurants()
-                          .open(4)
+                          .open( date.day() + 1 )
                           .supports('delivery', 'courier')
-          }).isFulfillable();
+          });
 
-          assert( !result );
+          var omit = [ fulfillability.requirements.LeadTimes ];
+
+          assert.deepEqual( result.why({ omit }), ['OpenDay', 'OpenHours']);
         }}
 
       , '.isFulfillable() test lead times is fulfillable': function( timezone ){ return function(){
           // Order in 24 hours
-          var date = moment.tz('America/Chicago').add(1, 'days');
+          var date = moment.tz(timezone).add(1, 'days');
 
           var result = fulfillability({
-            timezone: 'America/Chicago'
+            timezone: timezone
           , date: date.format('YYYY-MM-DD')
           , time: date.format('HH:mm a')
           , guests: 20
@@ -438,10 +441,10 @@ describe('Orders Stamps', function(){
 
       , '.isFulfillable() test lead times is not fulfillable': function( timezone ){ return function(){
           // Order in 24 hours
-          var date = moment.tz('America/Chicago').add(1, 'days');
+          var date = moment.tz(timezone).add(1, 'days');
 
           var result = fulfillability({
-            timezone: 'America/Chicago'
+            timezone: timezone
           , date: date.format('YYYY-MM-DD')
           , time: date.format('HH:mm a')
           , guests: 20
@@ -458,10 +461,10 @@ describe('Orders Stamps', function(){
 
       , '.isFulfillable() test lead times is not fulfillable because date is in the past': function( timezone ){ return function(){
           // Order in -24 hours
-          var date = moment.tz('America/Chicago').add(-1, 'days');
+          var date = moment.tz(timezone).add(-1, 'days');
 
           var result = fulfillability({
-            timezone: 'America/Chicago'
+            timezone: timezone
           , date: date.format('YYYY-MM-DD')
           , time: date.format('HH:mm a')
           , guests: 20
@@ -478,10 +481,10 @@ describe('Orders Stamps', function(){
 
       , '.isFulfillable() is false because of calendar event': function( timezone ){ return function(){
           // Order in -24 hours
-          var date = moment.tz('America/Chicago').add(2, 'days');
+          var date = moment.tz(timezone).add(2, 'days');
 
           var result = fulfillability({
-            timezone: 'America/Chicago'
+            timezone: timezone
           , date: date.format('YYYY-MM-DD')
           , time: date.format('HH:mm a')
           , guests: 20
@@ -510,10 +513,10 @@ describe('Orders Stamps', function(){
 
       , '.isFulfillable() is true even with a calendar event': function( timezone ){ return function(){
           // Order in -24 hours
-          var date = moment.tz('America/Chicago').add(2, 'days');
+          var date = moment.tz(timezone).add(2, 'days');
 
           var result = fulfillability({
-            timezone: 'America/Chicago'
+            timezone: timezone
           , date: date.format('YYYY-MM-DD')
           , time: date.format('HH:mm a')
           , guests: 20
@@ -542,10 +545,10 @@ describe('Orders Stamps', function(){
 
       , '.isFulfillable() minimum order': function( timezone ){ return function(){
           // Order in -24 hours
-          var date = moment.tz('America/Chicago').add(2, 'days');
+          var date = moment.tz(timezone).add(2, 'days');
 
           var result = fulfillability({
-            timezone: 'America/Chicago'
+            timezone: timezone
           , date: date.format('YYYY-MM-DD')
           , time: date.format('HH:mm a')
           , guests: 20
@@ -570,10 +573,10 @@ describe('Orders Stamps', function(){
 
       , '.isFulfillable() should omit': function( timezone ){ return function(){
           // Order in -24 hours
-          var date = moment.tz('America/Chicago').add(2, 'days');
+          var date = moment.tz(timezone).add(2, 'days');
 
           var result = fulfillability({
-            timezone: 'America/Chicago'
+            timezone: timezone
           , date: date.format('YYYY-MM-DD')
           , time: date.format('HH:mm a')
           , guests: 20

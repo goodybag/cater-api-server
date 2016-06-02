@@ -11,6 +11,9 @@
 <div>Pick up: {{{address order.location}}}</div>
 {{/if}}
 <div>Drop off: {{{address order}}}</div>
+{{#if order.courier_tracking_id}}
+<div>Tracking ID: {{order.courier_tracking_id}}</div>
+{{/if}}
 
 <p>Please respond to confirm.</p>
 <p>Contact Goodybag for any issues or questions at: {{phoneNumber config.phone.support}} or {{{mailto config.emails.orders}}}</p>

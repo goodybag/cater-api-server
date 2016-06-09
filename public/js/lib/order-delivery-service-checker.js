@@ -52,6 +52,16 @@ define(function( require, exports, module ){
     }
 
   , why: function( order ){
+      var criteria = exports.criteria.filter( function( c ){
+        return c.type === 'every';
+      });
+
+      var result = utils.every( criteria, function( criterion ){
+        return criterion.fn( order );
+      });
+
+      if ( !result ) return [];
+
       return exports.criteria.filter( function( c ){
         return c.type === 'some' && c.fn( order );
       }).map( function( c ){

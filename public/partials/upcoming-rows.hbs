@@ -6,8 +6,7 @@
     {{/if}}
   </td>
   <td>{{capitalize type}} {{#eq type 'courier'}}(<a href="/admin/delivery-services/{{deliveryService.id}}">{{deliveryService.name}}</a>){{/eq}}</td>
-  <td>{{datepart datetime}} {{timepart datetime}}</td>
-  <td>{{datepart actual_delivery_datetime}} {{timepart actual_delivery_datetime}}</td>
+    <td>{{datepart datetime}} {{timepart datetime}}{{#if actual_delivery_datetime}}({{datepart actual_delivery_datetime}} {{timepart actual_delivery_datetime}}){{/if}}</td>
   <td class="order-user">
     <a href="/admin/users/{{user.id}}">{{user.name}}</a>
     <div>{{{mailto user.email}}}</div>

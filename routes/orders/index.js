@@ -139,6 +139,7 @@ route.put('/:oid', m.getOrder2({
     userPaymentMethods: true,
     restaurant: true,
     deliveryService: true,
+    amenities: true,
     applyPriceHike: true
   }), m.restrict(['order-owner', 'order-restaurant', 'admin']), m.audit.orderType(),
   controllers.orders.update);

@@ -361,7 +361,43 @@ header {
 .upcoming-orders {
   min-height: 400px;
   display: block;
-  overflow: scroll;
+  padding-left: 85px;
+
+  .table-upcoming {
+    margin-top: 50px;
+
+    th {
+      vertical-align: bottom;
+      padding-bottom: 4px;
+
+      a {
+        display: block;
+        position: relative;
+        padding-right: 20px;
+
+        i {
+          position: absolute;
+          right: 0;
+          bottom: 3px;
+        }
+      }
+    }
+
+    td {
+      text-align: center;
+    }
+
+    .order-user,
+    .order-tracking {
+      text-align: left;
+    }
+
+    .delivery-expected,
+    .delivery-actual,
+    .order-phone {
+      min-width: 150px;
+    }
+  }
 }
 
 .upcoming-orders .picker {

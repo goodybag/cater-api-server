@@ -6,11 +6,13 @@
     {{/if}}
   </td>
   <td>{{capitalize type}} {{#eq type 'courier'}}(<a href="/admin/delivery-services/{{deliveryService.id}}">{{deliveryService.name}}</a>){{/eq}}</td>
-  <td><input type="checkbox" {{#if restaurant.plan_id}}checked="checked"{{/if}} disabled></td>
-  <td>{{datepart datetime}} {{timepart datetime}}</td>
-  <td><a href="/admin/users/{{user.id}}">{{user.email}}</a></td>
-  <td>{{user.organization}}</td>
-  <td><a href="/admin/restaurants/{{restaurant.id}}">{{restaurant.name}}</a></td>
+    <td>{{datepart datetime}} {{timepart datetime}}{{#if actual_delivery_datetime}}({{datepart actual_delivery_datetime}} {{timepart actual_delivery_datetime}}){{/if}}</td>
+  <td class="order-user">
+    <a href="/admin/users/{{user.id}}">{{user.name}}</a>
+    <div>{{{mailto user.email}}}</div>
+  </td>
+  <td>{{phoneNumber phone}}</td>
+  <td><a href="/admin/restaurants/{{restaurant.id}}/basic-info">{{restaurant.name}}</a></td>
   <td>
     {{~#if location~}}
     <a href="/admin/restaurants/{{restaurant.id}}/locations/{{location.id}}">{{location.name}}</a>
@@ -19,6 +21,11 @@
     {{~/if~}}
   </td>
   <td><a href="/admin/regions">{{restaurant.region.name}}</a></td>
-  <td>{{#if (eq type 'courier')}}{{{makeAnchor courier_tracking_id}}}{{/if}}</td>
+  <td>${{dollars total}}</td>
+  <td>
+    {{#if restaurant.plan_id}}
+      <i class="gb-icon-checkmark"></i>
+    {{/if}}
+  <td class="order-tracking">{{#if (eq type 'courier')}}{{{makeAnchor courier_tracking_id}}}{{/if}}</td>
 </tr>
 {{/each}}

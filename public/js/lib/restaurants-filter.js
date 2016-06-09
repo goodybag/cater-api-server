@@ -91,7 +91,7 @@ define( function( require, exports, module ){
 
     if ( 'date' in orderParams || 'time' in orderParams ){
       let isValidDateTime = new Date(
-        orderParams.date + ' ' + orderParams.time
+        orderParams.date + (orderParams.time ? (' ' + orderParams.time) : '')
       ).toString() !== 'Invalid Date';
 
       if ( !isValidDateTime ){

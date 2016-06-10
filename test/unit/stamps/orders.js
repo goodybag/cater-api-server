@@ -107,7 +107,7 @@ describe('Orders Stamps', function(){
       ]
     });
 
-    assert.equal( order.getAmenityTotal(), 2200 );
+    assert.equal( order.getAmenityTotal(), 2300 );
   });
 
   it('.getItemTotal', function(){
@@ -143,7 +143,7 @@ describe('Orders Stamps', function(){
       ]
     });
 
-    assert.equal( order.getSubTotal(), 3350 );
+    assert.equal( order.getSubTotal(), 3450 );
   });
 
   it('.getSubTotal() Cached', function(){
@@ -168,7 +168,6 @@ describe('Orders Stamps', function(){
     , amenities: [
         { price: 7, scale: 'flat', enabled: true }
       , { price: 2, scale: 'multiply', enabled: true }
-      , { price: 1, scale: 'multiply', enabled: false }
       ]
     , guests: 5
     , adjustment_amount: -100
@@ -211,7 +210,6 @@ describe('Orders Stamps', function(){
     , amenities: [
         { price: 7, scale: 'flat', enabled: true }
       , { price: 2, scale: 'multiply', enabled: true }
-      , { price: 1, scale: 'multiply', enabled: false }
       ]
     , guests: 5
     , adjustment_amount: -100
@@ -618,7 +616,7 @@ describe('Orders Stamps', function(){
         guests: 12, price: 100, scale: 'flat', enabled: false
       });
 
-      assert.equal( amenity.getTotal(), 0 );
+      assert.equal( amenity.getTotal(), 100 );
     });
 
     it('.getTotal() flat', function() {

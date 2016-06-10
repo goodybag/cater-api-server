@@ -24,8 +24,7 @@ define( function( require, exports, module ){
     })
     .methods({
       getTotal: function(){
-        if (!this.enabled) return 0;
-        else if (this.scale === 'flat') return this.price;
+        if (this.scale === 'flat') return this.price;
         else if (this.scale === 'multiply') return this.price * this.guests;
         throw new Error('Invalid amenity scale type');
       }

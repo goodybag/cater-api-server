@@ -57,11 +57,11 @@
           <tr>
             <td class="checkbox"></td>
             <td class="item"><div class="item-name">{{name}}</div>{{#if description}} - {{description}}{{/if}}</td>
+            <td class="feeds"></td>
             <td class="options"></td>
-            {{#if ../order.restaurant.show_item_recipients}}
+            {{#if ../../order.restaurant.show_item_recipients}}
             <td class="recipient">{{{join this.recipients "<br>"}}}</td>
             {{/if}}
-            <td class="feeds"></td>
             <td class="qty">{{#eq scale "multiply"}}x{{../../../order.guests}}{{/eq}}</td>
             <td class="price">
               {{#eq scale "multiply"}}

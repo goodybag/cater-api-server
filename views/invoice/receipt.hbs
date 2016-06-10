@@ -138,7 +138,7 @@
       <td class="line-item-name">
         <div class="item-name">{{name}}</div>
       </td>
-      {{#if ../order.restaurant.show_item_recipients}}
+      {{#if ../../order.restaurant.show_item_recipients}}
       <td class="line-item-recipient"></td>
       {{/if}}
       <td class="line-item-quantity">{{#eq scale "multiply"}}x {{../../../order.guests}}{{/eq}}</td>

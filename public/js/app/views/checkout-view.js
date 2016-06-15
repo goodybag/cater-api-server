@@ -619,7 +619,7 @@ define(function(require, exports, module) {
 
         val = $el.val();
 
-        if ( !val.length ) continue;
+        if ( !val || !val.length ) continue;
 
         if ( Order.addressFields[i] === 'phone' ){
           val = val.replace(/\(|\)|\s|\-/g, '');

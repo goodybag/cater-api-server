@@ -30,6 +30,7 @@ tmp/
 workers/validate-addresses/log.json
 workers/geocode-addresses/log.json
 workers/geocode-addresses/errors.json
+workers/elastic-search/errors.json
 dump.rdb
 
 coverage

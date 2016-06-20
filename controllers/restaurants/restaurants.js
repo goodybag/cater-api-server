@@ -4,6 +4,7 @@ var
 , queries = require('../../db/queries')
 , errors = require('../../errors')
 , utils = require('../../utils')
+, config = require('../../config')
 , states = require('../../public/js/lib/states')
 , enums = require('../../db/enums')
 , cuisines = require('../../public/cuisines')
@@ -20,39 +21,82 @@ var models = require('../../models');
 var restaurantDefinitionSchema = require('../../db/definitions/restaurants').schema;
 var OrderItem = require('stamps/orders/item');
 var Order = require('stamps/orders/base');
+var elasticsearch = require('../../lib/elastic-search-client');
 
 utils.findWhere(states, {abbr: 'TX'}).default = true;
 
 module.exports.list = function(req, res) {
   var logger = req.logger.create('Controller-Restaurants-List');
 
-  var results = db.cache.restaurants.byRegion( req.user.attributes.region_id );
+  utils.async.waterfall([
+    // Get the initial set of results from cache
+    ( next )=>{
+      var results = db.cache.restaurants.byRegion( req.user.attributes.region_id );
 
-  if ( results.error ){
-    logger.error('Error getting restaurants by region', {
-      error: error
-    });
+      if ( results.error ){
+        logger.error('Error getting restaurants by region', {
+          error: error
+        });
 
-    return res.error( results.error );
-  }
+        return res.error( results.error );
+      }
 
-  if (!_.isEqual(req.session.searchParams, req.query)) {
-    req.session.searchParams = _.cloneDeep(req.query);
-  }
+      return next( null, results );
+    }
 
-  return res.render('restaurant/list', {
-    layout:           'layout/default'
-  , defaultAddress:   req.user.attributes.defaultAddress
-  , restaurants:      restaurantsFilter( results, req.query, {
-                        sorts_by_no_contract: req.user.attributes.region.sorts_by_no_contract
-                      , timezone:             req.user.attributes.region.timezone
-                      })
-  , filterCuisines:   cuisines
-  , filterPrices:     utils.range(1, 5)
-  , filterMealTypes:  enums.getMealTypes()
-  , filterMealStyles: enums.getMealStyles()
-  , filterDiets:      enums.getTags()
-  });
+    // Filter results returned from elastic search
+  , ( results, next )=>{
+      if ( !config.elasticsearch.enabled ) return next( null, results );
+      if ( typeof req.query.search !== 'string' ) return next( null, results );
+
+      var esClient = elasticsearch();
+
+      esClient.search({
+        index: ['restaurants']
+      , size: results.length
+      , body: {
+          query: {
+            match: {
+              region_id: req.user.attributes.region_id
+            }
+          }
+        , sort: [ {'_score': 'desc' } ]
+        }
+      , q: `region_id:${req.user.attributes.region_id} AND ${req.query.search}`
+      }, ( error, search )=>{
+        if ( error ) return res.error( error );
+
+        var resultIndex = _.indexBy( search.hits.hits, '_id' );
+
+        results = results
+          .filter( result => result.id in resultIndex )
+          .sort( ( a, b ) => b._score - a._score );
+
+        next( null, results );
+      });
+    }
+
+    // Filter by restaurantsFilter and render
+  , ( results, next )=>{
+      if (!_.isEqual(req.session.searchParams, req.query)) {
+        req.session.searchParams = _.cloneDeep(req.query);
+      }
+
+      return res.render('restaurant/list', {
+        layout:           'layout/default'
+      , defaultAddress:   req.user.attributes.defaultAddress
+      , restaurants:      restaurantsFilter( results, req.query, {
+                            sorts_by_no_contract: req.user.attributes.region.sorts_by_no_contract
+                          , timezone:             req.user.attributes.region.timezone
+                          })
+      , filterCuisines:   cuisines
+      , filterPrices:     utils.range(1, 5)
+      , filterMealTypes:  enums.getMealTypes()
+      , filterMealStyles: enums.getMealStyles()
+      , filterDiets:      enums.getTags()
+      });
+    }
+  ]);
 };
 
 module.exports.get = function(req, res) {

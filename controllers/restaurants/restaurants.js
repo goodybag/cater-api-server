@@ -63,6 +63,7 @@ module.exports.list = function(req, res) {
         , sort: [ {'_score': 'desc' } ]
         }
       , q: `region_id:${req.user.attributes.region_id} AND ${req.query.search}`
+      , analyzer: 'simple'
       }, ( error, search )=>{
         if ( error ) return res.error( error );
 

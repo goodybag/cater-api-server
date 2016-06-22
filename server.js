@@ -13,12 +13,18 @@ require('./db/cache').autoFetchFromRedis( require('./db') );
 
 process.on('uncaughtException', function(err) {
   console.log('Uncaught Exception', err, err.stack);
-  forky.disconnect();
+
+  if (cluster.isWorker) {
+    forky.disconnect();
+  }
 });
 
 process.on('unhandledRejection', function(err) {
   console.log('Unhandled Rejection', err, err.stack);
-  forky.disconnect();
+
+  if (cluster.isWorker) {
+    forky.disconnect();
+  }
 });
 
 if (config.rollbar) {

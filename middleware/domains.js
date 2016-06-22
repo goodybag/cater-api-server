@@ -1,4 +1,5 @@
 var forky = require('forky');
+var cluster = require('cluster');
 
 //domain middleware
 module.exports = function(req, res, next) {
@@ -16,7 +17,10 @@ module.exports = function(req, res, next) {
 
   // Uncaught Exceptions will re-fork
   domain.once('error', function(e) {
-    forky.disconnect();
+    if (cluster.isWorker) {
+      forky.disconnect();
+    }
+
     return next(e);
   });
 };

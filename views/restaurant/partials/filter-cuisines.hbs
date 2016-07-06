@@ -15,7 +15,10 @@
       <div class="popover-body">
         <h1>Cuisine</h1>
         {{#each filterCuisines~}}
-        <label><input type="checkbox" value="{{this}}" {{#contains ../reqQuery.cuisines this}}checked="checked"{{/contains}}/> {{this}}</label>
+          {{!-- TODO: Omit when "Boxed Lunches" gets populated --}}
+          {{#dneq this "Boxed Lunches"~}}
+            <label><input type="checkbox" value="{{this}}" {{#contains ../reqQuery.cuisines this}}checked="checked"{{/contains}}/> {{this}}</label>
+          {{~/dneq}}
         {{~/each}}
         <button class="btn btn-default">Save and close</button>
       </div>

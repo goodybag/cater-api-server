@@ -78,6 +78,8 @@ config.defaults = {
     'jag@goodybag.com'
   , 'christymedlock@goodybag.com'
   , 'patrickmugavin@goodybag.com'
+  , 'a.weldon@bitesquad.com'
+  , 'd.young@bitesquad.com'
   , 'roylazorwitz@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
@@ -88,6 +90,8 @@ config.defaults = {
     'jag@goodybag.com'
   , 'christymedlock@goodybag.com'
   , 'patrickmugavin@goodybag.com'
+  , 'a.weldon@bitesquad.com'
+  , 'd.young@bitesquad.com'
   , 'roylazorwitz@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
@@ -499,6 +503,8 @@ config.production = {
   , dsOrders: [
       'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
+    , 'a.weldon@bitesquad.com'
+    , 'd.young@bitesquad.com'
     , 'roylazorwitz@goodybag.com'
 
     // temp
@@ -514,17 +520,23 @@ config.production = {
     , 'jacobparker@goodybag.com'
     , 'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
+    , 'a.weldon@bitesquad.com'
+    , 'd.young@bitesquad.com'
     , 'roylazorwitz@goodybag.com'
     ]
   , orderNotificationChecks: [
       'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
+    , 'a.weldon@bitesquad.com'
+    , 'd.young@bitesquad.com'
     , 'roylazorwitz@goodybag.com'
     , 'john@goodybag.com'
     ]
   , reminderPaymentStatusIgnore: [
       'christymedlock@goodybag.com'
     , 'patrickmugavin@goodybag.com'
+    , 'a.weldon@bitesquad.com'
+    , 'd.young@bitesquad.com'
     , 'roylazorwitz@goodybag.com'
     ]
   }

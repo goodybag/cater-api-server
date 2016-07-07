@@ -1,9 +1,9 @@
 module.exports = {
   name: 'Goodybag, Inc.'
 , mailingAddress: {
-    street: '1900 Ullrich Ave.'
+    street: '1705 Verdana Dr.'
   , city: 'Austin'
   , state: 'TX'
-  , zip: '78756'
+  , zip: '78753'
   }
 };

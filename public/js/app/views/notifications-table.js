@@ -63,7 +63,7 @@ define(function(require){
       });
 
       this.rowExpander.expand();
-      
+
       // Update the preview URL
       this.rowExpander.$wrapper.find('input').keyup( function( e ){
         item.params[ e.target.name ] = e.target.value;
@@ -103,9 +103,9 @@ define(function(require){
 
       orderNotifier.send( item.id, this.options.order.get('id'), item.params, function( error ){
         spinner.stop();
+        this_.trigger( 'send', item, this_ );
         if ( error ) return notify.error( error );
 
-        this_.trigger( 'send', item, this_ );
         var oldText = $target.text();
         $target.text('Success!');
         setTimeout( function(){ $target.text( oldText ); }, 3000 );

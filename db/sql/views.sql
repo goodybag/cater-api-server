@@ -16,4 +16,12 @@ CREATE OR REPLACE VIEW latest_order_revisions AS (
   SELECT DISTINCT ON (orv.order_id) orv.*
   FROM order_revisions orv
   ORDER BY orv.order_id, orv.created_at DESC
-)
+);
+
+CREATE OR REPLACE VIEW order_notification_history AS (
+  SELECT id, nid, user_id, order_id, data::jsonb, created_at, 'null'::jsonb AS error
+  FROM order_notifications
+  UNION ALL
+  SELECT id, nid, user_id, order_id, data, created_at, error
+  FROM order_notification_failures
+);

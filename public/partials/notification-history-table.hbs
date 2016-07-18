@@ -9,11 +9,11 @@
 </thead>
 <tbody>
   {{#each items}}
-  <tr>
+    <tr {{#if this.error}}class="failed-notification"{{/if}}>
     <td>{{{list this.data.to}}}</td>
     <td>{{this.name}}</td>
     <td>{{{this.data_html}}}</td>
-    <td>{{formatDateTime this.send_date "MM/DD/YYYY h:mma"}}</td>
+    <td>{{formatDateTime this.created_at "MM/DD/YYYY h:mma"}}</td>
     <td class="actions">
       <button
         class="btn btn-small btn-default btn-highlight"

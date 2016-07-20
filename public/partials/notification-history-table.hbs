@@ -13,7 +13,7 @@
     <td>{{{list this.data.to}}}</td>
     <td>{{this.name}}</td>
     <td>{{{this.data_html}}}</td>
-    <td>{{formatDateTime this.created_at "MM/DD/YYYY h:mma"}}</td>
+    <td>{{formatDateTimeWithTz this.created_at ../req.user.region.timezone "MM/DD/YYYY h:mma z"}}</td>
     <td class="actions">
       <button
         class="btn btn-small btn-default btn-highlight"

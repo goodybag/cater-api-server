@@ -81,6 +81,7 @@ config.defaults = {
   , 'a.weldon@bitesquad.com'
   , 'd.young@bitesquad.com'
   , 'amelia@bitesquad.com'
+  , 'j.rankin@bitesquad.com'
   , 'roylazorwitz@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
@@ -94,6 +95,7 @@ config.defaults = {
   , 'a.weldon@bitesquad.com'
   , 'd.young@bitesquad.com'
   , 'amelia@bitesquad.com'
+  , 'j.rankin@bitesquad.com'
   , 'roylazorwitz@goodybag.com'
   , 'om@goodybag.com'
   // , 'jay@goodybag.com'
@@ -508,6 +510,7 @@ config.production = {
     , 'a.weldon@bitesquad.com'
     , 'd.young@bitesquad.com'
     , 'amelia@bitesquad.com'
+    , 'j.rankin@bitesquad.com'
     , 'roylazorwitz@goodybag.com'
 
     // temp
@@ -526,6 +529,7 @@ config.production = {
     , 'a.weldon@bitesquad.com'
     , 'd.young@bitesquad.com'
     , 'amelia@bitesquad.com'
+    , 'j.rankin@bitesquad.com'
     , 'roylazorwitz@goodybag.com'
     ]
   , orderNotificationChecks: [
@@ -534,6 +538,7 @@ config.production = {
     , 'a.weldon@bitesquad.com'
     , 'd.young@bitesquad.com'
     , 'amelia@bitesquad.com'
+    , 'j.rankin@bitesquad.com'
     , 'roylazorwitz@goodybag.com'
     , 'john@goodybag.com'
     ]
@@ -543,6 +548,7 @@ config.production = {
     , 'a.weldon@bitesquad.com'
     , 'd.young@bitesquad.com'
     , 'amelia@bitesquad.com'
+    , 'j.rankin@bitesquad.com'
     , 'roylazorwitz@goodybag.com'
     ]
   }

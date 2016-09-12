@@ -507,6 +507,7 @@ config.production = {
     , 'om@goodybag.com'
     , 'adam.peacock@goodybag.com'
     , 'redemptions@goodybag.com'
+    , 'christymedlock@goodybag.com'
     ]
   , dsOrders: [
       'christymedlock@goodybag.com'

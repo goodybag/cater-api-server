@@ -479,7 +479,7 @@ config.production = {
   }
 
 , ironMQ: {
-    token: 'vr52EAPD-oYRDtZzsqYd0eoDLkI'
+    token: 'woOsY6uve1qQ3sxCyxcmykCFrSs'
   , projectId: '526990cba2b8ed000500002e'
   }
 

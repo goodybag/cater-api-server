@@ -49,7 +49,7 @@
     "lefunc": "~1.2.5",
     "plan.js": "~1.0.4",
     "prism": "git://github.com/LeaVerou/prism.git#gh-pages",
-    "stampit": "~1.1.0",
+    "stampit": "git://github.com/stampit-org/stampit.git#1.1.0",
     "isotope": "~2.1.0",
     "jquery-appear": "~0.2.2",
     "Chart.js": "^2.0.0",

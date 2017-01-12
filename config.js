@@ -509,7 +509,7 @@ config.production = {
       'jacobparker@goodybag.com'
     , 'jag@goodybag.com'
     , 'om@goodybag.com'
-    , 'debbie@bitesquad.com'
+    , 'adam@bitesquad.com'
     , 'redemptions@goodybag.com'
     , 'christymedlock@goodybag.com'
     ]

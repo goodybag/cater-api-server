@@ -137,7 +137,7 @@ var task = function (message, callback) {
     body = JSON.parse(message.body);
   } catch (e) {
     logger.error('unable to parse message body: ' + message.body);
-    return utils.queues.debit.del(message.id, utils.noop), callback(e);
+    return utils.queues.debit.del(message.id, {}, utils.noop), callback(e);
   }
 
   logger.info("processing order: " + body.order.id);
@@ -166,12 +166,12 @@ var task = function (message, callback) {
     }
 
     if ( !order ){
-      utils.queues.debit.del(message.id, utils.noop);
+      utils.queues.debit.del(message.id, {}, utils.noop);
       let error = { message: 'Could not find order', id: body.order.id };
       return setPaymentError( body.order, error, callback );
     }
 
-    if (_.contains(['invoiced', 'paid', 'ignore'], order.payment_status)) return utils.queues.debit.del(message.id, utils.noop), callback();
+    if (_.contains(['invoiced', 'paid', 'ignore'], order.payment_status)) return utils.queues.debit.del(message.id, {}, utils.noop), callback();
 
     // check to see if a debit was already successfuly processed for this order
     // if so it means that there was an error in updating our system with the
@@ -193,7 +193,7 @@ var task = function (message, callback) {
             logger.error('Error changing status to paid', { error: error });
             return setPaymentError( order, error, callback );
           }
-          utils.queues.debit.del(message.id, function(){
+          utils.queues.debit.del(message.id, {}, function(){
             callback()
           });
         });
@@ -213,7 +213,7 @@ var task = function (message, callback) {
             return setPaymentError( order, error, callback );
           }
           debitCustomer(order, function (error) {
-            utils.queues.debit.del(message.id, utils.noop);
+            utils.queues.debit.del(message.id, {}, utils.noop);
             if (error) logger.error('Error debiting customer', {
               error: error
             , order: { id: order.id }
@@ -223,7 +223,7 @@ var task = function (message, callback) {
         }));
       } else {
         debitCustomer(order, function (error) {
-          utils.queues.debit.del(message.id, utils.noop);
+          utils.queues.debit.del(message.id, {}, utils.noop);
           if (error) {
             logger.error({error: error});
           }

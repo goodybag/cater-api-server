@@ -138,15 +138,50 @@
           <dd>${{dollars order.total}}</dd>
         </div>
         <div class="row">
+          <dt>Delivery Date</dt>
+          <dd>
+            <div class="dt-row">
+              <div class="form-group form-group-delivery-date" data-icon="gb-icon-calendar">
+                <input type="text" class="form-control order-datetime" id="order-date" value="{{#if order.datetime}}{{formatDateTime order.datetime}}{{else}}{{formatDateTime orderParams.date}}{{/if}}">
+              </div>
+            </div>
+          </dd>
+        </div>
+        <div class="row">
           <dt>Delivery Time</dt>
-          <dd>{{formatDateTime2 order.datetime "R h:mm A"}} {{formatDateTimeWithTz order.datetime order.timezone "z"}}</dd>
+          <dd>
+            <div class="dt-row">
+              <input
+                class="dt-in"
+                name="dt-hour"
+                type="number"
+                {{#if order.datetime}}
+                  value="{{formatDateTime2 order.datetime "h"}}"
+                {{/if}}
+                min="1" max="12" />
+              <span>:</span>
+              <input
+                class="dt-in"
+                name="dt-min"
+                type="number"
+                {{#if order.datetime}}
+                  value="{{formatDateTime2 order.datetime "mm"}}"
+                {{/if}}
+                min="0" max="59"
+                onchange="if(parseInt(this.value,10)<10)this.value='0'+this.value;" />
+              <select class="dt-in" name="dt-period">
+                <option value="am"{{#eq (getAMPM order.datetime) 'am'}} selected{{/eq}}>AM</option>
+                <option value="pm"{{#eq (getAMPM order.datetime) 'pm'}} selected{{/eq}}>PM</option>
+              </select>
+            </div>
+          </dd>
         </div>
         <div class="row">
           <dt>Actual Delivery Time</dt>
           <dd>
-            <div class="actual-dt-row">
+            <div class="dt-row">
               <input
-                class="actual-dt-in"
+                class="dt-in"
                 name="actual-dt-hour"
                 type="number"
                 {{#if order.actual_delivery_datetime}}
@@ -155,7 +190,7 @@
                 min="1" max="12" />
               <span>:</span>
               <input
-                class="actual-dt-in"
+                class="dt-in"
                 name="actual-dt-min"
                 type="number"
                 {{#if order.actual_delivery_datetime}}
@@ -163,7 +198,7 @@
                 {{/if}}
                 min="0" max="59"
                 onchange="if(parseInt(this.value,10)<10)this.value='0'+this.value;" />
-              <select class="actual-dt-in" name="actual-dt-period">
+              <select class="dt-in" name="actual-dt-period">
                 <option value="am"{{#eq (getAMPM order.actual_delivery_datetime) 'am'}} selected{{/eq}}>AM</option>
                 <option value="pm"{{#eq (getAMPM order.actual_delivery_datetime) 'pm'}} selected{{/eq}}>PM</option>
               </select>

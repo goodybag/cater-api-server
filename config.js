@@ -507,11 +507,9 @@ config.production = {
   , info: 'info@goodybag.com'
   , rewards: [
       'jacobparker@goodybag.com'
-    , 'jag@goodybag.com'
     , 'om@goodybag.com'
-    , 'adam@bitesquad.com'
+    , 't.marx@bitesquad.com'
     , 'redemptions@goodybag.com'
-    , 'christymedlock@goodybag.com'
     ]
   , dsOrders: [
       'christymedlock@goodybag.com'

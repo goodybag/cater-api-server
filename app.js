@@ -71,9 +71,10 @@ app.use( middleware.consumeNewSignup() );
 
 app.use( middleware.setUserRegion() );
 
-if (config.isProduction || config.isStaging) {
-  app.use(middleware.sslRedirect);
-}
+// Using bitesquad's stuff without https
+// if (config.isProduction || config.isStaging) {
+//   app.use(middleware.sslRedirect);
+// }
 
 app.use( function( req, res, next ){
   res.locals.req = req;

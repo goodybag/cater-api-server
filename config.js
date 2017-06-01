@@ -483,7 +483,7 @@ config.production = {
   , projectId: '526990cba2b8ed000500002e'
   }
 
-, baseUrl: 'https://www.goodybag.com'
+, baseUrl: 'https://goodybag.bitesquad.com'
 
 , postgresConnStr: process.env['DATABASE_URL']
 

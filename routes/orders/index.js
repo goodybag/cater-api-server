@@ -333,3 +333,7 @@ route.get('/:oid/select-restaurant'
 , m.restrict(['admin', 'order-owner'])
 , controllers.orders.selectRestaurant
 );
+
+route.post('/:oid/promo/validate'
+, m.restrict(['admin', 'order-owner'])
+, controllers.orders.promos.validate);
